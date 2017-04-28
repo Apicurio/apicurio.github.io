@@ -1,0 +1,37 @@
+---
+title: Blog
+permalink: /blog/
+layout: page
+excerpt: All the latest news from the Electron team and community.
+---
+<div id="blog" class="container">
+  <div class="row">
+    <div class="col-lg-10">
+      <h1 class="section-header">Blog Posts <a style="font-size: 13px; color: #666" class="pull-right" href="/blog/feed.xml"><i class="fa fa-rss"></i> subscribe</a></h1>
+      <p>Welcome to the official API Design Studio blog!  Read below to learn about the latest information about the studio, including new releases, tips and tricks, and other stuff we're dying to let you in on.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="post-list col-lg-10">
+      {% for post in site.posts %}
+      {% assign author = site.data.authors[post.author] %}
+      <div class="container blog-post-item">
+        <div class="row">
+          <div class="col-md-10">
+            <h1 class="title"><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></h1>
+            <span class="date"><i class="fa fa-calendar"></i> {{ post.date | date: "%b %-d, %Y" }}</span>
+            <span class="author"><i class="fa fa-user"></i> {{ author.name }}</span>
+            <span class="tags"><i class="fa fa-tags"></i> {{ post.categories | array_to_sentence_string }}</span>
+            <div class="excerpt">
+              {{ post.excerpt }}
+            </div>
+            <div class="read-more" style="margin-bottom: 20px">
+              <a href="{{ post.url | prepend: site.baseurl }}" style="font-size: 15px">(read more)</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

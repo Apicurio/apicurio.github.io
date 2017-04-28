@@ -1,0 +1,107 @@
+---
+permalink: /
+layout: page
+---
+
+{% assign releases = site.github.releases %}
+{% assign ctag = site.version | prepend: "v" %}
+{% for release in releases %}
+  {% if release.tag_name == ctag %}
+    {% assign latestRelease = release %}
+  {% endif %}
+{% endfor %}
+
+<div class="jumbotron">
+    <div class="tagline tagline-1">
+        <span>Design beautiful, functional APIs</span>
+    </div>
+    <div class="tagline tagline-2">
+        <span>with zero coding, using OpenAPI</span>
+    </div>
+</div>
+
+<div class="quick-info">
+
+    <div class="info info-with-divider">
+      <a href="{{ site.baseurl }}/download/" class="btn btn-default">
+          <span class="fa fa-fw fa-download"></span>
+          <span>Try It Now</span>
+      </a>
+    </div>
+
+    <div class="info info-with-divider">
+        <span class="info-label">Version:</span>
+        <span class="info-value">
+            <a href="{{ latestRelease.html_url }}">
+                <span class="name">{{ latestRelease.name }}</span>
+            </a>
+        </span>
+    </div>
+
+    <div class="info">
+        <span class="info-label"><span class="fa fa-fw fa-github"></span>Clone or fork</span>
+        <span class="info-value"><a href="{{ site.github_url }}">on GitHub</a></span>
+    </div>
+
+</div>
+
+
+<div class="features container">
+
+    <div class="row">
+        <div class="col-md-4 feature">
+            <div class="icon"><span class="fa fa-globe"></span></div>
+            <div class="title">Web Based</div>
+            <div class="summary">Design your <strong><a href="https://www.openapis.org/">OpenAPI</a></strong> based APIs in an <strong><a href="https://angular.io/">Angular2</a></strong> based web application - no installation necessary.</div>
+        </div>
+
+        <div class="col-md-4 feature">
+            <div class="icon"><span class="fa fa-code"></span></div>
+            <div class="title">Code-optional Design</div>
+            <div class="summary">Don't know the <strong><a href="https://www.openapis.org/">OpenAPI specification</a></strong> inside and out?  Now you don't have to!</div>
+        </div>
+
+        <div class="col-md-4 feature">
+            <div class="icon"><span class="fa fa-code-fork"></span></div>
+            <div class="title">Open Source</div>
+            <div class="summary">The API Design Studio is fully <strong><a href="https://opensource.org/">open source</a></strong>, hosted on <strong><a href="{{ site.github_url }}">GitHub</a></strong> and actively maintained.</div>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="screenshot-carousel" class="container carousel slide" data-ride="carousel" data-interval="3000">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        <li data-target="#screenshot-carousel" data-slide-to="0" class="active"></li>
+        <li data-target="#screenshot-carousel" data-slide-to="1"></li>
+        <li data-target="#screenshot-carousel" data-slide-to="2"></li>
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner">
+        <div class="item active">
+            <img src="{{ site.baseurl }}/images/carousel/carousel-1.png" alt="API Design Studio Dashboard">
+        </div>
+        <div class="item">
+            <img src="{{ site.baseurl }}/images/carousel/carousel-2.png" alt="API Designer">
+        </div>
+        <div class="item">
+            <img src="{{ site.baseurl }}/images/carousel/carousel-3.png" alt="API Designer">
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <a class="left carousel-control" href="#screenshot-carousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a class="right carousel-control" href="#screenshot-carousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+</div>
+<script>
+    $('.carousel').carousel({
+        interval: 5000
+    })
+</script>

@@ -1,0 +1,30 @@
+---
+permalink: /blog/feed.xml
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+        <title>{{ site.name | xml_escape }}</title>
+        <description>{% if site.description %}{{ site.description | xml_escape }}{% endif %}</description>
+        <link>{{ site.baseurl }}</link>
+        <atom:link href="{{ site.url }}/feed.xml" rel="self" type="application/rss+xml" />
+        {% for post in site.posts limit:30 %}
+        {% assign author = site.data.authors[post.author] %}
+        <item>
+            <title>{{ post.title | xml_escape }}</title>
+            {% if author.name %}
+            <dc:creator>{{ author.name | xml_escape }}</dc:creator>
+            <author>{{ author.email | xml_escape }}</author>
+            {% endif %}
+            <description>{{ post.content | xml_escape | relative_urls_to_absolute }}</description>
+            {% for category in post.categories %}
+            <category term="{{ category }}" />
+            {% endfor %}
+            <pubDate>{{ post.date | date: "%a, %d %b %Y %H:%M:%S %z" }}</pubDate>
+            <link>{{ post.url | prepend: site.baseurl | prepend: site.url }}</link>
+            <guid isPermaLink="true">{{ post.url | prepend: site.baseurl | prepend: site.url }}</guid>
+        </item>
+        {% endfor %}
+        <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
+    </channel>
+</rss>
