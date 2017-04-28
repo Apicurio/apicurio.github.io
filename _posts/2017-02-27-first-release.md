@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "Introducing API Design Studio!"
+title: "Introducing Apicurio Studio!"
 date:   2017-02-28 02:00:00
 author: eric_wittmann
 categories: introduction overview
 ---
 
-Hello everyone and welcome to our new API Design Studio project (brought to you
+Hello everyone and welcome to the new Apicurio Studio project (brought to you
 by the folks who created [apiman](http://www.apiman.io/)).  In this blog post
 I'll give an overview of the project, why it exists, and where we're going.
 Thanks for reading!
@@ -28,7 +28,7 @@ the solutions out there (open and closed source) are simply text editors with a
 live-preview pane.  These solutions are often very well done, but they do require
 that the user know how to write an API spec using the OpenAPI format.
 
-To address this (hopefully useful) problem space, we created the API Design 
+To address this (hopefully useful) problem space, we created the Apicurio
 Studio project.  This project is intended to provide a standalone API design 
 solution, allowing users to collaboratively create, manage, and edit OpenAPI
 definitions without necessarily needing to know the syntax/format.
@@ -41,7 +41,7 @@ interested.  As always, feedback is welcome - and the earlier in the process
 you can make a suggestion, the more likely it is to see the light of day (major
 changes/suggestions in particular).
 
-See the [API Design Studio](http://www.apidesigner.org) for more information
+See the [Apicurio Studio](http://www.apidesigner.org) for more information
 about how to download and evaluate the project.  It's already super easy to
 download and try!
 
