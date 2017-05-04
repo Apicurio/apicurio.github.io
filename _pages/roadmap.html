@@ -4,7 +4,7 @@ permalink: /roadmap/
 layout: page
 excerpt: Find out what's happening soon, and not-so-soon...
 ---
-{% assign releases = site.github.releases %}
+{% assign releases = site.data.releases %}
 
 <div class="container" id="roadmap">
     <div class="row summary">
@@ -68,7 +68,8 @@ excerpt: Find out what's happening soon, and not-so-soon...
                 <div class="col-lg-3 relnotes">
                     <h2>Release Notes</h2>
                     <div class="release-notes">
-                        {% for release in releases %}
+                        {% for rdata in releases %}
+                        {% assign release = rdata[1] %}
                         {% if release.name contains section.name %}
                         <div><a href="{{ release.html_url }}">{{ release.tag_name }}</a> <span class="label-small">({{ release.published_at | date:'%b %d, %Y' }})</span></div>
                         {% endif %}

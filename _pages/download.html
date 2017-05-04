@@ -4,19 +4,9 @@ permalink: /download/
 layout: page
 excerpt: Download the Apicurio Studio quickstart and get started fast!
 ---
-{% assign releases = site.github.releases %}
-{% assign ctag = site.version | prepend: "v" %}
-{% assign casset = (site.version | prepend: "apicurio-studio-") | append: "-quickstart.zip" %}
-{% for release in releases %}
-  {% if release.tag_name == ctag %}
-    {% assign therelease = release %}
-    {% for asset in release.assets %}
-      {% if asset.name == casset %}
-        {% assign theasset = asset %}
-      {% endif %}
-    {% endfor %}
-  {% endif %}
-{% endfor %}
+
+{% assign latestRelease = site.data.latestRelease %}
+{% assign theasset = site.data.latestRelease.assets[0] %}
 
 <div class="container" id="download">
     <div id="content" class="row">
@@ -30,7 +20,7 @@ excerpt: Download the Apicurio Studio quickstart and get started fast!
                 <h3>Download & Install</h3>
                 <ol>
                     <li>
-                        <a href="{{ theasset.browser_download_url }}">Apicurio Studio {{ therelease.tag_name }}</a>
+                        <a href="{{ theasset.browser_download_url }}">Apicurio Studio {{ latestRelease.tag_name }}</a>
                     </li>
                     <li>Unpack the Apicurio Studio Quickstart zip</li>
                 </ol>
