@@ -7,7 +7,7 @@ categories: release staging_server openshift
 ---
 
 I have a quick announcement that I'm happy to make.  Until today, if you wanted to try out
-the Apicurio Studio, you had to download the quickstart from the [Download page](http://www.apidesigner.org/download/).
+the Apicurio Studio, you had to download the quickstart from the [Download page](http://www.apicur.io/download/).
 Well no longer!
 
 As of today, every release of the project will also deploy the quickstart for that release

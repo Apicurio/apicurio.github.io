@@ -23,7 +23,7 @@ Details
 Exactly one month since our first Tech Preview release, we have our *final* 
 Tech Preview release.
 
-Have a [look at the roadmap](http://www.apidesigner.org/roadmap/) we've created 
+Have a [look at the roadmap](http://www.apicur.io/roadmap/) we've created 
 on the project site.  There you will see details about what we've already done,
 and what we have planned for the future.  Note that future plans may change or
 at least re-prioritize.  You can always check back from time to time if you're 
@@ -34,7 +34,7 @@ More information about this latest release can be found here:
 * [Studio Release v0.0.5](https://github.com/apicurio/apicurio-studio/releases/tag/v0.0.5)
 
 Or if you're looking for a quick "Getting Started" experience, you can go
-to the project website's [Download Page](http://www.apidesigner.org/download/).
+to the project website's [Download Page](http://www.apicur.io/download/).
 
 Another way to track our progress is to have a look at the GitHub "project" for
 the Beta release.  We use that project to track work we're doing and schedule

@@ -27,6 +27,6 @@ More information about this release can be found here:
 * [https://github.com/apicurio/apicurio-studio/releases/tag/v0.0.2](https://github.com/apicurio/apicurio-studio/releases/tag/v0.0.2)
 
 Or if you're looking for a quick "Getting Started" experience, you can go
-to the project website's [Download Page](http://www.apidesigner.org/download/).
+to the project website's [Download Page](http://www.apicur.io/download/).
 
 Happy Designing!

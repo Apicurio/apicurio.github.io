@@ -41,7 +41,7 @@ interested.  As always, feedback is welcome - and the earlier in the process
 you can make a suggestion, the more likely it is to see the light of day (major
 changes/suggestions in particular).
 
-See the [Apicurio Studio](http://www.apidesigner.org) for more information
+See the [Apicurio Studio](http://www.apicur.io) for more information
 about how to download and evaluate the project.  It's already super easy to
 download and try!
 
