@@ -4,7 +4,12 @@ permalink: /roadmap/
 layout: page
 excerpt: Find out what's happening soon, and not-so-soon...
 ---
-{% assign releases = site.data.releases %}
+{% capture releases %}
+  {% for release in site.data.releases %}
+    {{ release[0] }}
+  {% endfor %}
+{% endcapture %}
+{% assign sortedreleases = releases | split:' ' | sort %}
 
 <div class="container" id="roadmap">
     <div class="row summary">
@@ -68,8 +73,8 @@ excerpt: Find out what's happening soon, and not-so-soon...
                 <div class="col-lg-3 relnotes">
                     <h2>Release Notes</h2>
                     <div class="release-notes">
-                        {% for rdata in releases %}
-                        {% assign release = rdata[1] %}
+                        {% for rname in sortedreleases %}
+                        {% assign release = site.data.releases[rname] %}
                         {% if release.name contains section.name %}
                         <div><a href="{{ release.html_url }}">{{ release.tag_name }}</a> <span class="label-small">({{ release.published_at | date:'%b %d, %Y' }})</span></div>
                         {% endif %}
