@@ -10,38 +10,45 @@ excerpt: Download the Apicurio Studio quickstart and get started fast!
 
 <div class="container" id="download">
     <div id="content" class="row">
-        <div class="col-lg-10">
-            <h1 class="section-header">Getting Started (Quickstart)</h1>
-            <p>The easiest way to get started with the Apicurio Studio is to download the quickstart (based on Tomcat 8) and fire it up!  All you need is to have Java (version 8) installed, and you're ready to rock.</p>
-        </div>
+        <ul class="nav nav-pills" role="tablist">
+            <li role="presentation" class="active"><a href="#quickstart" aria-controls="quickstart" role="tab" data-toggle="tab">Quickstart</a></li>
+            <li role="presentation"><a href="#docker" aria-controls="docker" role="tab" data-toggle="tab">Docker</a></li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="quickstart">
 
-        <div class="container">
-            <div class="col-lg-7">
-                <h3>Download & Install</h3>
-                <ol>
-                    <li>
-                        <a href="{{ theasset.browser_download_url }}">Apicurio Studio {{ latestRelease.tag_name }}</a>
-                    </li>
-                    <li>Unpack the Apicurio Studio Quickstart zip</li>
-                </ol>
+                <div class="col-lg-10">
+                    <h1 class="section-header">Getting Started (Quickstart)</h1>
+                    <p>The easiest way to get started with the Apicurio Studio is to download the quickstart (based on Tomcat 8) and fire it up!  All you need is to have Java (version 8) installed, and you're ready to rock.</p>
+                </div>
 
-                <h3>Run</h3>
-                <ol>
-                    <li>Start Tomcat</li>
-                    <li>
-                        Point your browser at the <a href="http://localhost:8080/" rel="nofollow" target="_blank">Apicurio Studio</a> and login with your <strong>GitHub</strong> credentials!
-                    </li>
-                </ol>
+                <div class="container">
+                    <div class="col-lg-7">
+                        <h3>Download & Install</h3>
+                        <ol>
+                            <li>
+                                <a href="{{ theasset.browser_download_url }}">Apicurio Studio {{ latestRelease.tag_name }}</a>
+                            </li>
+                            <li>Unpack the Apicurio Studio Quickstart zip</li>
+                        </ol>
 
-                <h3>Configure</h3>
-                <p>
-                    The quickstart distribution comes pre-configured with everything you need to get started.  There is <strong>no additional configuration</strong> for you
-                    to perform!
-                </p>
-            </div>
-            <div class="col-lg-5">
-                <h3>Or simply try this...</h3>
-                <pre class="code-block">
+                        <h3>Run</h3>
+                        <ol start="3">
+                            <li>Start Tomcat</li>
+                            <li>
+                                Point your browser at <a href="http://localhost:8080/" rel="nofollow" target="_blank">Apicurio Studio</a> and login with your <strong>GitHub</strong> credentials!
+                            </li>
+                        </ol>
+
+                        <h3>Configure</h3>
+                        <p>
+                            The quickstart distribution comes pre-configured with everything you need to get started.  There is <strong>no additional configuration</strong> for you
+                            to perform!
+                        </p>
+                    </div>
+                    <div class="col-lg-5">
+                        <h3>Or simply try this...</h3>
+                        <pre class="code-block">
 mkdir ~/apicurio-studio-{{ site.version }}
 cd ~/apicurio-studio-{{ site.version }}
 curl -L {{ theasset.browser_download_url }} -o {{ theasset.name }}
@@ -49,7 +56,56 @@ unzip {{ theasset.name }}
 cd apicurio-studio-{{ site.version }}
 ./bin/catalina.sh run
 </pre>
+                    </div>
+                </div>
+
+            </div>
+            <div role="tabpanel" class="tab-pane" id="docker">
+
+                <div class="col-lg-10">
+                    <h1 class="section-header">Getting Started (Docker)</h1>
+                    <p>If you prefer to get started by using the Apicurio Studio docker image, that's cool too! Just follow the instructions in this section instead.</p>
+                </div>
+
+                <div class="container">
+                    <div class="col-lg-7">
+                        <h3>Download</h3>
+                        <ol>
+                            <li>
+                                Use docker to pull the <a href="https://hub.docker.com/r/apicurio/apicurio-studio/">Apicurio Studio</a> docker image: <strong>apicurio/apicurio-studio</strong>
+                            </li>
+                        </ol>
+
+                        <h3>Run</h3>
+                        <ol start="2">
+                            <li>
+                                Use docker to run the downloaded image
+                                <p>
+                                    <pre>docker run -it -p 8080:8080 apicurio/apicurio-studio</pre>
+                                </p>
+                            </li>
+                            <li>
+                                Point your browser at <a href="http://localhost:8080/" rel="nofollow" target="_blank">Apicurio Studio</a> and login with your <strong>GitHub</strong> credentials!
+                            </li>
+                        </ol>
+
+                        <h3>Configure</h3>
+                        <p>
+                            Apicurio Studio comes pre-configured with everything you need to get started.  There is <strong>no additional configuration</strong> for you
+                            to perform!
+                        </p>
+                    </div>
+                    <div class="col-lg-5">
+                        <h3>Or simply try this...</h3>
+                        <pre class="code-block">
+docker pull apicurio/apicurio-studio:latest
+docker run -it -p 8080:8080 -p 8443:8443 apicurio/apicurio-studio:latest
+</pre>
+                    </div>
+                </div>
+
             </div>
         </div>
+
     </div>
 </div>
