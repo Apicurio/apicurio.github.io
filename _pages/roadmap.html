@@ -75,7 +75,7 @@ excerpt: Find out what's happening soon, and not-so-soon...
                     <div class="release-notes">
                         {% for rname in sortedreleases %}
                         {% assign release = site.data.releases[rname] %}
-                        {% if release.name contains section.name %}
+                        {% if release.tag_name contains section.version %}
                         <div><a href="{{ release.html_url }}">{{ release.tag_name }}</a> <span class="label-small">({{ release.published_at | date:'%b %d, %Y' }})</span></div>
                         {% endif %}
                         {% endfor %}
