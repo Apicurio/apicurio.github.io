@@ -5,9 +5,9 @@ layout: page
 excerpt: Find out what's happening soon, and not-so-soon...
 ---
 {%- capture releases -%}
-  {%- for release in site.data.releases -%}
+  {% for release in site.data.releases %}
     {{ release[0] }}
-  {%- endfor -%}
+  {% endfor %}
 {%- endcapture -%}
 {%- assign sortedreleases = releases | split:' ' | sort -%}
 
@@ -32,10 +32,10 @@ excerpt: Find out what's happening soon, and not-so-soon...
     <div id="content" class="row tbd">
 
         {%- for section in site.data.roadmap -%}
-        <div class="section col-lg-12 {%- if section.released -%}released{%- endif -%}">
+        <div class="section col-lg-12 {% if section.released %}released{% endif %}">
             <div class="section-header">
                 <h2 class="section-label">
-                    <a data-toggle="collapse" class="{%- if section.current == false -%}collapsed{%- endif -%}" data-target="#{{ section.id }}-body">{{ section.name }}</a>
+                    <a data-toggle="collapse" class="{% if section.current == false %}collapsed{% endif %}" data-target="#{{ section.id }}-body">{{ section.name }}</a>
                     {%- if section.current -%}
                     <span class="current-series">(current release series)</span>
                     {%- endif -%}
@@ -44,7 +44,7 @@ excerpt: Find out what's happening soon, and not-so-soon...
                     {%- endif -%}
                 </h2>
             </div>
-            <div class="section-body collapse {%- if section.released != true -%}in{%- endif -%} container" id="{{ section.id }}-body">
+            <div class="section-body collapse {% if section.released != true %}in{% endif %} container" id="{{ section.id }}-body">
                 <div class="col-lg-9">
                     <ul class="release">
                         <div class="headers">
@@ -58,7 +58,7 @@ excerpt: Find out what's happening soon, and not-so-soon...
                             <ul>
                             {%- for task in category.tasks -%}
                                 <li>
-                                    <span class="{%- if task.released -%}completed{%- endif -%}">{{ task.name }}</span>
+                                    <span class="{% if task.released %}completed{% endif %}">{{ task.name }}</span>
                                     {%- if task.released -%}
                                     <span class="in-version">{{ task.released }}</span>
                                     {%- endif -%}
