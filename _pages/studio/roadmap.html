@@ -7,20 +7,12 @@ excerpt: Find out what's happening soon, and not-so-soon...
 
 {%- include navtabs.html -%}
 
-{%- capture releases -%}
-  {% for release in site.data.releases %}
-    {{ release[0] }}
-  {% endfor %}
-{%- endcapture -%}
-{%- assign sortedreleases = releases | split:' ' | sort -%}
-
 <div class="container projpage">
     <div class="row">
         <div class="col-md-3">
             {%- include studio/_projnav.html -%}
         </div>
         <div class="col-md-9">
-
             <div id="roadmap">
                 <div class="row summary">
                     <div class="col-lg-10">
@@ -41,7 +33,7 @@ excerpt: Find out what's happening soon, and not-so-soon...
                 </div>
                 <div id="content" class="row tbd">
 
-                    {%- for section in site.data.roadmap -%}
+                    {%- for section in site.data.studio.roadmap -%}
                     <div class="section col-lg-12 {% if section.released %}released{% endif %}">
                         <div class="section-header">
                             <h2 class="section-label">

@@ -5,8 +5,9 @@ layout: page
 excerpt: Download the Apicurio Studio quickstart and get started fast!
 ---
 
-{% assign latestRelease = site.data.latestRelease %}
-{% assign theasset = site.data.latestRelease.assets[0] %}
+{% assign latestRelease = site.data.studio.latestRelease %}
+{% assign version = site.data.studio.latestRelease.tag_name | remove_first: "v" %}
+{% assign theasset = site.data.studio.latestRelease.assets[0] %}
 
 {%- include navtabs.html -%}
 
@@ -51,11 +52,11 @@ excerpt: Download the Apicurio Studio quickstart and get started fast!
                         <div class="col-lg-5">
                             <h3>Or try this...</h3>
                             <pre class="code-block">
-mkdir ~/apicurio-studio-{{ site.version }}
-cd ~/apicurio-studio-{{ site.version }}
+mkdir ~/apicurio-studio-{{ version }}
+cd ~/apicurio-studio-{{ version }}
 curl -L {{ theasset.browser_download_url }} -o {{ theasset.name }}
 unzip {{ theasset.name }}
-cd apicurio-studio-{{ site.version }}
+cd apicurio-studio-{{ version }}
 ./bin/standalone.sh -c standalone-apicurio.xml
 </pre>
                         </div>
