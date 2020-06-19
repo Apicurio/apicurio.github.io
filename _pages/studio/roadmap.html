@@ -4,6 +4,9 @@ permalink: /studio/roadmap/
 layout: page
 excerpt: Find out what's happening soon, and not-so-soon...
 ---
+
+{%- include navtabs.html -%}
+
 {%- capture releases -%}
   {% for release in site.data.releases %}
     {{ release[0] }}
@@ -11,80 +14,78 @@ excerpt: Find out what's happening soon, and not-so-soon...
 {%- endcapture -%}
 {%- assign sortedreleases = releases | split:' ' | sort -%}
 
-<div class="container" id="roadmap">
-    <div class="row summary">
-        <div class="col-lg-10">
-            <h1 class="section-header">Roadmap</h1>
-            <p>
-                Here you will find a very high level roadmap for the Apicurio Studio project. The details are subject to change,
-                but this page can provide a basic sense of the project's priorities and releases. Additional information can typically
-                be found on <a href="{{ site.github_url }}/issues">GitHub</a>.
-            </p>
-            <p>
-                The intention is to release new versions of the Apicurio Studio very frequently.  This roadmap represents a high
-                level set of features that make up a given release series (for example, <strong>Beta</strong>.  The list of tasks
-                for each release series is an indication of the work to be done in that series, but not an implication of the order
-                in which that work will be done.  Finally, we will not wait until <strong>all</strong> of the tasks are complete,
-                but will instead release iteratively as soon as useful functionality is completed.
-            </p>
+<div class="container projpage">
+    <div class="row">
+        <div class="col-md-3">
+            {%- include studio/_projnav.html -%}
         </div>
-    </div>
-    <div id="content" class="row tbd">
+        <div class="col-md-9">
 
-        {%- for section in site.data.roadmap -%}
-        <div class="section col-lg-12 {% if section.released %}released{% endif %}">
-            <div class="section-header">
-                <h2 class="section-label">
-                    <a data-toggle="collapse" class="{% if section.current == false %}collapsed{% endif %}" data-target="#{{ section.id }}-body">{{ section.name }}</a>
-                    {%- if section.current -%}
-                    <span class="current-series">(current release series)</span>
-                    {%- endif -%}
-                    {%- if section.released -%}
-                    <span class="released-series">[released]</span>
-                    {%- endif -%}
-                </h2>
-            </div>
-            <div class="section-body collapse {% if section.released != true %}in{% endif %} container" id="{{ section.id }}-body">
-                <div class="col-lg-9">
-                    <ul class="release">
-                        <div class="headers">
-                            <span class="header">Feature</span>
-                            <span class="header pull-right">Released In</span>
-                        </div>
-
-                        {%- for category in section.categories -%}
-                        <li>
-                            <span>{{ category.name }}</span>
-                            <ul>
-                            {%- for task in category.tasks -%}
-                                <li>
-                                    <span class="{% if task.released %}completed{% endif %}">{{ task.name }}</span>
-                                    {%- if task.released -%}
-                                    <span class="in-version">{{ task.released }}</span>
-                                    {%- endif -%}
-                                </li>
-                            {%- endfor -%}
-                            </ul>
-                        </li>
-                        {%- endfor -%}
-                    </ul>
-                </div>
-
-                <div class="col-lg-3 relnotes">
-                    <h2>Release Notes</h2>
-                    <div class="release-notes">
-                        {%- for rname in sortedreleases -%}
-                        {%- assign release = site.data.releases[rname] -%}
-                        {%- if release.tag_name contains section.version -%}
-                        <div><a href="{{ release.html_url }}">{{ release.tag_name }}</a> <span class="label-small">({{ release.published_at | date:'%b %d, %Y' }})</span></div>
-                        {%- endif -%}
-                        {%- endfor -%}
+            <div id="roadmap">
+                <div class="row summary">
+                    <div class="col-lg-10">
+                        <h1 class="section-header">Roadmap</h1>
+                        <p>
+                            Here you will find a very high level roadmap for the Apicurio Studio project. The details are subject to change,
+                            but this page can provide a basic sense of the project's priorities and releases. Additional information can typically
+                            be found on <a href="{{ site.github_url }}/issues">GitHub</a>.
+                        </p>
+                        <p>
+                            The intention is to release new versions of the Apicurio Studio very frequently.  This roadmap represents a high
+                            level set of features that make up a given release series (for example, <strong>Beta</strong>.  The list of tasks
+                            for each release series is an indication of the work to be done in that series, but not an implication of the order
+                            in which that work will be done.  Finally, we will not wait until <strong>all</strong> of the tasks are complete,
+                            but will instead release iteratively as soon as useful functionality is completed.
+                        </p>
                     </div>
                 </div>
+                <div id="content" class="row tbd">
 
+                    {%- for section in site.data.roadmap -%}
+                    <div class="section col-lg-12 {% if section.released %}released{% endif %}">
+                        <div class="section-header">
+                            <h2 class="section-label">
+                                <a data-toggle="collapse" class="{% if section.current == false %}collapsed{% endif %}" data-target="#{{ section.id }}-body">{{ section.name }}</a>
+                                {%- if section.current -%}
+                                <span class="current-series">(current release series)</span>
+                                {%- endif -%}
+                                {%- if section.released -%}
+                                <span class="released-series">[released]</span>
+                                {%- endif -%}
+                            </h2>
+                        </div>
+                        <div class="section-body collapse {% if section.released != true %}in{% endif %}" id="{{ section.id }}-body">
+                            <div class="col-lg-12">
+                                <ul class="release">
+                                    <div class="headers">
+                                        <span class="header">Feature</span>
+                                        <span class="header pull-right">Released In</span>
+                                    </div>
+
+                                    {%- for category in section.categories -%}
+                                    <li>
+                                        <span>{{ category.name }}</span>
+                                        <ul>
+                                            {%- for task in category.tasks -%}
+                                            <li>
+                                                <span class="{% if task.released %}completed{% endif %}">{{ task.name }}</span>
+                                                {%- if task.released -%}
+                                                <span class="in-version">{{ task.released }}</span>
+                                                {%- endif -%}
+                                            </li>
+                                            {%- endfor -%}
+                                        </ul>
+                                    </li>
+                                    {%- endfor -%}
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                    {%- endfor -%}
+
+                </div>
             </div>
         </div>
-        {%- endfor -%}
-
     </div>
 </div>
