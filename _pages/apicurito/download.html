@@ -1,0 +1,59 @@
+---
+title: Download
+permalink: /apicurito/download/
+layout: page
+excerpt: Use docker to get started with Apicurito fast!
+---
+
+{% assign latestRelease = site.data.apicurito.latestRelease %}
+{% assign version = site.data.apicurito.latestRelease.tag_name | remove_first: "v" %}
+{% assign theasset = site.data.apicurito.latestRelease.assets[0] %}
+
+{%- include navtabs.html -%}
+
+<div class="container projpage">
+    <div class="row">
+        <div class="col-md-3">
+            {%- include apicurito/_projnav.html -%}
+        </div>
+        <div class="col-md-9">
+            <div id="download">
+                <div id="content" class="row">
+                    <div class="col-lg-10">
+                        <h1 class="section-header">Getting Started (Docker)</h1>
+                        <p>The easiest way to get started with Apicurito is by using Docker to quickly start up an instance, then point your browser to it.</p>
+                    </div>
+
+                    <div class="">
+                        <div class="col-lg-9">
+                            <h3>Pull the image</h3>
+                            <ol>
+                                <li>
+                                    Pull the <a href="{{ site.docker_hub_url }}/apicurito-ui">apicurito-ui</a> docker image from docker hub.
+                                </li>
+                            </ol>
+<pre class="code-block">
+docker pull apicurio/apicurito-ui:{{ version }}
+</pre>
+
+                            <h3>Run the image</h3>
+                            <ol start="2">
+                                <li>Run the <code>apicurito-ui</code> docker image</li>
+                            </ol>
+<pre class="code-block">
+docker run -it -p 8080:8080 apicurio/apicurito-:{{ version }}
+</pre>
+
+                            <h3>Open Apicurito in your browser</h3>
+                            <ol start="2">
+                                <li>Open your browser to <a href="http://localhost:8080">http://localhost:8080</a></li>
+                            </ol>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
