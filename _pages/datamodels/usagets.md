@@ -1,7 +1,7 @@
 ---
 layout: dm_usage
-title: How To
-permalink: /datamodels/usagejs/
+title: "Data Models : Typescript Usage"
+permalink: /datamodels/usagets/
 excerpt: Learn how to use the Apicurio Data Models library
 ---
 
