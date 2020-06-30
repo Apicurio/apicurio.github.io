@@ -3,7 +3,7 @@ title: "Using a Local Installation of GitLab"
 layout: guide
 permalink: /studio/docs/using-a-local-installation-of-gitlab
 slug: "using-a-local-installation-of-gitlab"
-excerpt: "This article describes how to configure Apicurio, Keycloak, and (local) GitLab so that all three work together properly (including authentication and account linking)."
+excerpt: "This article describes how to configure Apicurio Studio, Keycloak, and (local) GitLab so that all three work together properly (including authentication and account linking)."
 hidden: false
 guide: true
 createdAt: "2018-08-29T18:16:36.851Z"

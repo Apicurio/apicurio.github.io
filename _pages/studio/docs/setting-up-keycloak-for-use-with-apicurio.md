@@ -1,9 +1,9 @@
 ---
-title: "Setting up Keycloak for use with Apicurio"
+title: "Setting up Keycloak for use with Apicurio Studio"
 layout: guide
 permalink: /studio/docs/setting-up-keycloak-for-use-with-apicurio
 slug: "setting-up-keycloak-for-use-with-apicurio"
-excerpt: "This article describes how to use your own KeyCloak server to provide the authentication layer to Apicurio."
+excerpt: "This article describes how to use your own KeyCloak server to provide the authentication layer to Apicurio Studio."
 hidden: false
 guide: true
 createdAt: "2018-04-02T11:37:10.694Z"
