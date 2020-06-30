@@ -1,0 +1,45 @@
+---
+title: "Studio : Documentation"
+permalink: /studio/docs/
+layout: page
+excerpt: Read all documentation for Apicurio Studio.
+---
+
+{% assign latestRelease = site.data.studio.latestRelease %}
+{% assign version = site.data.studio.latestRelease.tag_name | remove_first: "v" %}
+
+{%- include navtabs.html -%}
+
+<div class="container projpage">
+    <div class="row">
+        <div class="col-md-3">
+            {%- include studio/_projnav.html -%}
+        </div>
+        <div class="col-md-9">
+            <div id="guides">
+                <div id="content" class="row">
+                    <div class="col-lg-10">
+                        <h1 class="section-header">Apicurio Studio Documentation/Guides</h1>
+                        <p>Select a guide from the list below to learn more about a specific Apicurio Studio topic.</p>
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="guide-list">
+                            {% for page in site.pages %}
+                                {% if page.guide == true %}
+                                    <div class="guide-list-item">
+                                        <div class="guide-list-item-title">
+                                            <a href="{{ page.url }}"><span>{{ page.title }}</span></a>
+                                        </div>
+                                        <div class="guide-list-item-excerpt">
+                                            {{ page.excerpt }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
