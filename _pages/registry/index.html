@@ -51,19 +51,79 @@ layout: page
             <div class="info">
                 <div class="row summary">
                     <div class="col-lg-10">
-                        <h1 class="section-header">What is a Registry?</h1>
+                        <h1 class="section-header first">What is a Registry?</h1>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            In the context of Apicurio, a registry is a runtime system (server) that stores a
+                            specific set of artifacts (files).  At its core, a registry provides the ability to add,
+                            update, and remove the artifacts from the store, typically via a remote API of some kind
+                            (often a REST API).
                         </p>
                     </div>
                 </div>
                 <div class="row summary">
                     <div class="col-lg-10">
                         <h1 class="section-header">Use Cases</h1>
+                        <h2>API Registry</h2>
                         <p>
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+                            The key use-case for the Apicurio community, an API Registry is a system that allows users
+                            to register their API designs (e.g. OpenAPI or AsyncAPI files) so that potential API
+                            consumers can do the following:
                         </p>
+                        <ul>
+                            <li>Browse/search the list of APIs available in production</li>
+                            <li>View details about a single available API</li>
+                            <li>Learn how to use an API (via generated documentation)</li>
+                            <li>Generate Client SDKs for an API</li>
+                        </ul>
+                        <h2>Schema Registry</h2>
+                        <p>
+                            In the messaging and event streaming world, data that are published to topics and queues
+                            often must be serialized or validated using a Schema (e.g. Apache Avro, JSON Schema, or
+                            Google protocol buffers).  Schemas can be packaged in each application, but it is often a
+                            better architectural pattern to instead register them in an external system and then
+                            referenced from each application.  This allows the following:
+                        </p>
+                        <ul>
+                            <li>Decoupling of schemas from producers and consumers</li>
+                            <li>Potential to upgrade producers without upgrading consumers</li>
+                            <li>Central location to track all Schemas used in production</li>
+                            <li>Document the data format required for each topic/queue</li>
+                            <li>Centralized control of data format (schema) evolution</li>
+                        </ul>
                     </div>
+                </div>
+                <div class="row summary">
+                    <div class="col-lg-10">
+                        <h1 class="section-header">Apicurio Registry - Key Features</h1>
+                        <div class="key-feature">
+                            <div class="name">Storage/management of several types of artifacts</div>
+                            <div class="description">
+                                The registry supports adding, removing, and updating the following types of artifacts:
+                                <b>OpenAPI</b>,
+                                <b>AsyncAPI</b>,
+                                <b>GraphQL</b>,
+                                <b>Apache Avro</b>,
+                                <b>Google protocol buffers</b>,
+                                <b>JSON Schema</b>,
+                                <b>Kafka Connect schema</b>,
+                                <b>WSDL</b>,
+                                <b>XML Schema (XSD)</b>
+                            </div>
+                        </div>
+                        <div class="key-feature">
+                            <div class="name">Configurable content rules</div>
+                            <div class="description">
+                                Content evolution (adding and updating artifact content) can be controlled by enabling
+                                content rules, including <b>Validity</b> and <b>Compatibility</b>.
+                            </div>
+                        </div>
+                        <div class="key-feature">
+                            <div class="name">Multiple storage options</div>
+                            <div class="description">
+                                The registry can be configured to store data in various back-end storage systems
+                                depending on use-case, including Kafka, PostgreSQL, and Infinispan (embedded).
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
