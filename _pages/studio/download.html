@@ -1,0 +1,77 @@
+---
+title: "Studio : Download"
+permalink: /studio/download/
+layout: page
+excerpt: Download the Apicurio Studio quickstart and get started fast!
+---
+
+{% assign latestRelease = site.data.studio.latestRelease %}
+{% assign version = site.data.studio.latestRelease.tag_name | remove_first: "v" %}
+{% assign theasset = site.data.studio.latestRelease.assets[0] %}
+
+{%- include navtabs.html -%}
+
+<div class="container projpage">
+    <div class="row">
+        <div class="col-md-3">
+            {%- include studio/_projnav.html -%}
+        </div>
+        <div class="col-md-9">
+            <div id="download">
+                <div id="content" class="row">
+                    <div class="col-lg-10">
+                        <h1 class="section-header first">Getting Started (Quickstart)</h1>
+                        <p>The easiest way to get started with the Apicurio Studio is to download the quickstart (based on Wildfly) and fire it up!  All you need is to have Java (version 8) installed, and you're ready to rock.</p>
+                    </div>
+
+                    <div class="">
+                        <div class="col-lg-7">
+                            <h3>Download & Install</h3>
+                            <ol>
+                                <li>
+                                    <a href="{{ theasset.browser_download_url }}">Apicurio Studio {{ latestRelease.tag_name }}</a>
+                                </li>
+                                <li>Unpack the Apicurio Studio Quickstart zip</li>
+                            </ol>
+
+                            <h3>Configure</h3>
+                            <p>
+                                The Apicurio Studio quickstart is designed to work automatically if you download and run
+                                it on your local machine.  If you wish to run it on a different machine, or put it into
+                                production, please see our documentation.
+                            </p>
+
+                            <h3>Run</h3>
+                            <ol start="3">
+                                <li>Start WildFly</li>
+                                <li>
+                                    Point your browser at <a href="https://localhost:8443/studio" rel="nofollow" target="_blank">Apicurio Studio</a> and log in (or register a new account)!
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="col-lg-5">
+                            <h3>Or try this...</h3>
+                            <pre class="code-block">
+mkdir ~/apicurio-studio-{{ version }}
+cd ~/apicurio-studio-{{ version }}
+curl -L {{ theasset.browser_download_url }} -o {{ theasset.name }}
+unzip {{ theasset.name }}
+cd apicurio-studio-{{ version }}
+./bin/standalone.sh -c standalone-apicurio.xml
+</pre>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-10 docker-note">
+                        <div class="alert alert-info">
+                            <span class="pficon pficon-info"></span>
+                            <strong>Note to Docker users!</strong> You can really quickly get Apicurio up and running by using
+                            our <a href="https://github.com/Apicurio/apicurio-studio/blob/master/distro/docker-compose/Readme.md">docker compose script</a>.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

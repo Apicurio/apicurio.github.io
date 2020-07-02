@@ -1,0 +1,135 @@
+---
+title: "Data Models"
+permalink: /datamodels/
+layout: page
+---
+
+{% assign latestRelease = site.data.datamodels.latestRelease %}
+
+{%- include navtabs.html -%}
+
+<div class="jumbotron datamodels">
+    <div class="tagline tagline-1">
+        <span>Data modeling library</span>
+    </div>
+    <div class="tagline tagline-2">
+        <span>for OpenAPI and AsyncAPI</span>
+    </div>
+</div>
+
+<div class="quick-info">
+
+    <div class="info info-with-divider">
+        <span class="info-label">Version:</span>
+        <span class="info-value">
+            <a href="{{ latestRelease.html_url }}">
+                <span class="name">{{ latestRelease.name }}</span>
+            </a>
+        </span>
+    </div>
+
+    <div class="info">
+        <span class="info-label"><span class="fa fa-fw fa-github"></span>Clone or fork</span>
+        <span class="info-value"><a href="{{ site.github_datamodels_url }}">on GitHub</a></span>
+    </div>
+
+</div>
+
+<div class="container projpage">
+    <div class="row">
+        <div class="col-md-3">
+            {%- include datamodels/_projnav.html -%}
+        </div>
+        <div class="col-md-9">
+            <div class="info">
+                <div class="row summary">
+                    <div class="col-lg-10">
+                        <h1 class="section-header first">What is this library?</h1>
+                        <p>
+                            The Apicurio Data Models library is a Java and Typescript compatible library that provides
+                            reading, writing, analysis, modification, and validation of OpenAPI and AsyncAPI documents.
+                            Use this library if you need to support either OpenAPI or AsyncAPI specifications in your
+                            own projects.
+                        </p>
+                    </div>
+                </div>
+                <div class="row summary">
+                    <div class="col-lg-10">
+                        <h1 class="section-header first">Key Features</h1>
+                        <div class="key-feature">
+                            <div class="name">Parsing into a formal model</div>
+                            <div class="description">
+                                OpenAPI and AsyncAPI content (typically JSON or YAML content) can be parsed into a
+                                formal, structured (tree-like) data model, much like XML or other structured content.
+                            </div>
+                        </div>
+                        <div class="key-feature">
+                            <div class="name">Visitor + Traverser patterns</div>
+                            <div class="description">
+                                Full support for the <a href="https://en.wikipedia.org/wiki/Visitor_pattern">Visitor design pattern</a>,
+                                for both a single <em>Node</em> in the model and also a traversal (up or down) of the
+                                full (or partial) document.
+                            </div>
+                        </div>
+                        <div class="key-feature">
+                            <div class="name">Validation of the model</div>
+                            <div class="description">
+                                Validate all, or only part, of the data model against all of the rules defined in the
+                                OpenAPI/AsyncAPI specifications.
+                            </div>
+                        </div>
+                        <div class="key-feature">
+                            <div class="name">Supports both Java and Typescript</div>
+                            <div class="description">
+                                Use this library in your Java, node.js, or browser based applications!  It works the
+                                same no matter how you use it.
+                            </div>
+                        </div>
+                        <div class="key-feature">
+                            <div class="name">Convert OpenAPI 2.0 to OpenAPI 3.0</div>
+                            <div class="description">
+                                Includes a built-in transformer for easily converting older "Swagger" documents into the
+                                newer OpenAPI 3 format.
+                            </div>
+                        </div>
+                        <div class="key-feature">
+                            <div class="name">Robust $ref support</div>
+                            <div class="description">
+                                Provide your own $ref resolver so that the library can properly analyze/validate
+                                documents with external references.  Also included is a built-in "dereferencer" which
+                                can transform a document with external references into one without any (by internalizing
+                                all of the refs)!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row summary">
+                    <div class="col-lg-10">
+                        <h1 class="section-header">Java <b>and</b> Typescript?  What?!</h1>
+                        <p>
+                            The Apicurio Data Models library is written in Java and then transpiled to Typescript using
+                            the very nice <a href="http://www.jsweet.org/">JSweet Utility</a>.  This results in the
+                            library being released both as a standard Maven library (and released into Maven Central)
+                            as well as a javascript module released into <a href="https://www.npmjs.com/package/apicurio-data-models">npmjs.com</a>.
+                        </p>
+                        <p>
+                            The JSweet tool does a great job with the transpilation, allowing us to have a very thin
+                            "compatibility" layer (check out the
+                            <a href="https://github.com/Apicurio/apicurio-data-models/tree/master/src/main/java/io/apicurio/datamodels/compat">io.apicurio.datamodels.compat</a>
+                            Java package) to isolate functionality that cannot be transpiled from Java to Typescript.
+                            In addition, we have a very comprehensive set of unit tests that are designed to run in both
+                            the Java and Typescript builds.  This is critical as it allows us to be very confident
+                            that the library behaves the same in both runtime environments.
+                        </p>
+                        <p>
+                            The motivation for writing this library in this way is because the Apicurio Studio project
+                            requires this data modeling functionality in both the Java back-end layer <b>and</b> the
+                            browser front-end layer.  As a result, this library is actually heavily used in both forms
+                            and is not just a novelty.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

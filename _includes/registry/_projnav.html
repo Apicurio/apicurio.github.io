@@ -1,0 +1,42 @@
+{% assign nav_segments = page.url | split: "/" %}
+{% assign nav_segment = nav_segments[2] %}
+<ul class="projnav nav">
+    <li class="{% if nav_segment == blank %}active{% endif %}">
+        <a href="{{ site.baseurl }}/registry">
+            <span>About</span>
+            <i class="fa fa-home" aria-hidden="true"></i>
+        </a>
+    </li>
+    <li class="{% if nav_segment == 'download' %}active{% endif %}">
+        <a href="{{ site.baseurl }}/registry/download">
+            <span>Download</span>
+            <i class="fa fa-download" aria-hidden="true"></i>
+        </a>
+    </li>
+    <li class="last {% if nav_segment == 'docs' %}active{% endif %}">
+        <a href="{{ site.baseurl }}/registry/docs">
+            <span>Documentation</span>
+            <i class="fa fa-book" aria-hidden="true"></i>
+        </a>
+    </li>
+</ul>
+<ul class="projnav nav">
+    <li>
+        <a href="{{ site.github_registry_url }}">
+            <span>Source Code</span>
+            <i class="fa fa-github" aria-hidden="true"></i>
+        </a>
+    </li>
+    <li>
+        <a href="{{ site.github_registry_url }}/issues">
+            <span>Issue Tracker</span>
+            <i class="fa fa-bug" aria-hidden="true"></i>
+        </a>
+    </li>
+    <li class="last">
+        <a href="https://hub.docker.com/search?q=apicurio%2Fapicurio-registry&type=image">
+            <span>Docker Images</span>
+            <i class="fa fa-th" aria-hidden="true"></i>
+        </a>
+    </li>
+</ul>
