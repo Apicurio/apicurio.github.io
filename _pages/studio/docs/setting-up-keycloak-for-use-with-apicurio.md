@@ -38,7 +38,8 @@ curl https://downloads.jboss.org/keycloak/7.0.1/keycloak-7.0.1.zip -o keycloak-7
 Once you have Keycloak downloaded and installed, you can start it up using the following command:
 
 ```shell
-cd ~/keycloak/keycloak-7.0.1\n./bin/standalone.sh
+cd ~/keycloak/keycloak-7.0.1
+./bin/standalone.sh
 ```
 
 Keycloak should start up cleanly, usually in about 10 or 20 seconds.  If it starts up normally you should see a line like this at the end of the output:
