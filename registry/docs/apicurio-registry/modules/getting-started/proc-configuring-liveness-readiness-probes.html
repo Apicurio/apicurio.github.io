@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Configuring Apicurio Registry health checks on OpenShift :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/modules/getting-started/proc-configuring-liveness-readiness-probes.html">
+    <meta name="generator" content="Antora 2.3.3">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div id="rhbar">
+    <a class="jbdevlogo" href="https://www.jboss.org/projects/about" rel="nofollow" target="_blank"></a>
+    <a class="rhlogo" href="https://www.redhat.com/" rel="nofollow" target="_blank"></a>
+</div>
+<div class="masthead-header">
+
+    <a href="" target="_blank" class="github-corner" aria-label="View source on Github">
+        <svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    </a>
+
+    <div class="masthead-logo"></div>
+    <div class="masthead-brand"><a href="/">Apicurio Studio</a></div>
+    <div class="masthead-menu">
+        <ul>
+            <li><a href="/contact/">Contact</a></li>
+        </ul>
+    </div>
+</div>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../index.html"> Getting Started</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../index.html">Apicurio Registry</a></li>
+    <li><a href="proc-configuring-liveness-readiness-probes.html">Configuring Apicurio Registry health checks on OpenShift</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="file:///work/apicurio-registry/.antora/modules/ROOT/pages/modules/getting-started/proc-configuring-liveness-readiness-probes.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Configuring Apicurio Registry health checks on OpenShift</h1>
+<div class="paragraph">
+<p>You can configure optional environment variables for liveness and readiness probes to monitor the health of the Apicurio Registry server on OpenShift:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>Liveness probes</em> test if the application can make progress. If the application cannot make progress, OpenShift automatically restarts the failing Pod.</p>
+</li>
+<li>
+<p><em>Readiness probes</em> test if the application is ready to process requests. If the application is not ready, it can become overwhelmed by requests, and OpenShift stops sending requests for the time that the probe fails. If other Pods are OK, they continue to receive requests.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The default values of the liveness and readiness environment variables are designed for most cases and should only be changed if required by your environment. Any changes to the defaults depend on your hardware, network, and amount of data stored. These values should be kept as low as possible to avoid unnecessary overhead.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have an OpenShift cluster with cluster administrator access.</p>
+</li>
+<li>
+<p>You must have already installed Apicurio Registry. See <a href="#installing-registry-operatorhub">[installing-registry-operatorhub]</a>.</p>
+</li>
+<li>
+<p>You must have already installed and configured your chosen Apicurio Registry storage in {kafka-streams}, embedded Infinispan, or PostgreSQL.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the OpenShift Container Platform web console, log in using an account with cluster administrator privileges.</p>
+</li>
+<li>
+<p>Click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong>.</p>
+</li>
+<li>
+<p>On the <strong>ApicurioRegistry</strong> tab, click the Operator custom resource for your deployment, for example, <strong>example-apicurioregistry</strong>.</p>
+</li>
+<li>
+<p>In the main overview page, find the <strong>Deployment Name</strong> section and the corresponding <code>DeploymentConfig</code> name for your Apicurio Registry deployment, for example, <strong>example-apicurioregistry</strong>.</p>
+</li>
+<li>
+<p>In the left navigation menu, click <strong>Workloads</strong> &gt; <strong>Deployment Configs</strong>, and select your <code>DeploymentConfig</code> name.</p>
+</li>
+<li>
+<p>Click the <strong>Environment</strong> tab, and enter your environment variables in the <strong>Single values env</strong> section, for example:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>NAME</strong>: <code>LIVENESS_STATUS_RESET</code></p>
+</li>
+<li>
+<p><strong>VALUE</strong>: <code>350</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Save</strong> at the bottom.</p>
+<div class="paragraph">
+<p>Alternatively, you can perform these steps using the OpenShift <code>oc</code> command. For more details, see the <a href="https://docs.openshift.com/container-platform/{registry-ocp-version}/cli_reference/openshift_cli/getting-started-cli.html">OpenShift CLI documentation</a>.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#registry-liveness-env-vars">[registry-liveness-env-vars]</a></p>
+</li>
+<li>
+<p><a href="https://docs.openshift.com/container-platform/{registry-ocp-version}/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
+</li>
+</ul>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2020 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
