@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Installing Apicurio Registry on OpenShift :: Apicurio Registry</title>
-    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/assemblies/getting-started/assembly-installing-the-registry-openshift.html">
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/getting-started/assembly-installing-the-registry-openshift.html">
     <meta name="generator" content="Antora 2.3.3">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="../../assets/css/site.css">
     <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
     <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
   </head>
@@ -36,12 +36,33 @@
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
   <nav class="nav-menu">
-    <h3 class="title"><a href="../../index.html">Apicurio Registry</a></h3>
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../index.html"> Getting Started</a>
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Introduction to Apicurio Registry rules</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-installing-the-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="assembly-installing-the-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Using the Apicurio Registry Java client</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry reference</a>
   </li>
 </ul>
   </li>
@@ -58,7 +79,7 @@
       <span class="title">Apicurio Registry</span>
       <ul class="versions">
         <li class="version is-current is-latest">
-          <a href="../../index.html">master</a>
+          <a href="../index.html">master</a>
         </li>
       </ul>
     </li>
@@ -70,28 +91,28 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="../../index.html" class="home-link"></a>
+  <a href="../index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
-    <li><a href="../../index.html">Apicurio Registry</a></li>
+    <li><a href="../index.html">Apicurio Registry</a></li>
     <li><a href="assembly-installing-the-registry-openshift.html">Installing Apicurio Registry on OpenShift</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="file:///work/apicurio-registry/.antora/modules/ROOT/pages/assemblies/getting-started/assembly-installing-the-registry-openshift.adoc">Edit this Page</a></div>
-</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
   <div class="content">
 <article class="doc">
 <h1 class="page">Installing Apicurio Registry on OpenShift</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter explains how to first install Apicurio Registry and then how to set up your chosen registry storage option: {kafka-streams}, embedded Infinispan, or PostgreSQL database.</p>
+<p>This chapter explains how to first install Apicurio Registry and then how to set up your chosen registry storage option: Strimzi, embedded Infinispan, or PostgreSQL database.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p><a href="#registry-overview">[registry-overview]</a></p>
+<p><a href="assembly-intro-to-the-registry.html">Registry Overview</a></p>
 </li>
 </ul>
 </div>
@@ -104,13 +125,13 @@
 </ul>
 </div>
 <div class="ulist">
-<div class="title">{kafka-streams} storage</div>
+<div class="title">Strimzi storage</div>
 <ul>
 <li>
-<p><a href="#installing-kafka-streams-operatorhub">Installing {kafka-streams} from the OpenShift OperatorHub</a></p>
+<p><a href="#installing-kafka-streams-operatorhub">Installing Strimzi from the OpenShift OperatorHub</a></p>
 </li>
 <li>
-<p><a href="#setting-up-kafka-streams-storage">Configuring Apicurio Registry with {kafka-streams} storage on OpenShift</a></p>
+<p><a href="#setting-up-kafka-streams-storage">Configuring Apicurio Registry with Strimzi storage on OpenShift</a></p>
 </li>
 </ul>
 </div>
@@ -225,7 +246,7 @@ You can install more than one instance of Apicurio Registry depending on your en
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/{registry-ocp-version}/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.4/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
 </li>
 <li>
 <p><a href="https://github.com/Apicurio/apicurio-registry-operator">Apicurio Registry Operator community in GitHub</a></p>
@@ -235,10 +256,10 @@ You can install more than one instance of Apicurio Registry depending on your en
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-kafka-streams-operatorhub"><a class="anchor" href="#installing-kafka-streams-operatorhub"></a>Installing {kafka-streams} from the OpenShift OperatorHub</h2>
+<h2 id="installing-kafka-streams-operatorhub"><a class="anchor" href="#installing-kafka-streams-operatorhub"></a>Installing Strimzi from the OpenShift OperatorHub</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you do not already have {kafka-streams} installed, you can install the {kafka-streams} Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/{registry-ocp-version}/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
+<p>If you do not already have Strimzi installed, you can install the Strimzi Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/4.4/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -261,7 +282,7 @@ You can install more than one instance of Apicurio Registry depending on your en
 <p>In the left navigation menu, click <strong>Catalog</strong> &gt; <strong>OperatorHub</strong>.</p>
 </li>
 <li>
-<p>In the <strong>Filter by keyword</strong> text box, enter <code>Strimzi</code> to find the <strong>{kafka-streams}</strong> Operator.</p>
+<p>In the <strong>Filter by keyword</strong> text box, enter <code>Strimzi</code> to find the <strong>Strimzi</strong> Operator.</p>
 </li>
 <li>
 <p>Read the information about the Operator, and click <strong>Install</strong>. This displays the <strong>Create Operator Subscription</strong> page.</p>
@@ -286,7 +307,7 @@ You can install more than one instance of Apicurio Registry depending on your en
 <p>Click <strong>Subscribe</strong>. This displays the <strong>Operators</strong> &gt; <strong>Installed Operators</strong> page.</p>
 </li>
 <li>
-<p>Wait a few moments until the <strong>Status</strong> for the {kafka-streams} Operator displays <strong>Succeeded</strong> and the subscription is <strong>Up to Date</strong>.</p>
+<p>Wait a few moments until the <strong>Status</strong> for the Strimzi Operator displays <strong>Succeeded</strong> and the subscription is <strong>Up to Date</strong>.</p>
 </li>
 </ol>
 </div>
@@ -294,20 +315,20 @@ You can install more than one instance of Apicurio Registry depending on your en
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/{registry-ocp-version}/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.4/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
 </li>
 <li>
-<p><a href="https://access.redhat.com/documentation/en-us/red_hat_amq/{amq-version}/html/using_amq_streams_on_openshift/index?">Using AMQ Streams on OpenShift</a></p>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_amq/7.7/html/using_amq_streams_on_openshift/index?">Using AMQ Streams on OpenShift</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="setting-up-kafka-streams-storage"><a class="anchor" href="#setting-up-kafka-streams-storage"></a>Configuring Apicurio Registry with {kafka-streams} storage on OpenShift</h2>
+<h2 id="setting-up-kafka-streams-storage"><a class="anchor" href="#setting-up-kafka-streams-storage"></a>Configuring Apicurio Registry with Strimzi storage on OpenShift</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section explains how to configure Kafka-based storage for Apicurio Registry using {kafka-streams} on OpenShift. This storage option is suitable for production environments when <code>persistent</code> storage is configured for the Kafka cluster on OpenShift. You can install Apicurio Registry in an existing Kafka cluster or create a new Kafka cluster, depending on your environment.</p>
+<p>This section explains how to configure Kafka-based storage for Apicurio Registry using Strimzi on OpenShift. This storage option is suitable for production environments when <code>persistent</code> storage is configured for the Kafka cluster on OpenShift. You can install Apicurio Registry in an existing Kafka cluster or create a new Kafka cluster, depending on your environment.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -319,7 +340,7 @@ You can install more than one instance of Apicurio Registry depending on your en
 <p>You must have already installed Apicurio Registry. See <a href="#installing-registry-operatorhub">Installing Apicurio Registry from the OpenShift OperatorHub</a>.</p>
 </li>
 <li>
-<p>You must have already installed {kafka-streams}. See <a href="#installing-kafka-streams-operatorhub">Installing {kafka-streams} from the OpenShift OperatorHub</a>.</p>
+<p>You must have already installed Strimzi. See <a href="#installing-kafka-streams-operatorhub">Installing Strimzi from the OpenShift OperatorHub</a>.</p>
 </li>
 </ul>
 </div>
@@ -330,11 +351,11 @@ You can install more than one instance of Apicurio Registry depending on your en
 <p>In the OpenShift Container Platform web console, log in using an account with cluster administrator privileges.</p>
 </li>
 <li>
-<p>If you do not already have a Kafka cluster configured, create a new Kafka cluster using {kafka-streams}. For example, in the OpenShift OperatorHub:</p>
+<p>If you do not already have a Kafka cluster configured, create a new Kafka cluster using Strimzi. For example, in the OpenShift OperatorHub:</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Click <strong>Installed Operators</strong> &gt; <strong>{kafka-streams}</strong>.</p>
+<p>Click <strong>Installed Operators</strong> &gt; <strong>Strimzi</strong>.</p>
 </li>
 <li>
 <p>Under <strong>Provided APIs</strong> &gt; <strong>Kafka</strong>, click <strong>Create Instance</strong> to create a new Kafka cluster.</p>
@@ -348,7 +369,7 @@ You can install more than one instance of Apicurio Registry depending on your en
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-The default example creates a cluster with 3 Zookeeper nodes and 3 Kafka nodes with <code>ephemeral</code> storage. This temporary storage is suitable for development and testing only, and not for production. For more details, see <a href="https://access.redhat.com/documentation/en-us/red_hat_amq/{amq-version}/html/using_amq_streams_on_openshift/index?">Using AMQ Streams on OpenShift</a>.
+The default example creates a cluster with 3 Zookeeper nodes and 3 Kafka nodes with <code>ephemeral</code> storage. This temporary storage is suitable for development and testing only, and not for production. For more details, see <a href="https://access.redhat.com/documentation/en-us/red_hat_amq/7.7/html/using_amq_streams_on_openshift/index?">Using AMQ Streams on OpenShift</a>.
 </td>
 </tr>
 </table>
@@ -514,7 +535,7 @@ spec:
 <h2 id="installing-postgresql-operatorhub"><a class="anchor" href="#installing-postgresql-operatorhub"></a>Installing a PostgreSQL database from the OpenShift OperatorHub</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you do not already have a PostgreSQL database Operator installed, you can install a PostgreSQL Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/{registry-ocp-version}/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
+<p>If you do not already have a PostgreSQL database Operator installed, you can install a PostgreSQL Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/4.4/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -582,7 +603,7 @@ You must read the documentation from your chosen <strong>PostgreSQL</strong> Ope
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/{registry-ocp-version}/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.4/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
 </li>
 <li>
 <p><a href="https://access.crunchydata.com/documentation/postgres-operator/4.3.2/quickstart/">Crunchy PostgreSQL Operator QuickStart</a></p>
@@ -724,7 +745,7 @@ spec:
 <footer class="footer">
   <p>Copyright © 2020 Red Hat, Inc. All rights reserved.</p>
 </footer>
-<script src="../../../assets/js/site.js"></script>
-<script async src="../../../assets/js/vendor/highlight.js"></script>
+<script src="../../assets/js/site.js"></script>
+<script async src="../../assets/js/vendor/highlight.js"></script>
   </body>
 </html>
