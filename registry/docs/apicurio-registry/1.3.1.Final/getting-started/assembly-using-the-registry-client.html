@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Apicurio Registry content rules :: Apicurio Registry</title>
-    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/getting-started/assembly-intro-to-registry-rules.html">
-    <meta name="generator" content="Antora 2.3.3">
+    <title>Using the Apicurio Registry Java client :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/1.3.1.Final/getting-started/assembly-using-the-registry-client.html">
+    <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-    <link rel="stylesheet" href="../../assets/css/site.css">
+    <link rel="stylesheet" href="../../../assets/css/site.css">
     <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
     <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
   </head>
@@ -31,7 +31,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry" data-version="master">
+<div class="nav-container" data-component="apicurio-registry" data-version="1.3.1.Final">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -43,7 +43,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -61,7 +61,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Using the Kafka client serializers/deserializers</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="assembly-using-the-registry-client.html">Using the Apicurio Registry Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -75,14 +75,14 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry</span>
-    <span class="version">master</span>
+    <span class="version">1.3.1.Final</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">Apicurio Registry</span>
       <ul class="versions">
         <li class="version is-current is-latest">
-          <a href="../index.html">master</a>
+          <a href="../index.html">1.3.1.Final</a>
         </li>
       </ul>
     </li>
@@ -98,110 +98,125 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
-    <li><a href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a></li>
+    <li><a href="assembly-using-the-registry-client.html">Using the Apicurio Registry Java client</a></li>
   </ul>
 </nav>
   <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Apicurio Registry content rules</h1>
+<h1 class="page">Using the Apicurio Registry Java client</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter introduces the optional rules used to govern registry content and provides details on the available rule types:</p>
+<p>This chapter explains how to use the Apicurio Registry Java client:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#registry-rules">Rules for registry content</a></p>
+<p><a href="#registry-client-intro">Apicurio Registry Java client overview</a></p>
 </li>
 <li>
-<p><a href="#registry-rules-apply">When rules are applied</a></p>
+<p><a href="#writing-registry-client">Writing a Apicurio Registry client application</a></p>
 </li>
 <li>
-<p><a href="#registry-rules-work">How rules work</a></p>
+<p><a href="#registry-client-types">Apicurio Registry Java client reference</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-rules"><a class="anchor" href="#registry-rules"></a>Rules for registry content</h2>
+<h2 id="registry-client-intro"><a class="anchor" href="#registry-client-intro"></a>Apicurio Registry Java client overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To govern the evolution of registry content, you can configure optional rules for artifact content added to the registry. All configured global rules or artifact rules must pass before a new artifact version can be uploaded to the registry. Configured artifact rules override any configured global rules.</p>
+<p>You can manage artifacts stored in Apicurio Registry using a Java client application. You can create, read, update, or delete artifacts stored in the registry using the Apicurio Registry Java client classes&#8230;&#8203;</p>
 </div>
 <div class="paragraph">
-<p>The goal of these rules is to prevent invalid content from being added to the registry. For example, content can be invalid for the following reasons:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Invalid syntax for a given artifact type (for example, <code>AVRO</code> or <code>PROTOBUF</code>)</p>
-</li>
-<li>
-<p>Valid syntax, but semantics violate a specification</p>
-</li>
-<li>
-<p>Incompatibility, when new content includes breaking changes relative to the current artifact version</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>You can add these optional content rules using the Apicurio Registry web console, REST API commands, or a Java client application.</p>
+<p>More TBD</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-rules-apply"><a class="anchor" href="#registry-rules-apply"></a>When rules are applied</h2>
+<h2 id="writing-registry-client"><a class="anchor" href="#writing-registry-client"></a>Writing a Apicurio Registry client application</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Rules are applied only when content is added to the registry. This includes the following REST operations:</p>
+<p>This section explains how to manage artifacts stored in Apicurio Registry using a Java client application&#8230;&#8203;</p>
+</div>
+<div class="paragraph">
+<p>More TBD</p>
 </div>
 <div class="ulist">
+<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Adding an artifact</p>
+<p>See <a href="assembly-intro-to-the-registry.html">Registry Overview</a></p>
 </li>
 <li>
-<p>Updating an artifact</p>
-</li>
-<li>
-<p>Adding an artifact version</p>
+<p>Apicurio Registry must be installed and running in your environment</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>If a rule is violated, Apicurio Registry returns an HTTP error. The response body includes the violated rule and a message showing what went wrong.</p>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Enter step one here.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Insert client code sample here <i class="conum" data-value="1"></i><b>(1)</b>
+...</code></pre>
 </div>
-<div class="admonitionblock note">
+</div>
+<div class="colist arabic">
 <table>
 <tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-If no rules are configured for an artifact, the set of currently configured global rules are applied, if any.
-</td>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Describe the client code sample here</td>
 </tr>
 </table>
 </div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For an example Java client application, see <a href="https://github.com/Apicurio/apicurio-registry-demo" class="bare">https://github.com/Apicurio/apicurio-registry-demo</a>.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-rules-work"><a class="anchor" href="#registry-rules-work"></a>How rules work</h2>
+<h2 id="registry-client-types"><a class="anchor" href="#registry-client-types"></a>Apicurio Registry Java client reference</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Each rule has a name and optional configuration information. The registry storage maintains the list of rules for each artifact and the list of global rules. Each rule in the list consists of a name and a set of configuration properties, which are specific to the rule implementation.</p>
+<p>The Apicurio Registry Java client includes the following&#8230;&#8203;</p>
 </div>
 <div class="paragraph">
-<p>A rule is provided with the content of the current version of the artifact (if one exists) and the new version of the artifact being added. The rule implementation returns true or false depending on whether the artifact passes the rule. If not, the registry reports the reason why in an HTTP error response. Some rules might not use the previous version of the content. For example, compatibility rules use previous versions, but syntax or semantic validity rules do not.</p>
+<p>More TBD</p>
 </div>
-<div class="paragraph">
-<div class="title">Additional resources</div>
-<p>For more details, see <a href="assembly-registry-reference.html">Apicurio Registry reference</a> and <a href="#registry-rule-maturity-matrix">[registry-rule-maturity-matrix]</a>.</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Apicurio Registry Java client types</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TBD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TBD</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </article>
@@ -214,7 +229,7 @@ If no rules are configured for an artifact, the set of currently configured glob
 <footer class="footer">
   <p>Copyright © 2020 Red Hat, Inc. All rights reserved.</p>
 </footer>
-<script src="../../assets/js/site.js"></script>
-<script async src="../../assets/js/vendor/highlight.js"></script>
+<script src="../../../assets/js/site.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
   </body>
 </html>

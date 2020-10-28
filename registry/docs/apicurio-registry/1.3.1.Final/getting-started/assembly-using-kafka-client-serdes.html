@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Using the Kafka client serializers/deserializers :: Apicurio Registry</title>
-    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/getting-started/assembly-using-kafka-client-serdes.html">
-    <meta name="generator" content="Antora 2.3.3">
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/1.3.1.Final/getting-started/assembly-using-kafka-client-serdes.html">
+    <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-    <link rel="stylesheet" href="../../assets/css/site.css">
+    <link rel="stylesheet" href="../../../assets/css/site.css">
     <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
     <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
   </head>
@@ -31,7 +31,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry" data-version="master">
+<div class="nav-container" data-component="apicurio-registry" data-version="1.3.1.Final">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -75,14 +75,14 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry</span>
-    <span class="version">master</span>
+    <span class="version">1.3.1.Final</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">Apicurio Registry</span>
       <ul class="versions">
         <li class="version is-current is-latest">
-          <a href="../index.html">master</a>
+          <a href="../index.html">1.3.1.Final</a>
         </li>
       </ul>
     </li>
@@ -120,19 +120,25 @@
 <p><a href="#registry-serdes-concepts-serde-registry">Kafka client applications and Apicurio Registry</a></p>
 </li>
 <li>
+<p><a href="#registry-serdes-types-serde-registry">Configuring different SerDe types</a></p>
+</li>
+<li>
 <p><a href="#registry-serdes-concepts-strategy-registry">Strategies to lookup a schema</a></p>
 </li>
 <li>
 <p><a href="#registry-serdes-concepts-constants-registry">Apicurio Registry serializer/deserializer constants</a></p>
 </li>
 <li>
-<p><a href="#registry-serdes-register-registry">Registering a schema to Apicurio Registry</a></p>
+<p><a href="#registry-serdes-register-registry">Registering a schema in Apicurio Registry</a></p>
 </li>
 <li>
 <p><a href="#registry-serdes-config-consumer-registry">Using a schema from a consumer client</a></p>
 </li>
 <li>
 <p><a href="#registry-serdes-config-producer-registry">Using a schema from a producer client</a></p>
+</li>
+<li>
+<p><a href="#registry-serdes-config-stream-registry">Using a schema from a Kafka Streams application</a></p>
 </li>
 </ul>
 </div>
@@ -165,8 +171,25 @@
 <p>Schemas can evolve, so you can define rules in Apicurio Registry, for example, to ensure that changes to a schema are valid and do not break previous versions used by applications. Apicurio Registry checks for compatibility by comparing a modified schema with previous schema versions.</p>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry provides full schema registry support for Avro schemas,
-which are used by client applications through Kafka client serializer/deserializer (SerDe) services provided by Apicurio Registry.</p>
+<p>Apicurio Registry provides schema registry support for a number of schema technologies such as:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Avro</p>
+</li>
+<li>
+<p>Protobuf</p>
+</li>
+<li>
+<p>JSON Schema</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These schema technologies can be used by client applications through Kafka client serializer/deserializer (SerDe)
+services provided by Apicurio Registry.  The maturity and usage of the SerDe classes provided by Apicurio Registry may vary.  See
+the type-specific sections below for more details about each.</p>
 </div>
 </div>
 </div>
@@ -182,7 +205,7 @@ which are used by client applications through Kafka client serializer/deserializ
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#registry-serdes-register-registry">Define and register your schema with Apicurio Registry</a></p>
+<p><a href="#registry-serdes-register-registry">Define and register your schema with Apicurio Registry</a> (optional)</p>
 </li>
 <li>
 <p><a href="#registry-serdes-config-producer-registry">Configure the producer client code</a>:</p>
@@ -195,7 +218,10 @@ which are used by client applications through Kafka client serializer/deserializ
 <p>Apicurio Registry serializer to use with the messages</p>
 </li>
 <li>
-<p><em>Strategy</em> to look up the schema used for serialization in Apicurio Registry</p>
+<p><em>Strategy</em> to map the Kafka message to an artifact ID in Apicurio Registry</p>
+</li>
+<li>
+<p><em>Strategy</em> to look up (or register) the schema used for serialization in Apicurio Registry</p>
 </li>
 </ul>
 </div>
@@ -203,11 +229,12 @@ which are used by client applications through Kafka client serializer/deserializ
 </ul>
 </div>
 <div class="paragraph">
-<p>After registering your schema, when you start Kafka and Apicurio Registry,
-you can access the schema to format messages sent to the Kafka broker topic by the producer.</p>
+<p>After registering your schema, when you start Kafka and Apicurio Registry, you can access the schema to format messages
+sent to the Kafka broker topic by the producer.  Alternatively (depending on configuration), the producer can
+automatically register the schema on first use.</p>
 </div>
 <div class="paragraph">
-<p>If a schema already exists, you can create a new version using the REST API based on compatibility rules defined in Apicurio Registry. Versions are used for compatibility checking as a schema evolves.An artifact ID and schema version represents a unique tuple that identifies a schema.</p>
+<p>If a schema already exists, you can create a new version using the REST API based on compatibility rules defined in Apicurio Registry. Versions are used for compatibility checking as a schema evolves. An artifact ID and schema version represents a unique tuple that identifies a schema.</p>
 </div>
 </div>
 </div>
@@ -244,8 +271,13 @@ you can access the schema to format messages sent to the Kafka broker topic by t
 </ul>
 </div>
 <div class="paragraph">
-<p>The schema is then retrieved by the deserializer using a global ID written into the message being consumed.
-The message received must, therefore, include a global ID as well as the message data.</p>
+<p>The schema is then retrieved by the deserializer using a global ID written into the message being consumed.  The schema
+global ID can be located in the message headers or in the message payload itself, depending on the configuration of
+the producer application.</p>
+</div>
+<div class="paragraph">
+<p>When locating the global ID in the message payload, the format of the data begins with a magic byte (as a signal to
+consumers) followed by the global ID and then the message data as normal.</p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -264,13 +296,381 @@ The message received must, therefore, include a global ID as well as the message
 </div>
 </div>
 <div class="sect1">
+<h2 id="registry-serdes-types-serde-registry"><a class="anchor" href="#registry-serdes-types-serde-registry"></a>Configuring different SerDe types</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When using a schema technology in your Kafka applications, you must choose which specific schema type to use.  Common
+options include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apache Avro</p>
+</li>
+<li>
+<p>JSON Schema</p>
+</li>
+<li>
+<p>Google Protobuf</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Which schema technology you choose is dependent on use case and preference.  Of course Kafka allows you to implement
+your own custom serializer and deserializer classes, so you are always free to write your own classes, including
+leveraging Apicurio Registry functionality by utilizing the REST Client (see the "Using the Apicurio Registry Java client" section).</p>
+</div>
+<div class="paragraph">
+<p>For your convenience, Apicurio Registry provides out of the box SerDe classes for all three of the above schema technologies.
+This section of the documentation explains how to configure Kafka applications to use each type.</p>
+</div>
+<div class="paragraph">
+<p>Using one of the serializer or deserializer classes provided by Apicurio Registry in your Kafka application is as simple
+as setting the proper configuration properties.  Here are some simple examples of configuring producer and
+consumer Kafka applications.</p>
+</div>
+<div class="listingblock">
+<div class="title">Configuring a producer</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public Producer&lt;Object,Object&gt; createKafkaProducer(String kafkaBootstrapServers, String topicName) {
+    Properties props = new Properties();
+
+    // Configure standard Kafka settings
+    props.putIfAbsent(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBootstrapServers);
+    props.putIfAbsent(ProducerConfig.CLIENT_ID_CONFIG, "Producer-" + topicName);
+    props.putIfAbsent(ProducerConfig.ACKS_CONFIG, "all");
+
+    // Use a Apicurio Registry provided Kafka Serializer
+    props.putIfAbsent(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+        io.apicurio.registry.utils.serde.AvroKafkaSerializer.class.getName());
+    props.putIfAbsent(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+        io.apicurio.registry.utils.serde.AvroKafkaSerializer.class.getName());
+
+    // Configure Apicurio Registry location
+    props.putIfAbsent(AbstractKafkaSerDe.REGISTRY_URL_CONFIG_PARAM, REGISTRY_URL);
+    // Map the topic name (plus -key/value) to the artifactId in the registry
+    props.putIfAbsent(AbstractKafkaSerializer.REGISTRY_ARTIFACT_ID_STRATEGY_CONFIG_PARAM,
+        io.apicurio.registry.utils.serde.strategy.TopicIdStrategy.class.getName());
+    // Get an existing schema or auto-register if not found
+    props.putIfAbsent(AbstractKafkaSerializer.REGISTRY_GLOBAL_ID_STRATEGY_CONFIG_PARAM,
+        io.apicurio.registry.utils.serde.strategy.GetOrCreateIdStrategy.class.getName());
+
+    // Create the Kafka producer
+    Producer&lt;Object, Object&gt; producer = new KafkaProducer&lt;&gt;(props);
+    return producer;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Configuring a consumer</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public Consumer&lt;Object,Object&gt; createKafkaConsumer(String kafkaBootstrapServers, String topicName) {
+    Properties props = new Properties();
+
+    // Configure standard Kafka settings
+    props.putIfAbsent(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBootstrapServers);
+    props.putIfAbsent(ConsumerConfig.GROUP_ID_CONFIG, "Consumer-" + topicName);
+    props.putIfAbsent(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
+    props.putIfAbsent(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
+    props.putIfAbsent(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+
+    // Use a Apicurio Registry provided Kafka Deserializer
+    props.putIfAbsent(ProducerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+        io.apicurio.registry.utils.serde.AvroKafkaDeserializer.class.getName());
+    props.putIfAbsent(ProducerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+        io.apicurio.registry.utils.serde.AvroKafkaDeserializer.class.getName());
+
+    // Configure Apicurio Registry location
+    props.putIfAbsent(AbstractKafkaSerDe.REGISTRY_URL_CONFIG_PARAM, REGISTRY_URL);
+    // No other configuration needed for the deserializer, because the globalId of the schema
+    // the deserializer should use is sent as part of the message.  So the deserializer simply
+    // extracts that globalId and uses it to look up the schema from the registry.
+
+    // Create the Kafka Consumer
+    KafkaConsumer&lt;Long, GenericRecord&gt; consumer = new KafkaConsumer&lt;&gt;(props);
+    return consumer;
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_avro_serde_with_apicurio_registry"><a class="anchor" href="#_using_avro_serde_with_apicurio_registry"></a>Using Avro SerDe with Apicurio Registry</h3>
+<div class="paragraph">
+<p>Apicurio Registry provides serializer and deserializer classes for Apache Avro out of the box, to make using Avro as
+easy as possible.  These classes are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>io.apicurio.registry.utils.serde.AvroKafkaSerializer</code></p>
+</li>
+<li>
+<p><code>io.apicurio.registry.utils.serde.AvroKafkaDeserializer</code></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_configuring_the_avro_serializer"><a class="anchor" href="#_configuring_the_avro_serializer"></a>Configuring the Avro serializer</h4>
+<div class="paragraph">
+<p>You can configure the Avro serializer class in the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apicurio Registry location as a URL</p>
+</li>
+<li>
+<p>Artifact ID strategy (see the "Strategies to lookup a schema" section)</p>
+</li>
+<li>
+<p>Global ID strategy (see the "Strategies to lookup a schema" section)</p>
+</li>
+<li>
+<p>Global ID location</p>
+</li>
+<li>
+<p>Global ID handler</p>
+</li>
+<li>
+<p>Avro datum provider</p>
+</li>
+<li>
+<p>Avro encoding</p>
+</li>
+</ul>
+</div>
+<div class="sect4">
+<h5 id="_global_id_location"><a class="anchor" href="#_global_id_location"></a><strong>Global ID location</strong></h5>
+<div class="paragraph">
+<p>The serializer is responsible for passing the unique global ID of the schema as part of the Kafka message so that
+consumers can use the right schema for deserialization.  The location of that global ID can be in the payload of
+the message or in the message headers.  The default approach is to pass the global ID in the message payload.  If
+you want the ID sent in the message headers instead, you can set the following configuration property:</p>
+</div>
+<div class="paragraph">
+<p><code>props.putIfAbsent(AbstractKafkaSerDe.USE_HEADERS, "true")</code></p>
+</div>
+<div class="paragraph">
+<p>The property name is <code>apicurio.registry.use.headers</code>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_global_id_handler"><a class="anchor" href="#_global_id_handler"></a><strong>Global ID handler</strong></h5>
+<div class="paragraph">
+<p>You can customize precisely how the global ID is encoded when passing it in the Kafka message body. Set
+the configuration property <code>apicurio.registry.id-handler</code> to be a class that implements the
+<code>io.apicurio.registry.utils.serde.strategy.IdHandler</code> interface.  Apicurio Registry provides two implementations of
+that interface:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>io.apicurio.registry.utils.serde.strategy.DefaultIdHandler</code> - stores the ID as an 8 byte long</p>
+</li>
+<li>
+<p><code>io.apicurio.registry.utils.serde.strategy.Legacy4ByteIdHandler</code> - stores the ID as an 4 byte int</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry represents the global ID of an artifact as a long, but for legacy reasons (or for compatibility with
+other registries or serde classes) you may want to use 4 bytes when sending the ID.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_avro_datum_provider"><a class="anchor" href="#_avro_datum_provider"></a><strong>Avro datum provider</strong></h5>
+<div class="paragraph">
+<p>TBD</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_avro_encoding"><a class="anchor" href="#_avro_encoding"></a><strong>Avro encoding</strong></h5>
+<div class="paragraph">
+<p>When using Apache Avro to serializer data, it is common to use the Avro binary encoding format.  This is so that
+the data is encoded in as efficient a format as possible.  However, Avro also supports encoding the data as JSON.
+Encoding as JSON is useful because it is much easier to inspect the payload of each message, often for logging,
+debugging, or other similar use cases.  The Apicurio Registry Avro serializer can be configured to change the encoding
+to JSON from the default (binary).</p>
+</div>
+<div class="paragraph">
+<p>Set the Avro encoding to use by configuring the <code>apicurio.avro.encoding</code> property. The value must be either
+<code>JSON</code> or <code>BINARY</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuring_the_avro_deserializer"><a class="anchor" href="#_configuring_the_avro_deserializer"></a>Configuring the Avro deserializer</h4>
+<div class="paragraph">
+<p>You must configure the Avro deserializer class to match the configuration settings of the serializer.  As a
+result, you can configure the Avro deserializer class in the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apicurio Registry location as a URL</p>
+</li>
+<li>
+<p>Global ID handler</p>
+</li>
+<li>
+<p>Avro datum provider</p>
+</li>
+<li>
+<p>Avro encoding</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See the serializer documentation for the above configuration options - the property names and values are the same.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The following options are <strong>not</strong> needed when configuring the deserializer:
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Artifact ID strategy</p>
+</li>
+<li>
+<p>Global ID strategy</p>
+</li>
+<li>
+<p>Global ID location</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The reason these options are not necessary is that the deserializer class can figure this information out from
+the message itself.  In the case of the two strategies, they are not needed because the serializer is responsible
+for sending the global ID of the schema as part of the message.  And the location of that global ID is determined
+(by the deserializer) by simply checking for the magic byte at the start of the message payload.  If that byte is
+found then the global ID is read from the message payload (using the configured handler).  If the magic byte is
+not found, then the global ID is read from the message headers.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_json_schema_serde_with_apicurio_registry"><a class="anchor" href="#_using_json_schema_serde_with_apicurio_registry"></a>Using JSON Schema SerDe with Apicurio Registry</h3>
+<div class="paragraph">
+<p>Apicurio Registry provides serializer and deserializer classes for JSON Schema out of the box, to make using JSON Schema as
+easy as possible.  These classes are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>io.apicurio.registry.utils.serde.JsonSchemaKafkaSerializer</code></p>
+</li>
+<li>
+<p><code>io.apicurio.registry.utils.serde.JsonSchemaKafkaDeserializer</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Unlike Apache Avro, JSON Schema is not actually a serialization technology - it is instead a validation
+technology.  As a result, configuration options for JSON Schema are quite different.  For example, there is no
+<strong>encoding</strong> option, since data is always encoded as JSON.</p>
+</div>
+<div class="sect3">
+<h4 id="_configuring_the_json_schema_serializer"><a class="anchor" href="#_configuring_the_json_schema_serializer"></a>Configuring the JSON Schema serializer</h4>
+<div class="paragraph">
+<p>You can configure the JSON Schema serializer class in the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apicurio Registry location as a URL</p>
+</li>
+<li>
+<p>Artifact ID strategy (see the "Strategies to lookup a schema" section)</p>
+</li>
+<li>
+<p>Global ID strategy (see the "Strategies to lookup a schema" section)</p>
+</li>
+<li>
+<p>Validation enabled/disabled</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As you can see, the only non-standard configuration property is whether JSON Schema validation is enabled or
+disabled.  The validation feature is disabled by default but can be enabled by setting
+<code>apicurio.registry.serdes.json-schema.validation-enabled</code> to <code>"true"</code>.  For example:</p>
+</div>
+<div class="paragraph">
+<p><code>props.putIfAbsent(JsonSchemaSerDeConstants.REGISTRY_JSON_SCHEMA_VALIDATION_ENABLED, "true")</code></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuring_the_json_schema_deserializer"><a class="anchor" href="#_configuring_the_json_schema_deserializer"></a>Configuring the JSON Schema deserializer</h4>
+<div class="paragraph">
+<p>You can configure the JSON Schema deserializer class in the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apicurio Registry location as a URL</p>
+</li>
+<li>
+<p>Validation enabled/disabled</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As you can see, the deserializer is very simple to configure.  You need to provide the location of Apicurio Registry so
+that the schema can be loaded.  The only other configuration is whether or not to perform validation.  These
+configuration properties are the same as for the serializer.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Deserializer validation will only work if the serializer passes the global ID in the Kafka message, which
+will only happen when validation is enabled in the serializer.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_protobuf_serde_with_apicurio_registry"><a class="anchor" href="#_using_protobuf_serde_with_apicurio_registry"></a>Using Protobuf SerDe with Apicurio Registry</h3>
+<div class="paragraph">
+<p>TBD</p>
+</div>
+<div class="sect3">
+<h4 id="_configuring_the_protobuf_serializer"><a class="anchor" href="#_configuring_the_protobuf_serializer"></a>Configuring the Protobuf serializer</h4>
+<div class="paragraph">
+<p>TBD</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuring_the_protobuf_deserializer"><a class="anchor" href="#_configuring_the_protobuf_deserializer"></a>Configuring the Protobuf deserializer</h4>
+<div class="paragraph">
+<p>TBD</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="registry-serdes-concepts-strategy-registry"><a class="anchor" href="#registry-serdes-concepts-strategy-registry"></a>Strategies to lookup a schema</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Kafka client serializer/deserializer uses a lookup <em>strategy</em> to determine the artifact ID or global ID under which the message schema is registered in Apicurio Registry.</p>
+<p>The Kafka client serializer uses two lookup <em>strategies</em> to determine the artifact ID and global ID under which the message schema is registered in Apicurio Registry.</p>
 </div>
 <div class="paragraph">
-<p>For a given topic and message, you can use implementations of the following Java classes:</p>
+<p>For a given topic and message, you can use implementations of the following Java interfaces:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -283,13 +683,28 @@ The message received must, therefore, include a global ID as well as the message
 </ul>
 </div>
 <div class="paragraph">
-<p>The artifact ID returned depends on whether the <em>key</em> or <em>value</em> in the message is being serialized.</p>
+<div class="title">Artifact ID strategy</div>
+<p>The artifact ID strategy provides a way to map the Kafka topic and message information to the ID of an artifact in
+Apicurio Registry.  The common convention for the mapping is to combine the Kafka topic name with either <code>key</code> or <code>value</code>
+(depending on whether the serializer is being used for the Kafka message key or value).  However, alternative
+conventions can be used for the mapping, either by using an alternative strategy provided by Apicurio Registry or by
+creating a custom Java class that implements <code>io.apicurio.registry.utils.serde.strategy.ArtifactIdStrategy</code>.</p>
+</div>
+<div class="paragraph">
+<div class="title">Global ID strategy</div>
+<p>The global ID strategy is responsible for locating and identifying the specific <strong>version</strong> of the schema registered
+under the artifact ID provided by the artifact ID strategy.  Every version of every artifact has a single globally
+unique identifier that can be used to retrieve the content of that artifact.  As described in a previous section,
+that global ID is what gets included in every Kafka message so that a deserializer can properly fetch the schema
+from Apicurio Registry.  The global ID strategy can either lookup an existing artifact version, or it can register one if
+not found, depending on which strategy is used.  Additionally, you can provide your own strategy by creating a
+custom Java class that implements <code>io.apicurio.registry.utils.serde.strategy.GlobalIdStrategy</code>.</p>
 </div>
 <div class="paragraph">
 <p>The classes for each strategy are organized in the <code>io.apicurio.registry.utils.serde.strategy</code> package.</p>
 </div>
 <div class="paragraph">
-<p>The default strategy is <code>TopicIdStrategy</code>, which looks for Apicurio Registry artifacts with the same name as the Kafka topic receiving messages.</p>
+<p>The default artifact ID strategy is <code>TopicIdStrategy</code>, which looks for Apicurio Registry artifacts with the same name as the Kafka topic receiving messages.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example</div>
@@ -311,7 +726,7 @@ The message received must, therefore, include a global ID as well as the message
 <p>The <code>schema</code> parameter is the schema of the message being serialized/deserialized.</p>
 </li>
 <li>
-<p>The <code>artifactID</code> returned is the ID under which the schema is registered in Apicurio Registry.</p>
+<p>The <code>artifactID</code> returned is the artifact ID under which the schema is registered in Apicurio Registry.</p>
 </li>
 </ul>
 </div>
@@ -493,7 +908,7 @@ ReflectAvroDatumProvider (io.apicurio.registry.utils.serde.avro) <i class="conum
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-serdes-register-registry"><a class="anchor" href="#registry-serdes-register-registry"></a>Registering a schema to Apicurio Registry</h2>
+<h2 id="registry-serdes-register-registry"><a class="anchor" href="#registry-serdes-register-registry"></a>Registering a schema in Apicurio Registry</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>After you have defined a schema in the appropriate format, such as <em>Apache Avro</em>, you can add the schema to Apicurio Registry.</p>
@@ -644,46 +1059,44 @@ try (RegistryService service = RegistryClient.create(registryUrl_node1)) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">String registryUrl_node1 = PropertiesUtil.property(clientProperties, "registry.url.node1",
-    "https://my-cluster-service-registry-myproject.example.com/api");
-RegistryService service = RegistryClient.cached(registryUrl);</code></pre>
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">String registryUrl = "https://registry.example.com/api";
+Properties props = new Properties();
+props.putIfAbsent(AbstractKafkaSerDe.REGISTRY_URL_CONFIG_PARAM, registryUrl); <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Configure the client with the Apicurio Registry deserializer service.</p>
+<p>Configure the client with the Apicurio Registry deserializer.</p>
 <div class="paragraph">
 <p>For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Deserializer&lt;LogInput&gt; deserializer = new AvroKafkaDeserializer &lt;&gt; ( <i class="conum" data-value="1"></i><b>(1)</b>
-    service,
-    new DefaultAvroDatumProvider&lt;LogInput&gt;().setUseSpecificAvroReader(true)
-);
-Serde&lt;LogInput&gt; logSerde = Serdes.serdeFrom( <i class="conum" data-value="2"></i><b>(2)</b>
-    new AvroKafkaSerializer&lt;&gt;(service),
-    deserializer
-);
-KStream&lt;String, LogInput&gt; input = builder.stream( <i class="conum" data-value="3"></i><b>(3)</b>
-    INPUT_TOPIC,
-    Consumed.with(Serdes.String(), logSerde)
-);</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Configure Kafka
+props.putIfAbsent(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, SERVERS);
+props.putIfAbsent(ConsumerConfig.GROUP_ID_CONFIG, "Consumer-" + TOPIC_NAME);
+props.putIfAbsent(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
+props.putIfAbsent(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
+props.putIfAbsent(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+props.putIfAbsent(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+    AvroKafkaDeserializer.class.getName()); <i class="conum" data-value="2"></i><b>(2)</b> <i class="conum" data-value="3"></i><b>(3)</b>
+props.putIfAbsent(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+    AvroKafkaDeserializer.class.getName()); <i class="conum" data-value="2"></i><b>(2)</b> <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The deserializer service provided by Apicurio Registry.</td>
+<td>The Apicurio Registry URL.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The deserialization is in <em>Apache Avro</em> JSON format.</td>
+<td>The deserializer provided by Apicurio Registry.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>The input data for deserialization derived from the topic values consumed by the client.</td>
+<td>The deserialization is in <em>Apache Avro</em> JSON format.</td>
 </tr>
 </table>
 </div>
@@ -719,27 +1132,23 @@ KStream&lt;String, LogInput&gt; input = builder.stream( <i class="conum" data-va
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">String registryUrl_node1 = PropertiesUtil.property(clientProperties, "registry.url.node1",
-    "https://my-cluster-service-registry-myproject.example.com/api");
-RegistryService service = RegistryClient.cached(registryUrl);</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">String registryUrl = "https://registry.example.com/api";
+Properties props = new Properties();
+props.putIfAbsent(AbstractKafkaSerDe.REGISTRY_URL_CONFIG_PARAM, registryUrl); <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Configure the client with the serializer services, and the strategy to look up the schema in Apicurio Registry.</p>
+<p>Configure the client with the serializer, and the and the strategy to look up the schema in Apicurio Registry.</p>
 <div class="paragraph">
 <p>For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">String registryUrl_node1 = PropertiesUtil.property(clientProperties, "registry.url.node1",
-    "https://my-cluster-service-registry-myproject.example.com/api");
-
-    clientProperties.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, property(clientProperties, CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, "my-cluster-kafka-bootstrap:9092"));
-    clientProperties.put(AbstractKafkaSerDe.REGISTRY_URL_CONFIG_PARAM, registryUrl_node1); <i class="conum" data-value="1"></i><b>(1)</b>
-    clientProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName()); <i class="conum" data-value="2"></i><b>(2)</b>
-    clientProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, AvroKafkaSerializer.class.getName()); <i class="conum" data-value="3"></i><b>(3)</b>
-    clientProperties.put(AbstractKafkaSerializer.REGISTRY_GLOBAL_ID_STRATEGY_CONFIG_PARAM, FindLatestIdStrategy.class.getName()); <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">props.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, "my-cluster-kafka-bootstrap:9092");
+props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, AvroKafkaSerializer.class.getName()); <i class="conum" data-value="2"></i><b>(2)</b>
+props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, AvroKafkaSerializer.class.getName()); <i class="conum" data-value="3"></i><b>(3)</b>
+props.put(AbstractKafkaSerializer.REGISTRY_GLOBAL_ID_STRATEGY_CONFIG_PARAM, FindLatestIdStrategy.class.getName()); <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -750,15 +1159,97 @@ RegistryService service = RegistryClient.cached(registryUrl);</code></pre>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The serializer service for the message <em>key</em> provided by Apicurio Registry.</td>
+<td>The serializer for the message <em>key</em> provided by Apicurio Registry.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>The serializer service for the message <em>value</em> provided by Apicurio Registry.</td>
+<td>The serializer for the message <em>value</em> provided by Apicurio Registry.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Lookup strategy to find the global ID for the schema. Matches the schema of the message against its global ID (artifact ID and schema version) in Apicurio Registry.</td>
+<td>Lookup strategy to find the global ID for the schema.</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-serdes-config-stream-registry"><a class="anchor" href="#registry-serdes-config-stream-registry"></a>Using a schema from a Kafka Streams application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This procedure describes how to configure a Kafka Streams client written in Java to use a schema from Apicurio Registry.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed</p>
+</li>
+<li>
+<p>The schema is registered with Apicurio Registry</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create and configure a REST client with the Apicurio Registry</p>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">String registryUrl = "https://registry.example.com/api";
+RegistryService client = RegistryClient.cached(registryUrl);</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Configure the serializer, deserializer, and create the Kafka Streams client</p>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Serializer&lt;LogInput&gt; serializer = new AvroKafkaSerializer&lt;&gt;( <i class="conum" data-value="1"></i><b>(1)</b>
+    client,
+    new DefaultAvroDatumProvider&lt;LogInput&gt;().setUseSpecificAvroReader(true)
+);
+Deserializer&lt;LogInput&gt; deserializer = new AvroKafkaDeserializer &lt;&gt; ( <i class="conum" data-value="2"></i><b>(2)</b>
+    client,
+    new DefaultAvroDatumProvider&lt;LogInput&gt;().setUseSpecificAvroReader(true)
+);
+Serde&lt;LogInput&gt; logSerde = Serdes.serdeFrom( <i class="conum" data-value="3"></i><b>(3)</b>
+    serializer,
+    deserializer
+);
+KStream&lt;String, LogInput&gt; input = builder.stream( <i class="conum" data-value="4"></i><b>(4)</b>
+    INPUT_TOPIC,
+    Consumed.with(Serdes.String(), logSerde)
+);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The serializer provided by Apicurio Registry.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The deserializer provided by Apicurio Registry.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The deserialization is in <em>Apache Avro</em> format.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The Kafka Streams client application.</td>
 </tr>
 </table>
 </div>
@@ -777,7 +1268,7 @@ RegistryService service = RegistryClient.cached(registryUrl);</code></pre>
 <footer class="footer">
   <p>Copyright © 2020 Red Hat, Inc. All rights reserved.</p>
 </footer>
-<script src="../../assets/js/site.js"></script>
-<script async src="../../assets/js/vendor/highlight.js"></script>
+<script src="../../../assets/js/site.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
   </body>
 </html>

@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Installing Apicurio Registry on OpenShift :: Apicurio Registry</title>
-    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/getting-started/assembly-installing-the-registry-openshift.html">
-    <meta name="generator" content="Antora 2.3.3">
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/1.3.1.Final/getting-started/assembly-installing-the-registry-openshift.html">
+    <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-    <link rel="stylesheet" href="../../assets/css/site.css">
+    <link rel="stylesheet" href="../../../assets/css/site.css">
     <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
     <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
   </head>
@@ -31,7 +31,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry" data-version="master">
+<div class="nav-container" data-component="apicurio-registry" data-version="1.3.1.Final">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -75,14 +75,14 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry</span>
-    <span class="version">master</span>
+    <span class="version">1.3.1.Final</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">Apicurio Registry</span>
       <ul class="versions">
         <li class="version is-current is-latest">
-          <a href="../index.html">master</a>
+          <a href="../index.html">1.3.1.Final</a>
         </li>
       </ul>
     </li>
@@ -124,6 +124,9 @@
 <ul>
 <li>
 <p><a href="#installing-registry-operatorhub">Installing Apicurio Registry from the OpenShift OperatorHub</a></p>
+</li>
+<li>
+<p><a href="#configuring-registry-ui">Configuring Apicurio Registry web console</a></p>
 </li>
 </ul>
 </div>
@@ -255,6 +258,81 @@ You can install more than one instance of Apicurio Registry depending on your en
 <p><a href="https://github.com/Apicurio/apicurio-registry-operator">Apicurio Registry Operator community in GitHub</a></p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-registry-ui"><a class="anchor" href="#configuring-registry-ui"></a>Configuring Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can configure the Apicurio Registry web console in a number of ways, either to customize its behavior or to properly
+configure it for your deployment environment.</p>
+</div>
+<div class="sect2">
+<h3 id="_configuring_apicurio_registry_web_console_for_deployment_environment"><a class="anchor" href="#_configuring_apicurio_registry_web_console_for_deployment_environment"></a>Configuring Apicurio Registry web console for deployment environment</h3>
+<div class="paragraph">
+<p>When a user navigates their browser to the Apicurio Registry web console, some initial configuration settings are loaded.
+Two important configuration properties are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>URL of the back-end API</p>
+</li>
+<li>
+<p>URL of the front-end web console</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Typically Apicurio Registry will automatically detect and generate these settings, but there are some deployment environments
+where this automatic detection can fail.  When this happens, you can configure the following environment variables to
+explicitly set them:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><em>REGISTRY_UI_CONFIG_APIURL</em></strong> : set to override the URL to the back-end API (example <a href="https://registry.my-domain.com/api" class="bare">https://registry.my-domain.com/api</a>)</p>
+</li>
+<li>
+<p><strong><em>REGISTRY_UI_CONFIG_UIURL</em></strong> : set to override the URL to the front-end web console (example <a href="https://registry.my-domain.com/ui" class="bare">https://registry.my-domain.com/ui</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_apicurio_registry_console_for_read_only_mode"><a class="anchor" href="#_configuring_apicurio_registry_console_for_read_only_mode"></a>Configuring Apicurio Registry console for read-only mode</h3>
+<div class="paragraph">
+<p>An optional feature that can be enabled in Apicurio Registry is the ability to put the web console into "Read Only"
+mode.  This mode disables all of the features in the web console that would allow a user to make changes to
+registered artifacts.  This includes (but is not limited to):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Creating an artifact</p>
+</li>
+<li>
+<p>Uploading a new version of an artifact</p>
+</li>
+<li>
+<p>Updating an artifact&#8217;s metadata</p>
+</li>
+<li>
+<p>Deleting an artifact</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To put the web console into read only mode, set the following environment variable:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><em>REGISTRY_UI_FEATURES_READONLY</em></strong> : set to <code>true</code> to enable "Read Only" mode (default <code>false</code>)</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
@@ -748,7 +826,7 @@ spec:
 <footer class="footer">
   <p>Copyright © 2020 Red Hat, Inc. All rights reserved.</p>
 </footer>
-<script src="../../assets/js/site.js"></script>
-<script async src="../../assets/js/vendor/highlight.js"></script>
+<script src="../../../assets/js/site.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
   </body>
 </html>
