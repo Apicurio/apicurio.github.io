@@ -1,3 +1,0 @@
-var ApicuritoConfig = {
-  "generators": []
-};
