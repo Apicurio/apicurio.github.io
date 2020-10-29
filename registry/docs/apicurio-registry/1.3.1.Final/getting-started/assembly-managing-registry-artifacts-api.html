@@ -58,6 +58,12 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
   </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Using the Kafka client serializers/deserializers</a>
   </li>
@@ -115,9 +121,6 @@
 <ul>
 <li>
 <p><a href="#managing-artifacts-using-rest-api">Managing artifacts using Registry REST API commands</a></p>
-</li>
-<li>
-<p><a href="#managing-artifacts-using-maven-plugin">Managing artifacts using the Apicurio Registry Maven plug-in</a></p>
 </li>
 <li>
 <p><a href="#managing-artifacts-using-client-code">Managing artifacts using a Apicurio Registry client application</a></p>
@@ -199,127 +202,6 @@ When adding artifacts in Apicurio Registry using the REST API, if you do not spe
 <ul>
 <li>
 <p>For more REST API sample requests, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="managing-artifacts-using-maven-plugin"><a class="anchor" href="#managing-artifacts-using-maven-plugin"></a>Managing artifacts using the Apicurio Registry Maven plug-in</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Apicurio Registry provides a Maven plug-in to enable you to upload or download registry artifacts as part of your development build. For example, this plug-in is useful for testing and validating that your schema updates are compatible with client applications.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>See <a href="assembly-intro-to-the-registry.html">Registry Overview</a></p>
-</li>
-<li>
-<p>Apicurio Registry must be installed and running in your environment</p>
-</li>
-<li>
-<p>Maven must be installed and configured in your environment</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Update your Maven <code>pom.xml</code> file to use the <code>apicurio-registry-maven-plugin</code> to upload an artifact to Apicurio Registry. The following example shows registering an Apache Avro schema artifact:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
-&lt;groupId&gt;io.apicurio&lt;/groupId&gt;
-&lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
-&lt;version&gt;${registry.version}&lt;/version&gt;
-&lt;executions&gt;
-  &lt;execution&gt;
-    &lt;phase&gt;generate-sources&lt;/phase&gt;
-    &lt;goals&gt;
-      &lt;goal&gt;register&lt;/goal&gt; <i class="conum" data-value="1"></i><b>(1)</b>
-    &lt;/goals&gt;
-    &lt;configuration&gt;
-      &lt;registryUrl&gt;http://my-cluster-service-registry-myproject.example.com/api&lt;/registryUrl&gt; <i class="conum" data-value="2"></i><b>(2)</b>
-      &lt;artifactType&gt;AVRO&lt;/artifactType&gt;
-      &lt;artifacts&gt;
-        &lt;schema1&gt;${project.basedir}/schemas/schema1.avsc&lt;/schema1&gt; <i class="conum" data-value="3"></i><b>(3)</b>
-      &lt;/artifacts&gt;
-    &lt;/configuration&gt;
-  &lt;/execution&gt;
-&lt;/executions&gt;
-&lt;/plugin&gt;</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specify <code>register</code> as the execution goal to upload an artifact to the registry.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>You must specify the Apicurio Registry URL with the <code>/api</code> endpoint.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>You can upload multiple artifacts using the artifact ID and location.</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>You can also update your Maven <code>pom.xml</code> file to download a previously registered artifact from Apicurio Registry:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
-&lt;groupId&gt;io.apicurio&lt;/groupId&gt;
-&lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
-&lt;version&gt;${registry.version}&lt;/version&gt;
-&lt;executions&gt;
-  &lt;execution&gt;
-    &lt;phase&gt;generate-sources&lt;/phase&gt;
-    &lt;goals&gt;
-      &lt;goal&gt;download&lt;/goal&gt; <i class="conum" data-value="1"></i><b>(1)</b>
-    &lt;/goals&gt;
-    &lt;configuration&gt;
-      &lt;registryUrl&gt;http://my-cluster-service-registry-myproject.example.com/api&lt;/registryUrl&gt; <i class="conum" data-value="2"></i><b>(2)</b>
-          &lt;ids&gt;
-            &lt;param1&gt;schema1&lt;/param1&gt; <i class="conum" data-value="3"></i><b>(3)</b>
-          &lt;/ids&gt;
-      &lt;outputDirectory&gt;${project.build.directory}&lt;/outputDirectory&gt;
-   &lt;/configuration&gt;
- &lt;/execution&gt;
-&lt;/executions&gt;
-&lt;/plugin&gt;</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specify <code>download</code> as the execution goal.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>You must specify the Apicurio Registry URL with the <code>/api</code> endpoint.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>You can download multiple artifacts to a specified directory using the artifact ID.</td>
-</tr>
-</table>
-</div>
-</li>
-</ol>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p>For more details on the Maven plug-in, see <a href="https://github.com/Apicurio/apicurio-registry-demo" class="bare">https://github.com/Apicurio/apicurio-registry-demo</a>.</p>
 </li>
 </ul>
 </div>
