@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Using the Kafka client serializers/deserializers :: Apicurio Registry</title>
-    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/1.3.1.Final/getting-started/assembly-using-kafka-client-serdes.html">
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/getting-started/assembly-using-kafka-client-serdes.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="../../assets/css/site.css">
     <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
     <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
   </head>
@@ -31,7 +31,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry" data-version="1.3.1.Final">
+<div class="nav-container" data-component="apicurio-registry" data-version="master">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -81,14 +81,14 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry</span>
-    <span class="version">1.3.1.Final</span>
+    <span class="version">master</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">Apicurio Registry</span>
       <ul class="versions">
         <li class="version is-current is-latest">
-          <a href="../index.html">1.3.1.Final</a>
+          <a href="../index.html">master</a>
         </li>
       </ul>
     </li>
@@ -485,7 +485,37 @@ other registries or serde classes) you may want to use 4 bytes when sending the 
 <div class="sect4">
 <h5 id="_avro_datum_provider"><a class="anchor" href="#_avro_datum_provider"></a><strong>Avro datum provider</strong></h5>
 <div class="paragraph">
-<p>TBD</p>
+<p>Avro provides different Datum writers and readers to write and read data. Apicurio Registry supports three different types:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Generic</p>
+</li>
+<li>
+<p>Specific</p>
+</li>
+<li>
+<p>Reflect</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry&#8217;s <code>AvroDatumProvider</code> is the abstraction on which type is then actually used,
+where <code>DefaultAvroDatumProvider</code> is used by default.</p>
+</div>
+<div class="paragraph">
+<p>There are two configuration options you can set:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>apicurio.registry.avro-datum-provider</code> - provide a fully qualified Java classname of the <code>AvroDatumProvider</code> implementation, for example <code>io.apicurio.registry.utils.serde.avro.ReflectAvroDatumProvider</code></p>
+</li>
+<li>
+<p><code>apicurio.registry.use-specific-avro-reader</code> - true or false, to use Specific type when using <code>DefaultAvroDatumProvider</code></p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect4">
@@ -652,18 +682,108 @@ will only happen when validation is enabled in the serializer.
 <div class="sect2">
 <h3 id="_using_protobuf_serde_with_apicurio_registry"><a class="anchor" href="#_using_protobuf_serde_with_apicurio_registry"></a>Using Protobuf SerDe with Apicurio Registry</h3>
 <div class="paragraph">
-<p>TBD</p>
+<p>Apicurio Registry provides serializer and deserializer classes for Google Protobuf out of the box, to make using Protobuf as
+easy as possible.  These classes are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>io.apicurio.registry.utils.serde.ProtobufKafkaSerializer</code></p>
+</li>
+<li>
+<p><code>io.apicurio.registry.utils.serde.ProtobufKafkaDeserializer</code></p>
+</li>
+</ul>
 </div>
 <div class="sect3">
 <h4 id="_configuring_the_protobuf_serializer"><a class="anchor" href="#_configuring_the_protobuf_serializer"></a>Configuring the Protobuf serializer</h4>
 <div class="paragraph">
-<p>TBD</p>
+<p>You can configure the Protobuf serializer class in the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apicurio Registry location as a URL</p>
+</li>
+<li>
+<p>Artifact ID strategy (see the "Strategies to lookup a schema" section)</p>
+</li>
+<li>
+<p>Global ID strategy (see the "Strategies to lookup a schema" section)</p>
+</li>
+<li>
+<p>Global ID location</p>
+</li>
+<li>
+<p>Global ID handler</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_configuring_the_protobuf_deserializer"><a class="anchor" href="#_configuring_the_protobuf_deserializer"></a>Configuring the Protobuf deserializer</h4>
 <div class="paragraph">
-<p>TBD</p>
+<p>You must configure the Protobuf deserializer class to match the configuration settings of the serializer.  As a
+result, you can configure the Protobuf deserializer class in the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apicurio Registry location as a URL</p>
+</li>
+<li>
+<p>Global ID handler</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See the serializer documentation for the above configuration options - the property names and values are the same.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The following options are <strong>not</strong> needed when configuring the deserializer:
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Artifact ID strategy</p>
+</li>
+<li>
+<p>Global ID strategy</p>
+</li>
+<li>
+<p>Global ID location</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The reason these options are not necessary is that the deserializer class can figure this information out from
+the message itself.  In the case of the two strategies, they are not needed because the serializer is responsible
+for sending the global ID of the schema as part of the message.  And the location of that global ID is determined
+(by the deserializer) by simply checking for the magic byte at the start of the message payload.  If that byte is
+found then the global ID is read from the message payload (using the configured handler).  If the magic byte is
+not found, then the global ID is read from the message headers.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+the Protobuf deserializer doesn&#8217;t deserialize to your exact Protobuf Message implementation,
+but rather to a <code>DynamicMessage</code> instance (as there is no appropriate API to do otherwise).
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1274,7 +1394,7 @@ KStream&lt;String, LogInput&gt; input = builder.stream( <i class="conum" data-va
 <footer class="footer">
   <p>Copyright © 2020 Red Hat, Inc. All rights reserved.</p>
 </footer>
-<script src="../../../assets/js/site.js"></script>
-<script async src="../../../assets/js/vendor/highlight.js"></script>
+<script src="../../assets/js/site.js"></script>
+<script async src="../../assets/js/vendor/highlight.js"></script>
   </body>
 </html>

@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Apicurio Registry content rules :: Apicurio Registry</title>
-    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/1.3.1.Final/getting-started/assembly-intro-to-registry-rules.html">
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/getting-started/assembly-intro-to-registry-rules.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="../../assets/css/site.css">
     <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
     <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
   </head>
@@ -31,7 +31,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry" data-version="1.3.1.Final">
+<div class="nav-container" data-component="apicurio-registry" data-version="master">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -81,14 +81,14 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry</span>
-    <span class="version">1.3.1.Final</span>
+    <span class="version">master</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">Apicurio Registry</span>
       <ul class="versions">
         <li class="version is-current is-latest">
-          <a href="../index.html">1.3.1.Final</a>
+          <a href="../index.html">master</a>
         </li>
       </ul>
     </li>
@@ -210,6 +210,156 @@ If no rules are configured for an artifact, the set of currently configured glob
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="registry-rules-config"><a class="anchor" href="#registry-rules-config"></a>Configuring rules</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can configure rules individually for each artifact, as well as globally.  Apicurio Registry applies the rules configured
+for the specific artifact, but if no rules are configured at that level it applies the globally configured rules.  If
+no global rules are configured then no rules are applied.</p>
+</div>
+<div class="sect2">
+<h3 id="_configuring_artifact_rules"><a class="anchor" href="#_configuring_artifact_rules"></a>Configuring artifact rules</h3>
+<div class="paragraph">
+<p>You can configure artifact rules using the REST API or the web console.  See the relevant documentation sections
+for more information.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_global_rules"><a class="anchor" href="#_configuring_global_rules"></a>Configuring global rules</h3>
+<div class="paragraph">
+<p>You can configure global rules in several ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use the <code>/rules</code> operations in the REST API</p>
+</li>
+<li>
+<p>Use the web console</p>
+</li>
+<li>
+<p>Set default global rules using Apicurio Registry application properties</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Default global rules</div>
+<p>You can configure the Apicurio Registry at the application level to enable or disable global rules.  This allows
+configuring of these global rules at installation time without any need for post-install configuration.  You
+can use the following application property format:</p>
+</div>
+<div class="paragraph">
+<p><code>registry.rules.global.&lt;ruleName&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>The following rule names are currently supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>compatibility</code></p>
+</li>
+<li>
+<p><code>validity</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The value of the application property must be a valid configuration option that is specific to the rule being
+configured.  The following is a table of valid values for each rule:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Rule</th>
+<th class="tableblock halign-left valign-top">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Validity</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>FULL</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>SYNTAX_ONLY</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>NONE</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Compatibility</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>BACKWARD</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>BACKWARD_TRANSITIVE</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>FORWARD</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>FORWARD_TRANSITIVE</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>FULL</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>FULL_TRANSITIVE</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>NONE</code></p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can configure these application properties as Java system properties or include them in the Quarkus
+<code>application.properties</code> file.  See more information about configuring Apicurio Registry elsewhere in this
+documentation and also in <a href="https://quarkus.io/guides/config#overriding-properties-at-runtime">Quarkus documentation</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
@@ -220,7 +370,7 @@ If no rules are configured for an artifact, the set of currently configured glob
 <footer class="footer">
   <p>Copyright © 2020 Red Hat, Inc. All rights reserved.</p>
 </footer>
-<script src="../../../assets/js/site.js"></script>
-<script async src="../../../assets/js/vendor/highlight.js"></script>
+<script src="../../assets/js/site.js"></script>
+<script async src="../../assets/js/vendor/highlight.js"></script>
   </body>
 </html>

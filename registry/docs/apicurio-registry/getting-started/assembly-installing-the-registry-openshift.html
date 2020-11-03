@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Installing Apicurio Registry on OpenShift :: Apicurio Registry</title>
-    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/1.3.1.Final/getting-started/assembly-installing-the-registry-openshift.html">
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/getting-started/assembly-installing-the-registry-openshift.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="../../assets/css/site.css">
     <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
     <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
   </head>
@@ -31,7 +31,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry" data-version="1.3.1.Final">
+<div class="nav-container" data-component="apicurio-registry" data-version="master">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -81,14 +81,14 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry</span>
-    <span class="version">1.3.1.Final</span>
+    <span class="version">master</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">Apicurio Registry</span>
       <ul class="versions">
         <li class="version is-current is-latest">
-          <a href="../index.html">1.3.1.Final</a>
+          <a href="../index.html">master</a>
         </li>
       </ul>
     </li>
@@ -544,6 +544,50 @@ spec:
 </ol>
 </div>
 <div class="paragraph">
+<div class="title">Overriding default Kafka topic names</div>
+<p>You can change the default names of the Kafka topics that Apicurio Registry will use to store data in Kafka.  It is sometimes
+necessary to do this when sharing the Kafka cluster with other applications that may already be using topics named
+<code>storage-topic</code> or <code>global-id-topic</code>.</p>
+</div>
+<div class="paragraph">
+<p>Change the default topic names by overriding them either by setting appropriate environment variables or by
+setting appropriate Java system properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Topic Default</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+<th class="tableblock halign-left valign-top">System Property</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>storage-topic</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>REGISTRY_STREAMS_TOPOLOGY_STORAGE_TOPIC</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>registry.streams.topology.storage.topic</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>global-id-topic</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>REGISTRY_STREAMS_TOPOLOGY_GLOBAL_ID_TOPIC</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>registry.streams.topology.global.id.topic</code></p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
 <div class="title">Additional resources</div>
 <p>For more details on installing Strimzi and on creating Kafka clusters and topics, see <a href="https://strimzi.io/docs/overview/latest/" class="bare">https://strimzi.io/docs/overview/latest/</a></p>
 </div>
@@ -832,7 +876,7 @@ spec:
 <footer class="footer">
   <p>Copyright © 2020 Red Hat, Inc. All rights reserved.</p>
 </footer>
-<script src="../../../assets/js/site.js"></script>
-<script async src="../../../assets/js/vendor/highlight.js"></script>
+<script src="../../assets/js/site.js"></script>
+<script async src="../../assets/js/vendor/highlight.js"></script>
   </body>
 </html>
