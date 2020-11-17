@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Managing Apicurio Registry content using the REST API :: Apicurio Registry</title>
+    <title>Managing Service Registry content using the REST API :: Apicurio Registry</title>
     <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/1.3.2.Final/getting-started/assembly-managing-registry-artifacts-api.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
@@ -41,37 +41,40 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Service Registry</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Service Registry content rules</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-installing-the-registry-docker.html">Installing Apicurio Registry using Docker</a>
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Service Registry using Docker</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-installing-the-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Service Registry on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring Apicurio Registry on OpenShift</a>
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Service Registry storage on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring Service Registry deployment on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Service Registry content using the web console</a>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Service Registry content using the REST API</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Service Registry content using the Maven plug-in</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Using the Kafka client serializers/deserializers</a>
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Service Registry content using the Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-the-registry-client.html">Using the Apicurio Registry Java client</a>
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry reference</a>
+    <a class="nav-link" href="assembly-registry-reference.html">Service Registry artifact reference</a>
   </li>
 </ul>
   </li>
@@ -104,26 +107,82 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
-    <li><a href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a></li>
+    <li><a href="assembly-managing-registry-artifacts-api.html">Managing Service Registry content using the REST API</a></li>
   </ul>
 </nav>
   <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Managing Apicurio Registry content using the REST API</h1>
+<h1 class="page">Managing Service Registry content using the REST API</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter explains how to manage artifacts stored in the registry using the Registry REST API. This includes using Registry REST API commands, a Maven plug-in, or a Java client application:</p>
+<p>This chapter describes the Registry REST API and shows how to use it manage artifacts stored in the registry:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#managing-artifacts-using-rest-api">Managing artifacts using Registry REST API commands</a></p>
+<p><a href="#registry-rest-api">Registry REST API overview</a></p>
 </li>
 <li>
-<p><a href="#managing-artifacts-using-client-code">Managing artifacts using a Apicurio Registry client application</a></p>
+<p><a href="#managing-artifacts-using-rest-api">Managing artifacts using Registry REST API commands</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-rest-api"><a class="anchor" href="#registry-rest-api"></a>Registry REST API overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Using the Registry REST API, client applications can manage the artifacts in Service Registry. This API provides create, read, update, and delete operations for:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Artifacts</dt>
+<dd>
+<p>Manage the schema and API design artifacts stored in the registry. This also includes browse or search for artifacts, for example, by name, ID, description, or label. You can also manage the lifecycle state of an artifact: enabled, disabled, or deprecated.</p>
+</dd>
+<dt class="hdlist1">Artifact versions</dt>
+<dd>
+<p>Manage the versions that are created when artifact content is updated. This also includes browse or search for versions, for example, by name, ID, description, or label. You can also manage the lifecycle state of a version: enabled, disabled, or deprecated.</p>
+</dd>
+<dt class="hdlist1">Artifact metadata</dt>
+<dd>
+<p>Manage details about artifacts such as when an artifact was created or modified, its current state, and so on. Users can edit some metadata, and some is read-only. For example, editable metadata includes artifact name, description, or label, but when the artifact was created and modified are read-only.</p>
+</dd>
+<dt class="hdlist1">Global rules</dt>
+<dd>
+<p>Configure rules to govern the content evolution of all artifacts to prevent invalid or incompatible content from being added to the registry. Global rules are applied only if an artifact does not have its own specific artifact rules configured.</p>
+</dd>
+<dt class="hdlist1">Artifact rules</dt>
+<dd>
+<p>Configure rules to govern the content evolution of a specific artifact to prevent invalid or incompatible content from being added to the registry. Artifact rules override any global rules configured.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<div class="title">Compatibility with other schema registries</div>
+<p>The Registry REST API is compatible with the Confluent schema registry REST API, which includes support for Apache Avro, Google Protocol buffers, and JSON Schema artifact types. Applications using Confluent client libraries can use Service Registry as a drop-in replacement instead.
+For more details, see <a href="https://developers.redhat.com/blog/2019/12/17/replacing-confluent-schema-registry-with-red-hat-integration-service-registry/">Replacing Confluent Schema Registry with Red Hat Integration Service Registry</a>.</p>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For detailed information, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+</li>
+<li>
+<p>The Registry REST API documentation is also available from the main endpoint of your Service Registry deployment, for example, on <code>http://MY-REGISTRY-URL/api</code>.</p>
 </li>
 </ul>
 </div>
@@ -133,7 +192,7 @@
 <h2 id="managing-artifacts-using-rest-api"><a class="anchor" href="#managing-artifacts-using-rest-api"></a>Managing artifacts using Registry REST API commands</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Client applications can use Registry REST API commands to manage artifacts in Apicurio Registry, for example, in a CI/CD pipeline deployed in production. The Registry REST API provides create, read, update, and delete operations for artifacts, versions, metadata, and rules stored in the registry. For detailed information, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<p>Client applications can use Registry REST API commands to manage artifacts in Service Registry, for example, in a CI/CD pipeline deployed in production. The Registry REST API provides create, read, update, and delete operations for artifacts, versions, metadata, and rules stored in the registry. For detailed information, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
 </div>
 <div class="paragraph">
 <p>This section shows a simple curl-based example of using the Registry REST API to add and retrieve an Apache Avro schema artifact in the registry.</p>
@@ -145,7 +204,7 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-When adding artifacts in Apicurio Registry using the REST API, if you do not specify a unique artifact ID, Apicurio Registry generates one automatically as a UUID.
+When adding artifacts in Service Registry using the REST API, if you do not specify a unique artifact ID, Service Registry generates one automatically as a UUID.
 </td>
 </tr>
 </table>
@@ -154,10 +213,10 @@ When adding artifacts in Apicurio Registry using the REST API, if you do not spe
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>See <a href="assembly-intro-to-the-registry.html">Registry Overview</a></p>
+<p>See <a href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a></p>
 </li>
 <li>
-<p>Apicurio Registry must be installed and running in your environment.</p>
+<p>Service Registry must be installed and running in your environment.</p>
 </li>
 </ul>
 </div>
@@ -175,7 +234,7 @@ When adding artifacts in Apicurio Registry using the REST API, if you do not spe
 <p>This example shows adding an Avro schema artifact with an artifact ID of <code>share-price</code>.</p>
 </div>
 <div class="paragraph">
-<p><code>MY-REGISTRY-HOST</code> is the host name on which Apicurio Registry is deployed. For example: <code>http://localhost:8080/api/artifacts</code>.</p>
+<p><code>MY-REGISTRY-HOST</code> is the host name on which Service Registry is deployed. For example: <code>my-cluster-service-registry-myproject.example.com</code>.</p>
 </div>
 </li>
 <li>
@@ -202,81 +261,6 @@ When adding artifacts in Apicurio Registry using the REST API, if you do not spe
 <ul>
 <li>
 <p>For more REST API sample requests, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="managing-artifacts-using-client-code"><a class="anchor" href="#managing-artifacts-using-client-code"></a>Managing artifacts using a Apicurio Registry client application</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>You can also manage artifacts stored in Apicurio Registry using a Java client application. You create, read, update, or delete artifacts stored in the registry using the Apicurio Registry Java client classes.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>See <a href="assembly-intro-to-the-registry.html">Registry Overview</a></p>
-</li>
-<li>
-<p>You must have implemented a client application in Java that imports the Apicurio Registry client classes: <code>io.apicurio.registry.client.RegistryClient</code></p>
-</li>
-<li>
-<p>Apicurio Registry must be installed and running in your environment</p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Procedure</div>
-<ul>
-<li>
-<p>Update your client application to add a new artifact in the registry. The following example shows adding an Apache Avro schema artifact from a Kafka producer client application:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">String registryUrl_node1 = PropertiesUtil.property(clientProperties, "registry.url.node1",
-  "http://my-cluster-service-registry-myproject.example.com/api"); <i class="conum" data-value="1"></i><b>(1)</b>
-   try (RegistryService service = RegistryClient.create(registryUrl_node1))
-   {
-    String artifactId = ApplicationImpl.INPUT_TOPIC + "-value";
-    try {
-     service.getArtifactMetaData(artifactId); <i class="conum" data-value="2"></i><b>(2)</b>
-    }
-    catch (WebApplicationException e) {
-     CompletionStage &lt; ArtifactMetaData &gt; csa = service.createArtifact( <i class="conum" data-value="3"></i><b>(3)</b>
-        ArtifactType.AVRO,
-        artifactId,
-         new ByteArrayInputStream(LogInput.SCHEMA$.toString().getBytes())
-        );
-    csa.toCompletableFuture().get();
-    }
- }</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Configure the client application with the Apicurio Registry URL in the client properties. You must specify the Apicurio Registry URL with the <code>/api</code> endpoint. You can create properties for more than one registry node.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Check to see if the schema artifact already exists in the registry based on the artifact ID.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Add the new schema artifact in the registry.</td>
-</tr>
-</table>
-</div>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p>For an example Java client application, see <a href="https://github.com/Apicurio/apicurio-registry-demo" class="bare">https://github.com/Apicurio/apicurio-registry-demo</a>.</p>
 </li>
 </ul>
 </div>

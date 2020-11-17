@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Managing Apicurio Registry content using the Maven plug-in :: Apicurio Registry</title>
+    <title>Managing Service Registry content using the Maven plug-in :: Apicurio Registry</title>
     <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/1.3.2.Final/getting-started/assembly-managing-registry-artifacts-maven.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
@@ -41,37 +41,40 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Service Registry</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Service Registry content rules</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-installing-the-registry-docker.html">Installing Apicurio Registry using Docker</a>
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Service Registry using Docker</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-installing-the-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Service Registry on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring Apicurio Registry on OpenShift</a>
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Service Registry storage on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring Service Registry deployment on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Service Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Service Registry content using the REST API</a>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Service Registry content using the Maven plug-in</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Using the Kafka client serializers/deserializers</a>
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Service Registry content using the Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-the-registry-client.html">Using the Apicurio Registry Java client</a>
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry reference</a>
+    <a class="nav-link" href="assembly-registry-reference.html">Service Registry artifact reference</a>
   </li>
 </ul>
   </li>
@@ -104,58 +107,57 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
-    <li><a href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a></li>
+    <li><a href="assembly-managing-registry-artifacts-maven.html">Managing Service Registry content using the Maven plug-in</a></li>
   </ul>
 </nav>
   <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Managing Apicurio Registry content using the Maven plug-in</h1>
+<h1 class="page">Managing Service Registry content using the Maven plug-in</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter explains how to manage artifacts stored in the registry using the Apicurio Registry Maven plug-in.</p>
+<p>This chapter explains how to manage artifacts stored in the registry using the Service Registry Maven plug-in:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#managing-artifacts-using-maven-plugin">Managing artifacts using the Apicurio Registry Maven plug-in</a></p>
+<p><a href="#managing-artifacts-using-maven-plugin">Managing artifacts using the Service Registry Maven plug-in</a></p>
 </li>
 </ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="managing-artifacts-using-maven-plugin"><a class="anchor" href="#managing-artifacts-using-maven-plugin"></a>Managing artifacts using the Apicurio Registry Maven plug-in</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Apicurio Registry provides a Maven plug-in to enable you to upload or download registry artifacts as part of your development build. For example, this plug-in is useful for testing and validating that your schema updates are compatible with client applications.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>See <a href="assembly-intro-to-the-registry.html">Registry Overview</a></p>
+<p>See <a href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a></p>
 </li>
 <li>
-<p>Apicurio Registry must be installed and running in your environment</p>
+<p>Service Registry must be installed and running in your environment</p>
 </li>
 <li>
 <p>Maven must be installed and configured in your environment</p>
 </li>
 </ul>
 </div>
-<div class="sect2">
-<h3 id="_registering_an_artifact_using_the_maven_plug_in"><a class="anchor" href="#_registering_an_artifact_using_the_maven_plug_in"></a>Registering an artifact using the Maven plug-in</h3>
-<div class="paragraph">
-<p>Probably the most common use case for the Maven plug-in is registering artifacts during a build.  You can accomplish
-this by using the <code>register</code> goal provided.  Simply update your Maven <code>pom.xml</code> file to use the
-<code>apicurio-registry-maven-plugin</code> to upload an artifact to Apicurio Registry.</p>
 </div>
-<div class="paragraph">
-<p>The following example shows registering an Apache Avro schema artifact:</p>
 </div>
+<div class="sect1">
+<h2 id="managing-artifacts-using-maven-plugin"><a class="anchor" href="#managing-artifacts-using-maven-plugin"></a>Managing artifacts using the Service Registry Maven plug-in</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can use the Service Registry Maven plug-in to upload or download registry artifacts as part of your development build. For example, this plug-in is useful for testing and validating that your schema updates are compatible with client applications.</p>
+</div>
+<h3 id="_registering_an_artifact_using_the_maven_plug_in" class="discrete">Registering an artifact using the Maven plug-in</h3>
+<div class="paragraph">
+<p>Probably the most common use case for the Maven plug-in is registering artifacts during a build. You can accomplish this by using the <code>register</code> execution goal.</p>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Update your Maven <code>pom.xml</code> file to use the <code>apicurio-registry-maven-plugin</code> to register an artifact. The following example shows registering an Apache Avro schema:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
@@ -184,11 +186,11 @@ this by using the <code>register</code> goal provided.  Simply update your Maven
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specify <code>register</code> as the execution goal to upload an artifact to the registry.</td>
+<td>Specify <code>register</code> as the execution goal to upload the schema artifact to the registry.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>You must specify the Apicurio Registry URL with the <code>/api</code> endpoint.</td>
+<td>You must specify the Service Registry URL with the <code>/api</code> endpoint.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -196,16 +198,18 @@ this by using the <code>register</code> goal provided.  Simply update your Maven
 </tr>
 </table>
 </div>
+</li>
+</ul>
 </div>
-<div class="sect2">
-<h3 id="_downloading_an_artifact_using_the_maven_plug_in"><a class="anchor" href="#_downloading_an_artifact_using_the_maven_plug_in"></a>Downloading an artifact using the Maven plug-in</h3>
+<h3 id="_downloading_an_artifact_using_the_maven_plug_in" class="discrete">Downloading an artifact using the Maven plug-in</h3>
 <div class="paragraph">
-<p>You can also use the Maven plug-in to download artifacts from Apicurio Registry.  This is often useful, for example, when
-generating code from a registered schema.</p>
+<p>You can also use the Maven plug-in to download artifacts from Service Registry. This is often useful, for example, when generating code from a registered schema.</p>
 </div>
-<div class="paragraph">
-<p>The following example shows downloading a single schema by its artifact ID.</p>
-</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Update your Maven <code>pom.xml</code> file to use the <code>apicurio-registry-maven-plugin</code> to download an artifact. The following example shows downloading a single schema by its artifact ID.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
@@ -239,7 +243,7 @@ generating code from a registered schema.</p>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>You must specify the Apicurio Registry URL with the <code>/api</code> endpoint.</td>
+<td>You must specify the Service Registry URL with the <code>/api</code> endpoint.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -247,17 +251,16 @@ generating code from a registered schema.</p>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>The plug-in will automatically try to select an appropriate file extension, but you can override it using <code>&lt;artifactExtension&gt;</code>.</td>
+<td>The plug-in automatically tries to select an appropriate file extension, but you can override it using <code>&lt;artifactExtension&gt;</code>.</td>
 </tr>
 </table>
 </div>
+</li>
+</ul>
 </div>
-<div class="sect2">
-<h3 id="_testing_an_artifact"><a class="anchor" href="#_testing_an_artifact"></a>Testing an artifact</h3>
+<h3 id="_testing_an_artifact_using_the_maven_plug_in" class="discrete">Testing an artifact using the Maven plug-in</h3>
 <div class="paragraph">
-<p>You may want to simply verify that an artifact can be registered without actually making any changes.  This is most
-often useful when rules have been configured in Apicurio Registry.  Testing the artifact will result in a failure if the
-artifact content violates any of the configured rules.</p>
+<p>You might want to verify that an artifact can be registered without actually making any changes. This is most often useful when rules are configured in Service Registry. Testing the artifact results in a failure if the artifact content violates any of the configured rules.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -266,14 +269,16 @@ artifact content violates any of the configured rules.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Even if the artifact passes the test, no content will be added to Apicurio Registry.
+Even if the artifact passes the test, no content is added to Service Registry.
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p>The following example shows testing an Apache Avro schema artifact:</p>
-</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Update your Maven <code>pom.xml</code> file to use the <code>apicurio-registry-maven-plugin</code> to test an artifact. The following example shows testing an Apache Avro schema:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
@@ -302,11 +307,11 @@ Even if the artifact passes the test, no content will be added to Apicurio Regis
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specify <code>test-update</code> as the execution goal to test an artifact.</td>
+<td>Specify <code>test-update</code> as the execution goal to test the schema artifact.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>You must specify the Apicurio Registry URL with the <code>/api</code> endpoint.</td>
+<td>You must specify the Service Registry URL with the <code>/api</code> endpoint.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -314,14 +319,16 @@ Even if the artifact passes the test, no content will be added to Apicurio Regis
 </tr>
 </table>
 </div>
+</li>
+</ul>
+</div>
 <div class="ulist">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details on the Maven plug-in, see <a href="https://github.com/Apicurio/apicurio-registry-demo" class="bare">https://github.com/Apicurio/apicurio-registry-demo</a>.</p>
+<p>For more details on the Service Registry Maven plug-in, see the <a href="https://github.com/Apicurio/apicurio-registry-demo">Registry demonstration example</a></p>
 </li>
 </ul>
-</div>
 </div>
 </div>
 </div>

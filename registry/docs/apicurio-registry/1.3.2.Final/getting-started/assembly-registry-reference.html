@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Apicurio Registry reference :: Apicurio Registry</title>
+    <title>Service Registry artifact reference :: Apicurio Registry</title>
     <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/1.3.2.Final/getting-started/assembly-registry-reference.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
@@ -41,37 +41,40 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Service Registry</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Service Registry content rules</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-installing-the-registry-docker.html">Installing Apicurio Registry using Docker</a>
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Service Registry using Docker</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-installing-the-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Service Registry on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring Apicurio Registry on OpenShift</a>
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Service Registry storage on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring Service Registry deployment on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Service Registry content using the web console</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Service Registry content using the REST API</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Using the Kafka client serializers/deserializers</a>
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Service Registry content using the Maven plug-in</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-the-registry-client.html">Using the Apicurio Registry Java client</a>
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Service Registry content using the Java client</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers</a>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry reference</a>
+    <a class="nav-link" href="assembly-registry-reference.html">Service Registry artifact reference</a>
   </li>
 </ul>
   </li>
@@ -104,41 +107,56 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
-    <li><a href="assembly-registry-reference.html">Apicurio Registry reference</a></li>
+    <li><a href="assembly-registry-reference.html">Service Registry artifact reference</a></li>
   </ul>
 </nav>
   <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Apicurio Registry reference</h1>
+<h1 class="page">Service Registry artifact reference</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter lists the supported artifact types, states and content rule types that are stored in Apicurio Registry.
-* <a href="#registry-artifact-types">Apicurio Registry artifact types</a>
-* <a href="#registry-artifact-states">Apicurio Registry artifact states</a>
-* <a href="#registry-rule-types">Apicurio Registry content rule types</a>
-* <a href="#registry-rule-maturity-matrix">Apicurio Registry content rule maturity matrix</a></p>
+<p>This chapter provides details on the supported artifact types, states, metadata, and content rules that are stored in Service Registry.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#registry-artifact-types">Service Registry artifact types</a></p>
+</li>
+<li>
+<p><a href="#registry-artifact-states">Service Registry artifact states</a></p>
+</li>
+<li>
+<p><a href="#registry-artifact-metadata">Service Registry artifact metadata</a></p>
+</li>
+<li>
+<p><a href="#registry-rule-types">Service Registry content rule types</a></p>
+</li>
+<li>
+<p><a href="#registry-rule-maturity-matrix">Service Registry content rule maturity</a></p>
+</li>
+</ul>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more detailed information on artifact types, states, and rule types, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+<p>For more detailed information, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-artifact-types"><a class="anchor" href="#registry-artifact-types"></a>Apicurio Registry artifact types</h2>
+<h2 id="registry-artifact-types"><a class="anchor" href="#registry-artifact-types"></a>Service Registry artifact types</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can store and manage the following artifact types in Apicurio Registry:</p>
+<p>You can store and manage the following artifact types in Service Registry:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Apicurio Registry artifact types</caption>
+<caption class="title">Table 1. Service Registry artifact types</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -195,13 +213,13 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-artifact-states"><a class="anchor" href="#registry-artifact-states"></a>Apicurio Registry artifact states</h2>
+<h2 id="registry-artifact-states"><a class="anchor" href="#registry-artifact-states"></a>Service Registry artifact states</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>These are the valid artifact states in Apicurio Registry:</p>
+<p>These are the valid artifact states in Service Registry:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Apicurio Registry artifact states</caption>
+<caption class="title">Table 2. Service Registry artifact states</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -219,24 +237,172 @@
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DISABLED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The artifact and its metadata is viewable and searchable using the Apicurio Registry web console, but its content cannot be fetched by any client.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The artifact and its metadata is viewable and searchable using the Service Registry web console, but its content cannot be fetched by any client.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DEPRECATED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The artifact is fully usable but a header is added to the REST API response whenever the artifact content is fetched. The Apicurio Registry Rest Client will also log a warning whenever it sees deprecated content.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The artifact is fully usable but a header is added to the REST API response whenever the artifact content is fetched. The Service Registry Rest Client will also log a warning whenever it sees deprecated content.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-rule-types"><a class="anchor" href="#registry-rule-types"></a>Apicurio Registry content rule types</h2>
+<h2 id="registry-artifact-metadata"><a class="anchor" href="#registry-artifact-metadata"></a>Service Registry artifact metadata</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can specify the following rule types to govern content evolution in Apicurio Registry:</p>
+<p>When an artifact is added to Service Registry, a set of metadata properties is stored along with the artifact content. This metadata consists of a set of generated read-only properties, along with some properties that you can set.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Apicurio Registry content rule types</caption>
+<caption class="title">Table 3. Service Registry metadata properties</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Editable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>ArtifactType</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>state</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>ArtifactState</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>true</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>version</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>integer</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>createdBy</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>createdOn</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>date</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>modifiedBy</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>modifiedOn</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>date</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>true</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>true</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>labels</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>array of string</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>true</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>properties</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>map</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>true</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<div class="title">Updating artifact metadata</div>
+<ul>
+<li>
+<p>You can use the Service Registry REST API to update the set of editable properties using the metadata endpoints.</p>
+</li>
+<li>
+<p>You can edit the <code>state</code> property only by using the state transition API. For example, you can mark an artifact as <code>deprecated</code> or <code>disabled</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Additional resources</div>
+<p>For more details, see the <code>/artifacts/{artifactId}/meta</code> sections in the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-rule-types"><a class="anchor" href="#registry-rule-types"></a>Service Registry content rule types</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can specify the following rule types to govern content evolution in Service Registry:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Service Registry content rule types</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -300,15 +466,14 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-rule-maturity-matrix"><a class="anchor" href="#registry-rule-maturity-matrix"></a>Apicurio Registry content rule maturity matrix</h2>
+<h2 id="registry-rule-maturity-matrix"><a class="anchor" href="#registry-rule-maturity-matrix"></a>Service Registry content rule maturity</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Not all rules are fully implemented for every artifact type supported by the registry.
-The following table documents the current maturity level for each rule and each
-artifact type.</p>
+<p>Not all content rules are fully implemented for every artifact type supported by Service Registry.
+The following table shows the current maturity level for each rule and artifact type.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Apicurio Registry content rule maturity matrix</caption>
+<caption class="title">Table 5. Service Registry content rule maturity matrix</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -316,9 +481,9 @@ artifact type.</p>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Artifact Type</th>
-<th class="tableblock halign-left valign-top">Validity Rule</th>
-<th class="tableblock halign-left valign-top">Compatibility Rule</th>
+<th class="tableblock halign-left valign-top">Artifact type</th>
+<th class="tableblock halign-left valign-top">Validity rule</th>
+<th class="tableblock halign-left valign-top">Compatibility rule</th>
 </tr>
 </thead>
 <tbody>

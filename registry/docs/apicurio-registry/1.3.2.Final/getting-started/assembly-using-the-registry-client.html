@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Using the Apicurio Registry Java client :: Apicurio Registry</title>
+    <title>Managing Service Registry content using the Java client :: Apicurio Registry</title>
     <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/1.3.2.Final/getting-started/assembly-using-the-registry-client.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
@@ -41,37 +41,40 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Service Registry</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Service Registry content rules</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-installing-the-registry-docker.html">Installing Apicurio Registry using Docker</a>
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Service Registry using Docker</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-installing-the-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Service Registry on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring Apicurio Registry on OpenShift</a>
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Service Registry storage on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring Service Registry deployment on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Service Registry content using the web console</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Service Registry content using the REST API</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Using the Kafka client serializers/deserializers</a>
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Service Registry content using the Maven plug-in</a>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="assembly-using-the-registry-client.html">Using the Apicurio Registry Java client</a>
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Service Registry content using the Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry reference</a>
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-registry-reference.html">Service Registry artifact reference</a>
   </li>
 </ul>
   </li>
@@ -104,101 +107,70 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
-    <li><a href="assembly-using-the-registry-client.html">Using the Apicurio Registry Java client</a></li>
+    <li><a href="assembly-using-the-registry-client.html">Managing Service Registry content using the Java client</a></li>
   </ul>
 </nav>
   <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Using the Apicurio Registry Java client</h1>
+<h1 class="page">Managing Service Registry content using the Java client</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter explains how to use the Apicurio Registry Java client:</p>
+<p>This chapter explains how to use the Service Registry Java client:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#registry-client-intro">Apicurio Registry Java client overview</a></p>
+<p><a href="#registry-client-intro">Service Registry Java client</a></p>
 </li>
 <li>
-<p><a href="#writing-registry-client">Writing a Apicurio Registry client application</a></p>
+<p><a href="#writing-registry-client">Writing Service Registry client applications</a></p>
 </li>
 <li>
-<p><a href="#registry-client-types">Apicurio Registry Java client reference</a></p>
+<p><a href="#registry-client-config">Service Registry Java client configuration</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-client-intro"><a class="anchor" href="#registry-client-intro"></a>Apicurio Registry Java client overview</h2>
+<h2 id="registry-client-intro"><a class="anchor" href="#registry-client-intro"></a>Service Registry Java client</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can manage artifacts stored in Apicurio Registry using a Java client application. You can create, read, update, or delete artifacts stored
-in the registry using the Apicurio Registry Java client classes.</p>
+<p>You can manage artifacts stored in Service Registry using a Java client application. You can create, read, update, or delete artifacts stored in the registry using the Service Registry Java client classes.</p>
 </div>
 <div class="paragraph">
-<p>You can access the Apicurio Registry Java client by adding the proper dependency to your project, see <a href="#writing-registry-client">Writing a Apicurio Registry client application</a>.</p>
+<p>You can access the Service Registry Java client by adding the correct dependency to your project, see <a href="#writing-registry-client">Writing Service Registry client applications</a>.</p>
 </div>
 <div class="paragraph">
-<p>The Apicurio Registry client is autocloseable and is implemented using Retrofit and OkHttp as base libraries. This gives the user the ability to customize its
-usage by, for example, adding custom headers or enabling TLS auth support.</p>
-</div>
-<div class="sect2">
-<h3 id="_enabling_tls_support_in_the_client"><a class="anchor" href="#_enabling_tls_support_in_the_client"></a>Enabling TLS support in the client</h3>
-<div class="paragraph">
-<p>You can configure TLS authentication using the following properties:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>apicurio.registry.request.ssl.truststore.location</p>
-</li>
-<li>
-<p>apicurio.registry.request.ssl.truststore.password</p>
-</li>
-<li>
-<p>apicurio.registry.request.ssl.truststore.type</p>
-</li>
-<li>
-<p>apicurio.registry.request.ssl.keystore.location</p>
-</li>
-<li>
-<p>apicurio.registry.request.ssl.keystore.password</p>
-</li>
-<li>
-<p>apicurio.registry.request.ssl.keystore.type</p>
-</li>
-<li>
-<p>apicurio.registry.request.ssl.key.password</p>
-</li>
-</ul>
-</div>
+<p>The Service Registry client is auto-closeable and is implemented using Retrofit and OkHttp as base libraries. This gives you the ability to customize its use, for example, by adding custom headers or enabling Transport Layer Security (TLS) authentication. For more details, see <a href="#registry-client-config">Service Registry Java client configuration</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="writing-registry-client"><a class="anchor" href="#writing-registry-client"></a>Writing a Apicurio Registry client application</h2>
+<h2 id="writing-registry-client"><a class="anchor" href="#writing-registry-client"></a>Writing Service Registry client applications</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section explains how to manage artifacts stored in Apicurio Registry using a Java client application.</p>
+<p>This section explains how to manage artifacts stored in Service Registry using a Java client application. The Service Registry Java client extends the <code>Autocloseable</code> interface.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>See <a href="assembly-intro-to-the-registry.html">Registry Overview</a></p>
+<p>See <a href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a></p>
 </li>
 <li>
-<p>Apicurio Registry must be installed and running in your environment.</p>
-</li>
-<li>
-<p>Add the following dependency to your Maven project:</p>
+<p>Service Registry must be installed and running in your environment</p>
 </li>
 </ul>
 </div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add the following dependency to your Maven project:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
@@ -208,11 +180,9 @@ usage by, for example, adding custom headers or enabling TLS auth support.</p>
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
+</li>
 <li>
-<p>Create a registry client</p>
+<p>Create a registry client as follows:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class ClientExample {
@@ -220,9 +190,9 @@ usage by, for example, adding custom headers or enabling TLS auth support.</p>
     private static final RegistryRestClient client;
 
      public static void main(String[] args) throws Exception {
-        // Create a Service Registry client
-        String registryUrl = "http://localhost:8080/api/";
-        RegistryRestClient client = RegistryRestClientFactory.create(registryUrl); <i class="conum" data-value="1"></i><b>(1)</b>
+        // Create a registry client
+        String registryUrl = "https://registry.my-domain.com/api"; <i class="conum" data-value="1"></i><b>(1)</b>
+        RegistryRestClient client = RegistryRestClientFactory.create(registryUrl); <i class="conum" data-value="2"></i><b>(2)</b>
     }
 }</code></pre>
 </div>
@@ -231,42 +201,46 @@ usage by, for example, adding custom headers or enabling TLS auth support.</p>
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>For more options on how to create a Apicurio Registry client, see {registry-client-types}.</td>
+<td>You must specify the Service Registry URL with the <code>/api</code> endpoint.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>For more options when creating a Service Registry client, see the Java client configuration in the next section.</td>
 </tr>
 </table>
 </div>
 </li>
 <li>
-<p>Once created, all the operations from the Apicurio Registry REST API are available through the client.  For details about the available
-operations, see the REST API documentation.</p>
+<p>When the client is created, you can use all the operations from the Service Registry REST API through the client. For more details, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
 </li>
 </ol>
-</div>
-<div class="paragraph">
-<p>The Apicurio Registry Java client extends the interface Autocloseable.</p>
 </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more examples on how to use or customize the Apicurio Registry client see <a href="https://github.com/Apicurio/apicurio-registry-examples/blob/master/rest-client" class="bare">https://github.com/Apicurio/apicurio-registry-examples/blob/master/rest-client</a></p>
+<p>For an example of how to use and customize the Service Registry client, see the <a href="https://github.com/Apicurio/apicurio-registry-examples/blob/master/rest-client">Registry client demonstration example</a>.</p>
+</li>
+<li>
+<p>For details on how to use the Service Registry Kafka client serializer/deserializer for Apache Avro in AMQ Streams producer and consumer applications, see
+<a href="https://access.redhat.com/documentation/en-us/red_hat_amq/7.7/html/using_amq_streams_on_openshift/service-registry-str">Using AMQ Streams on Openshift</a>.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-client-types"><a class="anchor" href="#registry-client-types"></a>Apicurio Registry Java client reference</h2>
+<h2 id="registry-client-config"><a class="anchor" href="#registry-client-config"></a>Service Registry Java client configuration</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Apicurio Registry Java client includes the following configuration options, based on the client factory.</p>
+<p>The Service Registry Java client includes the following configuration options, based on the client factory:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Apicurio Registry Java client options</caption>
+<caption class="title">Table 1. Service Registry Java client configuration options</caption>
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
+<col style="width: 25%;">
+<col style="width: 50%;">
+<col style="width: 25%;">
 </colgroup>
 <thead>
 <tr>
@@ -277,24 +251,54 @@ operations, see the REST API documentation.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Plain Client</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Plain client</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Basic REST client used to interact with a running registry.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Custom HTTP client</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Registry client using an OkHttpClient provided by the user.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl, okhttpClient</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl</code>, <code>okhttpClient</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Custom Configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Custom configuration</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Registry client that accepts a map containing custom configuration. This is useful, for example, to add custom headers to the calls.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl, Map&lt;String, Object&gt; configs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl</code>, <code>Map&lt;String Object&gt; configs</code></p></td>
 </tr>
 </tbody>
 </table>
+<h3 id="_custom_header_configuration" class="discrete">Custom header configuration</h3>
 <div class="paragraph">
-<p>In order to configure custom headers, the prefix <strong>apicurio.registry.request.headers</strong> must be added to the configs map key, for example, a key <strong>apicurio.registry.request.headers.Authorization</strong> with value Basic: xxxxx would result in a header of <strong>Authorization</strong> with value Basic: xxxxx.</p>
+<p>To configure custom headers, you must add the <code>apicurio.registry.request.headers</code> prefix to the <code>configs</code> map key. For example, a key of <code>apicurio.registry.request.headers.Authorization</code> with a value of <code>Basic: xxxxx</code> results in a header of <code>Authorization</code> with value of <code>Basic: xxxxx</code>.</p>
+</div>
+<h3 id="_tls_configuration" class="discrete">TLS configuration</h3>
+<div class="paragraph">
+<p>You can configure Transport Layer Security (TLS) authentication for the Service Registry Java client using the following properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>apicurio.registry.request.ssl.truststore.location</code></p>
+</li>
+<li>
+<p><code>apicurio.registry.request.ssl.truststore.password</code></p>
+</li>
+<li>
+<p><code>apicurio.registry.request.ssl.truststore.type</code></p>
+</li>
+<li>
+<p><code>apicurio.registry.request.ssl.keystore.location</code></p>
+</li>
+<li>
+<p><code>apicurio.registry.request.ssl.keystore.password</code></p>
+</li>
+<li>
+<p><code>apicurio.registry.request.ssl.keystore.type</code></p>
+</li>
+<li>
+<p><code>apicurio.registry.request.ssl.key.password</code></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
