@@ -48,7 +48,7 @@ export APICURIO_GITHUB_URL
 ```
 For now assume that your keycloak server is running on http://localhost:8080, though we will see in the later steps how to actually achieve it.
 ```
-In order to connect your local Apicurio server to our local Keycloak server, you must make some changes to standalone/configuration/standalone-apicurio.xml. In particular, you must change the apicurio.kc.auth.rootUrl and apicurio.kc.auth.realm properties (which can be found in the system-properties section of the file. For example, change these values to:
+In order to connect your local Apicurio server to your local Keycloak server, you must make some changes to standalone/configuration/standalone-apicurio.xml. In particular, you must change the apicurio.kc.auth.rootUrl and apicurio.kc.auth.realm properties (which can be found in the system-properties section of the file. For example, change these values to:
 
 ```xml
 <system-properties>
@@ -63,7 +63,7 @@ In order to connect your local Apicurio server to our local Keycloak server, you
 This article assumes we're running both Keycloak and Apicurio on the same machine. It's now time to start Apicurio and log in. To start Apicurio on the same machine as Keycloak without running up against port conflicts, run this command:
 
 ```shell
-./bin/standalone.sh -c standalone-apicurio.xml -Djboss.socket.binding.port-offset=100
+./distro/quickstart/target/apicurio-studio-*-SNAPSHOT/bin/standalone.sh -c standalone-apicurio.xml -Djboss.socket.binding.port-offset=100
 ```
 
 
@@ -96,6 +96,7 @@ Before starting your local Keycloak server, refer https://github.com/Apicurio/ap
 Follow the section "GitHub Identity Provider (https://github.com/Apicurio/apicurio-keycloak-extensions#github-identity-provider)" listed in the README.md of this git repository.
 
 Once you have followed the steps provided in the README.md of the above mentioned git repository, before starting Keycloak, add the following two system properties to it (either via command line or via standalone.xml):
+-Dapicurio.hub.github.baseUrl and -Dapicurio.hub.github.apiUrl
 
 If you are going via command line option to set the properties, you can run the following command to start the keycloak:
 ```
@@ -103,7 +104,7 @@ If you are going via command line option to set the properties, you can run the 
 ```
 
 ## 6. Configure Keycloak
-Once the keycloak server is running on http://localhost:8080/auth ,follow step 4 on this link --> https://apicurio-studio.readme.io/docs/setting-up-keycloak-for-use-with-apicurio#4-configure-a-new-realm-in-keycloak
+Once the keycloak server is running on http://localhost:8080/auth ,follow step 4 completely mentioned on this doc --> https://apicurio-studio.readme.io/docs/setting-up-keycloak-for-use-with-apicurio#4-configure-a-new-realm-in-keycloak
 
 
 ## 7. Configure Keycloak To Enable GitHub Account Linking
@@ -117,9 +118,10 @@ In a separate browser tab, navigate to the OAuth Apps section under Developer Se
 
 ![GitHub](/images/guides/github-oauths.png)
 
-With both browser tabs/windows open, copy the "Redirect URI" value in the Keycloak form into the "Authorization callback URL" field in the GitHub form. Complete the remaining fields in the GitHub form and click Register application.
+With both browser tabs/windows open, copy the "Redirect URI" value in the Keycloak form into the "Authorization callback URL" field in the GitHub form. Complete the remaining fields in the GitHub form and click Register application.lso add the "Home Page URL" in the GitHub form.
+As an example, if the "Redirect URI" in your keycloak form is "http://localhost:8080/auth/realms/apicurio/broker/github/endpoint", then "Authorization callback URL" in the GitHub form will be same as the "Redirect URI" and "Home Page URL" will be "http://localhost:8080/auth/realms/apicurio".
 
-![GitHub](/images/guides/github-oauth.png)
+![GitHub](/images/guides/github-oauth2.png)
 
 Once the GitHub application has been registered, copy the "Client ID" and "Client Secret" values from GitHub into the Keycloak form. Then complete the Keycloak form with the following values:
 
