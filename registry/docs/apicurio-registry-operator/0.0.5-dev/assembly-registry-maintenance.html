@@ -129,6 +129,12 @@
 <p><a href="#registry-liveness-and-readiness">Apicurio Registry liveness and readiness environment variables</a></p>
 </li>
 <li>
+<p><a href="#registry-https-in-cluster">Configuring an HTTPS connection to Apicurio Registry from inside the OpenShift cluster</a></p>
+</li>
+<li>
+<p><a href="#registry-https-outside-cluster">Configuring an HTTPS connection to Apicurio Registry from outside the OpenShift cluster</a></p>
+</li>
+<li>
 <p><a href="#registry-sql-backup">Backing up Apicurio Registry PostgreSQL storage</a></p>
 </li>
 <li>
@@ -297,6 +303,283 @@
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-https-in-cluster"><a class="anchor" href="#registry-https-in-cluster"></a>Configuring an HTTPS connection to Apicurio Registry from inside the OpenShift cluster</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following procedure shows how to configure Apicurio Registry deployment to expose a port for HTTPS connections from inside the OpenShift cluster.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+This kind of connection is not directly available outside of the cluster.
+Routing is based on hostname, which is encoded in the case of an HTTPS connection.
+Therefore, edge termination or other configuration is still needed.
+See <a href="#registry-https-outside-cluster">Configuring an HTTPS connection to Apicurio Registry from outside the OpenShift cluster</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have already installed the Apicurio Registry Operator.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Generate a <code>keystore</code> with a self-signed certificate.
+You can skip this step if you are using your own certificates.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">keytool -genkey -trustcacerts -keyalg RSA -keystore registry-keystore.jks -storepass password</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a new secret to hold the keystore and keystore password.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>In the left navigation menu of the OpenShift web console, click <strong>Workloads</strong> &gt; <strong>Secrets</strong> &gt; <strong>Create Key/Value Secret</strong>.</p>
+</li>
+<li>
+<p>Use the following values:<br>
+Name: <code>registry-keystore</code><br>
+Key 1: <code>keystore.jks</code><br>
+Value 1: <em>registry-keystore.jks</em> (uploaded file)<br>
+Key 2: <code>password</code><br>
+Value 2: <em>password</em></p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you encounter a <code>java.io.IOException: Invalid keystore format</code>, the upload of the binary file did not work properly.
+As an alternative, encode the file as a base64 string using <code>cat registry-keystore.jks | base64 -w0 &gt; data.txt</code> and edit the <strong>Secret</strong> resource as yaml to manually add the encoded file.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Edit the <strong>DeploymentConfig</strong> resource of the Apicurio Registry instance.
+You can find the correct name in a status field of the Apicurio Registry Operator.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Add the keystore secret as a volume:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">template:
+  spec:
+    volumes:
+    - name: registry-keystore-secret-volume
+      secret:
+      secretName: registry-keystore</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add a volume mount:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">volumeMounts:
+  - name: registry-keystore-secret-volume
+    mountPath: /etc/registry-keystore
+    readOnly: true</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add <code>JAVA_OPTIONS</code> and <code>KEYSTORE_PASSWORD</code> environment variables:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: KEYSTORE_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: registry-keystore
+      key: password
+- name: JAVA_OPTIONS
+    value: &gt;-
+     -Dquarkus.http.ssl.certificate.key-store-file=/etc/registry-keystore/keystore.jks
+     -Dquarkus.http.ssl.certificate.key-store-file-type=jks
+     -Dquarkus.http.ssl.certificate.key-store-password=$(KEYSTORE_PASSWORD)</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Order is important when using string interpolation.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Enable the HTTPS port:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">ports:
+  - containerPort: 8080
+    protocol: TCP
+  - containerPort: 8443
+    protocol: TCP</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Edit the <strong>Service</strong> resource of the Apicurio Registry instance.
+You can find the correct name in a status field of the Apicurio Registry Operator.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  - name: https
+    protocol: TCP
+    port: 8443
+    targetPort: 8443</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that the connection is working:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Connect into a pod on the cluster using SSH (you can use the Apicurio Registry pod):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc rsh -n default example-apicurioregistry-deployment-vx28s-4-lmtqb</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Find the cluster IP of the Apicurio Registry pod from the <strong>Service</strong> resource (see the <strong>Location</strong> column in the web console).
+Afterwards, execute a test request (we are using self-signed certificate, so an insecure flag is required):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -k https://172.30.209.198:8443/health
+[...]</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-https-outside-cluster"><a class="anchor" href="#registry-https-outside-cluster"></a>Configuring an HTTPS connection to Apicurio Registry from outside the OpenShift cluster</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following procedure shows how to configure Apicurio Registry deployment to expose an HTTPS edge-terminated route for connections from outside the OpenShift cluster.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have already installed the Apicurio Registry Operator.</p>
+</li>
+<li>
+<p>Read the <a href="https://docs.openshift.com/container-platform/latest/networking/routes/secured-routes.html">OpenShift documentation for creating secured routes</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add a second <strong>Route</strong> in addition to the HTTP route created by the Apicurio Registry Operator.
+See the following example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  [...]
+  labels:
+    app: example-apicurioregistry
+    [...]
+spec:
+  host: example-apicurioregistry-default.apps.example.com
+  to:
+    kind: Service
+    name: example-apicurioregistry-service-9whd7
+    weight: 100
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Make sure the <code>insecureEdgeTerminationPolicy: Redirect</code> configuration property is set.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If you do not specify a certificate, OpenShift will use a default.
+You can alternatively generate a custom self-signed certificate using the following commands:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">openssl genrsa 2048 &gt; host.key &amp;&amp;
+openssl req -new -x509 -nodes -sha256 -days 365 -key host.key -out host.cert</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and then create a route using the OpenShift CLI:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc create route edge \
+  --service=example-apicurioregistry-service-9whd7 \
+  --cert=host.cert --key=host.key \
+  --hostname=example-apicurioregistry-default.apps.example.com \
+  --insecure-policy=Redirect \
+  -n default</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
 </div>
 </div>
 <div class="sect1">
