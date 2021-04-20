@@ -35,7 +35,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry" data-version="1.3.3.Final">
+<div class="nav-container" data-component="apicurio-registry" data-version="2.0.0.Final">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -60,7 +60,7 @@
     <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring Apicurio Registry deployment on OpenShift</a>
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
@@ -72,13 +72,16 @@
     <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using the Java client</a>
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers</a>
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/0.0.5-dev/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -88,17 +91,17 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry</span>
-    <span class="version">1.3.3.Final</span>
+    <span class="version">2.0.0.Final</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">Apicurio Registry</span>
       <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../2.0.0.Final/index.html">2.0.0.Final</a>
+        <li class="version is-current is-latest">
+          <a href="../index.html">2.0.0.Final</a>
         </li>
-        <li class="version is-current">
-          <a href="../index.html">1.3.3.Final</a>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
         </li>
       </ul>
     </li>
@@ -121,7 +124,7 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="../../2.0.0.Final/index.html" class="home-link"></a>
+  <a href="../index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
@@ -129,10 +132,10 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.3.3.Final</button>
+  <button class="version-menu-toggle" title="Show other versions of page">2.0.0.Final</button>
   <div class="version-menu">
-    <a class="version" href="../../2.0.0.Final/getting-started/assembly-managing-registry-artifacts-ui.html">2.0.0.Final</a>
-    <a class="version is-current" href="assembly-managing-registry-artifacts-ui.html">1.3.3.Final</a>
+    <a class="version is-current" href="assembly-managing-registry-artifacts-ui.html">2.0.0.Final</a>
+    <a class="version" href="../../1.3.3.Final/getting-started/assembly-managing-registry-artifacts-ui.html">1.3.3.Final</a>
   </div>
 </div>
   <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
@@ -142,8 +145,8 @@
 <h1 class="page">Managing Apicurio Registry content using the web console</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
-<p>This chapter explains how to manage artifacts stored in the registry using the Apicurio Registry web console. This includes uploading and browsing registry content, and configuring optional rules:</p>
+<div class="paragraph _abstract">
+<p>This chapter explains how to manage schema and API artifacts stored in the registry using the Apicurio Registry web console. This includes uploading and browsing registry content, and configuring optional rules:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -201,7 +204,7 @@
 <div class="ulist">
 <ul>
 <li>
-<p><code>REGISTRY_UI_CONFIG_APIURL</code>: Set the URL for the backend Apicurio Registry REST API. For example,<code>https://registry.my-domain.com/api</code></p>
+<p><code>REGISTRY_UI_CONFIG_APIURL</code>: Set the URL for the backend Apicurio Registry REST API. For example,<code>https://registry.my-domain.com/apis</code></p>
 </li>
 <li>
 <p><code>REGISTRY_UI_CONFIG_UIURL</code>: Set the URL for the frontend Apicurio Registry web console. For example, <code>https://registry.my-domain.com/ui</code></p>
@@ -265,11 +268,11 @@
 </div>
 </li>
 <li>
-<p>Click <strong>Upload Artifact</strong>, and specify the following:</p>
+<p>Click <strong>Upload artifact</strong>, and specify the following:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>ID</strong>: Use the default empty setting to automatically generate an ID, or enter a specific artifact ID.</p>
+<p><strong>Group &amp; ID</strong>: Use the default empty settings to automatically generate an ID and <code>default</code> group, or enter an optional artifact group or ID.</p>
 </li>
 <li>
 <p><strong>Type</strong>: Use the default <strong>Auto-Detect</strong> setting to automatically detect the artifact type, or select the artifact type from the drop-down, for example, <strong>Avro Schema</strong> or <strong>OpenAPI</strong>.</p>
@@ -303,7 +306,7 @@ The Apicurio Registry server cannot automatically detect the <strong>Kafka Conne
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Info</strong>: Displays the artifact name, description, lifecycle status, when created, and last modified. You can click the <strong>Edit Artifact Metadata</strong> pencil icon to edit the artifact name and description or add labels, and click <strong>Download</strong> to download the artifact file locally. Also displays artifact <strong>Content Rules</strong> that you can enable and configure.</p>
+<p><strong>Info</strong>: Displays the artifact name and optional group, description, lifecycle status, when created, and last modified. Click the <strong>Edit Artifact Metadata</strong> pencil icon to edit the artifact name and description or add labels, and click <strong>Download</strong> to download the artifact file locally. Also displays artifact <strong>Content Rules</strong> that you can enable and configure.</p>
 </li>
 <li>
 <p><strong>Documentation</strong> (OpenAPI only): Displays automatically-generated REST API documentation.</p>
@@ -354,7 +357,7 @@ Deleting an artifact deletes the artifact and all of its versions, and cannot be
 <h2 id="browsing-artifacts-using-console"><a class="anchor" href="#browsing-artifacts-using-console"></a>Viewing artifacts using the Apicurio Registry web console</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can use the Apicurio Registry web console to browse the event schema and API design artifacts stored in the registry. This section shows simple examples of viewing Apicurio Registry artifacts, versions, and artifact rules. For more details on the artifact types stored in the registry, see <a href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>.</p>
+<p>You can use the Apicurio Registry web console to browse the event schema and API design artifacts stored in the registry. This section shows simple examples of viewing Apicurio Registry artifacts, groups, versions, and artifact rules. For more details on the artifact types stored in the registry, see <a href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -377,7 +380,7 @@ Deleting an artifact deletes the artifact and all of its versions, and cannot be
 </div>
 </li>
 <li>
-<p>Browse the list of artifacts stored in the registry, or enter a search string to find an artifact. You can select to search by a specific <strong>Name</strong>, <strong>Description</strong>, <strong>Label</strong>, or <strong>Everything</strong>.</p>
+<p>Browse the list of artifacts stored in the registry, or enter a search string to find an artifact. You can select to search by a specific <strong>Name</strong>, <strong>Group</strong>, <strong>Description</strong>, or <strong>Labels</strong>.</p>
 <div class="imageblock">
 <div class="content">
 <img src="../assets-images/images/getting-started/registry-web-console.png" alt="Browse artifacts in Registry web console">
@@ -390,7 +393,7 @@ Deleting an artifact deletes the artifact and all of its versions, and cannot be
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Info</strong>: Displays the artifact name, description, lifecycle status, when created, and last modified. You can click the <strong>Edit Artifact Metadata</strong> pencil icon to edit the artifact name and description or add labels, and click <strong>Download</strong> to download the artifact file locally. Also displays artifact <strong>Content Rules</strong> that you can enable and configure.</p>
+<p><strong>Info</strong>: Displays the artifact name and optional group, description, lifecycle status, when created, and last modified. Click the <strong>Edit Artifact Metadata</strong> pencil icon to edit the artifact name and description or add labels, and click <strong>Download</strong> to download the artifact file locally. Also displays artifact <strong>Content Rules</strong> that you can enable and configure.</p>
 </li>
 <li>
 <p><strong>Documentation</strong> (OpenAPI only): Displays automatically-generated REST API documentation.</p>
@@ -449,7 +452,7 @@ Deleting an artifact deletes the artifact and all of its versions, and cannot be
 </div>
 </li>
 <li>
-<p>For artifact rules, browse the list of artifacts stored in the registry, or enter a search string to find an artifact. You can select to search by a specific artifact <strong>Name</strong>, <strong>Description</strong>, <strong>Label</strong>, or <strong>Everything</strong>.</p>
+<p>For artifact rules, browse the list of artifacts stored in the registry, or enter a search string to find an artifact. You can select to search by a specific artifact <strong>Name</strong>, <strong>Group</strong>, <strong>Description</strong>, or <strong>Labels</strong>.</p>
 </li>
 <li>
 <p>Click <strong>View artifact</strong> to view the <strong>Artifact Details</strong>.</p>
@@ -464,7 +467,7 @@ Deleting an artifact deletes the artifact and all of its versions, and cannot be
 </div>
 </li>
 <li>
-<p>For global rules, click the <strong>Settings</strong> cog icon at the top right of the toolbar, and click <strong>Enable</strong> to configure a global <strong>Validity Rule</strong> or <strong>Compatibility Rule</strong>, and select the appropriate rule configuration from the drop-down. For more details, see <a href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>.</p>
+<p>For global rules, click <strong>Manage global rules</strong> at the top right of the toolbar, and click <strong>Enable</strong> to configure a global <strong>Validity Rule</strong> or <strong>Compatibility Rule</strong>, and select the appropriate rule configuration from the drop-down. For more details, see <a href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>.</p>
 </li>
 <li>
 <p>To disable an artifact rule or global rule, click the trash icon next to the rule.</p>
@@ -493,7 +496,7 @@ Deleting an artifact deletes the artifact and all of its versions, and cannot be
 </footer>
 <script src="../../../assets/js/site.js"></script>
 <script src="../../../assets/js/vendor/lunr.js"></script>
-<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/1.3.3.Final/getting-started/assembly-managing-registry-artifacts-ui.html"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/2.0.0.Final/getting-started/assembly-managing-registry-artifacts-ui.html"></script>
 <script async src="../../../assets/../search-index.js"></script>
 <script async src="../../../assets/js/vendor/highlight.js"></script>
   </body>

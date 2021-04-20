@@ -35,7 +35,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry" data-version="1.3.3.Final">
+<div class="nav-container" data-component="apicurio-registry" data-version="2.0.0.Final">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -60,7 +60,7 @@
     <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring Apicurio Registry deployment on OpenShift</a>
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
@@ -72,13 +72,16 @@
     <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using the Java client</a>
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers</a>
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/0.0.5-dev/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -88,17 +91,17 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry</span>
-    <span class="version">1.3.3.Final</span>
+    <span class="version">2.0.0.Final</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">Apicurio Registry</span>
       <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../2.0.0.Final/index.html">2.0.0.Final</a>
+        <li class="version is-current is-latest">
+          <a href="../index.html">2.0.0.Final</a>
         </li>
-        <li class="version is-current">
-          <a href="../index.html">1.3.3.Final</a>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
         </li>
       </ul>
     </li>
@@ -121,7 +124,7 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="../../2.0.0.Final/index.html" class="home-link"></a>
+  <a href="../index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
@@ -129,10 +132,10 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.3.3.Final</button>
+  <button class="version-menu-toggle" title="Show other versions of page">2.0.0.Final</button>
   <div class="version-menu">
-    <a class="version" href="../../2.0.0.Final/getting-started/assembly-installing-registry-storage-openshift.html">2.0.0.Final</a>
-    <a class="version is-current" href="assembly-installing-registry-storage-openshift.html">1.3.3.Final</a>
+    <a class="version is-current" href="assembly-installing-registry-storage-openshift.html">2.0.0.Final</a>
+    <a class="version" href="../../1.3.3.Final/getting-started/assembly-installing-registry-storage-openshift.html">1.3.3.Final</a>
   </div>
 </div>
   <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
@@ -142,28 +145,20 @@
 <h1 class="page">Installing Apicurio Registry storage on OpenShift</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
-<p>This chapter explains how to install and configure your chosen registry storage option: Strimzi, embedded Infinispan, or PostgreSQL database.</p>
+<div class="paragraph _abstract">
+<p>This chapter explains how to install and configure your chosen registry storage option:</p>
 </div>
 <div class="ulist">
-<div class="title">Strimzi storage</div>
+<div class="title">Kafka storage</div>
 <ul>
 <li>
 <p><a href="#installing-kafka-streams-operatorhub">Installing Strimzi from the OpenShift OperatorHub</a></p>
 </li>
 <li>
-<p><a href="#setting-up-kafka-streams-storage">Configuring Apicurio Registry with Strimzi storage on OpenShift</a></p>
+<p><a href="#setting-up-kafka-streams-storage">Configuring Apicurio Registry with Kafka storage on OpenShift</a></p>
 </li>
 <li>
 <p><a href="#registry-kafka-topic-names">Kafka topic name configuration</a></p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Embedded Infinispan storage</div>
-<ul>
-<li>
-<p><a href="#setting-up-infinispan-storage">Configuring Apicurio Registry with embedded Infinispan storage on OpenShift</a></p>
 </li>
 </ul>
 </div>
@@ -192,7 +187,7 @@
 <h2 id="installing-kafka-streams-operatorhub"><a class="anchor" href="#installing-kafka-streams-operatorhub"></a>Installing Strimzi from the OpenShift OperatorHub</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you do not already have Strimzi installed, you can install the Strimzi Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/4.5/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
+<p>If you do not already have Strimzi installed, you can install the Strimzi Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/4.7/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -245,20 +240,23 @@
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.5/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.7/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
 </li>
 <li>
-<p><a href="https://access.redhat.com/documentation/en-us/red_hat_amq/7.7/html/using_amq_streams_on_openshift/index?">Using AMQ Streams on OpenShift</a></p>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_amq/7.8/html/using_amq_streams_on_openshift/index?">Using AMQ Streams on OpenShift</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="setting-up-kafka-streams-storage"><a class="anchor" href="#setting-up-kafka-streams-storage"></a>Configuring Apicurio Registry with Strimzi storage on OpenShift</h2>
+<h2 id="setting-up-kafka-streams-storage"><a class="anchor" href="#setting-up-kafka-streams-storage"></a>Configuring Apicurio Registry with Kafka storage on OpenShift</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This section explains how to configure Kafka-based storage for Apicurio Registry using Strimzi on OpenShift. The <code>kafkasql</code> storage option uses Kafka storage with in-memory H2 database. This storage option is suitable for production environments when <code>persistent</code> storage is configured for the Kafka cluster on OpenShift.</p>
+</div>
 <div class="paragraph">
-<p>This section explains how to configure Kafka-based storage for Apicurio Registry using Strimzi on OpenShift. This storage option is suitable for production environments when <code>persistent</code> storage is configured for the Kafka cluster on OpenShift. You can install Apicurio Registry in an existing Kafka cluster or create a new Kafka cluster, depending on your environment.</p>
+<p>You can install Apicurio Registry in an existing Kafka cluster or create a new Kafka cluster, depending on your environment.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -299,7 +297,7 @@
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-The default example creates a cluster with 3 Zookeeper nodes and 3 Kafka nodes with <code>ephemeral</code> storage. This temporary storage is suitable for development and testing only, and not for production. For more details, see <a href="https://access.redhat.com/documentation/en-us/red_hat_amq/7.7/html/using_amq_streams_on_openshift/index?">Using AMQ Streams on OpenShift</a>.
+The default example creates a cluster with 3 Zookeeper nodes and 3 Kafka nodes with <code>ephemeral</code> storage. This temporary storage is suitable for development and testing only, and not for production. For more details, see <a href="https://access.redhat.com/documentation/en-us/red_hat_amq/7.8/html/using_amq_streams_on_openshift/index?">Using AMQ Streams on OpenShift</a>.
 </td>
 </tr>
 </table>
@@ -329,32 +327,6 @@ The default example creates a cluster with 3 Zookeeper nodes and 3 Kafka nodes w
 </div>
 </li>
 <li>
-<p>Create a Kafka topic to store the Apicurio Registry artifacts:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Under <strong>Provided APIs</strong> &gt; <strong>Kafka Topic</strong>, click <strong>Create topic</strong>.</p>
-</li>
-<li>
-<p>Change the default topic name from <code>my-topic</code> to the required <code>storage-topic</code>.</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Create a Kafka topic to store the Apicurio Registry global IDs:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Under <strong>Provided APIs</strong> &gt; <strong>Kafka Topic</strong>, click <strong>Create topic</strong>.</p>
-</li>
-<li>
-<p>Change the default topic name from <code>my-topic</code> to the required <code>global-id-topic</code>.</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
 <p>Click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry</strong> &gt; <strong>Create ApicurioRegistry</strong>.</p>
 </li>
 <li>
@@ -367,7 +339,7 @@ metadata:
   name: example-apicurioregistry
 spec:
   configuration:
-    persistence: "streams"
+    persistence: "kafkasql"
     streams:
       bootstrapServers: "my-cluster-kafka-bootstrap.my-project.svc:9092"</code></pre>
 </div>
@@ -386,50 +358,39 @@ spec:
 </li>
 </ol>
 </div>
-<div class="paragraph">
+<div class="paragraph _additional-resources">
 <div class="title">Additional resources</div>
 <p>For more details on installing Strimzi and on creating Kafka clusters and topics, see <a href="https://strimzi.io/docs/overview/latest/" class="bare">https://strimzi.io/docs/overview/latest/</a></p>
 </div>
-<div class="sect2">
+<div class="sect2 _abstract">
 <h3 id="registry-kafka-topic-names"><a class="anchor" href="#registry-kafka-topic-names"></a>Kafka topic name configuration</h3>
 <div class="paragraph">
-<p>The default Kafka topic names that Apicurio Registry uses to store data in Kafka are <code>storage-topic</code> and <code>global-id-topic</code>. You might be required to change these topic names if you are sharing your Kafka cluster with other applications that already use topics named <code>storage-topic</code> or <code>global-id-topic</code>.</p>
-</div>
-<div class="paragraph">
-<p>You can override the default topic names by setting the appropriate environment variables or Java system properties:</p>
+<p>The default Kafka topic name that Apicurio Registry uses to store data is <code>kafkasql-journal</code>. This topic is created automatically by Apicurio Registry. However, you can override this behavior or the default topic name by setting the appropriate environment variable or Java system property:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Kafka topic name configuration</caption>
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 40%;">
-<col style="width: 40%;">
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+<col style="width: 25%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Default topic name</th>
 <th class="tableblock halign-left valign-top">Environment variable</th>
 <th class="tableblock halign-left valign-top">Java system property</th>
+<th class="tableblock halign-left valign-top">Default value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>storage-topic</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>REGISTRY_STREAMS_TOPOLOGY_STORAGE_TOPIC</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>registry.streams.topology.storage.topic</code></p>
-</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_KAFKASQL_TOPIC</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.kafkasql.topic</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafkasql-journal</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>global-id-topic</code></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>REGISTRY_STREAMS_TOPOLOGY_GLOBAL_ID_TOPIC</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>registry.streams.topology.global.id.topic</code></p>
-</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_KAFKASQL_TOPIC_AUTO_CREATE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.kafkasql.topic.auto-create</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -437,79 +398,10 @@ spec:
 </div>
 </div>
 <div class="sect1">
-<h2 id="setting-up-infinispan-storage"><a class="anchor" href="#setting-up-infinispan-storage"></a>Configuring Apicurio Registry with embedded Infinispan storage on OpenShift</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This section explains how to configure Infinispan cache-based storage for Apicurio Registry on OpenShift. This storage option is based on Infinispan community Java libraries embedded in the Quarkus-based Apicurio Registry server. You do not need to install a separate Infinispan server using this storage option. This option is suitable for development or demonstration only, and is not suitable for production environments.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>You must have an OpenShift cluster with cluster administrator access.</p>
-</li>
-<li>
-<p>You must have already installed Apicurio Registry. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>In the OpenShift Container Platform web console, log in using an account with cluster administrator privileges.</p>
-</li>
-<li>
-<p>Click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry</strong> &gt; <strong>Create ApicurioRegistry</strong>.</p>
-</li>
-<li>
-<p>Paste in the following custom resource definition:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: apicur.io/v1alpha1
-kind: ApicurioRegistry
-metadata:
-  name: example-apicurioregistry
-spec:
-  configuration:
-    persistence: "infinispan"
-    infinispan: # Currently uses embedded version of Infinispan
-      clusterName: "example-apicurioregistry"
-      # ^ Optional</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Click <strong>Create</strong> and wait for the Apicurio Registry route to be created on OpenShift.</p>
-</li>
-<li>
-<p>Click <strong>Networking</strong> &gt; <strong>Route</strong> to access the new route for the Apicurio Registry web console. For example:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code>http://example-apicurioregistry.my-project.my-domain-name.com/</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p>For more details on configuring Infinispan clusters, see the example custom resources available from the <a href="https://github.com/Apicurio/apicurio-registry-demo/blob/master/kubernetes/resources-infinispan.yaml">Apicurio Registry demonstration</a>.</p>
-</li>
-<li>
-<p>For more details on Infinispan, see <a href="https://infinispan.org/" class="bare">https://infinispan.org/</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="installing-postgresql-operatorhub"><a class="anchor" href="#installing-postgresql-operatorhub"></a>Installing a PostgreSQL database from the OpenShift OperatorHub</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you do not already have a PostgreSQL database Operator installed, you can install a PostgreSQL Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/4.5/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
+<p>If you do not already have a PostgreSQL database Operator installed, you can install a PostgreSQL Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/4.7/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -574,7 +466,7 @@ You must read the documentation from your chosen <strong>PostgreSQL</strong> Ope
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.5/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.7/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
 </li>
 <li>
 <p><a href="https://access.crunchydata.com/documentation/postgres-operator/4.3.2/quickstart/">Crunchy PostgreSQL Operator QuickStart</a></p>
@@ -586,8 +478,8 @@ You must read the documentation from your chosen <strong>PostgreSQL</strong> Ope
 <div class="sect1">
 <h2 id="setting-up-postgresql-storage"><a class="anchor" href="#setting-up-postgresql-storage"></a>Configuring Apicurio Registry with PostgreSQL database storage on OpenShift</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This section explains how to configure Java Persistence API-based storage for Apicurio Registry on OpenShift using a PostgreSQL database Operator. You can install Apicurio Registry in an existing database or create a new database, depending on your environment. This section shows a simple example using the PostgreSQL Operator by Dev4Ddevs.com.</p>
+<div class="paragraph _abstract">
+<p>This section explains how to configure storage for Apicurio Registry on OpenShift using a PostgreSQL database Operator. You can install Apicurio Registry in an existing database or create a new database, depending on your environment. This section shows a simple example using the PostgreSQL Operator by Dev4Ddevs.com.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -670,7 +562,7 @@ metadata:
   name: example-apicurioregistry
 spec:
   configuration:
-    persistence: "jpa"
+    persistence: "sql"
     dataSource:
       url: "jdbc:postgresql://SERVICE_NAME.NAMESPACE.svc:5432/"
       # e.g. url: "jdbc:postgresql://acid-minimal-cluster.my-project.svc:5432/"
@@ -693,7 +585,7 @@ spec:
 </li>
 </ol>
 </div>
-<div class="ulist">
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
@@ -718,7 +610,7 @@ spec:
 </footer>
 <script src="../../../assets/js/site.js"></script>
 <script src="../../../assets/js/vendor/lunr.js"></script>
-<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/1.3.3.Final/getting-started/assembly-installing-registry-storage-openshift.html"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/2.0.0.Final/getting-started/assembly-installing-registry-storage-openshift.html"></script>
 <script async src="../../../assets/../search-index.js"></script>
 <script async src="../../../assets/js/vendor/highlight.js"></script>
   </body>

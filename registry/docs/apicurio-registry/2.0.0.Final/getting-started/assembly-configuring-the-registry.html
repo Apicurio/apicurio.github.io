@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Configuring Apicurio Registry deployment on OpenShift :: Apicurio Registry</title>
+    <title>Configuring your Apicurio Registry deployment :: Apicurio Registry</title>
     <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/2.0.0.Final/getting-started/assembly-configuring-the-registry.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
@@ -35,7 +35,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry" data-version="1.3.3.Final">
+<div class="nav-container" data-component="apicurio-registry" data-version="2.0.0.Final">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -60,7 +60,7 @@
     <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring Apicurio Registry deployment on OpenShift</a>
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
@@ -72,13 +72,16 @@
     <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using the Java client</a>
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers</a>
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/0.0.5-dev/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -88,17 +91,17 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry</span>
-    <span class="version">1.3.3.Final</span>
+    <span class="version">2.0.0.Final</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">Apicurio Registry</span>
       <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../2.0.0.Final/index.html">2.0.0.Final</a>
+        <li class="version is-current is-latest">
+          <a href="../index.html">2.0.0.Final</a>
         </li>
-        <li class="version is-current">
-          <a href="../index.html">1.3.3.Final</a>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
         </li>
       </ul>
     </li>
@@ -121,32 +124,38 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="../../2.0.0.Final/index.html" class="home-link"></a>
+  <a href="../index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
-    <li><a href="assembly-configuring-the-registry.html">Configuring Apicurio Registry deployment on OpenShift</a></li>
+    <li><a href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.3.3.Final</button>
+  <button class="version-menu-toggle" title="Show other versions of page">2.0.0.Final</button>
   <div class="version-menu">
-    <a class="version" href="../../2.0.0.Final/getting-started/assembly-configuring-the-registry.html">2.0.0.Final</a>
-    <a class="version is-current" href="assembly-configuring-the-registry.html">1.3.3.Final</a>
+    <a class="version is-current" href="assembly-configuring-the-registry.html">2.0.0.Final</a>
+    <a class="version" href="../../1.3.3.Final/getting-started/assembly-configuring-the-registry.html">1.3.3.Final</a>
   </div>
 </div>
   <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Configuring Apicurio Registry deployment on OpenShift</h1>
+<h1 class="page">Configuring your Apicurio Registry deployment</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
-<p>This chapter explains how to configure optional settings for Apicurio Registry health checks on OpenShift:</p>
+<div class="paragraph _abstract">
+<p>This chapter explains various configuration options for Apicurio Registry, such as authentication settings, logging, and health checks on OpenShift.</p>
 </div>
 <div class="ulist">
 <ul>
+<li>
+<p><a href="#registry-security">Configuring Apicurio Registry authentication and authorization</a></p>
+</li>
+<li>
+<p><a href="#registry-logging">Configuring Apicurio Registry logging</a></p>
+</li>
 <li>
 <p><a href="#configuring-liveness-readiness-probes">Configuring Apicurio Registry health checks on OpenShift</a></p>
 </li>
@@ -154,6 +163,244 @@
 <p><a href="#registry-liveness-env-vars">Environment variables for Apicurio Registry health checks</a></p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-security"><a class="anchor" href="#registry-security"></a>Configuring Apicurio Registry authentication and authorization</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This section explains how to configure authentication and authorization options for Apicurio Registry using Keycloak.</p>
+</div>
+<div class="paragraph">
+<p>You can enable authentication for the Apicurio Registry web console and core REST API using Keycloak based on OpenID Connect (OIDC). The same Keycloak realm and users are federated across the Apicurio Registry web console and core REST API using Open ID Connect so that you only require one set of credentials.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry provides role-based authorization for default admin, write, and read-only user roles. Apicurio Registry also provides content-based authorization at the schema or API level, where only the creator of the registry artifact can update or delete it. Apicurio Registry authentication and authorization are disabled by default.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Keycloak is installed and running, and configured with a Keycloak realm and user. For more details, see
+<a href="https://www.keycloak.org/getting-started">Getting Started with Keycloak</a>.</p>
+</li>
+<li>
+<p>Apicurio Registry is installed and running.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Set the following environment variables to configure Apicurio Registry authentication using Keycloak:</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 1. Configuration for Apicurio Registry authentication</caption>
+<colgroup>
+<col style="width: 29.4117%;">
+<col style="width: 35.2941%;">
+<col style="width: 11.7647%;">
+<col style="width: 23.5295%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If set to <code>true</code>, the environment variables that follow are required.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URL of the Keycloak authentication server to use. Must end with <code>/auth</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_REALM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Keycloak realm used for authentication.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_API_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The client ID for the Apicurio Registry REST API.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry-api</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_UI_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The client ID for the Apicurio Registry web console.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio-registry</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>When authentication is enabled, Apicurio Registry provides role-based authorization for the following default user roles:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 2. Default user roles for registry authentication and authorization</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3336%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Role</th>
+<th class="tableblock halign-left valign-top">Read artifacts</th>
+<th class="tableblock halign-left valign-top">Write artifacts</th>
+<th class="tableblock halign-left valign-top">Global rules</th>
+<th class="tableblock halign-left valign-top">Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-admin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full access to all create, read, update, and delete operations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-developer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to create, read, update, and delete operations, except configuring global rules. This role can configure artifact rules.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-readonly</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to read and search operations only. This role cannot configure any rules.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p>Set the following to <code>true</code> to enable owner-only authorization for updates to schema and API artifacts in Apicurio Registry:</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Configuration for owner-only authorization</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6668%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Java system property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_OWNER_ONLY_AUTHORIZATION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.owner-only-authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For an open source Docker-based example of authentication using Keycloak, see <a href="https://github.com/Apicurio/apicurio-registry/tree/master/distro/docker-compose" class="bare">https://github.com/Apicurio/apicurio-registry/tree/master/distro/docker-compose</a></p>
+</li>
+<li>
+<p>For details on how to use Keycloak in a production environment, see
+the <a href="https://www.keycloak.org/documentation">Keycloak documentation</a></p>
+</li>
+<li>
+<p>For details on custom configuration, the see <a href="https://quarkus.io/guides/security-openid-connect-web-authentication">Quarkus Open ID Connect documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-logging"><a class="anchor" href="#registry-logging"></a>Configuring Apicurio Registry logging</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can set Apicurio Registry logging configuration at runtime. Apicurio Registry provides a REST endpoint to set the log level for specific loggers for finer grained logging. This section explains how to view and set Apicurio Registry log levels at runtime using the Apicurio Registry <code>/admin</code> REST API.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Get the URL to access your Apicurio Registry instance, or get your Apicurio Registry route if you have Apicurio Registry deployed on OpenShift. This simple example uses a URL of <code>localhost:8080</code>.</p>
+</li>
+</ul>
+</div>
+<h3 id="_checking_the_current_log_level_for_a_specific_logger" class="discrete">Checking the current log level for a specific logger</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Use this <code>curl</code> command to obtain the current log level for the logger <code>io.apicurio.registry.storage</code>:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -i localhost:8080/apis/registry/v2/admin/loggers/io.apicurio.registry.storage
+HTTP/1.1 200 OK
+[...]
+Content-Type: application/json
+{"name":"io.apicurio.registry.storage","level":"INFO"}</code></pre>
+</div>
+</div>
+<h3 id="_changing_the_log_level_for_a_specific_logger" class="discrete">Changing the log level for a specific logger</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Use this <code>curl</code> command to change the log level for the logger <code>io.apicurio.registry.storage</code> to <code>DEBUG</code>:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X PUT -i -H "Content-Type: application/json" --data '{"level":"DEBUG"}' localhost:8080/apis/registry/v2/admin/loggers/io.apicurio.registry.storage
+HTTP/1.1 200 OK
+[...]
+Content-Type: application/json
+{"name":"io.apicurio.registry.storage","level":"DEBUG"}</code></pre>
+</div>
+</div>
+<h3 id="_reverting_to_the_default_log_level" class="discrete">Reverting to the default log level</h3>
+<div class="paragraph">
+<p>You can revert to the default log level the configuration of a specific logger. Use this <code>curl</code> command to change the log level for the logger <code>io.apicurio.registry.storage</code> to its default value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X DELETE -i localhost:8080/apis/registry/v2/admin/loggers/io.apicurio.registry.storage
+HTTP/1.1 200 OK
+[...]
+Content-Type: application/json
+{"name":"io.apicurio.registry.storage","level":"INFO"}</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -195,7 +442,7 @@ The default values of the liveness and readiness environment variables are desig
 <p>You must have already installed Apicurio Registry on OpenShift with your preferred storage option. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
 </li>
 <li>
-<p>You must have already installed and configured your chosen Apicurio Registry storage in Strimzi, embedded Infinispan, or PostgreSQL.</p>
+<p>You must have already installed and configured your chosen Apicurio Registry storage in Strimzi or PostgreSQL.</p>
 </li>
 </ul>
 </div>
@@ -233,7 +480,7 @@ The default values of the liveness and readiness environment variables are desig
 <li>
 <p>Click <strong>Save</strong> at the bottom.</p>
 <div class="paragraph">
-<p>Alternatively, you can perform these steps using the OpenShift <code>oc</code> command. For more details, see the <a href="https://docs.openshift.com/container-platform/4.5/cli_reference/openshift_cli/getting-started-cli.html">OpenShift CLI documentation</a>.</p>
+<p>Alternatively, you can perform these steps using the OpenShift <code>oc</code> command. For more details, see the <a href="https://docs.openshift.com/container-platform/4.7/cli_reference/openshift_cli/getting-started-cli.html">OpenShift CLI documentation</a>.</p>
 </div>
 </li>
 </ol>
@@ -245,7 +492,7 @@ The default values of the liveness and readiness environment variables are desig
 <p><a href="#registry-liveness-env-vars">Environment variables for Apicurio Registry health checks</a></p>
 </li>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.5/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.7/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
 </li>
 </ul>
 </div>
@@ -271,7 +518,7 @@ The following environment variables are provided for reference only. The default
 </div>
 <h3 id="_liveness_environment_variables" class="discrete">Liveness environment variables</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 1. Environment variables for Apicurio Registry liveness probes</caption>
+<caption class="title">Table 4. Environment variables for Apicurio Registry liveness probes</caption>
 <colgroup>
 <col style="width: 29.4117%;">
 <col style="width: 29.4117%;">
@@ -327,7 +574,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 </div>
 <h3 id="_readiness_environment_variables" class="discrete">Readiness environment variables</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 2. Environment variables for Apicurio Registry readiness probes</caption>
+<caption class="title">Table 5. Environment variables for Apicurio Registry readiness probes</caption>
 <colgroup>
 <col style="width: 30.7692%;">
 <col style="width: 38.4615%;">
@@ -391,7 +638,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <p><a href="#configuring-liveness-readiness-probes">Configuring Apicurio Registry health checks on OpenShift</a></p>
 </li>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.5/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.7/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
 </li>
 </ul>
 </div>
@@ -409,7 +656,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 </footer>
 <script src="../../../assets/js/site.js"></script>
 <script src="../../../assets/js/vendor/lunr.js"></script>
-<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/1.3.3.Final/getting-started/assembly-configuring-the-registry.html"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/2.0.0.Final/getting-started/assembly-configuring-the-registry.html"></script>
 <script async src="../../../assets/../search-index.js"></script>
 <script async src="../../../assets/js/vendor/highlight.js"></script>
   </body>
