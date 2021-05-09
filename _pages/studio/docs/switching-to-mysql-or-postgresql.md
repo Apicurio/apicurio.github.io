@@ -12,8 +12,7 @@ updatedAt: "2019-11-14T16:25:34.359Z"
 By default, the Apicurio Studio quickstart is configured to use a simple (but persistent) H2 database.  Unless you are simply evaluating the software, you will likely want to switch to using an external database such as MySQL or PostgreSQL.
 
 ## 1. Install MySQL or PostgreSQL or Configure AzureSQL
-Obviously the first step is to download and install [MySQL](https://www.mysql.com/) or [PostgreSQL](https://www.postgresql.org/).  Installation and configuration of the database you choose is outside the scope of this article.
-If you have AzureSQL configured, you can move to next steps.
+Obviously the first step is to download and install [MySQL](https://www.mysql.com/) or [PostgreSQL](https://www.postgresql.org/) or configure AzureSQL database.  Installation and configuration of the database you choose is outside the scope of this article.
 
 ## 2. (optional) Install the Apicurio Studio DDL
 Fire up your favorite SQL tool (for example if you're using MySQL then it's likely the MySQL Workbench) and use it to initialize your Apicurio Studio database with the appropriate DDL:
