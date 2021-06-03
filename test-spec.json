@@ -1,0 +1,2934 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Enrollment",
+        "version": "1.0",
+        "description": "Tax Exemption Platfiorm API for enabling omnichannel tax exemption enrollment\n\n# Authentication\n\n<!-- ReDoc-Inject: <security-definitions> -->",
+        "termsOfService": "urn:tos",
+        "contact": {
+            "name": "IDC EBS FRE  TAX",
+            "url": "https://collaboration.wal-mart.com/display/INFINITY/01.+Tax+Exemption",
+            "email": "idc-ebs-fintechfretx@wal-mart.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0"
+        },
+        "x-wm-fintech-business-info": {
+            "domain": "Enrollment",
+            "overview": "**About tax exemption**\n\nOrganizations which are into religious, charitable, nonprofit activities etc. are eligible for exemption on taxes as per the state tax regulations. Walmart offers exemption to these customers during the checkout process if they are already enrolled for exemption. \n\n\n\n**Existing process**\n\n1. Walmart Stores - The customers need to visit the service desk at a store for tax exemption enrolment and the store associates need to store the documents/certificates submitted by the customer during the enrollment. Upon successful enrolment, the customer gets an enrollment card with a unique Tax customer id which should be shown during the checkout at the registers for tax exemption on the purchases. \n2. Walmart.com - The customers can do the enrolment through Tax exemption enrolment program and the tax exemption is automatically applied during the checkout from the cart.\n3. Sam's Club - The enrolment is done by the club associates on Membership Express application using an iPad at the service desk.\n4. Samsclub.com - There is no separate enrolment process on Samsclub.com and the members should visit any nearest club for the same.  \n\n\n\n**Problems**\n\n1. Customer experience\n\n\\* The customers are often asked to get more/different documents during enrolment if the certificates they carry are incorrect.\n\n\\* They need to enroll separately for Walmart Stores, Walmart.com and SamsClub.\n\n\\* The customers need to visit the clubs for purchases done on Samsclub.com \n\n2. Tax audit reserves - Walmart's net operating income is impacted during the audit because of the following reasons\n\n\\*There is no digital repository option to store certificates collected for enrolment at Walmart Stores. Tracing the physical copy of the certificates is extremely difficult. The customers are often asked to re-enroll as it is much easier than tracing the earlier certificate submitted. \n\n\\*The certificate uploaded by the customer/member may not follow the requirements of state tax regulations. \n\n\n**Solution**\n\nTax exemption enrollment services enable the engineering teams of Walmart.com Pangea tax, SamsClub.com membership and Sams Membership Express to build enrollment programs on their respective applications. The customers and members use these programs to enrol themselves for availing tax exemption on their purchases across banners and channels. These services are built on top of the intelligence powered by our 3rd party tax partner, TTR. The enrollment program enables the customers to provide the right tax exemption information and documents in compliance with the state tax bodies and moreover, the enrollment can be done online for both brick and mortar and dot com channels.",
+            "summary": "Enables the consumers to take the right information and documentation from the customers for tax exemption enrollment",
+            "services": [
+                {
+                    "serviceName": "Onboarding",
+                    "description": "This service allows onboarding of a new tax exempt customer by taking basic details of the customer (customer name, address, business type and phone number) and persists the details in the DB.\n",
+                    "type": "Fine grained"
+                },
+                {
+                    "serviceName": "Lookup",
+                    "description": "This service fetches the details of the onboarded customer and returns customer's details like name, address, phone number, signed/unsigned tax exempt certificate.",
+                    "type": "Fine grained"
+                },
+                {
+                    "serviceName": "Upload certificate",
+                    "description": "This service uploads the signed/unsigned certificate with the customer details populated on the certificate, onto the blob storage. This blob storage is then used to return the customer certificate when lookup service is called.",
+                    "type": "Fine grained"
+                }
+            ],
+            "consumers": "1. Walmart.com Pangea tax\n2. SamsClub.com membership\n3. Sams Membership Express",
+            "sla": "Service availability - 99.99 % (Azure infrastructure)\n\nSecurity - service mesh authentication mechanism\n\nRisk management and disaster recovery - East US",
+            "usecases": "The customer/member should be able to \n1. Select the entities for which he would like to enroll for tax exemption\n2. Provide business and contact information\n3. Select the states for which the business needs tax exemption\n4. Fill out and sign and/or upload certificates for the information provided in the above 3 use cases"
+        },
+        "x-wm-fintech-api": {
+            "apiName": "Tax_exemption_enrollment"
+        }
+    },
+    "servers": [
+        {
+            "url": "https://taxexemptionworkflow.fintech-fre-tax.eus2-stage-a2.cluster.k8s.us.walmart.net",
+            "description": ""
+        }
+    ],
+    "paths": {
+        "/actuator/health": {
+            "get": {
+                "tags": [
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "text/xml": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "checkReadinessUsingGET",
+                "summary": "WCNP readiness probe health endpoint",
+                "x-codegen-request-body-name": "body"
+            }
+        },
+        "/v1/taxexempt/certificates/": {
+            "summary": "Fetches all certificates of a customer account",
+            "get": {
+                "tags": [
+                    "customer-tax-certificates"
+                ],
+                "parameters": [
+                    {
+                        "name": "taxCustId",
+                        "description": "taxCustId",
+                        "schema": {
+                            "format": "int32",
+                            "type": "integer"
+                        },
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CustomerAccountCertificatesResponse"
+                                },
+                                "example": {
+                                    "taxCustId": 30,
+                                    "certificates": [
+                                        {
+                                            "certificateId": 626,
+                                            "formTitle": "Sales and Use Tax Construction Contract Exemption Certificate",
+                                            "formId": 2104099,
+                                            "formName": "STEC CC",
+                                            "completionStatus": 2,
+                                            "contentId": 62
+                                        },
+                                        {
+                                            "certificateId": 627,
+                                            "formTitle": "Certificate of Governmental Exemption from Payment of Hotel Occupancy Taxes and Hotel Sales Taxes",
+                                            "formId": 2129605,
+                                            "formName": "Bossier",
+                                            "completionStatus": 2,
+                                            "contentId": 63
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "fetchAllCertificateRequestsOfCustomerUsingGET",
+                "summary": "API to fetch all certificates of a customer account"
+            },
+            "post": {
+                "requestBody": {
+                    "description": "certificateUpsertRequest",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CertificateUpsertRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "tags": [
+                    "customer-tax-certificates"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CustomerAccountCertificatesResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "certificateUpsertFlowUsingPOST",
+                "summary": "API For Certificate Insert Flow",
+                "x-codegen-request-body-name": "certificateUpsertRequest"
+            }
+        },
+        "/v1/taxexempt/certificates/metadata": {
+            "summary": "Updates certificate on form submission",
+            "post": {
+                "requestBody": {
+                    "description": "formSubmissionRequest",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FormSubmissionRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "tags": [
+                    "customer-tax-certificates"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FormSubmissionFlowResponse"
+                                },
+                                "example": {
+                                    "contentId": 58,
+                                    "certificateId": 622,
+                                    "postalCode": "12345",
+                                    "buyerState": "AZ",
+                                    "buyerCity": "NY",
+                                    "buyerAddress": "address",
+                                    "contactFax": "111-111-111",
+                                    "contactEmail": "abc@gmail.com",
+                                    "contactPhone": "222-222-222",
+                                    "buyerCompanyName": "MyCompany",
+                                    "placeExemptionMapping": [
+                                        {
+                                            "placeId": 108,
+                                            "exemptionId": "bus-id"
+                                        },
+                                        {
+                                            "placeId": 4,
+                                            "exemptionId": "bus-id"
+                                        },
+                                        {
+                                            "placeId": 41,
+                                            "exemptionId": "bus-id"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "insertStaticAndDynamicFormFieldsOnFormSubmissionUsingPOST",
+                "summary": "API to update certificate on form submission",
+                "x-codegen-request-body-name": "formSubmissionRequest"
+            }
+        },
+        "/v1/taxexempt/certificates/upload": {
+            "summary": "Upload the certificates to Azure Blob",
+            "post": {
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file",
+                                    "id"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "format": "binary",
+                                        "description": "file",
+                                        "type": "string"
+                                    },
+                                    "id": {
+                                        "format": "int32",
+                                        "description": "id",
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "tags": [
+                    "customer-tax-certificates"
+                ],
+                "responses": {
+                    "201": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseEntity"
+                                }
+                            },
+                            "application/json": {
+                                "example": {
+                                    "containerName": "taxcerts",
+                                    "blobName": "8703C91C-F637-4ADE-9143-F384CA5A3A57.pdf"
+                                }
+                            }
+                        },
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "uploadCertificateByStateUsingPOST",
+                "summary": "Upload the certificates to Azure Blob"
+            }
+        },
+        "/v1/taxexempt/customerAccount/": {
+            "summary": "API to Get Tax Exempt Customer",
+            "get": {
+                "tags": [
+                    "customer-accounts"
+                ],
+                "parameters": [
+                    {
+                        "name": "taxCustId",
+                        "description": "taxCustId",
+                        "schema": {
+                            "format": "int32",
+                            "type": "integer"
+                        },
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CustomerAccountDetailsResponse"
+                                },
+                                "example": {
+                                    "taxCustomerId": 364,
+                                    "customerName": "UAT23",
+                                    "billAddress": "BENTONVILLE, US",
+                                    "cityName": "ARIZONA",
+                                    "state": "CO",
+                                    "postalCode": "12345",
+                                    "emailId": "testuser@gmail.com",
+                                    "contactPhone": "111-111-1111",
+                                    "purposeCode": 29
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "fetchTaxExemptCustomerUsingGET",
+                "summary": "API to Get Tax Exempt Customer"
+            },
+            "post": {
+                "requestBody": {
+                    "description": "customerAccountOnboardingRequest",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CustomerAccountOnboardingRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "tags": [
+                    "customer-accounts"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CustomerAccountOnboardingResponse"
+                                },
+                                "example": {
+                                    "accountId": 2076,
+                                    "accountNumber": "525",
+                                    "taxCustId": "525",
+                                    "certificateId": 628,
+                                    "customerName": "TOMMY",
+                                    "address1": "add 2",
+                                    "cityName": "Florida",
+                                    "state": "AZ",
+                                    "postalCode": "54321",
+                                    "faxPhone": "222-333-222",
+                                    "emailId": "abc@yahoo.com",
+                                    "contactFirstName": "fname",
+                                    "contactLastName": "lname",
+                                    "contactPhone": "111-323-2222",
+                                    "purposeCode": 2,
+                                    "companyType": "1"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "onboardNewTaxExemptCustomerUsingPOST",
+                "summary": "API to Onboard New Tax Exempt Customer",
+                "x-codegen-request-body-name": "customerAccountOnboardingRequest"
+            }
+        },
+        "/v1/taxexempt/forms/": {
+            "summary": "API to get forms list based on States and TaxCategory",
+            "get": {
+                "tags": [
+                    "tax-exemption-form-recommendations"
+                ],
+                "parameters": [
+                    {
+                        "style": "form",
+                        "explode": true,
+                        "name": "stateIds",
+                        "description": "stateIds",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "format": "int64",
+                                "type": "integer"
+                            }
+                        },
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "taxCategoryId",
+                        "description": "taxCategoryId",
+                        "schema": {
+                            "format": "int64",
+                            "type": "integer"
+                        },
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RecommenedFormResponse"
+                                },
+                                "example": {
+                                    "recommendedFormList": {
+                                        "CO,CA": [
+                                            {
+                                                "id": 4134084,
+                                                "title": "Multijurisdiction",
+                                                "name": "Uniform Sales and Use Tax Resale Certificate",
+                                                "contentUrl": "https://my.ttrus.com/content/law/USA_Uniform_Sales_and_Use_Tax_Resale_Certificate_1608610688.pdf",
+                                                "agencyIssued": false,
+                                                "multiState": true,
+                                                "category": "Exemption Certificate",
+                                                "revisionStateId": 1,
+                                                "citationText": "Multistate Tax Commission: Uniform Sales and Use Tax Resale Certificate - Multijurisdiction (Dec. 9, 2020)",
+                                                "uuid": "CC97C670-9D29-11EB-99F6-91CA8D49C2FF"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "getRecommendedFormsBasedOnLocationsUsingGET",
+                "summary": "API to get forms list based on States and TaxCategory"
+            }
+        },
+        "/v1/taxexempt/forms/{formId}/fields": {
+            "summary": "API to get forms fields based on FormID",
+            "get": {
+                "tags": [
+                    "tax-exemption-form-recommendations"
+                ],
+                "parameters": [
+                    {
+                        "name": "formId",
+                        "description": "formId",
+                        "schema": {
+                            "format": "int64",
+                            "type": "integer"
+                        },
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FormValidationFieldsResponse"
+                                },
+                                "example": {
+                                    "formFields": "[{\"FieldType\":\"Paragraph\",\"SortOrder\":\"0\",\"FieldValue\":\"This form is for direct pay permit holders. You can enter the buyer's state-issued tax ID above, if it has one. The direct pay permit number goes down below in the box called \\\"Buyer's Direct Payment Permit Number.\\\"\",\"ClassName\":null,\"ContainerWidth\":\"12\",\"FieldVisible\":\"1\"},{\"FieldType\":\"Text\",\"SortOrder\":\"1\",\"FieldNameAlt\":\"Buyer Company Name\",\"FieldName\":\"buyer_company_name\",\"FieldNameMapItem\":\"buyer_company_name\",\"ContainerWidth\":\"12\",\"RequiredGroup\":null,\"FieldRequired\":\"1\",\"FieldVisible\":1,\"Category\":\"default\"},{\"FieldType\":\"Text\",\"SortOrder\":\"2\",\"FieldNameAlt\":\"Buyer's Street Address (Street & Number, P.O. Box or Route Number)\",\"FieldName\":\"company.address1\",\"FieldNameMapItem\":\"buyer_address1_address2\",\"ContainerWidth\":\"12\",\"RequiredGroup\":null,\"FieldRequired\":\"1\",\"FieldVisible\":1,\"Category\":\"default\"},{\"FieldType\":\"Text\",\"SortOrder\":\"3\",\"FieldNameAlt\":\"Buyer's City, State, and Zip Code\",\"FieldName\":\"buyer_address_2\",\"FieldNameMapItem\":\"buyer_city_state_zipcode\",\"ContainerWidth\":\"12\",\"RequiredGroup\":null,\"FieldRequired\":\"1\",\"FieldVisible\":\"1\",\"Category\":\"additional\"},{\"FieldType\":\"Text\",\"SortOrder\":\"4\",\"FieldNameAlt\":\"Buyer Phone Number\",\"FieldName\":\"buyer_contact_phone\",\"FieldNameMapItem\":\"buyer_contact_phone\",\"ContainerWidth\":\"12\",\"RequiredGroup\":null,\"FieldVisible\":1,\"Category\":\"default\"},{\"FieldType\":\"Text\",\"SortOrder\":\"5\",\"FieldNameAlt\":\"Seller Company Name\",\"FieldName\":\"receiver_company_name\",\"FieldNameMapItem\":\"receiver_company_name\",\"ContainerWidth\":\"12\",\"RequiredGroup\":null,\"FieldRequired\":\"1\",\"FieldVisible\":1,\"Category\":\"default\"},{\"FieldType\":\"Text\",\"SortOrder\":\"6\",\"FieldNameAlt\":\"Seller's Street Address (Street & Number, P.O. Box or Route Number)\",\"FieldName\":\"receiver_address_1\",\"FieldNameMapItem\":\"receiver_address1_address2\",\"ContainerWidth\":\"12\",\"RequiredGroup\":null,\"FieldRequired\":\"1\",\"FieldVisible\":1,\"Category\":\"default\"},{\"FieldType\":\"Text\",\"SortOrder\":\"7\",\"FieldNameAlt\":\"Seller's City, State, and Zip Code\",\"FieldName\":\"receiver_address_2\",\"FieldNameMapItem\":\"receiver_city_state_zipcode\",\"ContainerWidth\":\"12\",\"RequiredGroup\":null,\"FieldRequired\":\"1\",\"FieldVisible\":\"1\",\"Category\":\"additional\"},{\"FieldType\":\"Line\",\"SortOrder\":\"8\",\"ClassName\":null,\"ContainerWidth\":\"12\",\"FieldVisible\":\"1\"},{\"FieldType\":\"Text\",\"SortOrder\":\"10\",\"FieldNameAlt\":\"Buyer's Direct Payment Permit Number\",\"FieldName\":\"Taxpayer number\",\"FieldNameMapItem\":null,\"ContainerWidth\":\"6\",\"RequiredGroup\":null,\"FieldRequired\":\"1\",\"FieldVisible\":\"1\",\"Category\":\"additional\"},{\"FieldType\":\"Text\",\"SortOrder\":\"11\",\"FieldNameAlt\":\"Name of Permit Holder\",\"FieldName\":\"Permit holder\",\"FieldNameMapItem\":null,\"ContainerWidth\":\"6\",\"RequiredGroup\":null,\"FieldRequired\":\"1\",\"FieldVisible\":\"1\",\"Category\":\"additional\"},{\"FieldType\":\"Text\",\"SortOrder\":\"12\",\"FieldNameAlt\":\"Date\",\"FieldName\":\"date\",\"FieldNameMapItem\":\"date\",\"ContainerWidth\":\"12\",\"RequiredGroup\":null,\"Category\":\"additional\"},{\"FieldType\":\"Text\",\"SortOrder\":\"13\",\"FieldNameAlt\":\"Description of Items to be Purchased\",\"FieldName\":\"Description of items\",\"FieldNameMapItem\":\"item_description\",\"ContainerWidth\":\"12\",\"RequiredGroup\":null,\"Category\":\"default\",\"FieldVisible\":1}]",
+                                    "rules": "[{\"name\":\"files_signed\",\"title\":\"Files\",\"placeholder\":null,\"rules\":[\"min:1\"],\"message\":[{\"key\":\"min\",\"value\":\"This certificate requires a signed file.\"}]}]",
+                                    "signatureZone": "{\"pages\":[{\"coordinates\":[[{\"X\":\"130\",\"Y\":\"1438\",\"height\":43,\"width\":428},{\"X\":\"558\",\"Y\":\"1481\",\"height\":43,\"width\":428}]],\"height\":1584,\"width\":1224}]}",
+                                    "uploadOnly": false
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "getFormValidationFieldsUsingGET",
+                "summary": "API to get forms fields based on FormID"
+            }
+        },
+        "/v1/taxexempt/pdf/sign": {
+            "summary": "API to overlay the signature on tax exemption certificate",
+            "post": {
+                "requestBody": {
+                    "description": "signedPdfGenerationRequest",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SignedPdfGenerationRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "tags": [
+                    "customer-tax-certificate-files"
+                ],
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BlobResponse"
+                                },
+                                "example": {
+                                    "containerName": "taxcerts",
+                                    "blobName": "3989F7B1-34EA-4828-AE72-84E5EA500A14.pdf"
+                                }
+                            }
+                        },
+                        "description": "created"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "generateFilledPdfWithSignatureUsingPOST",
+                "summary": "API to overlay the signature on tax exemption certificate",
+                "x-codegen-request-body-name": "signedPdfGenerationRequest"
+            }
+        },
+        "/v1/taxexempt/pdf/unsign": {
+            "post": {
+                "requestBody": {
+                    "description": "certificateIdMap",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "format": "int64",
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "tags": [
+                    "customer-tax-certificate-files"
+                ],
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BlobResponse"
+                                },
+                                "example": {
+                                    "containerName": "tempcerts",
+                                    "blobName": "3989F7B1-34EA-4828-AE72-84E5EA500A14_temp.pdf"
+                                }
+                            }
+                        },
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "generateFilledPdfWithoutSignatureUsingPOST",
+                "summary": "API to fill out tax exemption certificate without signature",
+                "x-codegen-request-body-name": "certificateIdMap"
+            }
+        },
+        "/v1/taxexempt/questionaire/": {
+            "post": {
+                "requestBody": {
+                    "description": "request",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/QuestionnaireRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "tags": [
+                    "tax-exemption-questionnaire"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/QuestionnaireResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "getDecisionTreeBasedOnLocationUsingPOST",
+                "summary": "API to get Decision Tree Flow based on States ",
+                "x-codegen-request-body-name": "request"
+            }
+        },
+        "/v1/taxexempt/signature/": {
+            "put": {
+                "requestBody": {
+                    "description": "signatureFileRequest",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SignatureFileRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "tags": [
+                    "customer-signatures"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No body"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "deleteSignatureUsingPUT",
+                "summary": "API to delete signature for Customer",
+                "x-codegen-request-body-name": "signatureFileRequest"
+            },
+            "post": {
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file",
+                                    "signatureFileRequest"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "format": "binary",
+                                        "description": "file",
+                                        "type": "string"
+                                    },
+                                    "signatureFileRequest": {
+                                        "description": "signatureFileRequest"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "tags": [
+                    "customer-signatures"
+                ],
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SignatureResponse"
+                                },
+                                "example": {
+                                    "id": 20,
+                                    "uuid": "9aa5dde8-f78a-4fa9-af30-6ed9a503809e",
+                                    "companyType": "1",
+                                    "companyName": "TTR",
+                                    "name": "cc.png",
+                                    "height": 4500,
+                                    "width": 8000,
+                                    "fileName": "cc.png",
+                                    "extension": ".png",
+                                    "mimeType": "image/png",
+                                    "fileSize": 754765,
+                                    "createdAt": "2021-04-20T16:59:19.509+0000",
+                                    "updatedAt": "2021-04-20T16:59:19.509+0000",
+                                    "userTitle": "Programmer",
+                                    "userName": "Apoorva Sharma"
+                                }
+                            }
+                        },
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "uploadSignatureFileUsingPOST",
+                "summary": "API to upload signature for Customer"
+            }
+        },
+        "/v1/taxexempt/states/": {
+            "get": {
+                "tags": [
+                    "tax-exemption-places"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StatesListResponse"
+                                },
+                                "example": {
+                                    "count": 55,
+                                    "stateList": [
+                                        {
+                                            "id": 1,
+                                            "name": "United States",
+                                            "placeAbbreviation": "USA"
+                                        },
+                                        {
+                                            "id": 4,
+                                            "name": "Arkansas",
+                                            "placeAbbreviation": "AR"
+                                        },
+                                        {
+                                            "id": 6,
+                                            "name": "Illinois",
+                                            "placeAbbreviation": "IL"
+                                        },
+                                        {
+                                            "id": 7,
+                                            "name": "Washington",
+                                            "placeAbbreviation": "WA"
+                                        },
+                                        {
+                                            "id": 8,
+                                            "name": "North Carolina",
+                                            "placeAbbreviation": "NC"
+                                        },
+                                        {
+                                            "id": 12,
+                                            "name": "New Mexico",
+                                            "placeAbbreviation": "NM"
+                                        },
+                                        {
+                                            "id": 13,
+                                            "name": "New York",
+                                            "placeAbbreviation": "NY"
+                                        },
+                                        {
+                                            "id": 15,
+                                            "name": "Nebraska",
+                                            "placeAbbreviation": "NE"
+                                        },
+                                        {
+                                            "id": 18,
+                                            "name": "Mexico",
+                                            "placeAbbreviation": "MEX"
+                                        },
+                                        {
+                                            "id": 19,
+                                            "name": "South Carolina",
+                                            "placeAbbreviation": "SC"
+                                        },
+                                        {
+                                            "id": 21,
+                                            "name": "Ohio",
+                                            "placeAbbreviation": "OH"
+                                        },
+                                        {
+                                            "id": 22,
+                                            "name": "Missouri",
+                                            "placeAbbreviation": "MO"
+                                        },
+                                        {
+                                            "id": 23,
+                                            "name": "North Dakota",
+                                            "placeAbbreviation": "ND"
+                                        },
+                                        {
+                                            "id": 27,
+                                            "name": "Oklahoma",
+                                            "placeAbbreviation": "OK"
+                                        },
+                                        {
+                                            "id": 28,
+                                            "name": "Wyoming",
+                                            "placeAbbreviation": "WY"
+                                        },
+                                        {
+                                            "id": 29,
+                                            "name": "Utah",
+                                            "placeAbbreviation": "UT"
+                                        },
+                                        {
+                                            "id": 30,
+                                            "name": "Oregon",
+                                            "placeAbbreviation": "OR"
+                                        },
+                                        {
+                                            "id": 31,
+                                            "name": "Hawaii",
+                                            "placeAbbreviation": "HI"
+                                        },
+                                        {
+                                            "id": 32,
+                                            "name": "Delaware",
+                                            "placeAbbreviation": "DE"
+                                        },
+                                        {
+                                            "id": 33,
+                                            "name": "Mississippi",
+                                            "placeAbbreviation": "MS"
+                                        },
+                                        {
+                                            "id": 37,
+                                            "name": "Maine",
+                                            "placeAbbreviation": "ME"
+                                        },
+                                        {
+                                            "id": 38,
+                                            "name": "Kansas",
+                                            "placeAbbreviation": "KS"
+                                        },
+                                        {
+                                            "id": 39,
+                                            "name": "West Virginia",
+                                            "placeAbbreviation": "WV"
+                                        },
+                                        {
+                                            "id": 41,
+                                            "name": "Arizona",
+                                            "placeAbbreviation": "AZ"
+                                        },
+                                        {
+                                            "id": 45,
+                                            "name": "Texas",
+                                            "placeAbbreviation": "TX"
+                                        },
+                                        {
+                                            "id": 46,
+                                            "name": "Canada",
+                                            "placeAbbreviation": "CAN"
+                                        },
+                                        {
+                                            "id": 47,
+                                            "name": "Florida",
+                                            "placeAbbreviation": "FL"
+                                        },
+                                        {
+                                            "id": 49,
+                                            "name": "South Dakota",
+                                            "placeAbbreviation": "SD"
+                                        },
+                                        {
+                                            "id": 51,
+                                            "name": "District of Columbia",
+                                            "placeAbbreviation": "DC"
+                                        },
+                                        {
+                                            "id": 55,
+                                            "name": "Massachusetts",
+                                            "placeAbbreviation": "MA"
+                                        },
+                                        {
+                                            "id": 56,
+                                            "name": "Pennsylvania",
+                                            "placeAbbreviation": "PA"
+                                        },
+                                        {
+                                            "id": 57,
+                                            "name": "Alaska",
+                                            "placeAbbreviation": "AK"
+                                        },
+                                        {
+                                            "id": 58,
+                                            "name": "Kentucky",
+                                            "placeAbbreviation": "KY"
+                                        },
+                                        {
+                                            "id": 60,
+                                            "name": "Louisiana",
+                                            "placeAbbreviation": "LA"
+                                        },
+                                        {
+                                            "id": 61,
+                                            "name": "Michigan",
+                                            "placeAbbreviation": "MI"
+                                        },
+                                        {
+                                            "id": 62,
+                                            "name": "Connecticut",
+                                            "placeAbbreviation": "CT"
+                                        },
+                                        {
+                                            "id": 63,
+                                            "name": "Tennessee",
+                                            "placeAbbreviation": "TN"
+                                        },
+                                        {
+                                            "id": 64,
+                                            "name": "Virginia",
+                                            "placeAbbreviation": "VA"
+                                        },
+                                        {
+                                            "id": 72,
+                                            "name": "Montana",
+                                            "placeAbbreviation": "MT"
+                                        },
+                                        {
+                                            "id": 75,
+                                            "name": "Minnesota",
+                                            "placeAbbreviation": "MN"
+                                        },
+                                        {
+                                            "id": 77,
+                                            "name": "Nevada",
+                                            "placeAbbreviation": "NV"
+                                        },
+                                        {
+                                            "id": 78,
+                                            "name": "New Hampshire",
+                                            "placeAbbreviation": "NH"
+                                        },
+                                        {
+                                            "id": 82,
+                                            "name": "Vermont",
+                                            "placeAbbreviation": "VT"
+                                        },
+                                        {
+                                            "id": 83,
+                                            "name": "Georgia",
+                                            "placeAbbreviation": "GA"
+                                        },
+                                        {
+                                            "id": 85,
+                                            "name": "Wisconsin",
+                                            "placeAbbreviation": "WI"
+                                        },
+                                        {
+                                            "id": 87,
+                                            "name": "Alabama",
+                                            "placeAbbreviation": "AL"
+                                        },
+                                        {
+                                            "id": 88,
+                                            "name": "Iowa",
+                                            "placeAbbreviation": "IA"
+                                        },
+                                        {
+                                            "id": 92,
+                                            "name": "New Jersey",
+                                            "placeAbbreviation": "NJ"
+                                        },
+                                        {
+                                            "id": 93,
+                                            "name": "Rhode Island",
+                                            "placeAbbreviation": "RI"
+                                        },
+                                        {
+                                            "id": 95,
+                                            "name": "Indiana",
+                                            "placeAbbreviation": "IN"
+                                        },
+                                        {
+                                            "id": 96,
+                                            "name": "Maryland",
+                                            "placeAbbreviation": "MD"
+                                        },
+                                        {
+                                            "id": 100,
+                                            "name": "Idaho",
+                                            "placeAbbreviation": "ID"
+                                        },
+                                        {
+                                            "id": 102,
+                                            "name": "California",
+                                            "placeAbbreviation": "CA"
+                                        },
+                                        {
+                                            "id": 108,
+                                            "name": "Colorado",
+                                            "placeAbbreviation": "CO"
+                                        },
+                                        {
+                                            "id": 383,
+                                            "name": "Puerto Rico",
+                                            "placeAbbreviation": "PR"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "fetchAllStatesUsingGET",
+                "summary": "Api to fetch all the states from the DB"
+            }
+        },
+        "/v1/taxexempt/states/{taxCategoryId}": {
+            "get": {
+                "tags": [
+                    "tax-exemption-places"
+                ],
+                "parameters": [
+                    {
+                        "name": "taxCategoryId",
+                        "description": "taxCategoryId",
+                        "schema": {
+                            "format": "int64",
+                            "type": "integer"
+                        },
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StatesListResponse"
+                                },
+                                "example": {
+                                    "count": 46,
+                                    "stateList": [
+                                        {
+                                            "id": 4,
+                                            "name": "Arkansas",
+                                            "placeAbbreviation": "AR"
+                                        },
+                                        {
+                                            "id": 6,
+                                            "name": "Illinois",
+                                            "placeAbbreviation": "IL"
+                                        },
+                                        {
+                                            "id": 7,
+                                            "name": "Washington",
+                                            "placeAbbreviation": "WA"
+                                        },
+                                        {
+                                            "id": 8,
+                                            "name": "North Carolina",
+                                            "placeAbbreviation": "NC"
+                                        },
+                                        {
+                                            "id": 12,
+                                            "name": "New Mexico",
+                                            "placeAbbreviation": "NM"
+                                        },
+                                        {
+                                            "id": 13,
+                                            "name": "New York",
+                                            "placeAbbreviation": "NY"
+                                        },
+                                        {
+                                            "id": 15,
+                                            "name": "Nebraska",
+                                            "placeAbbreviation": "NE"
+                                        },
+                                        {
+                                            "id": 19,
+                                            "name": "South Carolina",
+                                            "placeAbbreviation": "SC"
+                                        },
+                                        {
+                                            "id": 21,
+                                            "name": "Ohio",
+                                            "placeAbbreviation": "OH"
+                                        },
+                                        {
+                                            "id": 22,
+                                            "name": "Missouri",
+                                            "placeAbbreviation": "MO"
+                                        },
+                                        {
+                                            "id": 23,
+                                            "name": "North Dakota",
+                                            "placeAbbreviation": "ND"
+                                        },
+                                        {
+                                            "id": 27,
+                                            "name": "Oklahoma",
+                                            "placeAbbreviation": "OK"
+                                        },
+                                        {
+                                            "id": 28,
+                                            "name": "Wyoming",
+                                            "placeAbbreviation": "WY"
+                                        },
+                                        {
+                                            "id": 29,
+                                            "name": "Utah",
+                                            "placeAbbreviation": "UT"
+                                        },
+                                        {
+                                            "id": 31,
+                                            "name": "Hawaii",
+                                            "placeAbbreviation": "HI"
+                                        },
+                                        {
+                                            "id": 33,
+                                            "name": "Mississippi",
+                                            "placeAbbreviation": "MS"
+                                        },
+                                        {
+                                            "id": 37,
+                                            "name": "Maine",
+                                            "placeAbbreviation": "ME"
+                                        },
+                                        {
+                                            "id": 38,
+                                            "name": "Kansas",
+                                            "placeAbbreviation": "KS"
+                                        },
+                                        {
+                                            "id": 39,
+                                            "name": "West Virginia",
+                                            "placeAbbreviation": "WV"
+                                        },
+                                        {
+                                            "id": 41,
+                                            "name": "Arizona",
+                                            "placeAbbreviation": "AZ"
+                                        },
+                                        {
+                                            "id": 45,
+                                            "name": "Texas",
+                                            "placeAbbreviation": "TX"
+                                        },
+                                        {
+                                            "id": 47,
+                                            "name": "Florida",
+                                            "placeAbbreviation": "FL"
+                                        },
+                                        {
+                                            "id": 49,
+                                            "name": "South Dakota",
+                                            "placeAbbreviation": "SD"
+                                        },
+                                        {
+                                            "id": 51,
+                                            "name": "District of Columbia",
+                                            "placeAbbreviation": "DC"
+                                        },
+                                        {
+                                            "id": 55,
+                                            "name": "Massachusetts",
+                                            "placeAbbreviation": "MA"
+                                        },
+                                        {
+                                            "id": 56,
+                                            "name": "Pennsylvania",
+                                            "placeAbbreviation": "PA"
+                                        },
+                                        {
+                                            "id": 58,
+                                            "name": "Kentucky",
+                                            "placeAbbreviation": "KY"
+                                        },
+                                        {
+                                            "id": 60,
+                                            "name": "Louisiana",
+                                            "placeAbbreviation": "LA"
+                                        },
+                                        {
+                                            "id": 61,
+                                            "name": "Michigan",
+                                            "placeAbbreviation": "MI"
+                                        },
+                                        {
+                                            "id": 62,
+                                            "name": "Connecticut",
+                                            "placeAbbreviation": "CT"
+                                        },
+                                        {
+                                            "id": 63,
+                                            "name": "Tennessee",
+                                            "placeAbbreviation": "TN"
+                                        },
+                                        {
+                                            "id": 64,
+                                            "name": "Virginia",
+                                            "placeAbbreviation": "VA"
+                                        },
+                                        {
+                                            "id": 75,
+                                            "name": "Minnesota",
+                                            "placeAbbreviation": "MN"
+                                        },
+                                        {
+                                            "id": 77,
+                                            "name": "Nevada",
+                                            "placeAbbreviation": "NV"
+                                        },
+                                        {
+                                            "id": 82,
+                                            "name": "Vermont",
+                                            "placeAbbreviation": "VT"
+                                        },
+                                        {
+                                            "id": 83,
+                                            "name": "Georgia",
+                                            "placeAbbreviation": "GA"
+                                        },
+                                        {
+                                            "id": 85,
+                                            "name": "Wisconsin",
+                                            "placeAbbreviation": "WI"
+                                        },
+                                        {
+                                            "id": 87,
+                                            "name": "Alabama",
+                                            "placeAbbreviation": "AL"
+                                        },
+                                        {
+                                            "id": 88,
+                                            "name": "Iowa",
+                                            "placeAbbreviation": "IA"
+                                        },
+                                        {
+                                            "id": 92,
+                                            "name": "New Jersey",
+                                            "placeAbbreviation": "NJ"
+                                        },
+                                        {
+                                            "id": 93,
+                                            "name": "Rhode Island",
+                                            "placeAbbreviation": "RI"
+                                        },
+                                        {
+                                            "id": 95,
+                                            "name": "Indiana",
+                                            "placeAbbreviation": "IN"
+                                        },
+                                        {
+                                            "id": 96,
+                                            "name": "Maryland",
+                                            "placeAbbreviation": "MD"
+                                        },
+                                        {
+                                            "id": 100,
+                                            "name": "Idaho",
+                                            "placeAbbreviation": "ID"
+                                        },
+                                        {
+                                            "id": 102,
+                                            "name": "California",
+                                            "placeAbbreviation": "CA"
+                                        },
+                                        {
+                                            "id": 108,
+                                            "name": "Colorado",
+                                            "placeAbbreviation": "CO"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "getStatesBasedOnTaxCategoryUsingGET",
+                "summary": "API to get states list based on TaxCategory"
+            }
+        },
+        "/v1/taxexempt/store/customerAccount/": {
+            "post": {
+                "requestBody": {
+                    "description": "customerAccountOnboardingRequest",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreCustomerAccountRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "tags": [
+                    "customer-accounts-wm-stores"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CustomerAccountOnboardingResponse"
+                                },
+                                "example": {
+                                    "accountId": 2076,
+                                    "accountNumber": "525",
+                                    "taxCustId": "525",
+                                    "certificateId": 628,
+                                    "customerName": "TOMMY",
+                                    "address1": "add 2",
+                                    "cityName": "Florida",
+                                    "state": "AZ",
+                                    "postalCode": "54321",
+                                    "faxPhone": "222-333-222",
+                                    "emailId": "abc@yahoo.com",
+                                    "contactFirstName": "fname",
+                                    "contactLastName": "lname",
+                                    "contactPhone": "111-323-2222",
+                                    "purposeCode": 2,
+                                    "companyType": "1"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "onboardNewTaxExemptCustomerFromStoreUsingPOST",
+                "summary": "API to Onboard Store Tax Exempt Customer",
+                "x-codegen-request-body-name": "customerAccountOnboardingRequest"
+            }
+        },
+        "/v1/taxexempt/taxcategory/": {
+            "get": {
+                "tags": [
+                    "tax-exemption-categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "companyId",
+                        "description": "companyId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TaxCategoryResponse"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "id": 1,
+                                        "name": "Grocery and Convenience Store Retail",
+                                        "samsBaseCode": 5411
+                                    },
+                                    {
+                                        "id": 2,
+                                        "name": "Liqour and Alcoholic Beverage Retail",
+                                        "samsBaseCode": 5411
+                                    },
+                                    {
+                                        "id": 3,
+                                        "name": "Meat Products Retail",
+                                        "samsBaseCode": 2013
+                                    },
+                                    {
+                                        "id": 4,
+                                        "name": "General Retail",
+                                        "samsBaseCode": 5411
+                                    },
+                                    {
+                                        "id": 5,
+                                        "name": "General Wholesale",
+                                        "samsBaseCode": 5084
+                                    },
+                                    {
+                                        "id": 6,
+                                        "name": "Food Wholesale",
+                                        "samsBaseCode": 5147
+                                    },
+                                    {
+                                        "id": 8,
+                                        "name": "Automobile Repair Services",
+                                        "samsBaseCode": 7389
+                                    },
+                                    {
+                                        "id": 14,
+                                        "name": "Hotel and Hospitality Services",
+                                        "samsBaseCode": 7389
+                                    },
+                                    {
+                                        "id": 18,
+                                        "name": "Manufacturer - Purchasing Equipment used in Manufacturing",
+                                        "samsBaseCode": 7389
+                                    },
+                                    {
+                                        "id": 19,
+                                        "name": "Manufacturer - Purchasing Materials for Resale in Manufactured Products",
+                                        "samsBaseCode": 7389
+                                    },
+                                    {
+                                        "id": 22,
+                                        "name": "Contruction Contractor - Registered as a Seller for Sales Tax Purposes",
+                                        "samsBaseCode": 1521
+                                    },
+                                    {
+                                        "id": 27,
+                                        "name": "Local Government",
+                                        "samsBaseCode": 9199
+                                    },
+                                    {
+                                        "id": 28,
+                                        "name": "Foreign Diplomat",
+                                        "samsBaseCode": 9199
+                                    },
+                                    {
+                                        "id": 29,
+                                        "name": "Tribal Government",
+                                        "samsBaseCode": 9199
+                                    },
+                                    {
+                                        "id": 30,
+                                        "name": "Federal Agency",
+                                        "samsBaseCode": 9199
+                                    },
+                                    {
+                                        "id": 33,
+                                        "name": "State Agency",
+                                        "samsBaseCode": 9199
+                                    },
+                                    {
+                                        "id": 35,
+                                        "name": "Membership Organization",
+                                        "samsBaseCode": 8661
+                                    },
+                                    {
+                                        "id": 36,
+                                        "name": "Civic, Social, or Fraternal Organization",
+                                        "samsBaseCode": 8661
+                                    },
+                                    {
+                                        "id": 37,
+                                        "name": "Social Service or Counseling Organization",
+                                        "samsBaseCode": 8661
+                                    },
+                                    {
+                                        "id": 38,
+                                        "name": "Charitable Nonprofit",
+                                        "samsBaseCode": 8661
+                                    },
+                                    {
+                                        "id": 39,
+                                        "name": "Church",
+                                        "samsBaseCode": 8661
+                                    },
+                                    {
+                                        "id": 41,
+                                        "name": "Public School",
+                                        "samsBaseCode": 8211
+                                    },
+                                    {
+                                        "id": 42,
+                                        "name": "Private School",
+                                        "samsBaseCode": 8211
+                                    },
+                                    {
+                                        "id": 43,
+                                        "name": "Public College",
+                                        "samsBaseCode": 8211
+                                    },
+                                    {
+                                        "id": 44,
+                                        "name": "Private College",
+                                        "samsBaseCode": 8211
+                                    },
+                                    {
+                                        "id": 48,
+                                        "name": "Agricultural, Forestry, and Fishing",
+                                        "samsBaseCode": 191
+                                    },
+                                    {
+                                        "id": 49,
+                                        "name": "Commercial Farm - Purchasing Equipment and Machinery",
+                                        "samsBaseCode": 191
+                                    },
+                                    {
+                                        "id": 50,
+                                        "name": "Commercial Farm - Purchasing Supplies and Materials",
+                                        "samsBaseCode": 191
+                                    },
+                                    {
+                                        "id": 51,
+                                        "name": "Commercial Forestry",
+                                        "samsBaseCode": 191
+                                    },
+                                    {
+                                        "id": 52,
+                                        "name": "Commercial Fishing",
+                                        "samsBaseCode": 191
+                                    },
+                                    {
+                                        "id": 53,
+                                        "name": "Horse Racing and Horse Breeding Facilities",
+                                        "samsBaseCode": 191
+                                    },
+                                    {
+                                        "id": 54,
+                                        "name": "Other Farming Operations",
+                                        "samsBaseCode": 191
+                                    }
+                                ]
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "getAllExemptionTypesByCompanyIDUsingGET",
+                "summary": "API to fetch ECMS Tax Category Based On Company Specific Tax Category id"
+            }
+        },
+        "/v1/taxexempt/taxcategory/{taxCategoryId}/company/{companyId}": {
+            "get": {
+                "tags": [
+                    "tax-exemption-categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "companyId",
+                        "description": "companyId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "taxCategoryId",
+                        "description": "taxCategoryId",
+                        "schema": {
+                            "format": "int64",
+                            "type": "integer"
+                        },
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaxCategoryResponse"
+                                },
+                                "example": {
+                                    "id": 1,
+                                    "name": "Grocery and Convenience Store Retail",
+                                    "walmartCategoryId": 5411,
+                                    "walmartPurposeCode": 1
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "deprecated": false,
+                "operationId": "getPurposeCodeByTaxCategoryIDAndCompanyIDUsingGET",
+                "summary": "API to fetch ECMS Tax Category based on company specific tax category id"
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Answer": {
+                "title": "Answer",
+                "type": "object",
+                "properties": {
+                    "answer": {
+                        "type": "string"
+                    },
+                    "answerId": {
+                        "format": "int64",
+                        "type": "integer"
+                    }
+                }
+            },
+            "BlobResponse": {
+                "title": "BlobResponse",
+                "type": "object",
+                "properties": {
+                    "blobName": {
+                        "type": "string"
+                    },
+                    "containerName": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "containerName": "taxcerts",
+                    "blobName": "3989F7B1-34EA-4828-AE72-84E5EA500A14.pdf"
+                }
+            },
+            "BusinessId": {
+                "title": "BusinessId",
+                "type": "object",
+                "properties": {
+                    "exemptBusId": {
+                        "type": "string"
+                    },
+                    "exemptState": {
+                        "type": "string"
+                    },
+                    "exemptStateId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "exemptTypeCode": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "idTypeCode": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                }
+            },
+            "Certificate": {
+                "title": "Certificate",
+                "type": "object",
+                "properties": {
+                    "applicationNotice": {
+                        "type": "string"
+                    },
+                    "applicationText": {
+                        "type": "string"
+                    },
+                    "certificateId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "certificateName": {
+                        "type": "string"
+                    },
+                    "coverageText": {
+                        "type": "string"
+                    },
+                    "multipleText": {
+                        "type": "string"
+                    },
+                    "selectionHelp": {
+                        "type": "string"
+                    }
+                }
+            },
+            "CertificatePlaceResponse": {
+                "title": "CertificatePlaceResponse",
+                "type": "object",
+                "properties": {
+                    "exemptionId": {
+                        "type": "string"
+                    },
+                    "placeId": {
+                        "format": "int64",
+                        "type": "integer"
+                    }
+                }
+            },
+            "CertificateResponse": {
+                "title": "CertificateResponse",
+                "type": "object",
+                "properties": {
+                    "certificateId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "companyType": {
+                        "type": "string"
+                    },
+                    "completionStatus": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "contentId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "fileName": {
+                        "type": "string"
+                    },
+                    "formId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "formName": {
+                        "type": "string"
+                    },
+                    "formTitle": {
+                        "type": "string"
+                    }
+                }
+            },
+            "CertificateUpsertRequest": {
+                "title": "CertificateUpsertRequest",
+                "type": "object",
+                "properties": {
+                    "companyType": {
+                        "type": "string"
+                    },
+                    "formDetails": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FormDetails"
+                        }
+                    },
+                    "receiverCity": {
+                        "type": "string"
+                    },
+                    "taxCategoryDesc": {
+                        "type": "string"
+                    },
+                    "taxCategoryId": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "taxCustId": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                }
+            },
+            "CustomerAccountCertificatesResponse": {
+                "title": "CustomerAccountCertificatesResponse",
+                "type": "object",
+                "properties": {
+                    "certificates": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CertificateResponse"
+                        }
+                    },
+                    "taxCustId": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                }
+            },
+            "CustomerAccountDetailsResponse": {
+                "title": "CustomerAccountDetailsResponse",
+                "type": "object",
+                "properties": {
+                    "billAddress": {
+                        "type": "string"
+                    },
+                    "cityName": {
+                        "type": "string"
+                    },
+                    "contactName": {
+                        "type": "string"
+                    },
+                    "contactPhone": {
+                        "type": "string"
+                    },
+                    "countryCode": {
+                        "type": "string"
+                    },
+                    "customerName": {
+                        "type": "string"
+                    },
+                    "emailId": {
+                        "type": "string"
+                    },
+                    "faxPhone": {
+                        "type": "string"
+                    },
+                    "postalCode": {
+                        "type": "string"
+                    },
+                    "purposeCode": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "taxCustomerId": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                }
+            },
+            "CustomerAccountOnboardingRequest": {
+                "title": "CustomerAccountOnboardingRequest",
+                "type": "object",
+                "properties": {
+                    "address1": {
+                        "type": "string"
+                    },
+                    "cityName": {
+                        "type": "string"
+                    },
+                    "companyType": {
+                        "type": "string"
+                    },
+                    "contactFirstName": {
+                        "type": "string"
+                    },
+                    "contactLastName": {
+                        "type": "string"
+                    },
+                    "contactPhone": {
+                        "type": "string"
+                    },
+                    "countryCode": {
+                        "type": "string"
+                    },
+                    "customerName": {
+                        "type": "string"
+                    },
+                    "customerPhone": {
+                        "type": "string"
+                    },
+                    "dirPayPermitInd": {
+                        "type": "string"
+                    },
+                    "emailId": {
+                        "type": "string"
+                    },
+                    "exemptStateCode": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "faxPhone": {
+                        "type": "string"
+                    },
+                    "issueStoreNumber": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "postalCode": {
+                        "type": "string"
+                    },
+                    "purposeCode": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "soundexCode": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "taxCustomerId": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                }
+            },
+            "CustomerAccountOnboardingResponse": {
+                "title": "CustomerAccountOnboardingResponse",
+                "type": "object",
+                "properties": {
+                    "accountId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "accountNumber": {
+                        "type": "string"
+                    },
+                    "address1": {
+                        "type": "string"
+                    },
+                    "busIds": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BusinessId"
+                        }
+                    },
+                    "certificateId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "cityName": {
+                        "type": "string"
+                    },
+                    "companyType": {
+                        "type": "string"
+                    },
+                    "contactFirstName": {
+                        "type": "string"
+                    },
+                    "contactLastName": {
+                        "type": "string"
+                    },
+                    "contactPhone": {
+                        "type": "string"
+                    },
+                    "countryCode": {
+                        "type": "string"
+                    },
+                    "createUserId": {
+                        "type": "string"
+                    },
+                    "customerName": {
+                        "type": "string"
+                    },
+                    "customerPhone": {
+                        "type": "string"
+                    },
+                    "dirPayPermitInd": {
+                        "type": "string"
+                    },
+                    "emailId": {
+                        "type": "string"
+                    },
+                    "exemptClassCode": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "exemptStateCode": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "expirationDate": {
+                        "format": "date",
+                        "type": "string"
+                    },
+                    "faxPhone": {
+                        "type": "string"
+                    },
+                    "issueStoreNumber": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "localName": {
+                        "type": "string"
+                    },
+                    "postalCode": {
+                        "type": "string"
+                    },
+                    "purposeCode": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "soundexCode": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "storeCountryCode": {
+                        "type": "string"
+                    },
+                    "taxCustId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "File": {
+                "title": "File",
+                "type": "object",
+                "properties": {
+                    "absolute": {
+                        "type": "boolean"
+                    },
+                    "absoluteFile": {
+                        "$ref": "#/components/schemas/File"
+                    },
+                    "absolutePath": {
+                        "type": "string"
+                    },
+                    "canonicalFile": {
+                        "$ref": "#/components/schemas/File"
+                    },
+                    "canonicalPath": {
+                        "type": "string"
+                    },
+                    "directory": {
+                        "type": "boolean"
+                    },
+                    "executable": {
+                        "type": "boolean"
+                    },
+                    "file": {
+                        "type": "boolean"
+                    },
+                    "freeSpace": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "hidden": {
+                        "type": "boolean"
+                    },
+                    "lastModified": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "parent": {
+                        "type": "string"
+                    },
+                    "parentFile": {
+                        "$ref": "#/components/schemas/File"
+                    },
+                    "path": {
+                        "type": "string"
+                    },
+                    "readable": {
+                        "type": "boolean"
+                    },
+                    "totalSpace": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "usableSpace": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "writable": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Form": {
+                "title": "Form",
+                "type": "object",
+                "properties": {
+                    "agencyIssued": {
+                        "type": "boolean"
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "citationText": {
+                        "type": "string"
+                    },
+                    "contentUrl": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "format": "date",
+                        "type": "string"
+                    },
+                    "deletedAt": {
+                        "format": "date",
+                        "type": "string"
+                    },
+                    "effectiveDate": {
+                        "format": "date",
+                        "type": "string"
+                    },
+                    "endDate": {
+                        "format": "date",
+                        "type": "string"
+                    },
+                    "id": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "multiState": {
+                        "type": "boolean"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "revisionStateId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "format": "date",
+                        "type": "string"
+                    },
+                    "uuid": {
+                        "type": "string"
+                    },
+                    "websiteUrl": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FormDetails": {
+                "title": "FormDetails",
+                "type": "object",
+                "properties": {
+                    "formId": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "states": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FormSubmissionFlowResponse": {
+                "title": "FormSubmissionFlowResponse",
+                "type": "object",
+                "properties": {
+                    "buyerAddress": {
+                        "type": "string"
+                    },
+                    "buyerCity": {
+                        "type": "string"
+                    },
+                    "buyerCompanyName": {
+                        "type": "string"
+                    },
+                    "buyerState": {
+                        "type": "string"
+                    },
+                    "certificateId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "contactEmail": {
+                        "type": "string"
+                    },
+                    "contactFax": {
+                        "type": "string"
+                    },
+                    "contactPhone": {
+                        "type": "string"
+                    },
+                    "contentId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "placeExemptionMapping": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CertificatePlaceResponse"
+                        }
+                    },
+                    "postalCode": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FormSubmissionRequest": {
+                "title": "FormSubmissionRequest",
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "string"
+                    },
+                    "certificateId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "companyName": {
+                        "type": "string"
+                    },
+                    "contentJson": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "fax": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "placeExemptionMapping": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PlaceExemptionIdMappingRequest"
+                        }
+                    },
+                    "postalCode": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FormValidationFieldsResponse": {
+                "title": "FormValidationFieldsResponse",
+                "type": "object",
+                "properties": {
+                    "formFields": {
+                        "type": "string"
+                    },
+                    "rules": {
+                        "type": "string"
+                    },
+                    "signatureZone": {
+                        "type": "string"
+                    },
+                    "uploadOnly": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "PlaceExemptionIdMappingRequest": {
+                "title": "PlaceExemptionIdMappingRequest",
+                "type": "object",
+                "properties": {
+                    "exemptionId": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Question": {
+                "title": "Question",
+                "type": "object",
+                "properties": {
+                    "additionalText": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    }
+                }
+            },
+            "QuestionAnswers": {
+                "title": "QuestionAnswers",
+                "type": "object",
+                "properties": {
+                    "answers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Answer"
+                        }
+                    },
+                    "certificates": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Certificate"
+                        }
+                    },
+                    "question": {
+                        "$ref": "#/components/schemas/Question"
+                    }
+                }
+            },
+            "QuestionnaireRequest": {
+                "title": "QuestionnaireRequest",
+                "type": "object",
+                "properties": {
+                    "locations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/StateWiseQuestionnaireRequest"
+                        }
+                    }
+                }
+            },
+            "QuestionnaireResponse": {
+                "title": "QuestionnaireResponse",
+                "type": "object",
+                "properties": {
+                    "stateWiseQuestionnaire": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/QuestionAnswers"
+                        }
+                    }
+                }
+            },
+            "RecommenedFormResponse": {
+                "title": "RecommenedFormResponse",
+                "type": "object",
+                "properties": {
+                    "recommendedFormList": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/Form"
+                            }
+                        }
+                    }
+                }
+            },
+            "ResponseEntity": {
+                "title": "ResponseEntity",
+                "type": "object",
+                "properties": {
+                    "body": {
+                        "type": "object"
+                    },
+                    "statusCode": {
+                        "enum": [
+                            "100 CONTINUE",
+                            "101 SWITCHING_PROTOCOLS",
+                            "102 PROCESSING",
+                            "103 CHECKPOINT",
+                            "200 OK",
+                            "201 CREATED",
+                            "202 ACCEPTED",
+                            "203 NON_AUTHORITATIVE_INFORMATION",
+                            "204 NO_CONTENT",
+                            "205 RESET_CONTENT",
+                            "206 PARTIAL_CONTENT",
+                            "207 MULTI_STATUS",
+                            "208 ALREADY_REPORTED",
+                            "226 IM_USED",
+                            "300 MULTIPLE_CHOICES",
+                            "301 MOVED_PERMANENTLY",
+                            "302 FOUND",
+                            "302 MOVED_TEMPORARILY",
+                            "303 SEE_OTHER",
+                            "304 NOT_MODIFIED",
+                            "305 USE_PROXY",
+                            "307 TEMPORARY_REDIRECT",
+                            "308 PERMANENT_REDIRECT",
+                            "400 BAD_REQUEST",
+                            "401 UNAUTHORIZED",
+                            "402 PAYMENT_REQUIRED",
+                            "403 FORBIDDEN",
+                            "404 NOT_FOUND",
+                            "405 METHOD_NOT_ALLOWED",
+                            "406 NOT_ACCEPTABLE",
+                            "407 PROXY_AUTHENTICATION_REQUIRED",
+                            "408 REQUEST_TIMEOUT",
+                            "409 CONFLICT",
+                            "410 GONE",
+                            "411 LENGTH_REQUIRED",
+                            "412 PRECONDITION_FAILED",
+                            "413 PAYLOAD_TOO_LARGE",
+                            "413 REQUEST_ENTITY_TOO_LARGE",
+                            "414 URI_TOO_LONG",
+                            "414 REQUEST_URI_TOO_LONG",
+                            "415 UNSUPPORTED_MEDIA_TYPE",
+                            "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+                            "417 EXPECTATION_FAILED",
+                            "418 I_AM_A_TEAPOT",
+                            "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+                            "420 METHOD_FAILURE",
+                            "421 DESTINATION_LOCKED",
+                            "422 UNPROCESSABLE_ENTITY",
+                            "423 LOCKED",
+                            "424 FAILED_DEPENDENCY",
+                            "425 TOO_EARLY",
+                            "426 UPGRADE_REQUIRED",
+                            "428 PRECONDITION_REQUIRED",
+                            "429 TOO_MANY_REQUESTS",
+                            "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+                            "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+                            "500 INTERNAL_SERVER_ERROR",
+                            "501 NOT_IMPLEMENTED",
+                            "502 BAD_GATEWAY",
+                            "503 SERVICE_UNAVAILABLE",
+                            "504 GATEWAY_TIMEOUT",
+                            "505 HTTP_VERSION_NOT_SUPPORTED",
+                            "506 VARIANT_ALSO_NEGOTIATES",
+                            "507 INSUFFICIENT_STORAGE",
+                            "508 LOOP_DETECTED",
+                            "509 BANDWIDTH_LIMIT_EXCEEDED",
+                            "510 NOT_EXTENDED",
+                            "511 NETWORK_AUTHENTICATION_REQUIRED"
+                        ],
+                        "type": "string"
+                    },
+                    "statusCodeValue": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                }
+            },
+            "SignatureFileRequest": {
+                "title": "SignatureFileRequest",
+                "type": "object",
+                "properties": {
+                    "company": {
+                        "type": "string"
+                    },
+                    "userName": {
+                        "type": "string"
+                    },
+                    "userTitle": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SignatureResponse": {
+                "title": "SignatureResponse",
+                "type": "object",
+                "properties": {
+                    "companyName": {
+                        "type": "string"
+                    },
+                    "companyType": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "deletedAt": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "extension": {
+                        "type": "string"
+                    },
+                    "fileName": {
+                        "type": "string"
+                    },
+                    "fileSize": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "height": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "id": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "mimeType": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "uploadedBy": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "userId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "userName": {
+                        "type": "string"
+                    },
+                    "userTitle": {
+                        "type": "string"
+                    },
+                    "uuid": {
+                        "type": "string"
+                    },
+                    "width": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                }
+            },
+            "SignatureZoneDetails": {
+                "title": "SignatureZoneDetails",
+                "type": "object",
+                "properties": {
+                    "imgHeight": {
+                        "format": "float",
+                        "type": "number"
+                    },
+                    "imgWidth": {
+                        "format": "float",
+                        "type": "number"
+                    },
+                    "leftXCoordinate": {
+                        "format": "float",
+                        "type": "number"
+                    },
+                    "leftYCoordinate": {
+                        "format": "float",
+                        "type": "number"
+                    },
+                    "pageHeight": {
+                        "format": "float",
+                        "type": "number"
+                    },
+                    "pageWidth": {
+                        "format": "float",
+                        "type": "number"
+                    }
+                }
+            },
+            "SignedPdfGenerationRequest": {
+                "title": "SignedPdfGenerationRequest",
+                "type": "object",
+                "properties": {
+                    "certificateId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "pageToSignZoneMapping": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/SignatureZoneDetails"
+                        }
+                    },
+                    "signatureId": {
+                        "format": "int64",
+                        "type": "integer"
+                    }
+                }
+            },
+            "State": {
+                "title": "State",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "placeAbbreviation": {
+                        "type": "string"
+                    }
+                }
+            },
+            "StateWiseQuestionnaireRequest": {
+                "title": "StateWiseQuestionnaireRequest",
+                "type": "object",
+                "properties": {
+                    "lastAnswerId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "state": {
+                        "type": "string"
+                    }
+                }
+            },
+            "StatesListResponse": {
+                "title": "StatesListResponse",
+                "type": "object",
+                "properties": {
+                    "count": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "stateList": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/State"
+                        }
+                    }
+                }
+            },
+            "StoreCustomerAccountRequest": {
+                "title": "StoreCustomerAccountRequest",
+                "type": "object",
+                "properties": {
+                    "address1": {
+                        "type": "string"
+                    },
+                    "busIds": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BusinessId"
+                        }
+                    },
+                    "cityName": {
+                        "type": "string"
+                    },
+                    "companyType": {
+                        "type": "string"
+                    },
+                    "contactFirstName": {
+                        "type": "string"
+                    },
+                    "contactLastName": {
+                        "type": "string"
+                    },
+                    "contactPhone": {
+                        "type": "string"
+                    },
+                    "countryCode": {
+                        "type": "string"
+                    },
+                    "createUserId": {
+                        "type": "string"
+                    },
+                    "customerName": {
+                        "type": "string"
+                    },
+                    "customerPhone": {
+                        "type": "string"
+                    },
+                    "dirPayPermitInd": {
+                        "type": "string"
+                    },
+                    "emailId": {
+                        "type": "string"
+                    },
+                    "exemptClassCode": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "exemptStateCode": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "expirationDate": {
+                        "format": "date",
+                        "type": "string"
+                    },
+                    "faxPhone": {
+                        "type": "string"
+                    },
+                    "issueStoreNumber": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "localName": {
+                        "type": "string"
+                    },
+                    "postalCode": {
+                        "type": "string"
+                    },
+                    "purposeCode": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "soundexCode": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "storeCountryCode": {
+                        "type": "string"
+                    },
+                    "taxCustomerId": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                }
+            },
+            "TaxCategoryResponse": {
+                "title": "TaxCategoryResponse",
+                "type": "object",
+                "properties": {
+                    "ecmsTaxCategoryId": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "id": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "samsBaseCode": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "walmartCategoryId": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "walmartPurposeCode": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "PingfedOAuth": {
+                "flows": {
+                    "implicit": {
+                        "authorizationUrl": "https://pfedprod.wal-mart.com:443/as/authorization.oauth2"
+                    }
+                },
+                "type": "oauth2",
+                "description": "Pinged based OAuth"
+            }
+        }
+    },
+    "security": [
+        {
+
+        }
+    ],
+    "tags": [
+        {
+            "name": "customer-tax-certificates",
+            "description": "APIs grouped under customer-tax-certificates provides the functionality to add, update, lookup and  upload tax exemption certificates"
+        },
+        {
+            "name": "customer-accounts",
+            "description": "APIs grouped under customer-accounts provide the lookup and onboarding services for customer opting for omnichannel tax exemption"
+        },
+        {
+            "name": "customer-accounts-wm-stores",
+            "description": "APIs grouped under customer-accounts-wm-stores provide the lookup and onboarding services for customer opting tax exemption exclusively for Walmart stores."
+        },
+        {
+            "name": "customer-tax-certificate-files",
+            "description": "APIs grouped under customer-tax-certificate-files are used to generate tax exemption certificate PDF files based on the inputs provided by customers. These APIs facilitate the unsigned PDF perview and also allows the customers to overlay their signatures on the generated PDFs."
+        },
+        {
+            "name": "tax-exemption-places",
+            "description": "APIs grouped under tax-exemption-places list out the states where tax exemption is available for different tax categories."
+        },
+        {
+            "name": "tax-exemption-questionnaire",
+            "description": "APIs under tax-exemption-questionnaire facilitates a decision tree traversal of tax questionnaire to identify the  correct tax caregory for a customer."
+        },
+        {
+            "name": "tax-exemption-form-recommendations",
+            "description": "APIs under tax-exemption-form-recommendations facilitate tax exemption form and tax exemption form fields discovery based on user inputs."
+        },
+        {
+            "name": "customer-signatures",
+            "description": "APIs grouped under customer-signatures facilitate upsert and delete functionalies for tax exempt customers to upload and delete their signatures. "
+        },
+        {
+            "name": "tax-exemption-categories",
+            "description": "APIs grouped under tax-exemption-categories list out the tax exemption categories for different business segments like Walmart.com, SAMS club etc."
+        }
+    ],
+    "_id": "Enrollment"
+}
