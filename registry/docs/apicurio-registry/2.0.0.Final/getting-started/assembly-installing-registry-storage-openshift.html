@@ -81,7 +81,7 @@
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/0.0.5-dev/index.html">Apicurio Registry Operator documentation</a>
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0-dev/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -109,7 +109,7 @@
       <span class="title">Apicurio Registry Operator</span>
       <ul class="versions">
         <li class="version is-latest">
-          <a href="../../../apicurio-registry-operator/1.0.0-dev/index.html">1.0.0-dev</a>
+          <a href="../../../apicurio-registry-operator/1.1.0-dev/index.html">1.1.0-dev</a>
         </li>
       </ul>
     </li>
@@ -184,7 +184,7 @@
 <h2 id="installing-kafka-streams-operatorhub"><a class="anchor" href="#installing-kafka-streams-operatorhub"></a>Installing Strimzi from the OpenShift OperatorHub</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you do not already have Strimzi installed, you can install the Strimzi Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/4.7/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
+<p>If you do not already have Strimzi installed, you can install the Strimzi Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/4.6/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -201,10 +201,10 @@
 <p>In the OpenShift Container Platform web console, log in using an account with cluster administrator privileges.</p>
 </li>
 <li>
-<p>Change to the OpenShift project in which Apicurio Registry is installed. For example, from the <strong>Project</strong> drop-down, select <code>my-project</code>.</p>
+<p>Change to the OpenShift project in which you want to install Strimzi. For example, from the <strong>Project</strong> drop-down, select <code>my-project</code>.</p>
 </li>
 <li>
-<p>In the left navigation menu, click <strong>Operators</strong> &gt; <strong>OperatorHub</strong>.</p>
+<p>In the left navigation menu, click <strong>Operators</strong> and then <strong>OperatorHub</strong>.</p>
 </li>
 <li>
 <p>In the <strong>Filter by keyword</strong> text box, enter <code>Strimzi</code> to find the <strong>Strimzi</strong> Operator.</p>
@@ -217,13 +217,23 @@
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Update Channel</strong> &gt; <strong>stable</strong></p>
+<p><strong>Update Channel</strong> and then <strong>stable</strong></p>
 </li>
 <li>
-<p><strong>Installation Mode</strong> &gt; <strong>A specific namespace on the cluster</strong> &gt; <strong>my-project</strong></p>
+<p><strong>Installation Mode</strong>: Select one of the following:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>All namespaces on the cluster (default)</strong></p>
 </li>
 <li>
-<p><strong>Approval Strategy</strong> &gt; <strong>Manual</strong></p>
+<p><strong>A specific namespace on the cluster</strong> &gt; <strong>my-project</strong></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Approval Strategy</strong>: Select <strong>Automatic</strong> or <strong>Manual</strong></p>
 </li>
 </ul>
 </div>
@@ -237,10 +247,10 @@
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.7/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.6/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
 </li>
 <li>
-<p><a href="https://access.redhat.com/documentation/en-us/red_hat_amq/7.8/html/using_amq_streams_on_openshift/index?">Using AMQ Streams on OpenShift</a></p>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_amq/2021.q2/html/using_amq_streams_on_openshift/index?">Using AMQ Streams on OpenShift</a></p>
 </li>
 </ul>
 </div>
@@ -280,10 +290,10 @@
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Click <strong>Installed Operators</strong> &gt; <strong>Strimzi</strong>.</p>
+<p>Click <strong>Installed Operators</strong> and then <strong>Strimzi</strong>.</p>
 </li>
 <li>
-<p>Under <strong>Provided APIs</strong> &gt; <strong>Kafka</strong>, click <strong>Create Instance</strong> to create a new Kafka cluster.</p>
+<p>Under <strong>Provided APIs</strong> and then <strong>Kafka</strong>, click <strong>Create Instance</strong> to create a new Kafka cluster.</p>
 </li>
 <li>
 <p>Edit the custom resource definition as appropriate, and click <strong>Create</strong>.</p>
@@ -294,7 +304,7 @@
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-The default example creates a cluster with 3 Zookeeper nodes and 3 Kafka nodes with <code>ephemeral</code> storage. This temporary storage is suitable for development and testing only, and not for production. For more details, see <a href="https://access.redhat.com/documentation/en-us/red_hat_amq/7.8/html/using_amq_streams_on_openshift/index?">Using AMQ Streams on OpenShift</a>.
+The default example creates a cluster with 3 Zookeeper nodes and 3 Kafka nodes with <code>ephemeral</code> storage. This temporary storage is suitable for development and testing only, and not for production. For more details, see <a href="https://access.redhat.com/documentation/en-us/red_hat_amq/2021.q2/html/using_amq_streams_on_openshift/index?">Using AMQ Streams on OpenShift</a>.
 </td>
 </tr>
 </table>
@@ -311,6 +321,7 @@ The default example creates a cluster with 3 Zookeeper nodes and 3 Kafka nodes w
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">status:
+  ...
   conditions:
   ...
   listeners:
@@ -330,15 +341,15 @@ The default example creates a cluster with 3 Zookeeper nodes and 3 Kafka nodes w
 <p>Paste in the following custom resource definition, but use your <code>bootstrapServers</code> value that you copied earlier:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: apicur.io/v1alpha1
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
 kind: ApicurioRegistry
 metadata:
-  name: example-apicurioregistry
+  name: example-apicurioregistry-kafkasql
 spec:
   configuration:
-    persistence: "kafkasql"
-    streams:
-      bootstrapServers: "my-cluster-kafka-bootstrap.my-project.svc:9092"</code></pre>
+    persistence: 'kafkasql'
+    kafkasql:
+      bootstrapServers: 'my-cluster-kafka-bootstrap.my-project.svc:9092'</code></pre>
 </div>
 </div>
 </li>
@@ -349,7 +360,7 @@ spec:
 <p>Click <strong>Networking</strong> &gt; <strong>Route</strong> to access the new route for the Apicurio Registry web console. For example:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>http://example-apicurioregistry.my-project.my-domain-name.com/</code></pre>
+<pre class="highlightjs highlight"><code>http://example-apicurioregistry-kafkasql.my-project.my-domain-name.com/</code></pre>
 </div>
 </div>
 </li>
@@ -398,7 +409,7 @@ spec:
 <h2 id="installing-postgresql-operatorhub"><a class="anchor" href="#installing-postgresql-operatorhub"></a>Installing a PostgreSQL database from the OpenShift OperatorHub</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you do not already have a PostgreSQL database Operator installed, you can install a PostgreSQL Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/4.7/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
+<p>If you do not already have a PostgreSQL database Operator installed, you can install a PostgreSQL Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/4.6/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -415,10 +426,10 @@ spec:
 <p>In the OpenShift Container Platform web console, log in using an account with cluster administrator privileges.</p>
 </li>
 <li>
-<p>Change to the OpenShift project in which Apicurio Registry is installed. For example, from the <strong>Project</strong> drop-down, select <code>my-project</code>.</p>
+<p>Change to the OpenShift project in which you want to install the PostgreSQL Operator. For example, from the <strong>Project</strong> drop-down, select <code>my-project</code>.</p>
 </li>
 <li>
-<p>In the left navigation menu, click <strong>Operators</strong> &gt; <strong>OperatorHub</strong>.</p>
+<p>In the left navigation menu, click <strong>Operators</strong> and then <strong>OperatorHub</strong>.</p>
 </li>
 <li>
 <p>In the <strong>Filter by keyword</strong> text box, enter <code>PostgreSQL</code> to find an Operator suitable for your environment, for example, <strong>Crunchy PostgreSQL for OpenShift</strong> or <strong>PostgreSQL Operator by Dev4Ddevs.com</strong>.</p>
@@ -431,13 +442,13 @@ spec:
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Update Channel</strong> &gt; <strong>stable</strong></p>
+<p><strong>Update Channel</strong>: <strong>stable</strong></p>
 </li>
 <li>
-<p><strong>Installation Mode</strong> &gt; <strong>A specific namespace on the cluster</strong> &gt; <strong>my-project</strong></p>
+<p><strong>Installation Mode</strong>: <strong>A specific namespace on the cluster</strong> and then <strong>my-project</strong></p>
 </li>
 <li>
-<p><strong>Approval Strategy</strong> &gt; <strong>Manual</strong></p>
+<p><strong>Approval Strategy</strong>: Select <strong>Automatic</strong> or <strong>Manual</strong></p>
 </li>
 </ul>
 </div>
@@ -463,7 +474,7 @@ You must read the documentation from your chosen <strong>PostgreSQL</strong> Ope
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.7/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.6/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
 </li>
 <li>
 <p><a href="https://access.crunchydata.com/documentation/postgres-operator/4.3.2/quickstart/">Crunchy PostgreSQL Operator QuickStart</a></p>
@@ -502,17 +513,17 @@ You must read the documentation from your chosen <strong>PostgreSQL</strong> Ope
 <p>Change to the OpenShift project in which Apicurio Registry and your PostgreSQL Operator are installed. For example, from the <strong>Project</strong> drop-down, select <code>my-project</code>.</p>
 </li>
 <li>
-<p>Create a PostgreSQL database for your Apicurio Registry storage. For example, click <strong>Installed Operators</strong> &gt; <strong>PostgreSQL Operator by Dev4Ddevs.com</strong> &gt; <strong>Create database</strong> &gt; <strong>YAML</strong>.</p>
+<p>Create a PostgreSQL database for your Apicurio Registry storage. For example, click <strong>Installed Operators</strong>, <strong>PostgreSQL Operator by Dev4Ddevs.com</strong>, and then <strong>Create database</strong>.</p>
 </li>
 <li>
-<p>Edit the database settings as follows:</p>
+<p>Click <strong>YAML</strong> and edit the database settings as follows:</p>
 <div class="ulist">
 <ul>
 <li>
 <p><code>name</code>: Change the value to <code>registry</code></p>
 </li>
 <li>
-<p><code>image</code>: Change the value to <code>centos/postgresql-10-centos7</code></p>
+<p><code>image</code>: Change the value to <code>centos/postgresql-12-centos7</code></p>
 </li>
 </ul>
 </div>
@@ -538,13 +549,13 @@ spec:
   databaseStorageRequest: 1Gi
   databaseUser: postgres
   databaseUserKeyEnvVar: POSTGRESQL_USER
-  image: centos/postgresql-10-centos7
+  image: centos/postgresql-12-centos7
   size: 1</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Click <strong>Create Database</strong>, and wait until the database is created.</p>
+<p>Click <strong>Create</strong>, and wait until the database is created.</p>
 </li>
 <li>
 <p>Click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry</strong> &gt; <strong>Create ApicurioRegistry</strong>.</p>
@@ -553,19 +564,19 @@ spec:
 <p>Paste in the following custom resource definition, and edit the values for the database <code>url</code> and credentials to match your environment:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: apicur.io/v1alpha1
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
 kind: ApicurioRegistry
 metadata:
-  name: example-apicurioregistry
+  name: example-apicurioregistry-sql
 spec:
   configuration:
-    persistence: "sql"
-    dataSource:
-      url: "jdbc:postgresql://SERVICE_NAME.NAMESPACE.svc:5432/"
-      # e.g. url: "jdbc:postgresql://acid-minimal-cluster.my-project.svc:5432/"
-      userName: "postgres"
-      password: "PASSWORD"
-      # ^ Optional</code></pre>
+    persistence: 'sql'
+    sql:
+      dataSource:
+        url: 'jdbc:postgresql://&lt;service name&gt;.&lt;namespace&gt;.svc:5432/&lt;database name&gt;'
+        # e.g. url: 'jdbc:postgresql://acid-minimal-cluster.my-project.svc:5432/registry'
+        userName: 'postgres'
+        password: '&lt;password&gt;' # Optional</code></pre>
 </div>
 </div>
 </li>
@@ -576,7 +587,7 @@ spec:
 <p>Click <strong>Networking</strong> &gt; <strong>Route</strong> to access the new route for the Apicurio Registry web console. For example:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>http://example-apicurioregistry.my-project.my-domain-name.com/</code></pre>
+<pre class="highlightjs highlight"><code>http://example-apicurioregistry-sql.my-project.my-domain-name.com/</code></pre>
 </div>
 </div>
 </li>

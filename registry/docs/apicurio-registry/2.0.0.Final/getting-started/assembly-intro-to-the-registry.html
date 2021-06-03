@@ -81,7 +81,7 @@
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/0.0.5-dev/index.html">Apicurio Registry Operator documentation</a>
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0-dev/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -109,7 +109,7 @@
       <span class="title">Apicurio Registry Operator</span>
       <ul class="versions">
         <li class="version is-latest">
-          <a href="../../../apicurio-registry-operator/1.0.0-dev/index.html">1.0.0-dev</a>
+          <a href="../../../apicurio-registry-operator/1.1.0-dev/index.html">1.1.0-dev</a>
         </li>
       </ul>
     </li>
@@ -163,9 +163,6 @@
 <p><a href="#registry-storage">Apicurio Registry storage options</a></p>
 </li>
 <li>
-<p><a href="#registry-web-console">Manage content using Apicurio Registry web console</a></p>
-</li>
-<li>
 <p><a href="#client-serde">Validate schemas with Kafka client serializers/deserializers</a></p>
 </li>
 <li>
@@ -204,7 +201,7 @@ Apicurio Registry provides a web console to make it easy for developers and admi
 <div class="ulist">
 <ul>
 <li>
-<p>Support for multiple payload formats for standard event schemas and API specifications</p>
+<p>Multiple payload formats for standard event schemas and API specifications</p>
 </li>
 <li>
 <p>Pluggable registry storage options in Apache Kafka or PostgreSQL database</p>
@@ -231,7 +228,7 @@ Apicurio Registry provides a web console to make it easy for developers and admi
 <p>Operator-based installation of Apicurio Registry on OpenShift</p>
 </li>
 <li>
-<p>Support for OpenID Connect (OIDC) authentication using Keycloak</p>
+<p>OpenID Connect (OIDC) authentication using Keycloak</p>
 </li>
 </ul>
 </div>
@@ -268,19 +265,18 @@ Apicurio Registry provides a web console to make it easy for developers and admi
 <div class="paragraph">
 <p>Apicurio Registry supports a wide range of message payload formats for standard event schemas and API specifications. For example, supported formats include Apache Avro, Google Protobuf, GraphQL, AsyncAPI, OpenAPI, and others. For more details, see <a href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>.</p>
 </div>
-<div class="sect2">
-<h3 id="_schema_and_api_groups"><a class="anchor" href="#_schema_and_api_groups"></a>Schema and API groups</h3>
+<h3 id="_schema_and_api_groups" class="discrete">Schema and API groups</h3>
 <div class="paragraph">
 <p>An <em>artifact group</em> is an optional named collection of schema or API artifacts. Each group contains a logically related set of schemas or API designs, typically managed by a single entity, belonging to a particular application or organization.</p>
 </div>
 <div class="paragraph">
-<p>You can create optional artifact groups when adding your schemas and API designs to organize them in Apicurio Registry. For example, you could create groups to match your <code>development</code> and <code>production</code> application environment, or your <code>sales</code> and <code>engineering</code> organization.</p>
+<p>You can create optional artifact groups when adding your schemas and API designs to organize them in Apicurio Registry. For example, you could create groups to match your <code>development</code> and <code>production</code> application environments, or your <code>sales</code> and <code>engineering</code> organizations.</p>
 </div>
 <div class="paragraph">
 <p>Schema and API groups can contain multiple artifact types. For example, you could have Protobuf, Avro, JSON Schema, OpenAPI, and AsyncAPI schema and API artifacts all in the same group.</p>
 </div>
 <div class="paragraph">
-<p>You can create schema and API artifacts and optional groups using the Apicurio Registry web console, core REST API, or Maven plug-in.  The following simple example shows using the REST API:</p>
+<p>You can create schema and API artifacts and optional groups using the Apicurio Registry web console, core REST API, Maven plug-in, or Java client application.  The following simple example shows using the REST API:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -301,7 +297,7 @@ Apicurio Registry provides a web console to make it easy for developers and admi
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Specifying a group is optional when using the Apicurio Registry web console, and a <code>default</code> group is automatically created. When using the v2 REST API or Maven plug-in, you can specify the <code>default</code> group in the API path if you do not want to create a unique group.
+Specifying a group is optional when using the Apicurio Registry web console, where a <code>default</code> group is automatically created. When using the v2 REST API or Maven plug-in, you can specify the <code>default</code> group in the API path if you do not want to create a unique group.
 </td>
 </tr>
 </table>
@@ -316,11 +312,10 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
 <h2 id="registry-web-console"><a class="anchor" href="#registry-web-console"></a>Manage content using Apicurio Registry web console</h2>
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>You can use the Apicurio Registry web console to browse and search the schema and API artifacts and optional groups stored in the registry, and to add new schema and API artifacts, groups, and versions. You can search for artifacts by label, name, group, and description. You can view an artifact’s content or its available versions, or download an artifact file locally.</p>
 </div>
 <div class="paragraph">
@@ -335,7 +330,7 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 <div class="paragraph">
 <p>The Apicurio Registry web console is available from the main endpoint of your Apicurio Registry deployment, for example, on <code>http://MY-REGISTRY-URL/ui</code>.</p>
 </div>
-<div class="ulist">
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
@@ -345,7 +340,7 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 </div>
 </div>
 </div>
-<div class="sect1">
+<div class="sect1 _abstract">
 <h2 id="registry-rest-api"><a class="anchor" href="#registry-rest-api"></a>Registry core REST API overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -385,12 +380,12 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 </div>
 <h3 id="_compatibility_with_other_schema_registry_rest_apis" class="discrete">Compatibility with other schema registry REST APIs</h3>
 <div class="paragraph">
-<p>The  Apicurio Registry core REST API version 2.0 is compatible with the following schema registry APIs:</p>
+<p>Apicurio Registry version 2 provides API compatibility with the following schema registries by including implementations of their respective REST APIs:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Apicurio Registry core REST API version 1</p>
+<p>Apicurio Registry version 1</p>
 </li>
 <li>
 <p>Confluent schema registry version 6</p>
@@ -406,7 +401,7 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 <div class="paragraph">
 <p>Applications using Confluent client libraries can use Apicurio Registry as a drop-in replacement.</p>
 </div>
-<div class="ulist">
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
@@ -423,7 +418,7 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 <h2 id="registry-storage"><a class="anchor" href="#registry-storage"></a>Apicurio Registry storage options</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry provides the following underlying storage implementations for schema and API artifacts:</p>
+<p>Apicurio Registry provides the following options for the underlying storage of registry data:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -445,7 +440,7 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The in-memory storage option is suitable for a development environment only. All data is lost when restarting Apicurio Registry with this storage. The Kafka storage option is recommended for production environments.
+The in-memory storage option is suitable for a development environment only. All data is lost when restarting Apicurio Registry with this storage. The PostgreSQL or Kafka storage option is recommended for a production environment.
 </td>
 </tr>
 </table>
@@ -561,10 +556,10 @@ The in-memory storage option is suitable for a development environment only. All
 <h2 id="registry-demo"><a class="anchor" href="#registry-demo"></a>Apicurio Registry demonstration examples</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry provides an open source demonstration of Apache Avro serialization/deserialization (SerDe) with storage in Apache Kafka. This example shows how the Apicurio Registry serializer/deserializer obtains the Avro schema from the registry at runtime and uses it to serialize and deserialize Kafka messages. For more details, see <a href="https://github.com/Apicurio/apicurio-registry-demo" class="bare">https://github.com/Apicurio/apicurio-registry-demo</a>.</p>
+<p>Apicurio Registry provides open source example applications that demonstrate how to use the registry in different use case scenarios. For example, these include storing schemas used by Kafka serializer and deserializer (SerDe) classes. These Java classes fetch the schema from the registry for use when producing or consuming operations to serialize, deserialize, or validate the Kafka message payload.</p>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry also provides the following example applications:</p>
+<p>These example applications include the following:</p>
 </div>
 <div class="ulist">
 <ul>

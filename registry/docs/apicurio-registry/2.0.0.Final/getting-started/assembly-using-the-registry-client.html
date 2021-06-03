@@ -81,7 +81,7 @@
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/0.0.5-dev/index.html">Apicurio Registry Operator documentation</a>
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0-dev/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -109,7 +109,7 @@
       <span class="title">Apicurio Registry Operator</span>
       <ul class="versions">
         <li class="version is-latest">
-          <a href="../../../apicurio-registry-operator/1.0.0-dev/index.html">1.0.0-dev</a>
+          <a href="../../../apicurio-registry-operator/1.1.0-dev/index.html">1.1.0-dev</a>
         </li>
       </ul>
     </li>
@@ -163,22 +163,22 @@
 <div class="sect1">
 <h2 id="registry-client-intro"><a class="anchor" href="#registry-client-intro"></a>Apicurio Registry Java client</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>You can manage artifacts stored in Apicurio Registry using a Java client application. You can create, read, update, or delete artifacts stored in the registry using the Apicurio Registry Java client classes.</p>
+<div class="paragraph _abstract">
+<p>You can manage artifacts stored in Apicurio Registry using a Java client application. You can create, read, update, or delete artifacts stored in the registry using the Apicurio Registry Java client classes. You can also perform admin functions using the client, such as managing global rules or importing and exporting registry data.</p>
 </div>
 <div class="paragraph">
-<p>You can access the Apicurio Registry Java client by adding the correct dependency to your project, see <a href="#writing-registry-client">Writing Apicurio Registry client applications</a>.</p>
+<p>You can access the Apicurio Registry Java client by adding the correct dependency to your project. For more details, see <a href="#writing-registry-client">Writing Apicurio Registry client applications</a>.</p>
 </div>
 <div class="paragraph">
-<p>The Apicurio Registry client is auto-closeable and is implemented using Retrofit and OkHttp as base libraries. This gives you the ability to customize its use, for example, by adding custom headers or enabling Transport Layer Security (TLS) authentication. For more details, see <a href="#registry-client-config">Apicurio Registry Java client configuration</a>.</p>
+<p>The Apicurio Registry client is implemented using the HTTP client provided by the JDK. This gives you the ability to customize its use, for example, by adding custom headers or enabling options for Transport Layer Security (TLS) authentication. For more details, see <a href="#registry-client-config">Apicurio Registry Java client configuration</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="writing-registry-client"><a class="anchor" href="#writing-registry-client"></a>Writing Apicurio Registry client applications</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This section explains how to manage artifacts stored in Apicurio Registry using a Java client application. The Apicurio Registry Java client extends the <code>Autocloseable</code> interface.</p>
+<div class="paragraph _abstract">
+<p>This section explains how to manage artifacts stored in Apicurio Registry using a Java client application.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -200,7 +200,7 @@
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
     &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
-    &lt;artifactId&gt;apicurio-registry-rest-client&lt;/artifactId&gt;
+    &lt;artifactId&gt;apicurio-registry-client&lt;/artifactId&gt;
     &lt;version&gt;${apicurio-registry.version}&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
@@ -216,8 +216,8 @@
 
      public static void main(String[] args) throws Exception {
         // Create a registry client
-        String registryUrl = "https://registry.my-domain.com/api"; <i class="conum" data-value="1"></i><b>(1)</b>
-        RegistryRestClient client = RegistryRestClientFactory.create(registryUrl); <i class="conum" data-value="2"></i><b>(2)</b>
+        String registryUrl = "https://my-registry.my-domain.com/apis/registry/v2"; <i class="conum" data-value="1"></i><b>(1)</b>
+        RegistryClient client = RegistryClientFactory.create(registryUrl); <i class="conum" data-value="2"></i><b>(2)</b>
     }
 }</code></pre>
 </div>
@@ -226,7 +226,7 @@
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>You must specify the Apicurio Registry URL with the <code>/api</code> endpoint.</td>
+<td>If you specify an example registry URL of <code><a href="https://my-registry.my-domain.com" class="bare">https://my-registry.my-domain.com</a></code>, the client will automatically append <code>/apis/registry/v2</code>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -240,11 +240,14 @@
 </li>
 </ol>
 </div>
-<div class="ulist">
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For an example of how to use and customize the Apicurio Registry client, see the <a href="https://github.com/Apicurio/apicurio-registry-examples/blob/master/rest-client">Registry client demonstration example</a>.</p>
+<p>For an open source example of how to use and customize the Apicurio Registry client, see the <a href="https://github.com/Apicurio/apicurio-registry-examples">Registry REST client demonstration example</a>.</p>
+</li>
+<li>
+<p>For details on how to use the Apicurio Registry Kafka client serializers/deserializers (SerDes) in producer and consumer applications, see <a href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a></p>
 </li>
 </ul>
 </div>
@@ -253,7 +256,7 @@
 <div class="sect1">
 <h2 id="registry-client-config"><a class="anchor" href="#registry-client-config"></a>Apicurio Registry Java client configuration</h2>
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>The Apicurio Registry Java client includes the following configuration options, based on the client factory:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -277,14 +280,14 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Custom HTTP client</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Registry client using an OkHttpClient provided by the user.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl</code>, <code>okhttpClient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Client with custom configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Registry client using the configuration provided by the user.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl</code>, <code>Map&lt;String Object&gt; configs</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Custom configuration</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Registry client that accepts a map containing custom configuration. This is useful, for example, to add custom headers to the calls.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl</code>, <code>Map&lt;String Object&gt; configs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Client with custom configuration and authentication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Registry client that accepts a map containing custom configuration. This is useful, for example, to add custom headers to the calls. This also requires providing an <code>auth</code> instance used to authenticate requests.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl, Map&lt;String Object&gt; configs, Auth auth</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -292,7 +295,7 @@
 <div class="paragraph">
 <p>To configure custom headers, you must add the <code>apicurio.registry.request.headers</code> prefix to the <code>configs</code> map key. For example, a key of <code>apicurio.registry.request.headers.Authorization</code> with a value of <code>Basic: xxxxx</code> results in a header of <code>Authorization</code> with value of <code>Basic: xxxxx</code>.</p>
 </div>
-<h3 id="_tls_configuration" class="discrete">TLS configuration</h3>
+<h3 id="_tls_configuration_options" class="discrete">TLS configuration options</h3>
 <div class="paragraph">
 <p>You can configure Transport Layer Security (TLS) authentication for the Apicurio Registry Java client using the following properties:</p>
 </div>

@@ -81,7 +81,7 @@
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/0.0.5-dev/index.html">Apicurio Registry Operator documentation</a>
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0-dev/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -109,7 +109,7 @@
       <span class="title">Apicurio Registry Operator</span>
       <ul class="versions">
         <li class="version is-latest">
-          <a href="../../../apicurio-registry-operator/1.0.0-dev/index.html">1.0.0-dev</a>
+          <a href="../../../apicurio-registry-operator/1.1.0-dev/index.html">1.1.0-dev</a>
         </li>
       </ul>
     </li>
@@ -179,7 +179,7 @@
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Keycloak is installed and running, and configured with a Keycloak realm and user. For more details, see
+<p>Keycloak is installed and running, and configured with a Keycloak realm and a user. For more details, see
 <a href="https://www.keycloak.org/getting-started">Getting Started with Keycloak</a>.</p>
 </li>
 <li>
@@ -187,14 +187,11 @@
 </li>
 </ul>
 </div>
-<div class="ulist">
+<div class="olist arabic">
 <div class="title">Procedure</div>
-<ul>
+<ol class="arabic">
 <li>
 <p>Set the following environment variables to configure Apicurio Registry authentication using Keycloak:</p>
-</li>
-</ul>
-</div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 1. Configuration for Apicurio Registry authentication</caption>
 <colgroup>
@@ -244,11 +241,11 @@
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>When authentication is enabled, Apicurio Registry provides role-based authorization for the following default user roles:</p>
-</div>
+</li>
+<li>
+<p>When Apicurio Registry authentication is enabled, you must assign Apicurio Registry users to at least one of the following default user roles in Keycloak:</p>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 2. Default user roles for registry authentication and authorization</caption>
+<caption class="title">Table 2. Default user roles for registry authentication and role-based authorization</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 16.6666%;">
@@ -289,13 +286,9 @@
 </tr>
 </tbody>
 </table>
-<div class="ulist">
-<ul>
-<li>
-<p>Set the following to <code>true</code> to enable owner-only authorization for updates to schema and API artifacts in Apicurio Registry:</p>
 </li>
-</ul>
-</div>
+<li>
+<p>You can set the following option to <code>true</code> to enable owner-only authorization for updates to schema and API artifacts in Apicurio Registry:</p>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 3. Configuration for owner-only authorization</caption>
 <colgroup>
@@ -321,6 +314,9 @@
 </tr>
 </tbody>
 </table>
+</li>
+</ol>
+</div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
@@ -332,7 +328,7 @@
 the <a href="https://www.keycloak.org/documentation">Keycloak documentation</a></p>
 </li>
 <li>
-<p>For details on custom configuration, the see <a href="https://quarkus.io/guides/security-openid-connect-web-authentication">Quarkus Open ID Connect documentation</a></p>
+<p>For details on configuring custom authentication for Apicurio Registry, the see <a href="https://quarkus.io/guides/security-openid-connect-web-authentication">Quarkus Open ID Connect documentation</a></p>
 </li>
 </ul>
 </div>
@@ -436,7 +432,7 @@ The default values of the liveness and readiness environment variables are desig
 <p>You must have an OpenShift cluster with cluster administrator access.</p>
 </li>
 <li>
-<p>You must have already installed Apicurio Registry on OpenShift with your preferred storage option. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
+<p>You must have already installed Apicurio Registry on OpenShift.</p>
 </li>
 <li>
 <p>You must have already installed and configured your chosen Apicurio Registry storage in Strimzi or PostgreSQL.</p>
@@ -477,7 +473,7 @@ The default values of the liveness and readiness environment variables are desig
 <li>
 <p>Click <strong>Save</strong> at the bottom.</p>
 <div class="paragraph">
-<p>Alternatively, you can perform these steps using the OpenShift <code>oc</code> command. For more details, see the <a href="https://docs.openshift.com/container-platform/4.7/cli_reference/openshift_cli/getting-started-cli.html">OpenShift CLI documentation</a>.</p>
+<p>Alternatively, you can perform these steps using the OpenShift <code>oc</code> command. For more details, see the <a href="https://docs.openshift.com/container-platform/4.6/cli_reference/openshift_cli/getting-started-cli.html">OpenShift CLI documentation</a>.</p>
 </div>
 </li>
 </ol>
@@ -489,7 +485,7 @@ The default values of the liveness and readiness environment variables are desig
 <p><a href="#registry-liveness-env-vars">Environment variables for Apicurio Registry health checks</a></p>
 </li>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.7/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.6/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
 </li>
 </ul>
 </div>
@@ -635,7 +631,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <p><a href="#configuring-liveness-readiness-probes">Configuring Apicurio Registry health checks on OpenShift</a></p>
 </li>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.7/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.6/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
 </li>
 </ul>
 </div>

@@ -81,7 +81,7 @@
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/0.0.5-dev/index.html">Apicurio Registry Operator documentation</a>
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0-dev/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -109,7 +109,7 @@
       <span class="title">Apicurio Registry Operator</span>
       <ul class="versions">
         <li class="version is-latest">
-          <a href="../../../apicurio-registry-operator/1.0.0-dev/index.html">1.0.0-dev</a>
+          <a href="../../../apicurio-registry-operator/1.1.0-dev/index.html">1.1.0-dev</a>
         </li>
       </ul>
     </li>
@@ -143,7 +143,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter explains how to install Apicurio Registry:</p>
+<p>This chapter explains how to install Apicurio Registry on OpenShift Container Platform:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -160,18 +160,6 @@
 </li>
 </ul>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-You can install more than one instance of Apicurio Registry depending on your environment. The number of instances depends on the number and type of artifacts stored in Apicurio Registry and on your chosen storage option.
-</td>
-</tr>
-</table>
-</div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
@@ -185,8 +173,20 @@ You can install more than one instance of Apicurio Registry depending on your en
 <div class="sect1">
 <h2 id="installing-registry-operatorhub"><a class="anchor" href="#installing-registry-operatorhub"></a>Installing Apicurio Registry from the OpenShift OperatorHub</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>You can install the Apicurio Registry Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/4.3/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
+<div class="paragraph _abstract">
+<p>You can install the Apicurio Registry Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/4.6/operators/understanding/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can install more than one instance of Apicurio Registry depending on your environment. The number of instances depends on the number and type of artifacts stored in Apicurio Registry and on your chosen storage option.
+</td>
+</tr>
+</table>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -207,7 +207,7 @@ You can install more than one instance of Apicurio Registry depending on your en
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>In the left navigation menu, click <strong>Home</strong> &gt; <strong>Project</strong> &gt; <strong>Create Project</strong>.</p>
+<p>In the left navigation menu, click <strong>Home</strong>, <strong>Project</strong>, and then <strong>Create Project</strong>.</p>
 </li>
 <li>
 <p>Enter a project name, for example, <code>my-project</code>, and click <strong>Create</strong>.</p>
@@ -216,7 +216,7 @@ You can install more than one instance of Apicurio Registry depending on your en
 </div>
 </li>
 <li>
-<p>In the left navigation menu, click <strong>Operators</strong> &gt; <strong>OperatorHub</strong>.</p>
+<p>In the left navigation menu, click <strong>Operators</strong> and then <strong>OperatorHub</strong>.</p>
 </li>
 <li>
 <p>In the <strong>Filter by keyword</strong> text box, enter <code>registry</code> to find the <strong>Apicurio Registry Operator</strong>.</p>
@@ -229,13 +229,33 @@ You can install more than one instance of Apicurio Registry depending on your en
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Update Channel</strong> &gt; <strong>alpha</strong></p>
+<p><strong>Update Channel</strong>: Select one of the following:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>2.0.x</strong>: Includes patch updates only, such as 2.0.1 and 2.0.2. For example, an installation on 2.0.x automatically ignores 2.1.x.</p>
 </li>
 <li>
-<p><strong>Installation Mode</strong> &gt; <strong>A specific namespace on the cluster</strong> &gt; <strong>my-project</strong></p>
+<p><strong>2.x</strong>: Includes all minor and patch updates, such as 2.1.0 and 2.0.1. For example, an installation on 2.0.x automatically upgrades to 2.1.x.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
-<p><strong>Approval Strategy</strong> &gt; <strong>Manual</strong></p>
+<p><strong>Installation Mode</strong>: Select one of the following:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>All namespaces on the cluster (default)</strong></p>
+</li>
+<li>
+<p><strong>A specific namespace on the cluster</strong>  and then <strong>my-project</strong></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Approval Strategy</strong>: Select <strong>Automatic</strong> or <strong>Manual</strong></p>
 </li>
 </ul>
 </div>
@@ -245,11 +265,11 @@ You can install more than one instance of Apicurio Registry depending on your en
 </li>
 </ol>
 </div>
-<div class="ulist">
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.7/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.6/operators/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
 </li>
 <li>
 <p><a href="https://github.com/Apicurio/apicurio-registry-operator">Apicurio Registry Operator community in GitHub</a></p>

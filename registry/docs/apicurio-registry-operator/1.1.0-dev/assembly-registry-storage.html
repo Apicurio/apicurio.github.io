@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Configuring Apicurio Registry storage :: Apicurio Registry</title>
-    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0-dev/assembly-registry-storage.html">
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.1.0-dev/assembly-registry-storage.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
     <link rel="stylesheet" href="../../assets/css/site.css">
@@ -35,7 +35,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry-operator" data-version="1.0.0-dev">
+<div class="nav-container" data-component="apicurio-registry-operator" data-version="1.1.0-dev">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -59,9 +59,6 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-operator-configuration.html">Apicurio Registry Operator configuration reference</a>
   </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-operator-dev-quickstart-minikube.html">Apicurio Registry Operator development quickstart on Minikube</a>
-  </li>
 </ul>
   </li>
 </ul>
@@ -70,7 +67,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry Operator</span>
-    <span class="version">1.0.0-dev</span>
+    <span class="version">1.1.0-dev</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -88,7 +85,7 @@
       <span class="title">Apicurio Registry Operator</span>
       <ul class="versions">
         <li class="version is-current is-latest">
-          <a href="index.html">1.0.0-dev</a>
+          <a href="index.html">1.1.0-dev</a>
         </li>
       </ul>
     </li>
@@ -126,22 +123,16 @@
 <p><a href="#registry-persistence-mem">Configuring Apicurio Registry In-Memory storage using CLI</a></p>
 </li>
 <li>
-<p><a href="#registry-persistence-infinispan">Configuring Apicurio Registry Infinispan storage</a></p>
+<p><a href="#registry-persistence-kafkasql-plain">Configuring plain Kafka storage with no security</a></p>
 </li>
 <li>
-<p><a href="#registry-persistence-kafka-plain">Configuring plain Kafka storage</a></p>
+<p><a href="#registry-persistence-kafkasql-tls">Configuring Kafka storage with TLS security</a></p>
 </li>
 <li>
-<p><a href="#registry-persistence-kafka-streams-plain">Configuring plain Kafka Streams storage with no security</a></p>
+<p><a href="#registry-persistence-kafkasql-scram">Configuring Kafka storage with SCRAM security</a></p>
 </li>
 <li>
-<p><a href="#registry-persistence-kafka-streams-tls">Configuring Kafka Streams storage with TLS security</a></p>
-</li>
-<li>
-<p><a href="#registry-persistence-kafka-streams-scram">Configuring Kafka Streams storage with SCRAM security</a></p>
-</li>
-<li>
-<p><a href="#registry-persistence-jpa">Configuring Java Persistence API (PostgreSQL) storage</a></p>
+<p><a href="#registry-persistence-sql">Configuring SQL (PostgreSQL) storage</a></p>
 </li>
 </ul>
 </div>
@@ -177,17 +168,11 @@ The Apicurio Registry Operator supports the same configuration options on OpenSh
 This is the easiest deployment to use, but is not recommended for production environment.</p>
 </li>
 <li>
-<p><strong>Infinispan</strong> - data is stored in an embedded Infinispan cache.</p>
+<p><strong>Apache Kafka</strong> (Kafka + SQL) - data is stored using Apache Kafka, with the help of local SQL database
+on each node.</p>
 </li>
 <li>
-<p><strong>Apache Kafka</strong> - data is stored using plain Apache Kafka.</p>
-</li>
-<li>
-<p><strong>Apache Kafka Steams</strong> - data is stored using Apache Kafka Streams.
-This option is recommended for most production deployments.</p>
-</li>
-<li>
-<p><strong>Java Persistence API</strong> (PostgreSQL) - data is stored in a relational database, in this case PostgreSQL 12+.</p>
+<p><strong>SQL</strong> (PostgreSQL) - data is stored in a relational database, in this case PostgreSQL 12+.</p>
 </li>
 </ul>
 </div>
@@ -201,10 +186,7 @@ This option is recommended for most production deployments.</p>
 <p><strong>Apache Kafka</strong></p>
 </li>
 <li>
-<p><strong>Apache Kafka Streams</strong></p>
-</li>
-<li>
-<p><strong>Java Persistence API</strong> (PostgreSQL)</p>
+<p><strong>SQL</strong> (PostgreSQL)</p>
 </li>
 </ul>
 </div>
@@ -227,20 +209,21 @@ The Apicurio Registry Operator will deploy Apicurio Registry in this way if you 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: apicur.io/v1alpha1
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
 kind: ApicurioRegistry
 metadata:
-  name: example-apicurioregistry
-# spec:
-# No config required for dev deployment
-# NOTE: In-memory storage option is not suitable for production environment</code></pre>
+  name: example-apicurioregistry-mem
+spec:
+  configuration:
+    persistence: "mem" # Optional (default value)
+    # NOTE: No additional configuration required for *dev* deployment</code></pre>
 </div>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You must have an OpenShift cluster with cluster administrator access.</p>
+<p>You must have an Kubernetes cluster with cluster administrator access.</p>
 </li>
 <li>
 <p>You must have already installed the Apicurio Registry Operator.</p>
@@ -254,9 +237,8 @@ metadata:
 <p>Deploy the example CR using following commands:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export REF="master" &&
-curl -sSL "https://raw.githubusercontent.com/Apicurio/apicurio-registry-operator/$REF/docs/modules/ROOT/examples/in-memory_cr.yaml" |
-kubectl apply -f - -n $NAMESPACE</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export NAMESPACE="default"
+curl -sSL "https://raw.githubusercontent.com/Apicurio/apicurio-registry-operator/v1.0.0/docs/modules/ROOT/examples/apicurioregistry_mem_cr.yaml" | kubectl apply -f - -n $NAMESPACE</code></pre>
 </div>
 </div>
 </li>
@@ -279,191 +261,7 @@ Use embedded Infinispan persistence option when deploying multiple replicas.
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-persistence-infinispan"><a class="anchor" href="#registry-persistence-infinispan"></a>Configuring Apicurio Registry Infinispan storage</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The Apicurio Registry Infinispan storage option uses RAM to store the data on nodes where Apicurio Registry is deployed. This is achieved using an embedded Infinispan in-memory data grid, which also provides data replication between nodes. This configuration is simple, with an optional field to provide a name for the Infinispan cluster.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>You must have an OpenShift cluster with cluster administrator access.</p>
-</li>
-<li>
-<p>You must have already installed the Apicurio Registry Operator.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>In the OpenShift Container Platform web console, log in with cluster administrator privileges.</p>
-</li>
-<li>
-<p>Change to the OpenShift project in which Apicurio Registry is installed. For example, from the <strong>Project</strong> drop-down, select <code>my-project</code>.</p>
-</li>
-<li>
-<p>Click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry</strong> &gt; <strong>Create ApicurioRegistry</strong>.</p>
-</li>
-<li>
-<p>Use the following example <code>ApicurioRegistry</code> CR:</p>
-</li>
-</ol>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: apicur.io/v1alpha1
-kind: ApicurioRegistry
-metadata:
-  name: example-apicurioregistry
-spec:
-  configuration:
-    persistence: "infinispan"
-    infinispan: # Currently, registry uses an embedded version of Infinispan
-      clusterName: "example-apicurioregistry"
-      # ^ Optional</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="registry-persistence-kafka-plain"><a class="anchor" href="#registry-persistence-kafka-plain"></a>Configuring plain Kafka storage</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>You can configure the Strimzi Operator and Apicurio Registry Operator to use plain Kafka (without Kafka Streams) and with no security.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>You must install the Apicurio Registry Operator using the OperatorHub or command line.</p>
-</li>
-<li>
-<p>You must install the Strimzi Operator or have Kafka accessible from your OpenShift cluster.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>In the OpenShift web console, click <strong>Installed Operators</strong>, select the <strong>Strimzi</strong> Operator details, and then the <strong>Kafka</strong> tab.</p>
-</li>
-<li>
-<p>Click <strong>Create Kafka</strong> to provision a new Kafka cluster for Apicurio Registry storage. You can use the default value, for example:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta1
-kind: Kafka
-metadata:
-  name: my-cluster
-  namespace: registry-example-kafka
-spec:
-  kafka:
-    version: 2.5.0
-    replicas: 3
-    listeners:
-      plain: {}
-      tls: {}
-    config:
-      offsets.topic.replication.factor: 3
-      transaction.state.log.replication.factor: 3
-      transaction.state.log.min.isr: 2
-      log.message.format.version: '2.5'
-    storage:
-      type: ephemeral
-  zookeeper:
-    replicas: 3
-    storage:
-      type: ephemeral
-  entityOperator:
-    topicOperator: {}
-    userOperator: {}</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Your OpenShift project namespace might be different.
-</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>When the cluster is ready, open the <strong>Kafka</strong> resource, examine the <code>status</code> block, and copy the <code>bootstrapServers</code> value for later use when deploying Apicurio Registry. For example:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">status:
-  conditions:
-    ...
-  listeners:
-    - addresses:
-        - host: my-cluster-kafka-bootstrap.registry-example-kafka.svc
-          port: 9092
-      bootstrapServers: 'my-cluster-kafka-bootstrap.registry-example-kafka.svc:9092'
-      type: plain
-  ...</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Click the <strong>Kafka Topic</strong> tab, and then <strong>Create Kafka Topic</strong> to create the required <code>global-id-topic</code>:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta1
-kind: KafkaTopic
-metadata:
-  name: global-id-topic
-  labels:
-    strimzi.io/cluster: my-cluster
-  namespace: registry-example-kafka
-spec:
-  partitions: 2
-  replicas: 1
-  config:
-    retention.ms: 604800000
-    segment.bytes: 1073741824</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Change the topic name to <code>global-id-topic</code>, and optionally decrease the partition and replica count to minimum, which is sufficient for an example deployment.</p>
-</li>
-<li>
-<p>Perform the same steps to create the required <code>storage-topic</code> topic.</p>
-</li>
-<li>
-<p>Select the <strong>Apicurio Registry Operator</strong>, and in the <strong>ApicurioRegistry</strong> tab, click <strong>Create ApicurioRegistry</strong>, using the following example, but replace your value in the <code>bootstrapServers</code> field.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: apicur.io/v1alpha1
-kind: ApicurioRegistry
-metadata:
-  name: example-apicurioregistry
-spec:
-  configuration:
-    persistence: "kafka"
-    kafka:
-      bootstrapServers: "my-cluster-kafka-bootstrap.registry-example-kafka.svc:9092"</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Wait a few minutes to see the <strong>Route</strong> being created, where you can access the application.</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="registry-persistence-kafka-streams-plain"><a class="anchor" href="#registry-persistence-kafka-streams-plain"></a>Configuring plain Kafka Streams storage with no security</h2>
+<h2 id="registry-persistence-kafkasql-plain"><a class="anchor" href="#registry-persistence-kafkasql-plain"></a>Configuring plain Kafka storage with no security</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>You can configure the Strimzi Operator and Apicurio Registry Operator to use a default connection with no security.</p>
@@ -489,32 +287,40 @@ spec:
 <p>Click <strong>Create Kafka</strong> to provision a new Kafka cluster for Apicurio Registry storage. You can use the default value, for example:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta1
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
   name: my-cluster
-  namespace: registry-example-streams-plain
+  namespace: registry-example-kafkasql-plain
+  # Change or remove the explicit namespace
 spec:
   kafka:
-    version: 2.5.0
-    replicas: 3
-    listeners:
-      plain: {}
-      tls: {}
     config:
       offsets.topic.replication.factor: 3
       transaction.state.log.replication.factor: 3
       transaction.state.log.min.isr: 2
-      log.message.format.version: '2.5'
+      log.message.format.version: '2.7'
+      inter.broker.protocol.version: '2.7'
+    version: 2.7.0
     storage:
       type: ephemeral
-  zookeeper:
     replicas: 3
-    storage:
-      type: ephemeral
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
   entityOperator:
     topicOperator: {}
-    userOperator: {}</code></pre>
+    userOperator: {}
+  zookeeper:
+    storage:
+      type: ephemeral
+    replicas: 3</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -539,25 +345,43 @@ Your OpenShift project namespace might be different.
     ...
   listeners:
     - addresses:
-        - host: my-cluster-kafka-bootstrap.registry-example-streams-plain.svc
+        - host: my-cluster-kafka-bootstrap.registry-example-kafkasql-plain.svc
           port: 9092
-      bootstrapServers: 'my-cluster-kafka-bootstrap.registry-example-streams-plain.svc:9092'
+      bootstrapServers: 'my-cluster-kafka-bootstrap.registry-example-kafkasql-plain.svc:9092'
       type: plain
   ...</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The default Kafka topic name that Apicurio Registry uses to store data is <code>kafkasql-journal</code>.
+This topic is created automatically by Apicurio Registry.
+You can override this behavior or the default topic name by setting the appropriate environment variables (default values):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>REGISTRY_KAFKASQL_TOPIC_AUTO_CREATE=true</code></p>
 </li>
 <li>
-<p>Click the <strong>Kafka Topic</strong> tab, and then <strong>Create Kafka Topic</strong> to create the required <code>global-id-topic</code>:</p>
+<p><code>REGISTRY_KAFKASQL_TOPIC=kafkasql-journal</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you decide not to create the Kafka topic manually, skip the next step.</p>
+</div>
+</li>
+<li>
+<p>Click the <strong>Kafka Topic</strong> tab, and then <strong>Create Kafka Topic</strong> to create the <code>kafkasql-journal</code> topic:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
-  name: global-id-topic
+  name: kafkasql-journal
   labels:
     strimzi.io/cluster: my-cluster
-  namespace: registry-example-streams-plain
+  namespace: registry-example-kafkasql-plain
 spec:
   partitions: 2
   replicas: 1
@@ -568,24 +392,18 @@ spec:
 </div>
 </li>
 <li>
-<p>Change the topic name to <code>global-id-topic</code>, and optionally decrease the partition and replica count to minimum, which is sufficient for an example deployment.</p>
-</li>
-<li>
-<p>Perform the same steps to create the required <code>storage-topic</code> topic.</p>
-</li>
-<li>
 <p>Select the <strong>Apicurio Registry Operator</strong>, and in the <strong>ApicurioRegistry</strong> tab, click <strong>Create ApicurioRegistry</strong>, using the following example, but replace your value in the <code>bootstrapServers</code> field.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: apicur.io/v1alpha1
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
 kind: ApicurioRegistry
 metadata:
-  name: example-apicurioregistry
+  name: example-apicurioregistry-kafkasql
 spec:
   configuration:
-    persistence: "streams"
-    streams:
-      bootstrapServers: "my-cluster-kafka-bootstrap.registry-example-streams-plain.svc:9092"</code></pre>
+    persistence: "kafkasql"
+    kafkasql:
+      bootstrapServers: "my-cluster-kafka-bootstrap.registry-example-kafkasql-plain.svc:9092"</code></pre>
 </div>
 </div>
 </li>
@@ -597,7 +415,7 @@ spec:
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-persistence-kafka-streams-tls"><a class="anchor" href="#registry-persistence-kafka-streams-tls"></a>Configuring Kafka Streams storage with TLS security</h2>
+<h2 id="registry-persistence-kafkasql-tls"><a class="anchor" href="#registry-persistence-kafkasql-tls"></a>Configuring Kafka storage with TLS security</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>You can configure the Strimzi Operator and Apicurio Registry Operator to use an encrypted Transport Layer Security (TLS) connection.</p>
@@ -639,50 +457,72 @@ In that case, you must manually create the Openshift secrets that the Apicurio R
 <p>Configure the <code>authorization</code> and <code>tls</code> fields to use TLS authentication for the Kafka cluster, for example:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta1
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
   name: my-cluster
-  namespace: registry-example-streams-tls
+  namespace: registry-example-kafkasql-tls
+  # Change or remove the explicit namespace
 spec:
   kafka:
-    authorization:
-      type: simple
-    version: 2.5.0
-    replicas: 3
-    listeners:
-      plain: {}
-      tls:
-        authentication:
-          type: tls
     config:
       offsets.topic.replication.factor: 3
       transaction.state.log.replication.factor: 3
       transaction.state.log.min.isr: 2
-      log.message.format.version: '2.5'
+      log.message.format.version: '2.7'
+      inter.broker.protocol.version: '2.7'
+    version: 2.7.0
     storage:
       type: ephemeral
-  zookeeper:
     replicas: 3
-    storage:
-      type: ephemeral
+    listeners:
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+        authentication:
+          type: tls
+    authorization:
+      type: simple
   entityOperator:
     topicOperator: {}
-    userOperator: {}</code></pre>
+    userOperator: {}
+  zookeeper:
+    storage:
+      type: ephemeral
+    replicas: 3</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The default Kafka topic name that Apicurio Registry uses to store data is <code>kafkasql-journal</code>.
+This topic is created automatically by Apicurio Registry.
+You can override this behavior or the default topic name by setting the appropriate environment variables (default values):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>REGISTRY_KAFKASQL_TOPIC_AUTO_CREATE=true</code></p>
+</li>
+<li>
+<p><code>REGISTRY_KAFKASQL_TOPIC=kafkasql-journal</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you decide not to create the Kafka topic manually, skip the next step.</p>
 </div>
 </li>
 <li>
-<p>Click the <strong>Kafka Topic</strong> tab, and then <strong>Create Kafka Topic</strong> to create the required <code>global-id-topic</code>:</p>
+<p>Click the <strong>Kafka Topic</strong> tab, and then <strong>Create Kafka Topic</strong> to create the <code>kafkasql-journal</code> topic:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
-  name: global-id-topic
+  name: kafkasql-journal
   labels:
     strimzi.io/cluster: my-cluster
-  namespace: registry-example-streams-plain
+  namespace: registry-example-kafkasql-tls
 spec:
   partitions: 2
   replicas: 1
@@ -693,16 +533,17 @@ spec:
 </div>
 </li>
 <li>
-<p>Change the topic name to <code>global-id-topic</code>, and optionally decrease the partition and replica count to minimum, which is sufficient for an example deployment.</p>
-</li>
-<li>
-<p>Perform the same steps to create the required <code>storage-topic</code> topic.</p>
-</li>
-<li>
-<p>Create a <strong>Kafka User</strong> resource to configure authentication and authorization for the Apicurio Registry user. For example, in the <code>spec</code> block, you can specify a user name in the <code>metadata</code> section or use the default <code>my-user</code>.</p>
+<p>Create a <strong>Kafka User</strong> resource to configure authentication and authorization for the Apicurio Registry user. You can specify a user name in the <code>metadata</code> section or use the default <code>my-user</code>.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaUser
+metadata:
+  name: my-user
+  labels:
+    strimzi.io/cluster: my-cluster
+  namespace: registry-example-kafkasql-tls
+spec:
   authentication:
     type: tls
   authorization:
@@ -737,7 +578,7 @@ spec:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-You must configure the authorization specifically for the topics and resources that the Apicurio Registry requires. This is a simple example.
+You must configure the authorization specifically for the topics and resources that the Apicurio Registry requires. This is a simple permissive example.
 </td>
 </tr>
 </table>
@@ -805,15 +646,15 @@ The name of the secret can vary based on your cluster or user name.
 <p>Configure the following example configuration to deploy the Apicurio Registry.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: apicur.io/v1alpha1
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
 kind: ApicurioRegistry
 metadata:
-  name: example-apicurioregistry
+  name: example-apicurioregistry-kafkasql
 spec:
   configuration:
-    persistence: "streams"
-    streams:
-      bootstrapServers: "my-cluster-kafka-bootstrap.registry-example-streams-tls.svc:9093"
+    persistence: "kafkasql"
+    kafkasql:
+      bootstrapServers: "my-cluster-kafka-bootstrap.registry-example-kafkasql-tls.svc:9093"
       security:
         tls:
           keystoreSecretName: my-user
@@ -838,7 +679,7 @@ You must use a different <code>bootstrapServers</code> address than in the plain
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-persistence-kafka-streams-scram"><a class="anchor" href="#registry-persistence-kafka-streams-scram"></a>Configuring Kafka Streams storage with SCRAM security</h2>
+<h2 id="registry-persistence-kafkasql-scram"><a class="anchor" href="#registry-persistence-kafkasql-scram"></a>Configuring Kafka storage with SCRAM security</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>You can configure the Strimzi Operator and Apicurio Registry Operator to use Salted Challenge Response Authentication Mechanism (SCRAM-SHA-512) for the Kafka cluster.</p>
@@ -880,50 +721,72 @@ In that case, you must manually create the Openshift secrets that the Apicurio R
 <p>Configure the <code>authorization</code> and <code>tls</code> fields to use SCRAM-SHA-512 authentication for the Kafka cluster, for example:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta1
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
   name: my-cluster
-  namespace: registry-example-streams-tls
+  namespace: registry-example-kafkasql-scram
+  # Change or remove the explicit namespace
 spec:
   kafka:
-    authorization:
-      type: simple
-    version: 2.5.0
-    replicas: 3
-    listeners:
-      plain: {}
-      tls:
-        authentication:
-          type: scram-sha-512
     config:
       offsets.topic.replication.factor: 3
       transaction.state.log.replication.factor: 3
       transaction.state.log.min.isr: 2
-      log.message.format.version: '2.5'
+      log.message.format.version: '2.7'
+      inter.broker.protocol.version: '2.7'
+    version: 2.7.0
     storage:
       type: ephemeral
-  zookeeper:
     replicas: 3
-    storage:
-      type: ephemeral
+    listeners:
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+        authentication:
+          type: scram-sha-512
+    authorization:
+      type: simple
   entityOperator:
     topicOperator: {}
-    userOperator: {}</code></pre>
+    userOperator: {}
+  zookeeper:
+    storage:
+      type: ephemeral
+    replicas: 3</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The default Kafka topic name that Apicurio Registry uses to store data is <code>kafkasql-journal</code>.
+This topic is created automatically by Apicurio Registry.
+You can override this behavior or the default topic name by setting the appropriate environment variables (default values):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>REGISTRY_KAFKASQL_TOPIC_AUTO_CREATE=true</code></p>
+</li>
+<li>
+<p><code>REGISTRY_KAFKASQL_TOPIC=kafkasql-journal</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you decide not to create the Kafka topic manually, skip the next step.</p>
 </div>
 </li>
 <li>
-<p>Click the <strong>Kafka Topic</strong> tab, and then <strong>Create Kafka Topic</strong> to create the required <code>global-id-topic</code>:</p>
+<p>Click the <strong>Kafka Topic</strong> tab, and then <strong>Create Kafka Topic</strong> to create the <code>kafkasql-journal</code> topic:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
-  name: global-id-topic
+  name: kafkasql-journal
   labels:
     strimzi.io/cluster: my-cluster
-  namespace: registry-example-streams-plain
+  namespace: registry-example-kafkasql-scram
 spec:
   partitions: 2
   replicas: 1
@@ -934,16 +797,17 @@ spec:
 </div>
 </li>
 <li>
-<p>Change the topic name to <code>global-id-topic</code>, and optionally decrease the partition and replica count to minimum, which is sufficient for an example deployment.</p>
-</li>
-<li>
-<p>Perform the same steps to create the required <code>storage-topic</code> topic.</p>
-</li>
-<li>
-<p>Create a <strong>Kafka User</strong> resource to configure SCRAM authentication and authorization for the Apicurio Registry user. For example, in the <code>spec</code> block, see the <code>authentication</code> section.</p>
+<p>Create a <strong>Kafka User</strong> resource to configure SCRAM authentication and authorization for the Apicurio Registry user. You can specify a user name in the <code>metadata</code> section or use the default <code>my-user</code>.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaUser
+metadata:
+  name: my-user
+  labels:
+    strimzi.io/cluster: my-cluster
+  namespace: registry-example-kafkasql-scram
+spec:
   authentication:
     type: scram-sha-512
   authorization:
@@ -970,6 +834,18 @@ spec:
           type: group
     type: simple</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You must configure the authorization specifically for the topics and resources that the Apicurio Registry requires. This is a simple permissive example.
+</td>
+</tr>
+</table>
 </div>
 </li>
 <li>
@@ -1031,15 +907,15 @@ The name of the secret can vary based on your cluster or user name.
 <p>Configure the following example settings to deploy the Apicurio Registry:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: apicur.io/v1alpha1
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
 kind: ApicurioRegistry
 metadata:
-  name: example-apicurioregistry
+  name: example-apicurioregistry-kafkasql
 spec:
   configuration:
-    persistence: "streams"
-    streams:
-      bootstrapServers: "my-cluster-kafka-bootstrap.registry-example-streams-scram.svc:9093"
+    persistence: "kafkasql"
+    kafkasql:
+      bootstrapServers: "my-cluster-kafka-bootstrap.registry-example-kafkasql-scram.svc:9093"
       security:
         scram:
           truststoreSecretName: my-cluster-cluster-ca-cert
@@ -1065,7 +941,7 @@ You must use a different <code>bootstrapServers</code> address than in the plain
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-persistence-jpa"><a class="anchor" href="#registry-persistence-jpa"></a>Configuring Java Persistence API (PostgreSQL) storage</h2>
+<h2 id="registry-persistence-sql"><a class="anchor" href="#registry-persistence-sql"></a>Configuring SQL (PostgreSQL) storage</h2>
 <div class="sectionbody">
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -1098,19 +974,18 @@ For example, from the <strong>Project</strong> drop-down, select <code>my-projec
 <p>Paste in the following <code>ApicurioRegistry</code> CR, and edit the values for the database <code>url</code> and credentials to match your environment:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: apicur.io/v1alpha1
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
 kind: ApicurioRegistry
 metadata:
-  name: example-apicurioregistry
+  name: example-apicurioregistry-sql
 spec:
   configuration:
-    persistence: "jpa"
-    dataSource:
-      url: "jdbc:postgresql://SERVICE_NAME.NAMESPACE.svc:5432/"
-      # e.g. url: "jdbc:postgresql://acid-minimal-cluster.my-project.svc:5432/"
-      userName: "postgres"
-      password: "PASSWORD"
-      # ^ Optional</code></pre>
+    persistence: "sql"
+    sql:
+      dataSource:
+        url: "jdbc:postgresql://&lt;service name&gt;.&lt;namespace&gt;.svc:5432/&lt;database name&gt;"
+        userName: "postgres"
+        password: "&lt;password&gt;" # Optional</code></pre>
 </div>
 </div>
 </li>
@@ -1144,7 +1019,7 @@ spec:
 </footer>
 <script src="../../assets/js/site.js"></script>
 <script src="../../assets/js/vendor/lunr.js"></script>
-<script src="../../assets/js/vendor/search.js" id="search-script" data-base-path="../.." data-page-path="/apicurio-registry-operator/1.0.0-dev/assembly-registry-storage.html"></script>
+<script src="../../assets/js/vendor/search.js" id="search-script" data-base-path="../.." data-page-path="/apicurio-registry-operator/1.1.0-dev/assembly-registry-storage.html"></script>
 <script async src="../../assets/../search-index.js"></script>
 <script async src="../../assets/js/vendor/highlight.js"></script>
   </body>
