@@ -9,6 +9,8 @@ categories: blog registry security
 
 Hey everyone, in Apicurio Registry 2.0.0.Final we've introduced support for some security concepts. In this blog post, I will explain these concepts them and show you how to configure them.
 
+---
+
 Core Features
 ===
 Essentially in this blog post, we will cover the following:
