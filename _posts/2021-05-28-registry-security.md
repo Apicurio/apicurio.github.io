@@ -7,14 +7,14 @@ categories: blog registry security
 ---
 
 
-Hey everyone, in Apicurio Registry 2.0.0.Final we've introduced support for some security concepts. In this blog post, I will try to explain them and show you how to configure them.
+Hey everyone, in Apicurio Registry 2.0.0.Final we've introduced support for some security concepts. In this blog post, I will explain these concepts them and show you how to configure them.
 
 Core Features
 ===
 Essentially in this blog post, we will cover the following:
 
-* **Authentication based on Keycloak** - optionally protect the registry such that the API requires users to authenticate (BASIC and OAuth supported)
-* **Role based authorization** - when authentication is enabled, you can also enable this feature, and users will need to have at least one role of (sr-admin, sr-developer, sr-readonly)
+* **Authentication based on Keycloak** - optionally protect the registry such that the registry API and web console requires users to authenticate (BASIC and OAuth supported)
+* **Role-based authorization** - when authentication is enabled, you can also enable this feature, and users will need to have at least one role of `sr-admin`, `sr-developer`, `sr-readonly`
 * **Creator-only authorization option** - option to prevent changes to artifacts unless the authenticated user is the user who originally created the artifact
 
 
@@ -23,7 +23,7 @@ Keycloak Configuration
 
 ### Authentication based on Keycloak
 In order to secure Apicurio Registry you will need a Keycloak server up and running along with some specific configuration.
-Essentially, you will need to create a Realm, two clients, and some roles (if you want to use roles).  By default Apicurio Registry expects the name of the Realm to be `registry`.
+Essentially, you must create a Realm, two clients, and some roles (if you want to use roles).  By default Apicurio Registry expects the name of the Realm to be `registry`.
 When security is enabled, Apicurio Registry will expect two Keycloak clients.  By default, these clients should be named `registry-api` and `apicurio-registry` (but don't worry, you will be able to customize everything by using environment variables!)
 Below you have the required configuration for the clients.
 
@@ -39,26 +39,26 @@ Now, you will need to tweak the Apicurio Registry configuration to get this to w
 
 ![Configure Apicurio Registry Auth_Properties](/images/guides/registry-auth-properties-config.png)
 
-The first property that you will need to use is `AUTH_ENABLED`.  You will need to set it to true to enable the integration.  The second property you need to set is the Keycloak server url `KEYCLOAK_URL`.
+The first property that you must set is `AUTH_ENABLED`.  You will need to set it to true to enable the integration.  The second property you need to set is the Keycloak server url `KEYCLOAK_URL`.
 We provide some sensible defaults for most of the configuration, but please, note that you can customize most of them by using environment variables.
 
 ### Role based authorization
 
-To enable roles, you need to set the `ROLES_ENABLED` propert to `true`. 
+To enable roles, you need to set the `ROLES_ENABLED` property to `true`. 
 
 ![Configure Apicurio Registry Auth_Properties](/images/guides/registry-auth-http-paths-config.png)
 
 Of course, if you enable roles in Apicurio Registry, you will also need to create them in Keycloak. 
-You need to create them as Realm roles. The default roles expected by Apicurio Registry are `sr-admin`, `sr-developer`, and `sr-readonly`.
+You must create them as Realm roles. The default roles expected by Apicurio Registry are `sr-admin`, `sr-developer`, and `sr-readonly`.
 When you enable roles, this will result in some HTTP paths and operations available just for certain roles. 
-You have the full configuration in the image above but, essentially, there will be some operations like those around rules, logs levels etc that are restricted to the admin role. 
-The developer role will be able to perform most of the operations and, obviously, the read-only role will be able just to read artifacts. 
+You have the full configuration in the image above, but there are some operations like those around rules, logs levels, and so on that are restricted to the admin role. 
+The developer role can perform most of the operations, and the read-only role can read or search artifacts. 
 
 ### Creator-only authorization option
 
 Finally, you also have the option to restrict certain operations just to the creator of the artifact. To do so, you need to set the environment variable `AUTHZ_ENABLED` to `true`.
 
-Last, but not least, as always, we still have a lot of things to do!  As always, you can see the
+Last, but not least, we still have a lot of things to do!  As always, you can see the
 stuff we're tracking by viewing the [GitHub issues](https://github.com/Apicurio/apicurio-registry/issues) for the project.
 
 If you find bugs or want to request a new feature, that's a great place to start!
