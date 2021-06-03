@@ -35,7 +35,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry-operator" data-version="1.1.0-dev">
+<div class="nav-container" data-component="apicurio-registry-operator" data-version="0.0.4">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -59,6 +59,9 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-operator-configuration.html">Apicurio Registry Operator configuration reference</a>
   </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-operator-dev-quickstart-minikube.html">Apicurio Registry Operator development quickstart on Minikube</a>
+  </li>
 </ul>
   </li>
 </ul>
@@ -67,7 +70,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry Operator</span>
-    <span class="version">1.1.0-dev</span>
+    <span class="version">0.0.4</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -84,14 +87,14 @@
     <li class="component is-current">
       <span class="title">Apicurio Registry Operator</span>
       <ul class="versions">
-        <li class="version is-current is-latest">
-          <a href="index.html">1.1.0-dev</a>
+        <li class="version is-latest">
+          <a href="../1.1.0-dev/index.html">1.1.0-dev</a>
         </li>
         <li class="version">
           <a href="../1.0.0/index.html">1.0.0</a>
         </li>
-        <li class="version">
-          <a href="../0.0.4/index.html">0.0.4</a>
+        <li class="version is-current">
+          <a href="index.html">0.0.4</a>
         </li>
       </ul>
     </li>
@@ -111,14 +114,14 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.1.0-dev</button>
+  <button class="version-menu-toggle" title="Show other versions of page">0.0.4</button>
   <div class="version-menu">
-    <a class="version is-current" href="assembly-operator-quickstart.html">1.1.0-dev</a>
+    <a class="version" href="../1.1.0-dev/assembly-operator-quickstart.html">1.1.0-dev</a>
     <a class="version" href="../1.0.0/assembly-operator-quickstart.html">1.0.0</a>
-    <a class="version" href="../0.0.4/assembly-operator-quickstart.html">0.0.4</a>
+    <a class="version is-current" href="assembly-operator-quickstart.html">0.0.4</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry-operator/edit/master/docs/modules/ROOT/pages/assembly-operator-quickstart.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry-operator/blob/v0.0.4/docs/modules/ROOT/pages/assembly-operator-quickstart.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
@@ -148,7 +151,7 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The recommended installation option for production environments is <a href="assembly-operator-installation.html" class="page">Installing Apicurio Registry Operator using the OperatorHub</a>. The recommended storage option is SQL or Kafka.
+The recommended installation option for production environments is <a href="assembly-operator-installation.html" class="page">Installing Apicurio Registry Operator using the OperatorHub</a>. The recommended storage option is Kafka Streams.
 </td>
 </tr>
 </table>
@@ -160,19 +163,6 @@ The recommended installation option for production environments is <a href="asse
 <div class="sectionbody">
 <div class="paragraph">
 <p>You can quickly deploy the Apicurio Registry Operator on the command line, without the Operator Lifecycle Manager, by executing a single command.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-This procedure will deploy the latest released version of Apicurio Registry Operator.
-If you want to deploy the development version, visit <a href="https://github.com/Apicurio/apicurio-registry-operator/">Apicurio Registry Operator GitHub repository</a>.
-</td>
-</tr>
-</table>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
@@ -186,10 +176,26 @@ If you want to deploy the development version, visit <a href="https://github.com
 </div>
 </li>
 <li>
+<p>Decide if you want to deploy the latest released version or choose a tag for a specific version:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export REF="master"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export REF="0.0.4"</code></pre>
+</div>
+</div>
+</li>
+<li>
 <p>Get the installation file and apply it to your cluster:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -sSL "https://raw.githubusercontent.com/Apicurio/apicurio-registry-operator/v1.0.0/docs/resources/install.yaml" |
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -sSL "https://raw.githubusercontent.com/Apicurio/apicurio-registry-operator/$REF/docs/resources/install.yaml" |
 sed "s/{NAMESPACE}/$NAMESPACE/g" | kubectl apply -f - -n $NAMESPACE</code></pre>
 </div>
 </div>
@@ -203,7 +209,8 @@ sed "s/{NAMESPACE}/$NAMESPACE/g" | kubectl apply -f - -n $NAMESPACE</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If you want to deploy an older release of the Operator, follow the documentation for that version.<br>
+You must always specify either <code>master</code> or a version tag when using the procedure above.<br>
+Since version <code>0.0.4</code>, you can also use <code>install-dev.yaml</code> on branch <code>master</code> to deploy the latest development version of Apicurio Registry Operator.<br>
 If you are deploying to OpenShift, use <code>oc</code> with the same arguments.
 </td>
 </tr>
@@ -217,19 +224,6 @@ If you are deploying to OpenShift, use <code>oc</code> with the same arguments.
 <div class="paragraph">
 <p>To quickly create a new Apicurio Registry deployment, use the in-memory storage option,
 which does not require an external storage to be configured as a prerequisite.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-This procedure will deploy the latest released version of Apicurio Registry Operator.
-If you want to deploy the development version, visit <a href="https://github.com/Apicurio/apicurio-registry-operator/">Apicurio Registry Operator GitHub repository</a>.
-</td>
-</tr>
-</table>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -251,10 +245,26 @@ If you want to deploy the development version, visit <a href="https://github.com
 </div>
 </li>
 <li>
+<p>Use the <code>master</code> branch or a git tag to select the appropriate example <code>ApicurioRegistry</code> CR for the given Apicurio Registry Operator version:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export REF="master"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export REF="0.0.4"</code></pre>
+</div>
+</div>
+</li>
+<li>
 <p>Create an <code>ApicurioRegistry</code> custom resource (CR):</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl apply -f https://raw.githubusercontent.com/Apicurio/apicurio-registry-operator/v1.0.0/docs/modules/ROOT/examples/apicurioregistry_mem_cr.yaml -n $NAMESPACE</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl apply -f https://raw.githubusercontent.com/Apicurio/apicurio-registry-operator/$REF/docs/modules/ROOT/examples/in-memory_cr.yaml -n $NAMESPACE</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -264,8 +274,8 @@ If you want to deploy the development version, visit <a href="https://github.com
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If you want to deploy an older release of the Operator, follow the documentation for that version.<br>
-If you are deploying to OpenShift, use <code>oc</code> with the same arguments.
+The path to the example <code>ApicurioRegistry</code> CR has been changed since version <code>0.0.4</code>. If you are deploying an older release,
+use <code>https://raw.githubusercontent.com/Apicurio/apicurio-registry-operator/$REF/docs/resources/example-cr/in-memory.yaml</code>.
 </td>
 </tr>
 </table>
@@ -273,32 +283,17 @@ If you are deploying to OpenShift, use <code>oc</code> with the same arguments.
 <div class="listingblock">
 <div class="title">Example CR for in-memory storage</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: apicur.io/v1alpha1
 kind: ApicurioRegistry
 metadata:
-  name: example-apicurioregistry-mem
-spec:
-  configuration:
-    persistence: "mem" # Optional (default value)
-    # NOTE: No additional configuration required for *dev* deployment</code></pre>
+  name: example-apicurioregistry
+# spec:
+# No config required for dev deployment
+# NOTE: In-memory storage option is not suitable for production environment</code></pre>
 </div>
 </div>
 </li>
 </ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="registry-operator-distribution-bundle"><a class="anchor" href="#registry-operator-distribution-bundle"></a>Apicurio Registry Operator Distribution Bundle</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Since version <code>1.0.0</code>, Apicurio Registry Operator project is distributed with an additional archive file containing installation files for the operator, with example <code>ApicurioRegistry</code> custom resource files.
-In addition, full Operator documentation and license information is also included.
-Docker images for the Operator and the Operand are distributed using a public registry.</p>
-</div>
-<div class="paragraph">
-<p>For released versions, you can find this file in the <a href="https://github.com/Apicurio/apicurio-registry-operator/releases">Apicurio Registry Operator releases page</a>.
-Visit the <a href="https://github.com/Apicurio/apicurio-registry-operator/">Apicurio Registry Operator GitHub repository</a> for information about how to build the bundle for development versions.</p>
 </div>
 </div>
 </div>
@@ -314,7 +309,7 @@ Visit the <a href="https://github.com/Apicurio/apicurio-registry-operator/">Apic
 </footer>
 <script src="../../assets/js/site.js"></script>
 <script src="../../assets/js/vendor/lunr.js"></script>
-<script src="../../assets/js/vendor/search.js" id="search-script" data-base-path="../.." data-page-path="/apicurio-registry-operator/1.1.0-dev/assembly-operator-quickstart.html"></script>
+<script src="../../assets/js/vendor/search.js" id="search-script" data-base-path="../.." data-page-path="/apicurio-registry-operator/0.0.4/assembly-operator-quickstart.html"></script>
 <script async src="../../assets/../search-index.js"></script>
 <script async src="../../assets/js/vendor/highlight.js"></script>
   </body>

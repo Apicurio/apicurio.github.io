@@ -35,7 +35,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry-operator" data-version="1.1.0-dev">
+<div class="nav-container" data-component="apicurio-registry-operator" data-version="0.0.4">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -59,6 +59,9 @@
   <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="assembly-operator-configuration.html">Apicurio Registry Operator configuration reference</a>
   </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-operator-dev-quickstart-minikube.html">Apicurio Registry Operator development quickstart on Minikube</a>
+  </li>
 </ul>
   </li>
 </ul>
@@ -67,7 +70,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry Operator</span>
-    <span class="version">1.1.0-dev</span>
+    <span class="version">0.0.4</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -84,14 +87,14 @@
     <li class="component is-current">
       <span class="title">Apicurio Registry Operator</span>
       <ul class="versions">
-        <li class="version is-current is-latest">
-          <a href="index.html">1.1.0-dev</a>
+        <li class="version is-latest">
+          <a href="../1.1.0-dev/index.html">1.1.0-dev</a>
         </li>
         <li class="version">
           <a href="../1.0.0/index.html">1.0.0</a>
         </li>
-        <li class="version">
-          <a href="../0.0.4/index.html">0.0.4</a>
+        <li class="version is-current">
+          <a href="index.html">0.0.4</a>
         </li>
       </ul>
     </li>
@@ -111,14 +114,14 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.1.0-dev</button>
+  <button class="version-menu-toggle" title="Show other versions of page">0.0.4</button>
   <div class="version-menu">
-    <a class="version is-current" href="assembly-operator-configuration.html">1.1.0-dev</a>
+    <a class="version" href="../1.1.0-dev/assembly-operator-configuration.html">1.1.0-dev</a>
     <a class="version" href="../1.0.0/assembly-operator-configuration.html">1.0.0</a>
-    <a class="version" href="../0.0.4/assembly-operator-configuration.html">0.0.4</a>
+    <a class="version is-current" href="assembly-operator-configuration.html">0.0.4</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry-operator/edit/master/docs/modules/ROOT/pages/assembly-operator-configuration.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry-operator/blob/v0.0.4/docs/modules/ROOT/pages/assembly-operator-configuration.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
@@ -164,45 +167,34 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get apicurioregistry
-kubectl edit apicurioregistry example-apicurioregistry</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl edit apicurioregistry example-apicurioregistry</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: apicur.io/v1alpha1
 kind: ApicurioRegistry
 metadata:
   name: example-apicurioregistry
-  namespace: demo-kafka
+  namespace: demo-streams
   # ...
 spec:
   configuration:
-    persistence: kafkasql
-    kafkasql:
-      bootstrapServers: 'my-cluster-kafka-bootstrap.demo-kafka.svc:9092'
+    persistence: streams
+    streams:
+      bootstrapServers: 'my-cluster-kafka-bootstrap.demo-streams.svc:9092'
   deployment:
     host: &gt;-
-      example-apicurioregistry.demo-kafka.example.com
+      example-apicurioregistry.demo-streams.example.com
 status:
-  conditions:
-  - lastTransitionTime: "2021-05-03T10:47:11Z"
-    message: ""
-    reason: Reconciled
-    status: "True"
-    type: Ready
-  info:
-    host: example-apicurioregistry.demo-kafka.example.com
-  managedResources:
-  - kind: Deployment
-    name: example-apicurioregistry-deployment
-    namespace: demo-kafka
-  - kind: Service
-    name: example-apicurioregistry-service
-    namespace: demo-kafka
-  - kind: Ingress
-    name: example-apicurioregistry-ingress
-    namespace: demo-kafka</code></pre>
+  deploymentName: example-apicurioregistry-deployment-qsdb7
+  host: &gt;-
+    example-apicurioregistry.demo-streams.example.com
+  image: &gt;-
+    registry.redhat.io/integration/service-registry-streams-rhel8@sha256:4b56da802333d2115cb3a0acc8d97445bd0dab67b639c361816df27b7f1aa296
+  ingressName: example-apicurioregistry-ingress-7mlnw
+  replicaCount: 1
+  serviceName: example-apicurioregistry-service-xvnmz</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -212,8 +204,7 @@ status:
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-By default, the Apicurio Registry Operator only watches its own project namespace. Therefore you must create the <code>ApicurioRegistry</code> CR in the same namespace, if you are deploying the operator manually.
-You can modify this behavior by updating <code>WATCH_NAMESPACE</code> environment variable in the Operator <code>Deployment</code> resource.
+The Apicurio Registry Operator currently only watches its own project namespace. Therefore you must create the <code>ApicurioRegistry</code> CR in the same namespace.
 </td>
 </tr>
 </table>
@@ -255,13 +246,16 @@ These configuration options may change or be renamed until Apicurio Registry Ope
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
   configuration:
     persistence: &lt;string&gt;
-    sql:
-      dataSource:
-        url: &lt;string&gt;
-        userName: &lt;string&gt;
-        password: &lt;string&gt;
-    kafkasql:
+    dataSource:
+      url: &lt;string&gt;
+      userName: &lt;string&gt;
+      password: &lt;string&gt;
+    kafka:
       bootstrapServers: &lt;string&gt;
+    streams:
+      bootstrapServers: &lt;string&gt;
+      applicationId: &lt;string&gt;
+      applicationServerPort: &lt;string&gt;
       security:
         tls:
           truststoreSecretName: &lt;string&gt;
@@ -271,20 +265,14 @@ These configuration options may change or be renamed until Apicurio Registry Ope
           truststoreSecretName: &lt;string&gt;
           user: &lt;string&gt;
           passwordSecretName: &lt;string&gt;
+    infinispan:
+      clusterName: &lt;string&gt;
     ui:
       readOnly: &lt;string&gt;
     logLevel: &lt;string&gt;
-    security:
-      keycloak:
-        url: &lt;string&gt;
-        realm: &lt;string&gt;
-        apiClientId: &lt;string&gt;
-        uiClientId: &lt;string&gt;
   deployment:
     replicas: &lt;int32&gt;
-    host: &lt;string&gt;
-    affinity: &lt;k8s.io/api/core/v1 Affinity struct&gt;
-    tolerations: &lt;k8s.io/api/core/v1 []Toleration slice&gt;</code></pre>
+    host: &lt;string&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -293,10 +281,10 @@ These configuration options may change or be renamed until Apicurio Registry Ope
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. ApicurioRegistry CR spec configuration options</caption>
 <colgroup>
-<col style="width: 36.3636%;">
-<col style="width: 18.1818%;">
-<col style="width: 18.1818%;">
-<col style="width: 27.2728%;">
+<col style="width: 33.3333%;">
+<col style="width: 11.1111%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3334%;">
 </colgroup>
 <thead>
 <tr>
@@ -317,91 +305,121 @@ These configuration options may change or be renamed until Apicurio Registry Ope
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/persistence</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mem</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Storage backend. One of <code>mem</code>, <code>sql</code>, <code>kafkasql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage backend. One of <code>mem</code>, <code>jpa</code>, <code>kafka</code>, <code>streams</code>, <code>infinispan</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/sql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/dataSource</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SQL storage backend configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database connection configuration for JPA storage backend</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>sql</strong>/dataSource</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database connection configuration for SQL storage backend</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>sql</strong>/dataSource/url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/dataSource/url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>required</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Database connection URL string</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>sql</strong>/dataSource/userName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/dataSource/userName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>required</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Database connection user</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>sql</strong>/dataSource/password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/dataSource/password</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>empty</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Database connection password</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/kafkasql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/kafka</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka storage backend configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka backend configuration section</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>kafkasql</strong>/bootstrapServers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/kafka/bootstrapServers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>required</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka bootstrap server URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/streams</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka Streams storage backend configuration</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/streams/bootstrapServers</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>required</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Kafka bootstrap server URL, for Streams storage backend</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>kafkasql</strong>/security/tls</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Section to configure TLS authentication for Kafka storage backend</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/streams/applicationId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>ApicurioRegistry CR name</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka Streams application ID</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>kafkasql</strong>/security/tls/truststoreSecretName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>streams</strong>/applicationServerPort</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>9000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/streams/security/tls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Section to configure TLS authentication for Kafka Streams storage backend</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/streams/security/tls/truststoreSecretName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>required</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Name of a secret containing TLS truststore for Kafka</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>kafkasql</strong>/security/tls/keystoreSecretName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/streams/security/tls/keystoreSecretName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>required</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Name of a secret containing user TLS keystore</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>kafkasql</strong>/security/scram/truststoreSecretName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/streams/security/scram/truststoreSecretName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>required</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Name of a secret containing TLS truststore for Kafka</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>kafkasql</strong>/security/scram/user</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/streams/security/scram/user</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>required</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SCRAM user name</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>kafkasql</strong>/security/scram/passwordSecretName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/streams/security/scram/passwordSecretName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>required</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Name of a secret containing SCRAM user password</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>kafkasql</strong>/security/scram/mechanism</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/streams/security/scram/mechanism</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SCRAM-SHA-512</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SASL mechanism</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/infinispan</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Infinispan persistence configuration section</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/infinispan/clusterName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>ApicurioRegistry CR name</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Infinispan cluster name</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/ui</code></p></td>
@@ -410,7 +428,7 @@ These configuration options may change or be renamed until Apicurio Registry Ope
 <td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry web console settings</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>ui</strong>/readOnly</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/ui/readOnly</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set Apicurio Registry web console to read-only mode</p></td>
@@ -419,49 +437,13 @@ These configuration options may change or be renamed until Apicurio Registry Ope
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/logLevel</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>INFO</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry log level. One of <code>INFO</code>, <code>DEBUG</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/security</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry web console and REST API security settings</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/security/keycloak</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Web console and REST API security configuration using Keycloak</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>security</strong>/keycloak/url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>required</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Keycloak URL, must end with <code>/auth</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>security</strong>/keycloak/realm</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>required</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Keycloak realm</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>security</strong>/keycloak/apiClientId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry-client-api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Keycloak client for REST API</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration/<strong>security</strong>/keycloak/uiClientId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry-client-ui</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Keycloak client for web console</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry operand log level. One of <code>INFO</code>, <code>DEBUG</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>deployment</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Section for Apicurio Registry deployment settings</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Section for operand deployment settings</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>deployment/replicas</code></p></td>
@@ -472,20 +454,8 @@ These configuration options may change or be renamed until Apicurio Registry Ope
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>deployment/host</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>auto-generated</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Host/URL where the Apicurio Registry console and API are available. If possible, Apicurio Registry Operator attempts to determine the correct value based on the settings of your cluster router. The value is auto-generated only once, so user can override it afterwards.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deployment/affinity</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">k8s.io/api/core/v1 Affinity struct</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>empty</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry deployment affinity configuration</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deployment/tolerations</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">k8s.io/api/core/v1 []Toleration slice</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>empty</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry deployment tolerations configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>auto-generated from ApicurioRegistry CR name and namespace</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Host/URL where the Apicurio Registry console and API are available</p></td>
 </tr>
 </tbody>
 </table>
@@ -517,26 +487,20 @@ Empty values might be accepted, but the Operator does not perform the specified 
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">status:
-  info:
-    host: &lt;string&gt;
-  conditions: &lt;list of:&gt;
-  - type: &lt;string&gt;
-    status: &lt;string, one of: True, False, Unknown&gt;
-    reason: &lt;string&gt;
-    message: &lt;string&gt;
-    lastTransitionTime: &lt;string, RFC-3339 timestamp&gt;
-  managedResources: &lt;list of:&gt;
-  - kind: &lt;string&gt;
-    namespace: &lt;string&gt;
-    name: &lt;string&gt;</code></pre>
+  image: &lt;string&gt;
+  deploymentName: &lt;string&gt;
+  serviceName: &lt;string&gt;
+  ingressName: &lt;string&gt;
+  replicaCount: &lt;int32&gt;
+  host: &lt;string&gt;</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. ApicurioRegistry CR status fields</caption>
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 16.6666%;">
-<col style="width: 50.0001%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
 </colgroup>
 <thead>
 <tr>
@@ -547,64 +511,34 @@ Empty values might be accepted, but the Operator does not perform the specified 
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>info</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Section with information about the deployed Apicurio Registry.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry operand image that the Operator deploys. Might change based on the storage option selected in configuration.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>info/host</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deploymentName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the <code>Deployment</code> or <code>DeploymentConfig</code> managed by the Operator, used to deploy the Apicurio Registry.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>serviceName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the <code>Service</code> managed by the Operator, to expose the Apicurio Registry operand as a service.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ingressName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the <code>Ingress</code> managed by the Operator, to make the Apicurio Registry accessible via HTTP. A <code>Route</code> is also created on OCP.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>replicaCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int32</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of Apicurio Registry operand pods deployed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>host</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">URL where the Apicurio Registry UI and REST API are accessible.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>conditions</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">List of conditions that report the status of the Apicurio Registry, or the Operator with respect to that deployment.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>conditions/type</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Type of the condition.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>conditions/status</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Status of the condition, one of <code>True</code>, <code>False</code>, <code>Unknown</code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>conditions/reason</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A programmatic identifier indicating the reason for the condition&#8217;s last transition.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>conditions/message</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A human readable message indicating details about the transition.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>conditions/lastTransitionTime</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The last time the condition transitioned from one status to another.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>managedResources</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">List of Kubernetes resources managed by Apicurio Registry Operator</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>managedResources/kind</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Resource kind.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>managedResources/namespace</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Resource namespace.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>managedResources/name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Resource name.</p></td>
 </tr>
 </tbody>
 </table>
@@ -619,13 +553,13 @@ Empty values might be accepted, but the Operator does not perform the specified 
 <div class="ulist">
 <ul>
 <li>
-<p><code>Deployment</code></p>
+<p><code>Deployment</code> (Kubernetes) or <code>DeploymentConfig</code> (OpenShift)</p>
 </li>
 <li>
-<p><code>Service</code></p>
+<p>Service</p>
 </li>
 <li>
-<p><code>Ingress</code></p>
+<p><code>Ingress</code> and <code>Route</code> (OpenShift)</p>
 </li>
 <li>
 <p><code>PodDisruptionBudget</code></p>
@@ -697,7 +631,7 @@ Empty values might be accepted, but the Operator does not perform the specified 
 </footer>
 <script src="../../assets/js/site.js"></script>
 <script src="../../assets/js/vendor/lunr.js"></script>
-<script src="../../assets/js/vendor/search.js" id="search-script" data-base-path="../.." data-page-path="/apicurio-registry-operator/1.1.0-dev/assembly-operator-configuration.html"></script>
+<script src="../../assets/js/vendor/search.js" id="search-script" data-base-path="../.." data-page-path="/apicurio-registry-operator/0.0.4/assembly-operator-configuration.html"></script>
 <script async src="../../assets/../search-index.js"></script>
 <script async src="../../assets/js/vendor/highlight.js"></script>
   </body>
