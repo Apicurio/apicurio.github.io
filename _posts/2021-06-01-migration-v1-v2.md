@@ -42,7 +42,7 @@ For that purpose Apicurio Registry 2.x provides a new import/export API to bulk 
 
 Apicurio Registry 1.3.x does not provide an import/export API, but with the 2.x release we provided an export tool compatible with Apicurio Registry 1.3.x that allows you to export a compatible zip file, which can be imported to your 2.x registry. This special export tool uses common existing APIs to export all of the content in the registry. It is less performant than the built-in export API we have introduced in 2.x, and so should only be used when exporting from a 1.3.x registry.
 
-This export tool is available from the [Apicurio Registry GitHub project](https://github.com/Apicurio/apicurio-registry/tree/2.0.x/utils/exportV1). It is a java application meant to be invoked from the command line.
+This export tool is available from the [Apicurio Registry GitHub release](https://github.com/Apicurio/apicurio-registry/releases/download/2.0.0.Final/apicurio-registry-utils-exportV1-2.0.0.Final.jar). It is a java application meant to be invoked from the command line.
 
 The migration steps for moving all your data from one version to another:
 
@@ -50,7 +50,7 @@ The migration steps for moving all your data from one version to another:
 
 1. Export all the data from Apicurio Registry 1.3.x using the `exportV1` tool. This will generate a `registry-export.zip` file in your current directory.
 ```
-java -jar apicurio-registry-utils-exportV1-2.0.0-SNAPSHOT-runner.jar http://old-registry.my-company.com/api
+java -jar apicurio-registry-utils-exportV1-2.0.0.Final.jar http://old-registry.my-company.com/api
 ```
 2. Import the zip file to Apicurio Registry 2.x using the import API. You can find more details in the [Apicurio Registry user documentation](https://www.apicur.io/registry/docs/apicurio-registry/2.0.0.Final/getting-started/assembly-managing-registry-artifacts-api.html#exporting-importing-using-rest-api)
 ```
