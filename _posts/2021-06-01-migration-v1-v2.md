@@ -49,25 +49,19 @@ The migration steps for moving all your data from one version to another:
 **Prerequisites**: Have running Apicurio Registry instances for both the version 1.3.x server (exporting from) and the new 2.x server (importing to).
 
 1. Export all the data from Apicurio Registry 1.3.x using the `exportV1` tool. This will generate a `registry-export.zip` file in your current directory.
-
 ```
 java -jar apicurio-registry-utils-exportV1-2.0.0-SNAPSHOT-runner.jar http://old-registry.my-company.com/api
 ```
-
 2. Import the zip file to Apicurio Registry 2.x using the import API. You can find more details in the [Apicurio Registry user documentation](https://www.apicur.io/registry/docs/apicurio-registry/2.0.0.Final/getting-started/assembly-managing-registry-artifacts-api.html#exporting-importing-using-rest-api)
-
 ```
 curl -X POST "http://new-registry.my-company.com/apis/registry/v2/admin/import" \
   -H "Accept: application/json" -H "Content-Type: application/zip" \
   --data-binary @registry-export.zip
 ```
-
 3. Check that all the artifacts are now imported to the new 2.x registry. Run these two commands and compare the count field.
-
 ```
 curl "http://old-registry.my-company.com/api/search/artifacts"
 ```
-
 ```
 curl "http://new-registry.my-company.com/apis/registry/v2/search/artifacts"
 ```
