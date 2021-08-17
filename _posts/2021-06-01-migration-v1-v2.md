@@ -10,6 +10,8 @@ Apicurio Registry 2.x is our latest and greatest release to date. It has plenty 
 
 Because of the breaking changes between 1.3.x and 2.x, there is no automatic upgrade and instead a migration process is required.  But don't worry!  We promise the process is not hard.
 
+---
+
 # Breaking changes
 
 There are three major changes in this release that must be taken into account to proceed with a migration.
