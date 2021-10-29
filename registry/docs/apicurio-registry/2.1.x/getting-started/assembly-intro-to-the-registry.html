@@ -35,7 +35,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry" data-version="1.3.3.Final">
+<div class="nav-container" data-component="apicurio-registry" data-version="2.1.x">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -60,7 +60,10 @@
     <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring Apicurio Registry deployment on OpenShift</a>
+    <a class="nav-link" href="assembly-migrating-registry-v1-v2.html">Migrating an existing Apicurio Registry deployment</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
@@ -72,13 +75,16 @@
     <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using the Java client</a>
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers</a>
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.1.0-dev/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -88,20 +94,20 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry</span>
-    <span class="version">1.3.3.Final</span>
+    <span class="version">2.1.x</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">Apicurio Registry</span>
       <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../2.1.x/index.html">2.1.x</a>
+        <li class="version is-current is-latest">
+          <a href="../index.html">2.1.x</a>
         </li>
         <li class="version">
           <a href="../../2.0.x/index.html">2.0.x</a>
         </li>
-        <li class="version is-current">
-          <a href="../index.html">1.3.3.Final</a>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
         </li>
       </ul>
     </li>
@@ -124,7 +130,7 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="../../2.1.x/index.html" class="home-link"></a>
+  <a href="../index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
@@ -132,11 +138,11 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.3.3.Final</button>
+  <button class="version-menu-toggle" title="Show other versions of page">2.1.x</button>
   <div class="version-menu">
-    <a class="version" href="../../2.1.x/getting-started/assembly-intro-to-the-registry.html">2.1.x</a>
+    <a class="version is-current" href="assembly-intro-to-the-registry.html">2.1.x</a>
     <a class="version" href="../../2.0.x/getting-started/assembly-intro-to-the-registry.html">2.0.x</a>
-    <a class="version is-current" href="assembly-intro-to-the-registry.html">1.3.3.Final</a>
+    <a class="version" href="../../1.3.3.Final/getting-started/assembly-intro-to-the-registry.html">1.3.3.Final</a>
   </div>
 </div>
   <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
@@ -146,7 +152,7 @@
 <h1 class="page">Introduction to Apicurio Registry</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>This chapter introduces Apicurio Registry concepts and features and provides details on the supported artifact types that are stored in the registry:</p>
 </div>
 <div class="ulist">
@@ -155,13 +161,16 @@
 <p><a href="#registry-overview">Apicurio Registry overview</a></p>
 </li>
 <li>
-<p><a href="#registry-artifacts">Schema and API artifacts in Apicurio Registry</a></p>
-</li>
-<li>
-<p><a href="#registry-storage">Apicurio Registry storage options</a></p>
+<p><a href="#registry-artifacts">Schema and API artifacts and groups in Apicurio Registry</a></p>
 </li>
 <li>
 <p><a href="#registry-web-console">Manage content using Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="#registry-rest-api">Registry core REST API overview</a></p>
+</li>
+<li>
+<p><a href="#registry-storage">Apicurio Registry storage options</a></p>
 </li>
 <li>
 <p><a href="#client-serde">Validate schemas with Kafka client serializers/deserializers</a></p>
@@ -182,7 +191,7 @@
 <div class="sect1">
 <h2 id="registry-overview"><a class="anchor" href="#registry-overview"></a>Apicurio Registry overview</h2>
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>Apicurio Registry is a datastore for sharing standard event schemas and API designs across API and event-driven architectures. You can use Apicurio Registry to decouple the structure of your data from your client applications, and to share and manage your data types and API descriptions at runtime using a REST interface.</p>
 </div>
 <div class="paragraph">
@@ -202,10 +211,10 @@ Apicurio Registry provides a web console to make it easy for developers and admi
 <div class="ulist">
 <ul>
 <li>
-<p>Support for multiple payload formats for standard event schemas and API specifications</p>
+<p>Multiple payload formats for standard event schemas and API specifications</p>
 </li>
 <li>
-<p>Pluggable storage options including Apache Kafka, embedded Infinispan, or PostgreSQL database</p>
+<p>Pluggable registry storage options in Apache Kafka or PostgreSQL database</p>
 </li>
 <li>
 <p>Registry content management using a web console, REST API command, Maven plug-in, or Java client</p>
@@ -217,26 +226,29 @@ Apicurio Registry provides a web console to make it easy for developers and admi
 <p>Full Apache Kafka schema registry support, including integration with Kafka Connect for external systems</p>
 </li>
 <li>
-<p>Client serializers/deserializers (Serdes) to validate Kafka and other message types at runtime</p>
+<p>Kafka client serializers/deserializers (Serdes) to validate message types at runtime</p>
 </li>
 <li>
 <p>Cloud-native Quarkus Java runtime for low memory footprint and fast deployment times</p>
 </li>
 <li>
-<p>Compatibility with existing Confluent schema registry client applications</p>
+<p>Compatibility with existing Confluent or IBM schema registry client applications</p>
 </li>
 <li>
 <p>Operator-based installation of Apicurio Registry on OpenShift</p>
+</li>
+<li>
+<p>OpenID Connect (OIDC) authentication using Keycloak</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-artifacts"><a class="anchor" href="#registry-artifacts"></a>Schema and API artifacts in Apicurio Registry</h2>
+<h2 id="registry-artifacts"><a class="anchor" href="#registry-artifacts"></a>Schema and API artifacts and groups in Apicurio Registry</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>The items stored in Apicurio Registry, such as event schemas and API specifications, are known as registry <em>artifacts</em>. The following shows an example of an Apache Avro schema artifact in JSON format for a simple share price application:</p>
+<div class="paragraph _abstract">
+<p>The items stored in Apicurio Registry, such as event schemas and API designs, are known as registry <em>artifacts</em>. The following shows an example of an Apache Avro schema artifact in JSON format for a simple share price application:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -258,18 +270,165 @@ Apicurio Registry provides a web console to make it easy for developers and admi
 </div>
 </div>
 <div class="paragraph">
-<p>When a schema or API contract is added as an artifact in the registry, client applications can then use that schema or API contract to validate that client messages conform to the correct data structure at runtime.</p>
+<p>When a schema or API design is added as an artifact in the registry, client applications can then use that schema or API design to validate that the client messages conform to the correct data structure at runtime.</p>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry supports a wide range of message payload formats for standard event schemas and API specifications. For example, supported formats include Apache Avro, Google protocol buffers, GraphQL, AsyncAPI, OpenAPI, and others. For more details, see <a href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>.</p>
+<p>Apicurio Registry supports a wide range of message payload formats for standard event schemas and API specifications. For example, supported formats include Apache Avro, Google Protobuf, GraphQL, AsyncAPI, OpenAPI, and others. For more details, see <a href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>.</p>
+</div>
+<h3 id="_schema_and_api_groups" class="discrete">Schema and API groups</h3>
+<div class="paragraph">
+<p>An <em>artifact group</em> is an optional named collection of schema or API artifacts. Each group contains a logically related set of schemas or API designs, typically managed by a single entity, belonging to a particular application or organization.</p>
+</div>
+<div class="paragraph">
+<p>You can create optional artifact groups when adding your schemas and API designs to organize them in Apicurio Registry. For example, you could create groups to match your <code>development</code> and <code>production</code> application environments, or your <code>sales</code> and <code>engineering</code> organizations.</p>
+</div>
+<div class="paragraph">
+<p>Schema and API groups can contain multiple artifact types. For example, you could have Protobuf, Avro, JSON Schema, OpenAPI, and AsyncAPI schema and API artifacts all in the same group.</p>
+</div>
+<div class="paragraph">
+<p>You can create schema and API artifacts and optional groups using the Apicurio Registry web console, core REST API, Maven plug-in, or Java client application.  The following simple example shows using the REST API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST -H "Content-type: application/json; artifactType=AVRO" \
+  -H "X-Registry-ArtifactId: share-price" \
+  --data '{"type":"record","name":"price","namespace":"com.example", \
+   "fields":[{"name":"symbol","type":"string"},{"name":"price","type":"string"}]}' \
+  https://my-registry.example.com/apis/registry/v2/groups/my-group/artifacts</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example adds an Avro schema with an artifact ID of <code>share-price</code> in an artifact group named <code>my-group</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Specifying a group is optional when using the Apicurio Registry web console, where a <code>default</code> group is automatically created. When using the v2 REST API or Maven plug-in, you can specify the <code>default</code> group in the API path if you do not want to create a unique group.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more details on schemas and groups, see the <a href="https://github.com/cloudevents/spec/blob/master/schemaregistry/schemaregistry.md">Cloud Native Computing Foundation (CNCF) Schema Registry API Version 0.1</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-web-console"><a class="anchor" href="#registry-web-console"></a>Manage content using Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the Apicurio Registry web console to browse and search the schema and API artifacts and optional groups stored in the registry, and to add new schema and API artifacts, groups, and versions. You can search for artifacts by label, name, group, and description. You can view an artifact’s content or its available versions, or download an artifact file locally.</p>
+</div>
+<div class="paragraph">
+<p>You can also use the web console to configure optional rules for registry content, both globally and for each schema and API artifact. These optional rules for content validation and compatibility are applied when new schema and API artifacts or versions are uploaded to the registry. For more details, see <a href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../assets-images/images/getting-started/registry-web-console.png" alt="Apicurio Registry web console">
+</div>
+<div class="title">Figure 1. Apicurio Registry web console</div>
+</div>
+<div class="paragraph">
+<p>The Apicurio Registry web console is available from the main endpoint of your Apicurio Registry deployment, for example, on <code>http://MY-REGISTRY-URL/ui</code>.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1 _abstract">
+<h2 id="registry-rest-api"><a class="anchor" href="#registry-rest-api"></a>Registry core REST API overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Using the Apicurio Registry core REST API, client applications can manage the schema and API artifacts in Apicurio Registry. This API provides create, read, update, and delete operations for:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Artifacts</dt>
+<dd>
+<p>Manage schema and API artifacts stored in the registry. You can also manage the lifecycle state of an artifact: enabled, disabled, or deprecated.</p>
+</dd>
+<dt class="hdlist1">Artifact versions</dt>
+<dd>
+<p>Manage versions that are created when a schema or API artifact is updated. You can also manage the lifecycle state of an artifact version: enabled, disabled, or deprecated.</p>
+</dd>
+<dt class="hdlist1">Artifact metadata</dt>
+<dd>
+<p>Manage details about a schema or API artifact, such as when it was created or modified, and its current state. You can edit the artifact name, description, or label. The artifact group and when the artifact was created or modified are read-only.</p>
+</dd>
+<dt class="hdlist1">Artifact rules</dt>
+<dd>
+<p>Configure rules to govern the content evolution of a specific schema or API artifact to prevent invalid or incompatible content from being added to the registry. Artifact rules override any global rules configured.</p>
+</dd>
+<dt class="hdlist1">Global rules</dt>
+<dd>
+<p>Configure rules to govern the content evolution of all schema and API artifacts artifacts to prevent invalid or incompatible content from being added to the registry. Global rules are applied only if an artifact does not have its own specific artifact rules configured.</p>
+</dd>
+<dt class="hdlist1">Search</dt>
+<dd>
+<p>Browse or search for schema and API artifacts and versions, for example, by name, group, description, or label.</p>
+</dd>
+<dt class="hdlist1">Admin</dt>
+<dd>
+<p>Export or import registry content in a <code>.zip</code> file, and manage logging levels for the registry server instance at runtime.</p>
+</dd>
+</dl>
+</div>
+<h3 id="_compatibility_with_other_schema_registry_rest_apis" class="discrete">Compatibility with other schema registry REST APIs</h3>
+<div class="paragraph">
+<p>Apicurio Registry version 2 provides API compatibility with the following schema registries by including implementations of their respective REST APIs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apicurio Registry version 1</p>
+</li>
+<li>
+<p>Confluent schema registry version 6</p>
+</li>
+<li>
+<p>IBM schema registry version 1</p>
+</li>
+<li>
+<p>Cloud Native Computing Foundation schema registry version 0</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Applications using Confluent client libraries can use Apicurio Registry as a drop-in replacement.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For detailed information, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+</li>
+<li>
+<p>API documentation for the core Apicurio Registry REST API and for all compatible APIs is available from the main endpoint of your Apicurio Registry deployment, for example, on <code>http://MY-REGISTRY-URL/apis</code>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="registry-storage"><a class="anchor" href="#registry-storage"></a>Apicurio Registry storage options</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Apicurio Registry provides the following underlying storage implementations for registry artifacts:</p>
+<div class="paragraph _abstract">
+<p>Apicurio Registry provides the following options for the underlying storage of registry data:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -277,16 +436,10 @@ Apicurio Registry provides a web console to make it easy for developers and admi
 <p>In-memory</p>
 </li>
 <li>
-<p>Java Persistence API</p>
+<p>PostgreSQL 12 database</p>
 </li>
 <li>
-<p>Apache Kafka</p>
-</li>
-<li>
-<p>Apache Kafka Streams</p>
-</li>
-<li>
-<p>Embedded Infinispan cache</p>
+<p>Apache Kafka 2.6</p>
 </li>
 </ul>
 </div>
@@ -297,12 +450,12 @@ Apicurio Registry provides a web console to make it easy for developers and admi
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The in-memory storage option is suitable for a development environment only. All data is lost when restarting Apicurio Registry with this storage. The Kafka Streams storage option is recommended for production environments.
+The in-memory storage option is suitable for a development environment only. All data is lost when restarting Apicurio Registry with this storage. The PostgreSQL or Kafka storage option is recommended for a production environment.
 </td>
 </tr>
 </table>
 </div>
-<div class="ulist">
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
@@ -319,47 +472,19 @@ The in-memory storage option is suitable for a development environment only. All
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-web-console"><a class="anchor" href="#registry-web-console"></a>Manage content using Apicurio Registry web console</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>You can use the Apicurio Registry web console to browse and search the artifacts stored in the registry, and to upload new artifacts and artifact versions. You can search for artifacts by label, name, and description. You can also view an artifact’s content, view all of its available versions, or download an artifact file locally.</p>
-</div>
-<div class="paragraph">
-<p>You can also use the Apicurio Registry web console to configure optional rules for registry content, both globally and for each artifact. These optional rules for content validation and compatibility are applied when new artifacts or artifact versions are uploaded to the registry. For more details, see <a href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../assets-images/images/getting-started/registry-web-console.png" alt="Apicurio Registry web console">
-</div>
-<div class="title">Figure 1. Apicurio Registry web console</div>
-</div>
-<div class="paragraph">
-<p>The Apicurio Registry web console is available from the main endpoint of your Apicurio Registry deployment, for example, on <code>http://MY-REGISTRY-URL/ui</code>.</p>
-</div>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="client-serde"><a class="anchor" href="#client-serde"></a>Validate schemas with Kafka client serializers/deserializers</h2>
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>Kafka producer applications can use serializers to encode messages that conform to a specific event schema. Kafka consumer applications can then use deserializers to validate that messages have been serialized using the correct schema, based on a specific schema ID.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../assets-images/images/getting-started/registry-serdes-architecture.png" alt="Registry Serdes architecture">
+<img src="../assets-images/images/getting-started/registry-serdes-architecture.png" alt="Registry SerDe architecture">
 </div>
-<div class="title">Figure 2. Apicurio Registry and Kafka client serializer/deserializer architecture</div>
+<div class="title">Figure 2. Apicurio Registry and Kafka client SerDe architecture</div>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry provides Kafka client serializers/deserializers (Serdes) to validate the following message types at runtime:</p>
+<p>Apicurio Registry provides Kafka client serializers/deserializers (SerDes) to validate the following message types at runtime:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -375,9 +500,9 @@ The in-memory storage option is suitable for a development environment only. All
 </ul>
 </div>
 <div class="paragraph">
-<p>The Apicurio Registry Maven repository and source code distributions include the Kafka serializer/deserializer implementations for these message types, which Kafka client developers can use to integrate with the registry. These implementations include custom <code>io.apicurio.registry.utils.serde</code> Java classes for each supported message type, which client applications can use to pull schemas from the registry at runtime for validation.</p>
+<p>The Apicurio Registry Maven repository and source code distributions include the Kafka SerDe implementations for these message types, which Kafka client developers can use to integrate with the registry. These implementations include custom Java classes for each supported message type, for example, <code>io.apicurio.registry.serde.avro</code>, which client applications can use to pull schemas from the registry at runtime for validation.</p>
 </div>
-<div class="ulist">
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
@@ -390,7 +515,7 @@ The in-memory storage option is suitable for a development environment only. All
 <div class="sect1">
 <h2 id="kafka-connect"><a class="anchor" href="#kafka-connect"></a>Stream data to external systems with Kafka Connect converters</h2>
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>You can use Apicurio Registry with Apache Kafka Connect to stream data between Kafka and external systems. Using Kafka Connect, you can define connectors for different systems to move large volumes of data into and out of Kafka-based systems.</p>
 </div>
 <div class="imageblock">
@@ -422,9 +547,9 @@ The in-memory storage option is suitable for a development environment only. All
 <p>Apicurio Registry can manage and track the Avro and JSON schemas used in the Kafka topics. Because the schemas are stored in Apicurio Registry and decoupled from the message content, each message must only include a tiny schema identifier. For an I/O bound system like Kafka, this means more total throughput for producers and consumers.</p>
 </div>
 <div class="paragraph">
-<p>The Avro and JSON Schema serializers and deserializers (Serdes) provided by Apicurio Registry are also used by Kafka producers and consumers in this use case. Kafka consumer applications that you write to consume change events can use the Avro or JSON Serdes to deserialize these change events. You can install these Serdes into any Kafka-based system and use them along with Kafka Connect, or with Kafka Connect-based systems such as Debezium and Camel Kafka Connector.</p>
+<p>The Avro and JSON Schema serializers and deserializers (SerDes) provided by Apicurio Registry are also used by Kafka producers and consumers in this use case. Kafka consumer applications that you write to consume change events can use the Avro or JSON Serdes to deserialize these change events. You can install these Serdes into any Kafka-based system and use them along with Kafka Connect, or with Kafka Connect-based systems such as Debezium and Camel Kafka Connector.</p>
 </div>
-<div class="ulist">
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
@@ -440,34 +565,40 @@ The in-memory storage option is suitable for a development environment only. All
 <div class="sect1">
 <h2 id="registry-demo"><a class="anchor" href="#registry-demo"></a>Apicurio Registry demonstration examples</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Apicurio Registry provides an open source demonstration of Apache Avro serialization/deserialization with storage in Apache Kafka Streams. This example shows how the serializer/deserializer obtains the Avro schema from the registry at runtime and uses it to serialize and deserialize Kafka messages. For more details, see <a href="https://github.com/Apicurio/apicurio-registry-demo" class="bare">https://github.com/Apicurio/apicurio-registry-demo</a>.</p>
+<div class="paragraph _abstract">
+<p>Apicurio Registry provides open source example applications that demonstrate how to use the registry in different use case scenarios. For example, these include storing schemas used by Kafka serializer and deserializer (SerDe) classes. These Java classes fetch the schema from the registry for use when producing or consuming operations to serialize, deserialize, or validate the Kafka message payload.</p>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry also provides the following example applications:</p>
+<p>These example applications include the following:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Simple Avro example</p>
+<p>Simple Avro</p>
 </li>
 <li>
-<p>Simple JSON Schema example</p>
+<p>Simple JSON Schema</p>
 </li>
 <li>
-<p>Confluent Serdes integration</p>
+<p>Confluent SerDes integration</p>
 </li>
 <li>
-<p>Avro bean example</p>
+<p>Avro bean</p>
 </li>
 <li>
-<p>Custom ID strategy example</p>
+<p>Custom ID strategy</p>
 </li>
 <li>
-<p>Simple Avro Maven example</p>
+<p>Simple Avro Maven</p>
 </li>
 <li>
-<p>REST client example</p>
+<p>REST client</p>
+</li>
+<li>
+<p>Mix Avro schemas</p>
+</li>
+<li>
+<p>Cloud Events</p>
 </li>
 </ul>
 </div>
@@ -497,20 +628,12 @@ The in-memory storage option is suitable for a development environment only. All
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://hub.docker.com/r/apicurio/apicurio-registry-mem" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry-mem</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Java Persistence API</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://hub.docker.com/r/apicurio/apicurio-registry-jpa" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry-jpa</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL database</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://hub.docker.com/r/apicurio/apicurio-registry-sql" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry-sql</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Apache Kafka</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://hub.docker.com/r/apicurio/apicurio-registry-kafka" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry-kafka</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apache Kafka Streams</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://hub.docker.com/r/apicurio/apicurio-registry-streams" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry-streams</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Infinispan</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://hub.docker.com/r/apicurio/apicurio-registry-infinispan" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry-infinispan</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://hub.docker.com/r/apicurio/apicurio-registry-kafkasql" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry-kafkasql</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry Operator</p></td>
@@ -543,7 +666,7 @@ The in-memory storage option is suitable for a development environment only. All
 </footer>
 <script src="../../../assets/js/site.js"></script>
 <script src="../../../assets/js/vendor/lunr.js"></script>
-<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/1.3.3.Final/getting-started/assembly-intro-to-the-registry.html"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/2.1.x/getting-started/assembly-intro-to-the-registry.html"></script>
 <script async src="../../../assets/../search-index.js"></script>
 <script async src="../../../assets/js/vendor/highlight.js"></script>
   </body>

@@ -35,7 +35,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry" data-version="1.3.3.Final">
+<div class="nav-container" data-component="apicurio-registry" data-version="2.0.x">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -60,7 +60,10 @@
     <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring Apicurio Registry deployment on OpenShift</a>
+    <a class="nav-link" href="assembly-migrating-registry-v1-v2.html">Migrating an existing Apicurio Registry deployment</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
@@ -72,13 +75,19 @@
     <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using the Java client</a>
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers</a>
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -88,7 +97,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry</span>
-    <span class="version">1.3.3.Final</span>
+    <span class="version">2.0.x</span>
   </div>
   <ul class="components">
     <li class="component is-current">
@@ -97,11 +106,11 @@
         <li class="version is-latest">
           <a href="../../2.1.x/index.html">2.1.x</a>
         </li>
-        <li class="version">
-          <a href="../../2.0.x/index.html">2.0.x</a>
-        </li>
         <li class="version is-current">
-          <a href="../index.html">1.3.3.Final</a>
+          <a href="../index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
         </li>
       </ul>
     </li>
@@ -132,11 +141,11 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.3.3.Final</button>
+  <button class="version-menu-toggle" title="Show other versions of page">2.0.x</button>
   <div class="version-menu">
     <a class="version" href="../../2.1.x/getting-started/assembly-registry-reference.html">2.1.x</a>
-    <a class="version" href="../../2.0.x/getting-started/assembly-registry-reference.html">2.0.x</a>
-    <a class="version is-current" href="assembly-registry-reference.html">1.3.3.Final</a>
+    <a class="version is-current" href="assembly-registry-reference.html">2.0.x</a>
+    <a class="version" href="../../1.3.3.Final/getting-started/assembly-registry-reference.html">1.3.3.Final</a>
   </div>
 </div>
   <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
@@ -146,7 +155,7 @@
 <h1 class="page">Apicurio Registry artifact reference</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>This chapter provides details on the supported artifact types, states, metadata, and content rules that are stored in Apicurio Registry.</p>
 </div>
 <div class="ulist">
@@ -168,7 +177,7 @@
 </li>
 </ul>
 </div>
-<div class="ulist">
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
@@ -224,10 +233,6 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>PROTOBUF</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Google protocol buffers schema</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PROTOBUF_FD</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Google protocol buffers file descriptor</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>WSDL</code></p></td>
@@ -427,7 +432,7 @@
 <div class="sect1">
 <h2 id="registry-rule-types"><a class="anchor" href="#registry-rule-types"></a>Apicurio Registry content rule types</h2>
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>You can specify the following rule types to govern content evolution in Apicurio Registry:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -613,7 +618,7 @@ The following table shows the current maturity level for each rule and artifact 
 </footer>
 <script src="../../../assets/js/site.js"></script>
 <script src="../../../assets/js/vendor/lunr.js"></script>
-<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/1.3.3.Final/getting-started/assembly-registry-reference.html"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/2.0.x/getting-started/assembly-registry-reference.html"></script>
 <script async src="../../../assets/../search-index.js"></script>
 <script async src="../../../assets/js/vendor/highlight.js"></script>
   </body>

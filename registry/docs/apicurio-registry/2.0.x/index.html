@@ -35,7 +35,7 @@
     </div>
 </div>
 <div class="body">
-<div class="nav-container" data-component="apicurio-registry" data-version="1.3.3.Final">
+<div class="nav-container" data-component="apicurio-registry" data-version="2.0.x">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -60,7 +60,10 @@
     <a class="nav-link" href="getting-started/assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="getting-started/assembly-configuring-the-registry.html">Configuring Apicurio Registry deployment on OpenShift</a>
+    <a class="nav-link" href="getting-started/assembly-migrating-registry-v1-v2.html">Migrating an existing Apicurio Registry deployment</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="getting-started/assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="getting-started/assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
@@ -72,13 +75,19 @@
     <a class="nav-link" href="getting-started/assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="getting-started/assembly-using-the-registry-client.html">Managing Apicurio Registry content using the Java client</a>
+    <a class="nav-link" href="getting-started/assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="getting-started/assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers</a>
+    <a class="nav-link" href="getting-started/assembly-using-kafka-client-serdes.html">Validating schemas using Kafka serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="getting-started/assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="getting-started/assembly-registry-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -88,7 +97,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Apicurio Registry</span>
-    <span class="version">1.3.3.Final</span>
+    <span class="version">2.0.x</span>
   </div>
   <ul class="components">
     <li class="component is-current">
@@ -97,11 +106,11 @@
         <li class="version is-latest">
           <a href="../2.1.x/index.html">2.1.x</a>
         </li>
-        <li class="version">
-          <a href="../2.0.x/index.html">2.0.x</a>
-        </li>
         <li class="version is-current">
-          <a href="index.html">1.3.3.Final</a>
+          <a href="index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../1.3.3.Final/index.html">1.3.3.Final</a>
         </li>
       </ul>
     </li>
@@ -132,11 +141,11 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.3.3.Final</button>
+  <button class="version-menu-toggle" title="Show other versions of page">2.0.x</button>
   <div class="version-menu">
     <a class="version" href="../2.1.x/index.html">2.1.x</a>
-    <a class="version" href="../2.0.x/index.html">2.0.x</a>
-    <a class="version is-current" href="index.html">1.3.3.Final</a>
+    <a class="version is-current" href="index.html">2.0.x</a>
+    <a class="version" href="../1.3.3.Final/index.html">1.3.3.Final</a>
   </div>
 </div>
   <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
@@ -147,10 +156,10 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Welcome to the Apicurio Registry version 1.3 documentation. Navigate using the left menu.</p>
+<p>Welcome to the Apicurio Registry version 2.0 documentation. Navigate using the left menu.</p>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry stores and retrieves API designs and event schemas, and gives you control of their evolution.</p>
+<p>Apicurio Registry is a schema registry and an API registry, which stores and retrieves event schemas and API designs, and gives you control of their evolution.</p>
 </div>
 </div>
 </div>
@@ -158,10 +167,10 @@
 <h2 id="_about_this_documentation"><a class="anchor" href="#_about_this_documentation"></a>About this documentation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This introduces Apicurio Registry, explains how to install with your chosen storage option, and how to manage event schemas and API designs using the Apicurio Registry web console, REST API, Maven plug-in, or Java client.</p>
+<p>This document introduces Apicurio Registry, explains how to install with your chosen storage option, and how to manage event schemas and API designs using the Apicurio Registry web console, REST API, Maven plug-in, or Java client.</p>
 </div>
 <div class="paragraph">
-<p>This also explains how to enforce schemas using Kafka client serializers and deserializers in your consumer and producer applications. It also describes Apicurio Registry content types and rule types, and OpenShift environment variables for health checks.</p>
+<p>This document also explains how to enforce schemas using Kafka client serializers and deserializers in your consumer and producer applications. It also describes Apicurio Registry content types and rule types, and OpenShift environment variables for health checks.</p>
 </div>
 </div>
 </div>
@@ -169,8 +178,7 @@
 <h2 id="_getting_help_with_apicurio_registry"><a class="anchor" href="#_getting_help_with_apicurio_registry"></a>Getting help with Apicurio Registry</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>See the <a href="https://github.com/Apicurio/apicurio-registry">Apicurio Registry</a> and <a href="https://github.com/Apicurio/apicurio-registry-operator">Apicurio Registry Operator</a> projects on GitHub.
-Any contributions, suggestions, and issue reports are welcome.</p>
+<p>See the <a href="https://github.com/Apicurio/apicurio-registry">Apicurio Registry</a> and <a href="https://github.com/Apicurio/apicurio-registry-operator">Apicurio Registry Operator</a> projects on GitHub. Any contributions, suggestions, and issue reports are welcome.</p>
 </div>
 <div class="paragraph">
 <p><a href="https://github.com/Apicurio/apicurio-registry/issues/new">Create an issue</a> on GitHub if you find any problems.</p>
@@ -189,7 +197,7 @@ Any contributions, suggestions, and issue reports are welcome.</p>
 </footer>
 <script src="../../assets/js/site.js"></script>
 <script src="../../assets/js/vendor/lunr.js"></script>
-<script src="../../assets/js/vendor/search.js" id="search-script" data-base-path="../.." data-page-path="/apicurio-registry/1.3.3.Final/index.html"></script>
+<script src="../../assets/js/vendor/search.js" id="search-script" data-base-path="../.." data-page-path="/apicurio-registry/2.0.x/index.html"></script>
 <script async src="../../assets/../search-index.js"></script>
 <script async src="../../assets/js/vendor/highlight.js"></script>
   </body>
