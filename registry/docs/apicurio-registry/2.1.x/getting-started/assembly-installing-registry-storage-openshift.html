@@ -78,13 +78,16 @@
     <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a>
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.1.0-dev/index.html">Apicurio Registry Operator documentation</a>
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -159,13 +162,13 @@
 <div class="title">Kafka storage</div>
 <ul>
 <li>
-<p><a href="#installing-kafka-streams-operatorhub">Installing Strimzi from the OpenShift OperatorHub</a></p>
+<p><a href="#installing-kafka-streams-operatorhub_registry">Installing Strimzi from the OpenShift OperatorHub</a></p>
 </li>
 <li>
-<p><a href="#setting-up-kafka-streams-storage">Configuring Apicurio Registry with Kafka storage on OpenShift</a></p>
+<p><a href="#setting-up-kafka-streams-storage_registry">Configuring Apicurio Registry with Kafka storage on OpenShift</a></p>
 </li>
 <li>
-<p><a href="#registry-kafka-topic-names">Kafka topic name configuration</a></p>
+<p><a href="#registry-kafka-topic-names_registry">Kafka topic name configuration</a></p>
 </li>
 </ul>
 </div>
@@ -173,10 +176,10 @@
 <div class="title">PostgreSQL database storage</div>
 <ul>
 <li>
-<p><a href="#installing-postgresql-operatorhub">Installing a PostgreSQL database from the OpenShift OperatorHub</a></p>
+<p><a href="#installing-postgresql-operatorhub_registry">Installing a PostgreSQL database from the OpenShift OperatorHub</a></p>
 </li>
 <li>
-<p><a href="#setting-up-postgresql-storage">Configuring Apicurio Registry with PostgreSQL database storage on OpenShift</a></p>
+<p><a href="#setting-up-postgresql-storage_registry">Configuring Apicurio Registry with PostgreSQL database storage on OpenShift</a></p>
 </li>
 </ul>
 </div>
@@ -191,7 +194,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-kafka-streams-operatorhub"><a class="anchor" href="#installing-kafka-streams-operatorhub"></a>Installing Strimzi from the OpenShift OperatorHub</h2>
+<h2 id="installing-kafka-streams-operatorhub_registry"><a class="anchor" href="#installing-kafka-streams-operatorhub_registry"></a>Installing Strimzi from the OpenShift OperatorHub</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>If you do not already have Strimzi installed, you can install the Strimzi Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/4.6/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
@@ -267,7 +270,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="setting-up-kafka-streams-storage"><a class="anchor" href="#setting-up-kafka-streams-storage"></a>Configuring Apicurio Registry with Kafka storage on OpenShift</h2>
+<h2 id="setting-up-kafka-streams-storage_registry"><a class="anchor" href="#setting-up-kafka-streams-storage_registry"></a>Configuring Apicurio Registry with Kafka storage on OpenShift</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>This section explains how to configure Kafka-based storage for Apicurio Registry using Strimzi on OpenShift. The <code>kafkasql</code> storage option uses Kafka storage with in-memory H2 database. This storage option is suitable for production environments when <code>persistent</code> storage is configured for the Kafka cluster on OpenShift.</p>
@@ -285,7 +288,7 @@
 <p>You must have already installed Apicurio Registry. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
 </li>
 <li>
-<p>You must have already installed Strimzi. See <a href="#installing-kafka-streams-operatorhub">Installing Strimzi from the OpenShift OperatorHub</a>.</p>
+<p>You must have already installed Strimzi. See <a href="#installing-kafka-streams-operatorhub_registry">Installing Strimzi from the OpenShift OperatorHub</a>.</p>
 </li>
 </ul>
 </div>
@@ -381,7 +384,7 @@ spec:
 <p>For more details on installing Strimzi and on creating Kafka clusters and topics, see <a href="https://strimzi.io/docs/overview/latest/" class="bare">https://strimzi.io/docs/overview/latest/</a></p>
 </div>
 <div class="sect2 _abstract">
-<h3 id="registry-kafka-topic-names"><a class="anchor" href="#registry-kafka-topic-names"></a>Kafka topic name configuration</h3>
+<h3 id="registry-kafka-topic-names_registry"><a class="anchor" href="#registry-kafka-topic-names_registry"></a>Kafka topic name configuration</h3>
 <div class="paragraph">
 <p>The default Kafka topic name that Apicurio Registry uses to store data is <code>kafkasql-journal</code>. This topic is created automatically by Apicurio Registry. However, you can override this behavior or the default topic name by setting the appropriate environment variable or Java system property:</p>
 </div>
@@ -416,7 +419,7 @@ spec:
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-postgresql-operatorhub"><a class="anchor" href="#installing-postgresql-operatorhub"></a>Installing a PostgreSQL database from the OpenShift OperatorHub</h2>
+<h2 id="installing-postgresql-operatorhub_registry"><a class="anchor" href="#installing-postgresql-operatorhub_registry"></a>Installing a PostgreSQL database from the OpenShift OperatorHub</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>If you do not already have a PostgreSQL database Operator installed, you can install a PostgreSQL Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see the <a href="https://docs.openshift.com/container-platform/4.6/operators/olm-understanding-operatorhub.html">OpenShift documentation</a>.</p>
@@ -494,7 +497,7 @@ You must read the documentation from your chosen <strong>PostgreSQL</strong> Ope
 </div>
 </div>
 <div class="sect1">
-<h2 id="setting-up-postgresql-storage"><a class="anchor" href="#setting-up-postgresql-storage"></a>Configuring Apicurio Registry with PostgreSQL database storage on OpenShift</h2>
+<h2 id="setting-up-postgresql-storage_registry"><a class="anchor" href="#setting-up-postgresql-storage_registry"></a>Configuring Apicurio Registry with PostgreSQL database storage on OpenShift</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>This section explains how to configure storage for Apicurio Registry on OpenShift using a PostgreSQL database Operator. You can install Apicurio Registry in an existing database or create a new database, depending on your environment. This section shows a simple example using the PostgreSQL Operator by Dev4Ddevs.com.</p>
@@ -509,7 +512,7 @@ You must read the documentation from your chosen <strong>PostgreSQL</strong> Ope
 <p>You must have already installed Apicurio Registry. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
 </li>
 <li>
-<p>You must have already installed a PostgreSQL Operator on OpenShift. For example, see <a href="#installing-postgresql-operatorhub">Installing a PostgreSQL database from the OpenShift OperatorHub</a>.</p>
+<p>You must have already installed a PostgreSQL Operator on OpenShift. For example, see <a href="#installing-postgresql-operatorhub_registry">Installing a PostgreSQL database from the OpenShift OperatorHub</a>.</p>
 </li>
 </ul>
 </div>

@@ -78,13 +78,16 @@
     <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a>
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.1.0-dev/index.html">Apicurio Registry Operator documentation</a>
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -152,40 +155,42 @@
 <h1 class="page">Managing Apicurio Registry content using a Java client</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph _absract">
+<div class="paragraph _abstract">
 <p>This chapter explains how to use the Apicurio Registry Java client:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#registry-client-intro">Apicurio Registry Java client</a></p>
+<p><a href="#registry-client-intro_registry">Apicurio Registry Java client</a></p>
 </li>
 <li>
-<p><a href="#writing-registry-client">Writing Apicurio Registry client applications</a></p>
+<p><a href="#writing-registry-client_registry">Writing Apicurio Registry Java client applications</a></p>
 </li>
 <li>
-<p><a href="#registry-client-config">Apicurio Registry Java client configuration</a></p>
+<p><a href="#registry-client-config_registry">Apicurio Registry Java client configuration</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-client-intro"><a class="anchor" href="#registry-client-intro"></a>Apicurio Registry Java client</h2>
+<h2 id="registry-client-intro_registry"><a class="anchor" href="#registry-client-intro_registry"></a>Apicurio Registry Java client</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>You can manage artifacts stored in Apicurio Registry using a Java client application. You can create, read, update, or delete artifacts stored in the registry using the Apicurio Registry Java client classes. You can also perform admin functions using the client, such as managing global rules or importing and exporting registry data.</p>
 </div>
 <div class="paragraph">
-<p>You can access the Apicurio Registry Java client by adding the correct dependency to your project. For more details, see <a href="#writing-registry-client">Writing Apicurio Registry client applications</a>.</p>
+<p>You can access the Apicurio Registry Java client by adding the correct dependency to your project.
+For more details, see <a href="#writing-registry-client_registry">Writing Apicurio Registry Java client applications</a></p>
 </div>
 <div class="paragraph">
-<p>The Apicurio Registry client is implemented using the HTTP client provided by the JDK. This gives you the ability to customize its use, for example, by adding custom headers or enabling options for Transport Layer Security (TLS) authentication. For more details, see <a href="#registry-client-config">Apicurio Registry Java client configuration</a>.</p>
+<p>The Apicurio Registry client is implemented using the HTTP client provided by the JDK. This gives you the ability to customize its use, for example, by adding custom headers or enabling options for Transport Layer Security (TLS) authentication.
+For more details, see <a href="#registry-client-config_registry">Apicurio Registry Java client configuration</a></p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="writing-registry-client"><a class="anchor" href="#writing-registry-client"></a>Writing Apicurio Registry client applications</h2>
+<h2 id="writing-registry-client_registry"><a class="anchor" href="#writing-registry-client_registry"></a>Writing Apicurio Registry Java client applications</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>This section explains how to manage artifacts stored in Apicurio Registry using a Java client application.</p>
@@ -194,10 +199,7 @@
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>See <a href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a></p>
-</li>
-<li>
-<p>Apicurio Registry must be installed and running in your environment</p>
+<p>Apicurio Registry is installed and running in your environment</p>
 </li>
 </ul>
 </div>
@@ -226,45 +228,44 @@
 
      public static void main(String[] args) throws Exception {
         // Create a registry client
-        String registryUrl = "https://my-registry.my-domain.com/apis/registry/v2"; <i class="conum" data-value="1"></i><b>(1)</b>
-        RegistryClient client = RegistryClientFactory.create(registryUrl); <i class="conum" data-value="2"></i><b>(2)</b>
+        String registryUrl = "https://my-registry.my-domain.com/apis/registry/v2";
+        RegistryClient client = RegistryClientFactory.create(registryUrl);
     }
 }</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>If you specify an example registry URL of <code><a href="https://my-registry.my-domain.com" class="bare">https://my-registry.my-domain.com</a></code>, the client will automatically append <code>/apis/registry/v2</code>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>For more options when creating a Apicurio Registry client, see the Java client configuration in the next section.</td>
-</tr>
-</table>
-</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If you specify an example registry URL of <code>https://my-registry.my-domain.com</code>, the client will automatically append <code>/apis/registry/v2</code>.</p>
 </li>
 <li>
-<p>When the client is created, you can use all the operations from the Apicurio Registry REST API through the client. For more details, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<p>For more options when creating a Apicurio Registry client, see the Java client configuration in the next section.</p>
+</li>
+</ul>
+</div>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p>When the client is created, you can use all the operations available in the Apicurio Registry REST API in the client. For more details, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For an open source example of how to use and customize the Apicurio Registry client, see the <a href="https://github.com/Apicurio/apicurio-registry-examples">Registry REST client demonstration example</a>.</p>
+<p>For an open source example of how to use and customize the Apicurio Registry client, see the <a href="https://github.com/Apicurio/apicurio-registry-examples">Registry REST client demonstration example</a></p>
 </li>
 <li>
-<p>For details on how to use the Apicurio Registry Kafka client serializers/deserializers (SerDes) in producer and consumer applications, see <a href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a></p>
+<p>For details on how to use the Apicurio Registry Kafka client serializers/deserializers (SerDes) in producer and consumer applications, see
+<a href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-client-config"><a class="anchor" href="#registry-client-config"></a>Apicurio Registry Java client configuration</h2>
+<h2 id="registry-client-config_registry"><a class="anchor" href="#registry-client-config_registry"></a>Apicurio Registry Java client configuration</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>The Apicurio Registry Java client includes the following configuration options, based on the client factory:</p>
@@ -296,7 +297,8 @@
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Client with custom configuration and authentication</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Registry client that accepts a map containing custom configuration. This is useful, for example, to add custom headers to the calls. This also requires providing an <code>auth</code> instance used to authenticate requests.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Registry client that accepts a map containing custom configuration. This is useful, for example, to add custom headers to the calls. This also requires providing an <code>auth</code> instance used to authenticate requests.</p>
+<p class="tableblock">The OpenShift Application Services authentication server is <code>https://identity.api.openshift.com/auth/realms/rhoas/protocol/openid-connect/token</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl, Map&lt;String Object&gt; configs, Auth auth</code></p></td>
 </tr>
 </tbody>
@@ -331,6 +333,15 @@
 </li>
 <li>
 <p><code>apicurio.registry.request.ssl.key.password</code></p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For details on how to configure authentication for Apicurio Registry Kafka client serializers/deserializers (SerDes), see
+<a href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a></p>
 </li>
 </ul>
 </div>

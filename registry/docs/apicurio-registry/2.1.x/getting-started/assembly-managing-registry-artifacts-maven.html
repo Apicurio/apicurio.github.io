@@ -78,13 +78,16 @@
     <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a>
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.1.0-dev/index.html">Apicurio Registry Operator documentation</a>
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -158,13 +161,13 @@
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#adding-artifacts-using-maven-plugin">Adding schema and API artifacts using the Maven plug-in</a></p>
+<p><a href="#adding-artifacts-using-maven-plugin_registry">Adding schema and API artifacts using the Maven plug-in</a></p>
 </li>
 <li>
-<p><a href="#downloading-artifacts-using-maven-plugin">Downloading schema and API artifacts using the Maven plug-in</a></p>
+<p><a href="#downloading-artifacts-using-maven-plugin_registry">Downloading schema and API artifacts using the Maven plug-in</a></p>
 </li>
 <li>
-<p><a href="#testing-artifacts-using-maven-plugin">Testing schema and API artifacts using the Maven plug-in</a></p>
+<p><a href="#testing-artifacts-using-maven-plugin_registry">Testing schema and API artifacts using the Maven plug-in</a></p>
 </li>
 </ul>
 </div>
@@ -185,10 +188,18 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="adding-artifacts-using-maven-plugin"><a class="anchor" href="#adding-artifacts-using-maven-plugin"></a>Adding schema and API artifacts using the Maven plug-in</h2>
+<h2 id="adding-artifacts-using-maven-plugin_registry"><a class="anchor" href="#adding-artifacts-using-maven-plugin_registry"></a>Adding schema and API artifacts using the Maven plug-in</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>The most common use case for the Maven plug-in is adding artifacts during a build. You can accomplish this by using the <code>register</code> execution goal.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running in your environment</p>
+</li>
+</ul>
 </div>
 <div class="ulist">
 <div class="title">Procedure</div>
@@ -209,16 +220,19 @@
         &lt;/goals&gt;
         &lt;configuration&gt;
             &lt;registryUrl&gt;http://REGISTRY-URL/apis/registry/v2&lt;/registryUrl&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+            &lt;authServerUrl&gt;MY-AUTH-SERVER&lt;/authServerUrl&gt;
+            &lt;clientId&gt;MY-CLIENT-ID&lt;/clientId&gt;
+            &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt; <i class="conum" data-value="3"></i><b>(3)</b>
             &lt;artifacts&gt;
                 &lt;artifact&gt;
-                    &lt;groupId&gt;TestGroup&lt;/groupId&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+                    &lt;groupId&gt;TestGroup&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
                     &lt;artifactId&gt;FullNameRecord&lt;/artifactId&gt;
                     &lt;file&gt;${project.basedir}/src/main/resources/schemas/record.avsc&lt;/file&gt;
                     &lt;ifExists&gt;FAIL&lt;/ifExists&gt;
                 &lt;/artifact&gt;
                 &lt;artifact&gt;
                     &lt;groupId&gt;TestGroup&lt;/groupId&gt;
-                    &lt;artifactId&gt;ExampleAPI&lt;/artifactId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+                    &lt;artifactId&gt;ExampleAPI&lt;/artifactId&gt; <i class="conum" data-value="5"></i><b>(5)</b>
                     &lt;type&gt;GRAPHQL&lt;/type&gt;
                     &lt;file&gt;${project.basedir}/src/main/resources/apis/example.graphql&lt;/file&gt;
                     &lt;ifExists&gt;RETURN_OR_UPDATE&lt;/ifExists&gt;
@@ -231,44 +245,43 @@
  &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specify <code>register</code> as the execution goal to upload the schema artifact to the registry.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>You can upload multiple artifacts using the specified group ID, artifact ID, and location.</td>
-</tr>
-</table>
-</div>
-</li>
-</ul>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>For more details on the Apicurio Registry Maven plug-in, see the <a href="https://github.com/Apicurio/apicurio-registry-demo">Registry demonstration example</a></p>
+<p>Specify <code>register</code> as the execution goal to upload the schema artifact to the registry.</p>
+</li>
+<li>
+<p>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</p>
+</li>
+<li>
+<p>If authentication is required, you can specify your authentication server and client credentials.</p>
+</li>
+<li>
+<p>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group.</p>
+</li>
+<li>
+<p>You can upload multiple artifacts using the specified group ID, artifact ID, and location.</p>
+</li>
+</ol>
+</div>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="downloading-artifacts-using-maven-plugin"><a class="anchor" href="#downloading-artifacts-using-maven-plugin"></a>Downloading schema and API artifacts using the Maven plug-in</h2>
+<h2 id="downloading-artifacts-using-maven-plugin_registry"><a class="anchor" href="#downloading-artifacts-using-maven-plugin_registry"></a>Downloading schema and API artifacts using the Maven plug-in</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>You can use the Maven plug-in to download artifacts from Apicurio Registry. This is often useful, for example, when generating code from a registered schema.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running in your environment</p>
+</li>
+</ul>
 </div>
 <div class="ulist">
 <div class="title">Procedure</div>
@@ -289,10 +302,13 @@
       &lt;/goals&gt;
       &lt;configuration&gt;
           &lt;registryUrl&gt;http://REGISTRY-URL/apis/registry/v2&lt;/registryUrl&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+          &lt;authServerUrl&gt;MY-AUTH-SERVER&lt;/authServerUrl&gt;
+          &lt;clientId&gt;MY-CLIENT-ID&lt;/clientId&gt;
+          &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt; <i class="conum" data-value="3"></i><b>(3)</b>
           &lt;artifacts&gt;
               &lt;artifact&gt;
-                  &lt;groupId&gt;TestGroup&lt;/groupId&gt; <i class="conum" data-value="3"></i><b>(3)</b>
-                  &lt;artifactId&gt;FullNameRecord&lt;/artifactId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+                  &lt;groupId&gt;TestGroup&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+                  &lt;artifactId&gt;FullNameRecord&lt;/artifactId&gt; <i class="conum" data-value="5"></i><b>(5)</b>
                   &lt;file&gt;${project.build.directory}/classes/record.avsc&lt;/file&gt;
                   &lt;overwrite&gt;true&lt;/overwrite&gt;
               &lt;/artifact&gt;
@@ -310,41 +326,32 @@
 &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specify <code>download</code> as the execution goal.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>You can download multiple artifacts to a specified directory using the artifact ID.</td>
-</tr>
-</table>
-</div>
-</li>
-</ul>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>For more details on the Apicurio Registry Maven plug-in, see the <a href="https://github.com/Apicurio/apicurio-registry-demo">Registry demonstration example</a></p>
+<p>Specify <code>download</code> as the execution goal.</p>
+</li>
+<li>
+<p>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</p>
+</li>
+<li>
+<p>If authentication is required, you can specify your authentication server and client credentials.</p>
+</li>
+<li>
+<p>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group.</p>
+</li>
+<li>
+<p>You can download multiple artifacts to a specified directory using the artifact ID.</p>
+</li>
+</ol>
+</div>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="testing-artifacts-using-maven-plugin"><a class="anchor" href="#testing-artifacts-using-maven-plugin"></a>Testing schema and API artifacts using the Maven plug-in</h2>
+<h2 id="testing-artifacts-using-maven-plugin_registry"><a class="anchor" href="#testing-artifacts-using-maven-plugin_registry"></a>Testing schema and API artifacts using the Maven plug-in</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>You might want to verify that an artifact can be registered without actually making any changes. This is often useful when rules are configured in Apicurio Registry. Testing the artifact results in a failure if the artifact content violates any of the configured rules.</p>
@@ -356,10 +363,18 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Even if the artifact passes the test, no content is added to Apicurio Registry.
+When testing artifacts using the Maven plug-in, even if the artifact passes the test, no content is added to Apicurio Registry.
 </td>
 </tr>
 </table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry must be installed and running in your environment</p>
+</li>
+</ul>
 </div>
 <div class="ulist">
 <div class="title">Procedure</div>
@@ -380,11 +395,14 @@ Even if the artifact passes the test, no content is added to Apicurio Registry.
         &lt;/goals&gt;
         &lt;configuration&gt;
             &lt;registryUrl&gt;http://REGISTRY-URL/apis/registry/v2&lt;/registryUrl&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+            &lt;authServerUrl&gt;MY-AUTH-SERVER&lt;/authServerUrl&gt;
+            &lt;clientId&gt;MY-CLIENT-ID&lt;/clientId&gt;
+            &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt; <i class="conum" data-value="3"></i><b>(3)</b>
             &lt;artifacts&gt;
                 &lt;artifact&gt;
-                    &lt;groupId&gt;TestGroup&lt;/groupId&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+                    &lt;groupId&gt;TestGroup&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
                     &lt;artifactId&gt;FullNameRecord&lt;/artifactId&gt;
-                    &lt;file&gt;${project.basedir}/src/main/resources/schemas/record.avsc&lt;/file&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+                    &lt;file&gt;${project.basedir}/src/main/resources/schemas/record.avsc&lt;/file&gt; <i class="conum" data-value="5"></i><b>(5)</b>
                 &lt;/artifact&gt;
                 &lt;artifact&gt;
                     &lt;groupId&gt;TestGroup&lt;/groupId&gt;
@@ -399,34 +417,25 @@ Even if the artifact passes the test, no content is added to Apicurio Registry.
  &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specify <code>test-update</code> as the execution goal to test the schema artifact.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>You can test multiple artifacts from specified directory using the artifact ID.</td>
-</tr>
-</table>
-</div>
-</li>
-</ul>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>For more details on the Apicurio Registry Maven plug-in, see the <a href="https://github.com/Apicurio/apicurio-registry-demo">Registry demonstration example</a></p>
+<p>Specify <code>test-update</code> as the execution goal to test the schema artifact.</p>
+</li>
+<li>
+<p>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</p>
+</li>
+<li>
+<p>If authentication is required, you can specify your authentication server and client credentials.</p>
+</li>
+<li>
+<p>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group.</p>
+</li>
+<li>
+<p>You can test multiple artifacts from a specified directory using the artifact ID.</p>
+</li>
+</ol>
+</div>
 </li>
 </ul>
 </div>

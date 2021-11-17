@@ -78,13 +78,16 @@
     <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a>
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.1.0-dev/index.html">Apicurio Registry Operator documentation</a>
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -158,25 +161,25 @@
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#registry-rules">Govern registry content using rules</a></p>
+<p><a href="#registry-rules_registry">Govern registry content using rules</a></p>
 </li>
 <li>
-<p><a href="#registry-rules-apply">When rules are applied</a></p>
+<p><a href="#registry-rules-apply_registry">When rules are applied</a></p>
 </li>
 <li>
-<p><a href="#registry-rules-work">How rules work</a></p>
+<p><a href="#registry-rules-work_registry">How rules work</a></p>
 </li>
 <li>
-<p><a href="#registry-rules-config">Content rule configuration</a></p>
+<p><a href="#registry-rules-config_registry">Content rule configuration</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-rules"><a class="anchor" href="#registry-rules"></a>Govern registry content using rules</h2>
+<h2 id="registry-rules_registry"><a class="anchor" href="#registry-rules_registry"></a>Govern registry content using rules</h2>
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>To govern the evolution of registry content, you can configure optional rules for artifact content added to the registry. All configured global rules or artifact rules must pass before a new artifact version can be uploaded to the registry. Configured artifact rules override any configured global rules.</p>
 </div>
 <div class="paragraph">
@@ -196,13 +199,10 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>You can add these optional content rules using the Apicurio Registry web console, REST API commands, or a Java client application.</p>
+<p>You can enable optional content rules using the Apicurio Registry web console, REST API commands, or a Java client application.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="registry-rules-apply"><a class="anchor" href="#registry-rules-apply"></a>When rules are applied</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="registry-rules-apply_registry"><a class="anchor" href="#registry-rules-apply_registry"></a>When rules are applied</h3>
 <div class="paragraph">
 <p>Rules are applied only when content is added to the registry. This includes the following REST operations:</p>
 </div>
@@ -235,29 +235,25 @@ If no rules are configured for an artifact, the set of currently configured glob
 </table>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="registry-rules-work"><a class="anchor" href="#registry-rules-work"></a>How rules work</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="registry-rules-work_registry"><a class="anchor" href="#registry-rules-work_registry"></a>How rules work</h3>
 <div class="paragraph">
-<p>Each rule has a name and optional configuration information. The registry storage maintains the list of rules for each artifact and the list of global rules. Each rule in the list consists of a name and a set of configuration properties, which are specific to the rule implementation.</p>
+<p>Each rule has a name and configuration information. The registry maintains the list of rules for each artifact and the list of global rules. Each rule in the list consists of a name and configuration for the rule implementation.</p>
 </div>
 <div class="paragraph">
 <p>A rule is provided with the content of the current version of the artifact (if one exists) and the new version of the artifact being added. The rule implementation returns true or false depending on whether the artifact passes the rule. If not, the registry reports the reason why in an HTTP error response. Some rules might not use the previous version of the content. For example, compatibility rules use previous versions, but syntax or semantic validity rules do not.</p>
 </div>
-<div class="paragraph">
+<div class="paragraph _additional-resources">
 <div class="title">Additional resources</div>
 <p>For more details, see <a href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>.</p>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="registry-rules-config"><a class="anchor" href="#registry-rules-config"></a>Content rule configuration</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="registry-rules-config_registry"><a class="anchor" href="#registry-rules-config_registry"></a>Content rule configuration</h3>
 <div class="paragraph">
 <p>You can configure rules individually for each artifact, as well as globally. Apicurio Registry applies the rules configured for the specific artifact. If no rules are configured at that level, Apicurio Registry applies the globally configured rules. If no global rules are configured, no rules are applied.</p>
 </div>
-<h3 id="_configure_artifact_rules" class="discrete">Configure artifact rules</h3>
+<h4 id="_configure_artifact_rules" class="discrete">Configure artifact rules</h4>
 <div class="paragraph">
 <p>You can configure artifact rules using the Apicurio Registry web console or REST API. For details, see the following:</p>
 </div>
@@ -271,7 +267,7 @@ If no rules are configured for an artifact, the set of currently configured glob
 </li>
 </ul>
 </div>
-<h3 id="_configure_global_rules" class="discrete">Configure global rules</h3>
+<h4 id="_configure_global_rules" class="discrete">Configure global rules</h4>
 <div class="paragraph">
 <p>You can configure global rules in several ways:</p>
 </div>
@@ -401,6 +397,7 @@ You can configure these application properties as Java system properties or incl
 </td>
 </tr>
 </table>
+</div>
 </div>
 </div>
 </div>

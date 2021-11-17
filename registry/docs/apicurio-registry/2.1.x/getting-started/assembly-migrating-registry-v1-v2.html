@@ -78,13 +78,16 @@
     <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a>
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.1.0-dev/index.html">Apicurio Registry Operator documentation</a>
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -158,23 +161,23 @@
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#registry-migration">Migration from Apicurio Registry 1.3.x to 2.x</a></p>
+<p><a href="#registry-migration_registry">Migration from Apicurio Registry 1.3.x to 2.x</a></p>
 </li>
 <li>
-<p><a href="#migrating-registry-data">Migrating Apicurio Registry data</a></p>
+<p><a href="#migrating-registry-data_registry">Migrating Apicurio Registry data</a></p>
 </li>
 <li>
-<p><a href="#migrating-registry-applications">Migrating Apicurio Registry client applications</a></p>
+<p><a href="#migrating-registry-applications_registry">Migrating Apicurio Registry client applications</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-migration"><a class="anchor" href="#registry-migration"></a>Migration from Apicurio Registry 1.3.x to 2.x</h2>
+<h2 id="registry-migration_registry"><a class="anchor" href="#registry-migration_registry"></a>Migration from Apicurio Registry 1.3.x to 2.x</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry 2.x includes new features with breaking changes from the previous 1.3.x release. This section describes the major changes between Apicurio Registry 1.3.x and version 2.x.</p>
+<p>Apicurio Registry 2.x includes new features with breaking changes from the previous Apicurio Registry 1.3.x release. This section describes the major changes between Apicurio Registry 1.3.x and version 2.x.</p>
 </div>
 <div class="paragraph">
 <p>Because of the breaking changes in 2.x, there is no automatic upgrade and a migration process is required. This involves moving the data in your existing registry to a new registry. You must also review your existing registry client applications and update their configuration to meet the new requirements.</p>
@@ -185,7 +188,7 @@
 <div class="sect2">
 <h3 id="_new_data_storage_options"><a class="anchor" href="#_new_data_storage_options"></a>New data storage options</h3>
 <div class="paragraph">
-<p>The existing registry data storage options in Apicurio Registry 1.3.x (<code>streams</code>,<code>jpa</code> and <code>infinispan</code>) have been replaced with new storage options in version 2.x (<code>sql</code> and <code>kafkasql</code>). These new storage options provide more robust, performant, and maintainable Apicurio Registry deployments.
+<p>The existing registry data storage options in Apicurio Registry 1.3.x (<code>streams</code>,<code>jpa</code>, and <code>infinispan</code>) have been replaced with new storage options in version 2.x (<code>sql</code> and <code>kafkasql</code>). These new storage options provide more robust, performant, and maintainable Apicurio Registry deployments.
 The in-memory storage option (<code>mem</code>) is also still available, but is not suitable for production workloads.</p>
 </div>
 <div class="paragraph">
@@ -215,7 +218,7 @@ see <a href="assembly-installing-registry-storage-openshift.html">Installing Api
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details on the registry v2 REST API, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+<p>For more details on the v2 REST API, see the <a href="../assets-attachments/registry-rest-api.htm">Registry REST API documentation</a></p>
 </li>
 </ul>
 </div>
@@ -223,7 +226,7 @@ see <a href="assembly-installing-registry-storage-openshift.html">Installing Api
 </div>
 </div>
 <div class="sect1">
-<h2 id="migrating-registry-data"><a class="anchor" href="#migrating-registry-data"></a>Migrating Apicurio Registry data</h2>
+<h2 id="migrating-registry-data_registry"><a class="anchor" href="#migrating-registry-data_registry"></a>Migrating Apicurio Registry data</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>Migrating data to Apicurio Registry 2.x requires exporting all data from your existing 1.3.x deployment and importing it into the new 2.x deployment. If you are using Apicurio Registry as a schema registry for Kafka applications, data migration is critical because each Kafka message carries the global identifier for the schema stored in Apicurio Registry. This identifier must be preserved during registry data migration.</p>
@@ -242,7 +245,7 @@ see <a href="assembly-installing-registry-storage-openshift.html">Installing Api
 </li>
 <li>
 <p>Download the
-<a href="https://github.com/Apicurio/apicurio-registry/releases/download/2.0.0.Final/apicurio-registry-utils-exportV1-2.0.0.Final.jar">Apicurio Registry export tool</a>.
+<a href="https://github.com/Apicurio/apicurio-registry/releases/download/2.0.1.Final/apicurio-registry-utils-exportV1-2.0.1.Final.jar">Apicurio Registry exportV1 tool</a> from GitHub.
 This is a Java application that you can run on the command line.</p>
 </li>
 </ul>
@@ -254,7 +257,7 @@ This is a Java application that you can run on the command line.</p>
 <p>Export all the data from Apicurio Registry 1.3.x using the <code>exportV1</code> tool. This generates a <code>registry-export.zip</code> file in your current directory:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -jar apicurio-registry-utils-exportV1-2.0.0.Final.jar http://old-registry.my-company.com/api</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -jar apicurio-registry-utils-exportV1-2.0.1.Final.jar http://old-registry.my-company.com/api</code></pre>
 </div>
 </div>
 </li>
@@ -288,26 +291,26 @@ This is a Java application that you can run on the command line.</p>
 <ul>
 <li>
 <p>For more details on the import/export REST API, see
-<a href="https://www.apicur.io/registry/docs/apicurio-registry/2.0.0.Final/getting-started/assembly-managing-registry-artifacts-api.html#exporting-importing-using-rest-api">Exporting and importing registry content using REST API commands</a></p>
+<a href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a></p>
 </li>
 <li>
-<p>For more details on the export tool for migrating from version 1.x to 2.x, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/master/utils/exportV1">Apicurio Registry export utility for 1.x versions</a></p>
+<p>For more details on the export tool for migrating from version 1.x to 2.x, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/2.0.x/utils/exportV1">Apicurio Registry export utility for 1.x versions</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="migrating-registry-applications"><a class="anchor" href="#migrating-registry-applications"></a>Migrating Apicurio Registry client applications</h2>
+<h2 id="migrating-registry-applications_registry"><a class="anchor" href="#migrating-registry-applications_registry"></a>Migrating Apicurio Registry client applications</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You must review your existing client applications to ensure that the Maven dependencies and Java client configuration meet the new requirements for version 2.x. For example, this includes new Maven dependencies for the Apicurio Registry Java REST client libraries or Kafka client serializer/deserializer (Serdes) libraries. You must also update your Java application configuration with the new registry v2 API path.</p>
+<p>You must review your existing Apicurio Registry client applications to ensure that the Maven dependencies and Java client configuration meet the new requirements for version 2.x. For example, this includes new Maven dependencies for the Apicurio Registry Java REST client libraries or Kafka client serializer/deserializer (Serdes) libraries. You must also update your Java application configuration with the new registry v2 API path.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Existing Apicurio Registry version 1.3.x Java client application or Kafka client producer and consumer Java applications with SerDes</p>
+<p>Existing Apicurio Registry 1.3.x Java client application or Kafka client producer and consumer Java applications with SerDes</p>
 </li>
 </ul>
 </div>
@@ -321,7 +324,7 @@ This is a Java application that you can run on the command line.</p>
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
     &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
     &lt;artifactId&gt;apicurio-registry-client&lt;/artifactId&gt;
-    &lt;version&gt;2.0.0.Final&lt;/version&gt;
+    &lt;version&gt;2.0.1.Final&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -343,7 +346,7 @@ This is a Java application that you can run on the command line.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>You can find more details in
+<p>You can find more details on the Java client in
 <a href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>.</p>
 </div>
 </li>
@@ -366,17 +369,17 @@ This is a Java application that you can run on the command line.</p>
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
     &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
     &lt;artifactId&gt;apicurio-registry-serdes-avro-serde&lt;/artifactId&gt;
-    &lt;version&gt;2.0.0.Final&lt;/version&gt;
+    &lt;version&gt;2.0.1.Final&lt;/version&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
     &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
     &lt;artifactId&gt;apicurio-registry-serdes-protobuf-serde&lt;/artifactId&gt;
-    &lt;version&gt;2.0.0.Final&lt;/version&gt;
+    &lt;version&gt;2.0.1.Final&lt;/version&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
     &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
     &lt;artifactId&gt;apicurio-registry-serdes-jsonschema-serde&lt;/artifactId&gt;
-    &lt;version&gt;2.0.0.Final&lt;/version&gt;
+    &lt;version&gt;2.0.1.Final&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -384,7 +387,7 @@ This is a Java application that you can run on the command line.</p>
 <li>
 <p>In your Kafka producer and consumer Java applications, you must change your registry URL configuration from pointing to the existing v1 API path to the new v2 path. For example:</p>
 <div class="paragraph">
-<p><em>Existing v1 registry v1 API path</em>:</p>
+<p><em>Existing registry v1 API path</em>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -400,7 +403,7 @@ This is a Java application that you can run on the command line.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The refactored SerDes libraries also include other changes to optional configuration properties. You can find more details in
+<p>The refactored SerDes libraries also include other important changes to configuration properties. For more details on SerDes configuration, see
 <a href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a>.</p>
 </div>
 </li>

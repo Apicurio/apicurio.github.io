@@ -78,13 +78,16 @@
     <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a>
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.1.0-dev/index.html">Apicurio Registry Operator documentation</a>
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/index.html">Apicurio Registry Operator documentation</a>
   </li>
 </ul>
   </li>
@@ -158,13 +161,13 @@
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#installing-registry-in-memory-storage">Installing Apicurio Registry with in-memory storage</a></p>
+<p><a href="#installing-registry-in-memory-storage_registry">Installing Apicurio Registry with in-memory storage</a></p>
 </li>
 <li>
-<p><a href="#installing-registry-sql-storage">Installing Apicurio Registry with SQL database storage</a></p>
+<p><a href="#installing-registry-sql-storage_registry">Installing Apicurio Registry with SQL database storage</a></p>
 </li>
 <li>
-<p><a href="#installing-registry-kafka-storage">Installing Apicurio Registry with Apache Kafka storage</a></p>
+<p><a href="#installing-registry-kafka-storage_registry">Installing Apicurio Registry with Apache Kafka storage</a></p>
 </li>
 </ul>
 </div>
@@ -199,7 +202,7 @@ You can install more than one instance of Apicurio Registry depending on your en
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-registry-in-memory-storage"><a class="anchor" href="#installing-registry-in-memory-storage"></a>Installing Apicurio Registry with in-memory storage</h2>
+<h2 id="installing-registry-in-memory-storage_registry"><a class="anchor" href="#installing-registry-in-memory-storage_registry"></a>Installing Apicurio Registry with in-memory storage</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>This section explains how to install and run Apicurio Registry with simple in-memory storage from a container image.</p>
@@ -234,15 +237,18 @@ The in-memory storage option is suitable for development only. All data is lost 
 <p>Get the Apicurio Registry container image:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker pull apicurio/apicurio-registry-mem</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker pull apicurio/apicurio-registry-mem:VERSION</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p><code>VERSION</code> is the Apicurio Registry release version, for example, <code>2.1.2.Final</code>. For more details, see <a href="https://hub.docker.com/r/apicurio/apicurio-registry-mem/tags" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry-mem/tags</a>.</p>
 </div>
 </li>
 <li>
 <p>Run the container image:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker run -it -p 8080:8080 apicurio/apicurio-registry-mem:latest</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker run -it -p 8080:8080 apicurio/apicurio-registry-mem:VERSION</code></pre>
 </div>
 </div>
 </li>
@@ -278,7 +284,7 @@ The in-memory storage option is suitable for development only. All data is lost 
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-registry-sql-storage"><a class="anchor" href="#installing-registry-sql-storage"></a>Installing Apicurio Registry with SQL database storage</h2>
+<h2 id="installing-registry-sql-storage_registry"><a class="anchor" href="#installing-registry-sql-storage_registry"></a>Installing Apicurio Registry with SQL database storage</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>This section explains how to install and run Apicurio Registry with storage in a PostgreSQL database from a container image. This storage option is suitable for production environments.</p>
@@ -312,8 +318,11 @@ The in-memory storage option is suitable for development only. All data is lost 
 <p>Get the Apicurio Registry container image:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker pull apicurio/apicurio-registry-sql</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker pull apicurio/apicurio-registry-sql:VERSION</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p><code>VERSION</code> is the Apicurio Registry release version, for example, <code>2.1.2.Final</code>. For more details, see <a href="https://hub.docker.com/r/apicurio/apicurio-registry-sql/tags" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry-sql/tags</a>.</p>
 </div>
 </li>
 <li>
@@ -324,7 +333,7 @@ The in-memory storage option is suitable for development only. All data is lost 
 -e "REGISTRY_DATASOURCE_URL=jdbc:postgresql://postgres/apicurio-registry" \
 -e "REGISTRY_DATASOURCE_USERNAME=apicurio-registry" \
 -e "REGISTRY_DATASOURCE_PASSWORD=password" \
-apicurio/apicurio-registry-sql:latest</code></pre>
+apicurio/apicurio-registry-sql:VERSION</code></pre>
 </div>
 </div>
 </li>
@@ -363,7 +372,7 @@ apicurio/apicurio-registry-sql:latest</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-registry-kafka-storage"><a class="anchor" href="#installing-registry-kafka-storage"></a>Installing Apicurio Registry with Apache Kafka storage</h2>
+<h2 id="installing-registry-kafka-storage_registry"><a class="anchor" href="#installing-registry-kafka-storage_registry"></a>Installing Apicurio Registry with Apache Kafka storage</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>This topic explains how to install and run Apicurio Registry with Kafka storage from a container image. The <code>kafkasql</code> storage option uses Kafka storage with in-memory H2 database. This storage option is suitable for production environments.</p>
@@ -375,7 +384,7 @@ apicurio/apicurio-registry-sql:latest</code></pre>
 <p>You must have Docker installed and the Docker daemon running.</p>
 </li>
 <li>
-<p>Ensure that you can connect to the container repository: <a href="https://hub.docker.com/r/apicurio/apicurio-registry-kafka" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry-kafka</a>.</p>
+<p>Ensure that you can connect to the container repository: <a href="https://hub.docker.com/r/apicurio/apicurio-registry-kafkasql" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry-kafkasql</a>.</p>
 </li>
 <li>
 <p>Ensure that <code>KAFKA_HOME</code> is set to the location of your Kafka-based system.</p>
@@ -401,8 +410,11 @@ $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties &amp;
 <p>Get the Apicurio Registry container image:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker pull apicurio/apicurio-registry-kafkasql</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker pull apicurio/apicurio-registry-kafkasql:VERSION</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p><code>VERSION</code> is the Apicurio Registry release version, for example, <code>2.1.2.Final</code>. For more details, see <a href="https://hub.docker.com/r/apicurio/apicurio-registry-kafkasql/tags" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry-kafkasql/tags</a>.</p>
 </div>
 </li>
 <li>
