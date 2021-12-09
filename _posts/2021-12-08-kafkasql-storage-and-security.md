@@ -41,21 +41,22 @@ prepended with marker bytes used to recognize message type.
 In general, each message value class has a corresponding key class. 
 Classes for the keys are mainly responsible for determining the partition that the message is going to reside in, 
 the tenant information in case of a multi-tenant deployment, and identifying information for the object that the message value represents. 
-For example `ArtifactVersionKey` contains group ID, artifact ID and a version identifiers for the given artifact version object.
+For example `ArtifactVersionKey` contains group ID, artifact ID and version identifiers for the given artifact version object.
 Choice of the partition key is important for maintaining consistency of the data between nodes, 
 because ordering of the messages is only guaranteed in the same partition.
 
-Classes fo the values contain a field with operation that the message represents, which includes `CREATE`, `UPDATE`, and `DELETE`.
-The other fields carry the rest of the information, such as the editable metadata for an artifact version.
+Classes for the values contain a field with the operation that the message represents, which includes `CREATE`, `UPDATE`, and `DELETE`.
+The other fields carry the rest of the information, such as (for example) the editable metadata for an artifact version.
 
 ![KafkaSQL Storage Diagram](/images/guides/registry-storage-kafkasql-diagram.svg)
 *KafkaSQL storage option workflow diagram*
 
-When a change to a piece of data occurs, the originating nodes creates and sends the message to the Kafka topic,
+When a change to a piece of data occurs, the originating node creates and sends the message to the Kafka topic,
 and blocks the user thread until the operation is processed. 
 Its local database is not modified directly. Each node only applies changes that are read form the Kafka topic.
-Therefore, user thread is unblocked only after the original message is read back from the topic by the node.
-This ensures that in case of a composite operation, messages are always processed in the correct order.
+Therefore, the user thread is unblocked only after the original message is consumed from the topic by the node.
+This ensures that in case of a composite operation, messages are always processed in the correct order,
+and critically in the *same* order for each node.
 
 For example, when adding a new artifact version, the user may store a new content that is not already
 present in the storage. Therefore, the operation usually consists of two messages that have to be kept in the correct order,
@@ -390,17 +391,18 @@ And the same message after the bugfix:
 
 This issue has already been fixed in Apicurio Registry `2.1.4.Final`. If you are not able to upgrade, follow this procedure:
 
-In order to make sure you are not affected by this bug, you need to disable log compaction for the `kafkasql-journal` topic
-in your cluster. First, check if it is enabled:
+In order to make sure you are not affected by this bug, you need to disable log compaction 
+for the `kafkasql-journal` topic in your cluster.
+First, check if it is enabled:
 
 ```shell
 bin/kafka-configs.sh --describe --bootstrap-server localhost:9092 --topic kafkasql-journal 
 ```
 
 If you see `cleanup.policy=compact`, you are affected. To disable log compaction, you need to switch to the `delete`
-cleanup policy. However, in case of Apicurio Registry, deleting old messages may result in data corruption. 
-Therefore, you also have to set `retention.bytes=-1` and `retention.ms=-1` (or their server-wide equivalents 
-`log.retention.bytes` and `log.retention.ms`). For example:
+cleanup policy. However, in case of Apicurio Registry, deleting old messages will result in data corruption. 
+Therefore, you *must* also prevent messages to be actually deleted, by setting `retention.bytes=-1` and `retention.ms=-1` 
+(or their server-wide equivalents `log.retention.bytes` and `log.retention.ms`). For example:
 
 ```shell
 bin/kafka-configs.sh --alter --bootstrap-server localhost:9092 --topic kafkasql-journal \
