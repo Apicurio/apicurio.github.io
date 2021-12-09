@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Resolving a bug in KafkaSQL storage for Apicurio Registry"
-date:   2021-12-08 12:00:00
+date:   2021-12-09 12:00:00
 author: jsenko
 categories: blog registry security
 ---
