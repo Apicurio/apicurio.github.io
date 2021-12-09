@@ -12,6 +12,9 @@ storage options have been improved, and in some ways simplified.
 
 We have received great feedback from the users of the new KafkaSQL storage option, but recently several users have 
 reported an interesting bug, that seems to only affect users with the KafkaSQL persistence enabled.
+
+---
+
 The following error appears when a user attempts to update or create a new artifact:
 
 ![KafkaSQL error in UI](/images/guides/registry-storage-kafkasql-error-ui.png)
@@ -24,8 +27,6 @@ like to take this opportunity to share the details with the Apicurio community.
 In this blog post, we will take a look at the KafkaSQL storage option in more detail. 
 We'll describe the bug and the solution, and provide a temporary workaround for users 
 until they are able to upgrade to the patched version `2.1.4.Final`.
-
----
 
 # KafkaSQL Storage
 
