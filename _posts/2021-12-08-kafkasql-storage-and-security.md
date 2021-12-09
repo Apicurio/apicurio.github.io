@@ -11,7 +11,14 @@ We have kept the possibility of using both PostgreSQL database and Kafka to stor
 storage options have been improved, and in some ways simplified.
 
 We have received great feedback from the users of the new KafkaSQL storage option, but recently several users have 
-reported an interesting bug when using KafkaSQL. We have investigated the problem, found the cause, and would
+reported an interesting bug, that seems to only affect users with the KafkaSQL persistence enabled.
+The following error appears when a user attempts to update or create a new artifact:
+
+![KafkaSQL error in UI](/images/guides/registry-storage-kafkasql-error-ui.png)
+
+The first time that one of the users saw this error, they were able to resolve it by deleting the Kafka topic
+where the Apicurio Registry stores its data. However, the error started appearing again
+after some time. We have investigated the problem, found the cause, and would
 like to take this opportunity to share the details with the Apicurio community.
 
 In this blog post, we will take a look at the KafkaSQL storage option in more detail. 
@@ -69,7 +76,8 @@ as long as the data in the `kafkasql-journal` topic remains persisted and backed
 
 # Investigation
 
-In order to investigate the issue, we have to first attempt to reproduce the issue on a local Apicurio Registry deployment.
+In order to investigate the issue, we have to first attempt to reproduce the issue 
+on a local Apicurio Registry deployment with KafkaSQL storage.
 The following is a list of steps we have performed.
 
 First, a local Kafka instance must be downloaded, and then we can run it:
@@ -86,7 +94,7 @@ and the start Kafka:
 bin/kafka-server-start.sh config/server.properties
 ```
 
-We have been able to get the contents of the Kafka topics from the user who reported the issue.
+We have been able to get the contents of the Kafka topics from one the users who reported the issue.
 They used Kafkacat tool to export the data. An example output of Kafkacat looks like this:
 
 <div class="language-plaintext highlighter-rouge">
@@ -216,10 +224,7 @@ The data has been loaded as expected, and the database content looks good, so we
 ```
 *Sample Avro schema*
 
-and indeed we observe the following error:
-
-![KafkaSQL error in UI](/images/guides/registry-storage-kafkasql-error-ui.png)
-
+and indeed we observe the error we have been attempting to reproduce.
 The details of the exception are as follows, which corresponds to the reported issue:
 
 ```text
