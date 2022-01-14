@@ -93,6 +93,8 @@ You will need to provide the following information in the form:
 
 * **Name** - Apicurio
 * **Redirect URI** - https://keycloak.example.com/auth/realms/apicurio/broker/gitlab/endpoint
+* **Confidential** - typically set to enabled
+* **Expire access tokens** - should currently be set to *disabled* (until we can properly support refresh tokens)
 * **Scopes** - api, read_user, openid
 
 > **Redirect URI**
