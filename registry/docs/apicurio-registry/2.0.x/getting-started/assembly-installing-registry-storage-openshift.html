@@ -170,6 +170,9 @@
 <li>
 <p><a href="#registry-kafka-topic-names">Kafka topic name configuration</a></p>
 </li>
+<li>
+<p><a href="#configuring-kafka-oauth">Configuring OAuth authentication for Kafka storage</a></p>
+</li>
 </ul>
 </div>
 <div class="ulist">
@@ -415,6 +418,78 @@ spec:
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-kafka-oauth"><a class="anchor" href="#configuring-kafka-oauth"></a>Configuring OAuth authentication for Kafka storage</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When using Kafka-based storage in Strimzi, Apicurio Registry supports accessing a Kafka cluster that requires OAuth authentication. To enable this support, you must set some environment variables in your Apicurio Registry deployment.</p>
+</div>
+<div class="paragraph">
+<p>When these environment variables are set, the Kafka producer and consumer applications in Apicurio Registry will use this configuration to authenticate to the Kafka cluster over OAuth.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have already configured Kafka-based storage of Apicurio Registry data in Strimzi. See <a href="#setting-up-kafka-streams-storage">Configuring Apicurio Registry with Kafka storage on OpenShift</a>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Set the following environment variables in your Apicurio Registry deployment:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ENABLE_KAFKA_SASL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables SASL OAuth authentication for Apicurio Registry storage in Kafka. You must set this variable to <code>true</code> for the other variables to have effect.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The client ID used to authenticate to the Kafka cluster.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLIENT_SECRET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The client secret used to authenticate to the Kafka cluster.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OAUTH_TOKEN_ENDPOINT_URI</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URL of the OAuth identity server.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http://localhost:8090</code></p></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For an example of how to set Apicurio Registry environment variables on OpenShift, see
+<em>Configuring Apicurio Registry health checks on OpenShift</em> in <a href="assembly-configuring-the-registry.html" class="page">Configuring your Apicurio Registry deployment</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
