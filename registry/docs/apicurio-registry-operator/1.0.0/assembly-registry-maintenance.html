@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Managing Apicurio Registry deployment :: Apicurio Registry</title>
+    <title>Configuring and managing Apicurio Registry deployment :: Apicurio Registry</title>
     <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/assembly-registry-maintenance.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
@@ -54,7 +54,7 @@
     <a class="nav-link" href="assembly-registry-storage.html">Configuring Apicurio Registry storage</a>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="assembly-registry-maintenance.html">Managing Apicurio Registry deployment</a>
+    <a class="nav-link" href="assembly-registry-maintenance.html">Configuring and managing Apicurio Registry deployment</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="assembly-operator-configuration.html">Apicurio Registry Operator configuration reference</a>
@@ -110,7 +110,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Apicurio Registry Operator</a></li>
-    <li><a href="assembly-registry-maintenance.html">Managing Apicurio Registry deployment</a></li>
+    <li><a href="assembly-registry-maintenance.html">Configuring and managing Apicurio Registry deployment</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -124,16 +124,16 @@
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Managing Apicurio Registry deployment</h1>
+<h1 class="page">Configuring and managing Apicurio Registry deployment</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter explains how to manage your Apicurio Registry deployment:</p>
+<p>This chapter explains how to configure and manage your Apicurio Registry deployment:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#registry-security-keycloak">Securing Apicurio Registry API endpoints and web console using Keycloak</a></p>
+<p><a href="#registry-security-keycloak">Securing Apicurio Registry using the Keycloak Operator</a></p>
 </li>
 <li>
 <p><a href="#manage-registry-environment-variables">Managing Apicurio Registry environment variables</a></p>
@@ -158,30 +158,16 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-security-keycloak"><a class="anchor" href="#registry-security-keycloak"></a>Securing Apicurio Registry API endpoints and web console using Keycloak</h2>
+<h2 id="registry-security-keycloak"><a class="anchor" href="#registry-security-keycloak"></a>Securing Apicurio Registry using the Keycloak Operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The following procedure shows how to configure Apicurio Registry deployment to be protected by Keycloak.</p>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-The example configuration in this procedure is intended only for development and testing.
-In order to keep the procedure simple, it does not use HTTPS and other defenses recommended for a production environment.
-Please follow the Keycloak documentation for more details.
-</td>
-</tr>
-</table>
+<p>The following procedure shows how to configure a Apicurio Registry REST API and web console to be protected by Keycloak.</p>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry supports following user roles:</p>
+<p>Apicurio Registry supports the following user roles:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Supported user roles</caption>
+<caption class="title">Table 1. Apicurio Registry user roles</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -195,15 +181,15 @@ Please follow the Keycloak documentation for more details.
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-admin</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No restrictions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full access, no restrictions.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-developer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Can not modify global rules, perform import or export, and use <code>/admin</code> REST API endpoint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create artifacts and configure artifact rules. Cannot modify global rules, perform import/export, or use <code>/admin</code> REST API endpoint.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-readonly</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Can not modify artifacts or rules</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">View and search only. Cannot modify artifacts or rules, perform import/export, or use <code>/admin</code> REST API endpoint.</p></td>
 </tr>
 </tbody>
 </table>
@@ -214,8 +200,7 @@ Please follow the Keycloak documentation for more details.
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-There is a related configuration option in <code>ApicurioRegistry</code> CRD that can be used to set the web console to read-only mode.
-However, this configuration does not affect the REST API.
+There is a related configuration option in the <code>ApicurioRegistry</code> CRD that you can use to set the web console to read-only mode. However, this configuration does not affect the REST API.
 </td>
 </tr>
 </table>
@@ -231,11 +216,23 @@ However, this configuration does not affect the REST API.
 </li>
 </ul>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The example configuration in this procedure is intended for development and testing only. To keep the procedure simple, it does not use HTTPS and other defenses recommended for a production environment. For more details, see the Keycloak documentation.
+</td>
+</tr>
+</table>
+</div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>In the OpenShift web console, click <strong>Installed Operators</strong>, select the <strong>Keycloak</strong> Operator details, and then the <strong>Keycloak</strong> tab.</p>
+<p>In the OpenShift web console, click <strong>Installed Operators</strong> and <strong>Keycloak Operator</strong>, and then the <strong>Keycloak</strong> tab.</p>
 </li>
 <li>
 <p>Click <strong>Create Keycloak</strong> to provision a new Keycloak instance for securing a Apicurio Registry deployment. You can use the default value, for example:</p>
@@ -255,24 +252,15 @@ spec:
     enabled: True</code></pre>
 </div>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-There is a known Keycloak Operator issue <a href="https://issues.redhat.com/browse/KEYCLOAK-17532" class="bare">https://issues.redhat.com/browse/KEYCLOAK-17532</a> which contains a workaround you may need, until it is fully resolved.
-</td>
-</tr>
-</table>
-</div>
 </li>
 <li>
-<p>When the cluster is ready, click <strong>Networking</strong> &gt; <strong>Route</strong> to access the new route to the Keycloak instance. Copy the auth URL value for later use when deploying Apicurio Registry.</p>
+<p>Wait until the instance has been created, and click <strong>Networking</strong>  and then <strong>Routes</strong> to access the new route for the <strong>keycloak</strong> instance.</p>
 </li>
 <li>
-<p>Click the <strong>Keycloak Realm</strong> tab, and then <strong>Create Keycloak Realm</strong> to create a <code>registry</code> example realm:</p>
+<p>Click the <strong>Location</strong> URL and copy the displayed <code>../auth</code> URL value for later use when deploying Apicurio Registry.</p>
+</li>
+<li>
+<p>Click <strong>Installed Operators</strong> and <strong>Keycloak Operator</strong>, and click the <strong>Keycloak Realm</strong> tab, and then <strong>Create Keycloak Realm</strong> to create a <code>registry</code> example realm:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: keycloak.org/v1alpha1
@@ -338,13 +326,25 @@ spec:
         username: registry-user</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>This <code>KeycloakRealm</code> resource has to be customized with values suitable for your environment, if you are deploying to production.
-You can also create and manage realms using the web console of Keycloak instance.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You must customize this <code>KeycloakRealm</code> resource with values suitable for your environment if you are deploying to production. You can also create and manage realms using the Keycloak web console.
+</td>
+</tr>
+</table>
 </div>
 </li>
 <li>
 <p>If your cluster does not have a valid HTTPS certificate configured, you can create the following HTTP <code>Service</code> and <code>Ingress</code> resources as a temporary workaround:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Click <strong>Networking</strong> and then <strong>Services</strong>, and click <strong>Create Service</strong> using the following example:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">﻿apiVersion: v1
@@ -365,9 +365,15 @@ spec:
   type: ClusterIP
   sessionAffinity: None
 status:
-  loadBalancer: {}
----
-﻿apiVersion: networking.k8s.io/v1beta1
+  loadBalancer: {}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Click <strong>Networking</strong> and then <strong>Ingresses</strong>, and click <strong>Create Ingress</strong> using the following example::</p>
+<div class="listingblock">
+<div class="content">
+<pre>﻿apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: keycloak-http
@@ -382,15 +388,18 @@ spec:
             pathType: ImplementationSpecific
             backend:
               serviceName: keycloak-http
-              servicePort: 8080</code></pre>
+              servicePort: 8080</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Modify the <code>host</code> value to create a route accessible for the Apicurio Registry user, and use it instead of the HTTPS route created by Keycloak Operator.</p>
 </div>
 </li>
+</ol>
+</div>
+</li>
 <li>
-<p>Select the <strong>Apicurio Registry Operator</strong>, and in the <strong>ApicurioRegistry</strong> tab, click <strong>Create ApicurioRegistry</strong>, using the following example, but replace your values in the <code>keycloak</code> section.</p>
+<p>Click the <strong>Apicurio Registry Operator</strong>, and on the <strong>ApicurioRegistry</strong> tab, click <strong>Create ApicurioRegistry</strong>, using the following example, but replace your values in the <code>keycloak</code> section.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
@@ -434,10 +443,10 @@ spec:
 <p>Select the <strong>Installed Operators</strong> tab, and then the <strong>Red Hat Integration - Apicurio Registry Operator</strong>.</p>
 </li>
 <li>
-<p>On the <strong>ApicurioRegistry</strong> tab, click the <code>ApicurioRegistry</code> CR for your Apicurio Registry deployment.</p>
+<p>On the <strong>Apicurio Registry</strong> tab, click the <code>ApicurioRegistry</code> CR for your Apicurio Registry deployment.</p>
 </li>
 <li>
-<p>On the main overview page, view the <strong>managedResources</strong> section, which contains the name of the <code>Deployment</code> managed by the Operator to deploy your Apicurio Registry instance.</p>
+<p>On the main overview page, view the <code>managedResources</code> section, which contains the name of the <code>Deployment</code> managed by the Operator to deploy your Apicurio Registry instance.</p>
 </li>
 <li>
 <p>Find that <code>Deployment</code> in the <strong>Workloads</strong> &gt; <strong>Deployments</strong> in the left menu.</p>
@@ -468,7 +477,7 @@ spec:
 <p>Run <code>oc describe</code> on the CR representing the Apicurio Registry instance that you want to configure.</p>
 </li>
 <li>
-<p>View <strong>managedResources</strong> in the <strong>status</strong> section.</p>
+<p>View the <code>managedResource</code> in the <code>status</code> section.</p>
 </li>
 <li>
 <p>Find that <code>Deployment</code> and enter <code>oc edit</code>.</p>

@@ -163,7 +163,7 @@
 <p>Apicurio Registry provides client serializers/deserializers (SerDes) for Kafka producer and consumer applications written in Java. Kafka producer applications use serializers to encode messages that conform to a specific event schema. Kafka consumer applications use deserializers to validate that messages have been serialized using the correct schema, based on a specific schema ID. This ensures consistent schema use and helps to prevent data errors at runtime.</p>
 </div>
 <div class="paragraph">
-<p>This chapter explains how to use Kafka client SerDe in your producer and consumer client applications:</p>
+<p>This chapter explains how to use Kafka client SerDes in your producer and consumer client applications:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -233,7 +233,7 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>These schema technologies can be used by client applications through the Kafka client serializer/deserializer (SerDe) services provided by Apicurio Registry.  The maturity and usage of the SerDe classes provided by Apicurio Registry might vary. The sections that follow provide more details about each schema type.</p>
+<p>These schema technologies can be used by client applications through the Kafka client serializer/deserializer (SerDes) services provided by Apicurio Registry.  The maturity and usage of the SerDes classes provided by Apicurio Registry might vary. The sections that follow provide more details about each schema type.</p>
 </div>
 <h3 id="_producer_schema_configuration" class="discrete">Producer schema configuration</h3>
 <div class="paragraph">
@@ -335,10 +335,10 @@
 <h2 id="registry-serdes-concepts-strategy_registry"><a class="anchor" href="#registry-serdes-concepts-strategy_registry"></a>Strategies to look up a schema in Apicurio Registry</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The Kafka client serializer uses <em>lookup strategies</em> to determine the artifact ID and global ID under which the message schema is registered in Apicurio Registry. For a given topic and message, you can use different implementations of the <code>ArtifactResolverStrategy</code> Java interface to return a reference to an artifact in the registry.</p>
+<p>The Kafka client serializer uses <em>lookup strategies</em> to determine the artifact ID and global ID under which the message schema is registered in Apicurio Registry. For a given topic and message, you can use different implementations of the <code>ArtifactReferenceResolverStrategy</code> Java interface to return a reference to an artifact in the registry.</p>
 </div>
 <div class="paragraph">
-<p>The classes for each strategy are in the <code>io.apicurio.registry.serde.strategy</code> package. Specific strategy classes for Avro SerDe are in the <code>io.apicurio.registry.serde.avro.strategy package</code>. The default strategy is the <code>TopicIdStrategy</code>, which looks for Apicurio Registry artifacts with the same name as the Kafka topic receiving messages.</p>
+<p>The classes for each strategy are in the <code>io.apicurio.registry.serde.strategy</code> package. Specific strategy classes for Avro SerDes are in the <code>io.apicurio.registry.serde.avro.strategy package</code>. The default strategy is the <code>TopicIdStrategy</code>, which looks for Apicurio Registry artifacts with the same name as the Kafka topic receiving messages.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example</div>
@@ -369,16 +369,16 @@
 <div class="paragraph">
 <p>Which lookup strategy you use depends on how and where you store your schema. For example, you might use a strategy that uses a <em>record ID</em> if you have different Kafka topics with the same Avro message type.</p>
 </div>
-<h3 id="_artifactresolverstrategy_interface" class="discrete">ArtifactResolverStrategy interface</h3>
+<h3 id="_artifact_resolver_strategy" class="discrete">Artifact resolver strategy</h3>
 <div class="paragraph">
 <p>The artifact resolver strategy provides a way to map the Kafka topic and message information to an artifact in Apicurio Registry. The common convention for the mapping is to combine the Kafka topic name with the <code>key</code> or <code>value</code>, depending on whether the serializer is used for the Kafka message key or value.</p>
 </div>
 <div class="paragraph">
-<p>However, you can use alternative conventions for the mapping by using a strategy provided by Apicurio Registry, or by creating a custom Java class that implements <code>io.apicurio.registry.serde.strategy.ArtifactResolverStrategy</code>.</p>
+<p>However, you can use alternative conventions for the mapping by using a strategy provided by Apicurio Registry, or by creating a custom Java class that implements <code>io.apicurio.registry.serde.strategy.ArtifactReferenceResolverStrategy</code>.</p>
 </div>
-<h3 id="service-registry-concepts-artifactid-registry" class="discrete">Strategies to return an artifact reference</h3>
+<h3 id="service-registry-concepts-artifactid-registry" class="discrete">Strategies to return a reference to an artifact</h3>
 <div class="paragraph">
-<p>Apicurio Registry provides the following strategies to return an artifact reference based on an implementation of <code>ArtifaceResolverStrategy</code>:</p>
+<p>Apicurio Registry provides the following strategies to return a reference to an artifact based on an implementation of <code>ArtifactReferenceResolverStrategy</code>:</p>
 </div>
 <div class="dlist">
 <dl>
@@ -712,7 +712,7 @@ props.putIfAbsent(SerdeConfig.REGISTRY_URL, registryUrl);</code></pre>
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">props.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, "my-cluster-kafka-bootstrap:9092");
 props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, AvroKafkaSerializer.class.getName()); <i class="conum" data-value="1"></i><b>(1)</b>
 props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, AvroKafkaSerializer.class.getName()); <i class="conum" data-value="2"></i><b>(2)</b>
-props.put(SerdeConfig.FIND_LATEST_ARTIFACT, FindLatestIdStrategy.class.getName()); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+props.put(SerdeConfig.FIND_LATEST_ARTIFACT, Boolean.TRUE); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
