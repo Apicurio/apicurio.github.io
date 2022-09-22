@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Managing Apicurio Registry content using a Java client :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/2.3.x/getting-started/assembly-using-the-registry-client.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div id="rhbar">
+    <a class="jbdevlogo" href="https://www.jboss.org/projects/about" rel="nofollow" target="_blank"></a>
+    <a class="rhlogo" href="https://www.redhat.com/" rel="nofollow" target="_blank"></a>
+</div>
+<div class="masthead-header">
+
+    <a href="" target="_blank" class="github-corner" aria-label="View source on Github">
+        <svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    </a>
+    <div class="masthead-logo"></div>
+    <div class="masthead-brand"><a href="/">Apicurio Studio</a></div>
+    <div class="masthead-menu">
+          <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+
+    <div class="masthead-menu">
+        <ul>
+            <li><a href="/contact/">Contact</a></li>
+        </ul>
+    </div>
+</div>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="2.3.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/index.html">Apicurio Registry Operator documentation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v1-v2.html">Migrating an existing Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">2.3.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">2.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Client applications</li>
+    <li><a href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">2.3.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-using-the-registry-client.html">2.3.x</a>
+    <a class="version" href="../../2.2.x/getting-started/assembly-using-the-registry-client.html">2.2.x</a>
+    <a class="version" href="../../2.1.x/getting-started/assembly-using-the-registry-client.html">2.1.x</a>
+    <a class="version" href="../../2.0.x/getting-started/assembly-using-the-registry-client.html">2.0.x</a>
+    <a class="version" href="../../1.3.3.Final/getting-started/assembly-using-the-registry-client.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Managing Apicurio Registry content using a Java client</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This chapter explains how to use the Apicurio Registry Java client:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#registry-client-intro_registry">Apicurio Registry Java client</a></p>
+</li>
+<li>
+<p><a href="#writing-registry-client_registry">Writing Apicurio Registry Java client applications</a></p>
+</li>
+<li>
+<p><a href="#registry-client-config_registry">Apicurio Registry Java client configuration</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-client-intro_registry"><a class="anchor" href="#registry-client-intro_registry"></a>Apicurio Registry Java client</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can manage artifacts stored in Apicurio Registry using a Java client application. You can create, read, update, or delete artifacts stored in the registry using the Apicurio Registry Java client classes. You can also perform admin functions using the client, such as managing global rules or importing and exporting registry data.</p>
+</div>
+<div class="paragraph">
+<p>You can access the Apicurio Registry Java client by adding the correct dependency to your project.
+For more details, see <a href="#writing-registry-client_registry">Writing Apicurio Registry Java client applications</a></p>
+</div>
+<div class="paragraph">
+<p>The Apicurio Registry client is implemented using the HTTP client provided by the JDK. This gives you the ability to customize its use, for example, by adding custom headers or enabling options for Transport Layer Security (TLS) authentication.
+For more details, see <a href="#registry-client-config_registry">Apicurio Registry Java client configuration</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="writing-registry-client_registry"><a class="anchor" href="#writing-registry-client_registry"></a>Writing Apicurio Registry Java client applications</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This section explains how to manage artifacts stored in Apicurio Registry using a Java client application.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running in your environment</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add the following dependency to your Maven project:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+    &lt;artifactId&gt;apicurio-registry-client&lt;/artifactId&gt;
+    &lt;version&gt;${apicurio-registry.version}&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a registry client as follows:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class ClientExample {
+
+    private static final RegistryRestClient client;
+
+     public static void main(String[] args) throws Exception {
+        // Create a registry client
+        String registryUrl = "https://my-registry.my-domain.com/apis/registry/v2";
+        RegistryClient client = RegistryClientFactory.create(registryUrl);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If you specify an example registry URL of <code>https://my-registry.my-domain.com</code>, the client will automatically append <code>/apis/registry/v2</code>.</p>
+</li>
+<li>
+<p>For more options when creating a Apicurio Registry client, see the Java client configuration in the next section.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>When the client is created, you can use all the operations available in the Apicurio Registry REST API in the client. For more details, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For an open source example of how to use and customize the Apicurio Registry client, see the <a href="https://github.com/Apicurio/apicurio-registry-examples">Registry REST client demonstration example</a></p>
+</li>
+<li>
+<p>For details on how to use the Apicurio Registry Kafka client serializers/deserializers (SerDes) in producer and consumer applications, see
+<a href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-client-config_registry"><a class="anchor" href="#registry-client-config_registry"></a>Apicurio Registry Java client configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The Apicurio Registry Java client includes the following configuration options, based on the client factory:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Apicurio Registry Java client configuration options</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 50%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Plain client</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Basic REST client used to interact with a running registry.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Client with custom configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Registry client using the configuration provided by the user.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl</code>, <code>Map&lt;String Object&gt; configs</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Client with custom configuration and authentication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Registry client that accepts a map containing custom configuration. For example, this is useful to add custom headers to the calls.
+You must also provide an authentication server to authenticate the requests.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl, Map&lt;String Object&gt; configs, Auth auth</code></p></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_custom_header_configuration" class="discrete">Custom header configuration</h3>
+<div class="paragraph">
+<p>To configure custom headers, you must add the <code>apicurio.registry.request.headers</code> prefix to the <code>configs</code> map key. For example, a key of <code>apicurio.registry.request.headers.Authorization</code> with a value of <code>Basic: xxxxx</code> results in a header of <code>Authorization</code> with value of <code>Basic: xxxxx</code>.</p>
+</div>
+<h3 id="_tls_configuration_options" class="discrete">TLS configuration options</h3>
+<div class="paragraph">
+<p>You can configure Transport Layer Security (TLS) authentication for the Apicurio Registry Java client using the following properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>apicurio.registry.request.ssl.truststore.location</code></p>
+</li>
+<li>
+<p><code>apicurio.registry.request.ssl.truststore.password</code></p>
+</li>
+<li>
+<p><code>apicurio.registry.request.ssl.truststore.type</code></p>
+</li>
+<li>
+<p><code>apicurio.registry.request.ssl.keystore.location</code></p>
+</li>
+<li>
+<p><code>apicurio.registry.request.ssl.keystore.password</code></p>
+</li>
+<li>
+<p><code>apicurio.registry.request.ssl.keystore.type</code></p>
+</li>
+<li>
+<p><code>apicurio.registry.request.ssl.key.password</code></p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For details on how to configure authentication for Apicurio Registry Kafka client serializers/deserializers (SerDes), see
+<a href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2020 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/2.3.x/getting-started/assembly-using-the-registry-client.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
