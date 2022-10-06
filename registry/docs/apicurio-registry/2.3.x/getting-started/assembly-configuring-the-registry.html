@@ -495,7 +495,7 @@ For an example of setting environment variables on OpenShift, see <a href="#conf
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_OWNER_ONLY_AUTHORIZATION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_OBAC_ENABLED</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.owner-only-authorization</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
@@ -529,12 +529,59 @@ the <a href="https://www.keycloak.org/documentation">Keycloak documentation</a><
 <h2 id="registry-security-settings_registry"><a class="anchor" href="#registry-security-settings_registry"></a>Apicurio Registry authentication and authorization configuration options</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry provides configuration options for authentication using Keycloak with OpenID Connect or using HTTP basic authentication.</p>
+<p>Apicurio Registry provides authentication options for OpenID Connect with Keycloak or HTTP basic authentication.</p>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry provides configuration options for authorization, including role-based and content-based approaches. These include role-based authorization for default admin, write, and read-only user roles. Apicurio Registry also provides content-based authorization at the schema or API level, where only the creator of the registry artifact can update or delete it. Apicurio Registry authentication and authorization options are disabled by default.</p>
+<p>Apicurio Registry provides authorization options for role-based and content-based approaches:</p>
 </div>
-<h3 id="_apicurio_registry_authentication_using_keycloak_and_openid_connect" class="discrete">Apicurio Registry authentication using Keycloak and OpenID Connect</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Role-based authorization for default admin, write, and read-only user roles.</p>
+</li>
+<li>
+<p>Content-based authorization for schema or API artifacts, where only the owner of the artifacts or artifact group can update or delete artifacts.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Apicurio Registry authentication and authorization options are disabled by default.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This chapter provides details on the following configuration options:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#registry-security-authn-keycloak">Apicurio Registry authentication using OpenID Connect with Keycloak</a></p>
+</li>
+<li>
+<p><a href="#registry-security-authn-http">Apicurio Registry authentication using HTTP basic</a></p>
+</li>
+<li>
+<p><a href="#registry-security-rbac-enabled">Apicurio Registry role-based authorization</a></p>
+</li>
+<li>
+<p><a href="#registry-security-obac-enabled">Apicurio Registry owner-only authorization</a></p>
+</li>
+<li>
+<p><a href="#registry-security-auth-read">Apicurio Registry authenticated read access</a></p>
+</li>
+<li>
+<p><a href="#registry-security-anon-read">Apicurio Registry anonymous read-only access</a></p>
+</li>
+</ul>
+</div>
+<h3 id="registry-security-authn-keycloak" class="discrete">Apicurio Registry authentication using OpenID Connect with Keycloak</h3>
 <div class="paragraph">
 <p>You can set the following environment variables to configure authentication for the Apicurio Registry web console and API using Keycloak:</p>
 </div>
@@ -557,7 +604,7 @@ the <a href="https://www.keycloak.org/documentation">Keycloak documentation</a><
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables/disables authentication in registry.  When set to <code>true</code>, the environment variables that follow are required.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables or disables authentication in Apicurio Registry.  When set to <code>true</code>, the environment variables that follow are required.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
@@ -587,7 +634,7 @@ the <a href="https://www.keycloak.org/documentation">Keycloak documentation</a><
 </tr>
 </tbody>
 </table>
-<h3 id="_apicurio_registry_authentication_using_http_basic" class="discrete">Apicurio Registry authentication using HTTP basic</h3>
+<h3 id="registry-security-authn-http" class="discrete">Apicurio Registry authentication using HTTP basic</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -601,12 +648,12 @@ By default, Apicurio Registry supports authentication using OpenID Connect. User
 </table>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Configuration for Apicurio Registry to enable HTTP basic authentication support</caption>
+<caption class="title">Table 6. Configuration for Apicurio Registry HTTP basic authentication</caption>
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 16.6666%;">
-<col style="width: 16.6668%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
@@ -625,17 +672,17 @@ By default, Apicurio Registry supports authentication using OpenID Connect. User
 </tr>
 </tbody>
 </table>
-<h3 id="_role_based_authorization_in_apicurio_registry" class="discrete">Role-based authorization in Apicurio Registry</h3>
+<h3 id="registry-security-rbac-enabled" class="discrete">Apicurio Registry role-based authorization</h3>
 <div class="paragraph">
 <p>You can set the following option to <code>true</code> to enable role-based authorization in Apicurio Registry:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 7. Configuration for Apicurio Registry role-based authorization</caption>
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 16.6666%;">
-<col style="width: 16.6668%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
@@ -655,13 +702,13 @@ By default, Apicurio Registry supports authentication using OpenID Connect. User
 </tbody>
 </table>
 <div class="paragraph">
-<p>You can then configure role-based authorization to use roles found in the user&#8217;s authentication token (for example, granted when authenticating using Keycloak), or to use role mappings managed internally by Apicurio Registry.</p>
+<p>You can then configure role-based authorization to use roles included in the user&#8217;s authentication token (for example, granted when authenticating using Keycloak), or to use role mappings managed internally by Apicurio Registry.</p>
 </div>
-<h4 id="_using_roles_from_keycloak" class="discrete">Using roles from Keycloak</h4>
+<h4 id="_use_roles_assigned_in_keycloak" class="discrete">Use roles assigned in Keycloak</h4>
 <div class="paragraph">
 <p>To enable using roles assigned by Keycloak, set the following environment variables:</p>
 </div>
-<table class="tableblock frame-all grid-all stretch table-expandable">
+<table id="registry-security-rbac-keycloak-settings" class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 8. Configuration for Apicurio Registry role-based authorization using Keycloak</caption>
 <colgroup>
 <col style="width: 35.2941%;">
@@ -706,7 +753,7 @@ By default, Apicurio Registry supports authentication using OpenID Connect. User
 </table>
 <div class="paragraph">
 <p>When Apicurio Registry is configured to use roles from Keycloak, you must assign Apicurio Registry users to at least one
-of the following user roles in Keycloak. However, you can configure different user role names using the environment variables in the table above:</p>
+of the following user roles in Keycloak. However, you can configure different user role names using the environment variables in <a href="#registry-security-rbac-keycloak-settings">Configuration for Apicurio Registry role-based authorization using Keycloak</a>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 9. Apicurio Registry roles for authentication and authorization</caption>
@@ -839,7 +886,7 @@ privileges can grant access to other users.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org-admin</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_ADMIN_OVERRIDE_CLAIM-VALUE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_ADMIN_OVERRIDE_CLAIM_VALUE</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The value that the JWT token claim indicated by the CLAIM variable must be for the user to be granted admin-override.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
@@ -851,17 +898,17 @@ privileges can grant access to other users.</p>
 in Keycloak, which grants that user the admin role.  That user can then use the <code>/admin/roleMappings</code>
 REST API (or associated UI) to grant roles to additional users (including additional admins).</p>
 </div>
-<h3 id="_apicurio_registry_artifact_owner_only_authorization_option" class="discrete">Apicurio Registry artifact owner-only authorization option</h3>
+<h3 id="registry-security-obac-enabled" class="discrete">Apicurio Registry owner-only authorization</h3>
 <div class="paragraph">
-<p>You can set the following option to <code>true</code> to enable owner-only authorization for updates to schema and API artifacts in Apicurio Registry:</p>
+<p>You can set the following options to <code>true</code> to enable owner-only authorization for updates to artifacts or artifact groups in Apicurio Registry:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 12. Configuration for owner-only authorization</caption>
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 16.6666%;">
-<col style="width: 16.6668%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
@@ -873,34 +920,76 @@ REST API (or associated UI) to grant roles to additional users (including additi
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OWNER_ONLY_AUTHZ_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_OBAC_ENABLED</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.owner-only-authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_OBAC_LIMIT_GROUP_ACCESS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.owner-only-authorization.limit-group-access</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Enabling owner-only authorization results in a configuration where users with write access can only modify
-content that they themselves created. Users will not be able to update or delete artifacts created by
-other users.</p>
+<p>When owner-only authorization is enabled, only the user who created an artifact can modify or delete that artifact.</p>
 </div>
-<h3 id="_apicurio_registry_anonymous_read_only_access_option" class="discrete">Apicurio Registry anonymous read-only access option</h3>
+<div class="paragraph">
+<p>When owner-only authorization and group owner-only authorization are both enabled, only the user who created an artifact group has write access to that artifact group, for example, to add or remove artifacts in that group.</p>
+</div>
+<h3 id="registry-security-auth-read" class="discrete">Apicurio Registry authenticated read access</h3>
+<div class="paragraph">
+<p>When the authenticated read access option is enabled, Apicurio Registry grants at least read-only access to requests from any authenticated user in the same organization, regardless of their user role.</p>
+</div>
+<div class="paragraph">
+<p>To enable authenticated read access, you must first enable role-based authorization, and then set the following option to <code>true</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 13. Configuration for authenticated read access</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Java system property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_AUTHENTICATED_READS_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.authenticated-read-access.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For more details, see <a href="#registry-security-rbac-enabled">Apicurio Registry role-based authorization</a>.</p>
+</div>
+<h3 id="registry-security-anon-read" class="discrete">Apicurio Registry anonymous read-only access</h3>
 <div class="paragraph">
 <p>In addition to the two main types of authorization (role-based and owner-based authorization), Apicurio Registry
 supports an anonymous read-only access option.</p>
 </div>
 <div class="paragraph">
-<p>To enable anonymous users, such as REST API calls with no authentication credentials provided, to be allowed to make
-read-only calls to the REST API, set the following option to <code>true</code>:</p>
+<p>To allow anonymous users, such as REST API calls with no authentication credentials, to make read-only
+calls to the REST API, set the following option to <code>true</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. Configuration for anonymous read-only access</caption>
+<caption class="title">Table 14. Configuration for anonymous read-only access</caption>
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 16.6666%;">
-<col style="width: 16.6668%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
@@ -1267,7 +1356,7 @@ The default values of the liveness and readiness environment variables are desig
 <li>
 <p>Click <strong>Save</strong> at the bottom.</p>
 <div class="paragraph">
-<p>Alternatively, you can perform these steps using the OpenShift <code>oc</code> command. For more details, see the <a href="https://docs.openshift.com/container-platform/4.6/cli_reference/openshift_cli/getting-started-cli.html">OpenShift CLI documentation</a>.</p>
+<p>Alternatively, you can perform these steps using the OpenShift <code>oc</code> command. For more details, see the <a href="https://docs.openshift.com/container-platform/4.11/cli_reference/openshift_cli/getting-started-cli.html">OpenShift CLI documentation</a>.</p>
 </div>
 </li>
 </ol>
@@ -1279,7 +1368,7 @@ The default values of the liveness and readiness environment variables are desig
 <p><a href="#registry-liveness-env-vars_registry">Environment variables for Apicurio Registry health checks</a></p>
 </li>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.6/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.11/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
 </li>
 </ul>
 </div>
@@ -1305,7 +1394,7 @@ The following environment variables are provided for reference only. The default
 </div>
 <h3 id="_liveness_environment_variables" class="discrete">Liveness environment variables</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 14. Environment variables for Apicurio Registry liveness probes</caption>
+<caption class="title">Table 15. Environment variables for Apicurio Registry liveness probes</caption>
 <colgroup>
 <col style="width: 29.4117%;">
 <col style="width: 29.4117%;">
@@ -1361,7 +1450,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 </div>
 <h3 id="_readiness_environment_variables" class="discrete">Readiness environment variables</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 15. Environment variables for Apicurio Registry readiness probes</caption>
+<caption class="title">Table 16. Environment variables for Apicurio Registry readiness probes</caption>
 <colgroup>
 <col style="width: 30.7692%;">
 <col style="width: 38.4615%;">
@@ -1425,7 +1514,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <p><a href="#configuring-liveness-readiness-probes_registry">Configuring Apicurio Registry health checks on OpenShift</a></p>
 </li>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.6/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.11/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
 </li>
 </ul>
 </div>
@@ -1440,7 +1529,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_api"><a class="anchor" href="#_category_api"></a>Category <code>api</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 16. Category <code>api</code> configuration options</caption>
+<caption class="title">Table 17. Category <code>api</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -1478,7 +1567,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_auth"><a class="anchor" href="#_category_auth"></a>Category <code>auth</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 17. Category <code>auth</code> configuration options</caption>
+<caption class="title">Table 18. Category <code>auth</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -1649,7 +1738,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_cache"><a class="anchor" href="#_category_cache"></a>Category <code>cache</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 18. Category <code>cache</code> configuration options</caption>
+<caption class="title">Table 19. Category <code>cache</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -1680,7 +1769,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_ccompat"><a class="anchor" href="#_category_ccompat"></a>Category <code>ccompat</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 19. Category <code>ccompat</code> configuration options</caption>
+<caption class="title">Table 20. Category <code>ccompat</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -1718,7 +1807,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_download"><a class="anchor" href="#_category_download"></a>Category <code>download</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 20. Category <code>download</code> configuration options</caption>
+<caption class="title">Table 21. Category <code>download</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -1749,7 +1838,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_events"><a class="anchor" href="#_category_events"></a>Category <code>events</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 21. Category <code>events</code> configuration options</caption>
+<caption class="title">Table 22. Category <code>events</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -1780,7 +1869,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_health"><a class="anchor" href="#_category_health"></a>Category <code>health</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 22. Category <code>health</code> configuration options</caption>
+<caption class="title">Table 23. Category <code>health</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -1930,7 +2019,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_import"><a class="anchor" href="#_category_import"></a>Category <code>import</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 23. Category <code>import</code> configuration options</caption>
+<caption class="title">Table 24. Category <code>import</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -1961,7 +2050,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_kafka"><a class="anchor" href="#_category_kafka"></a>Category <code>kafka</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 24. Category <code>kafka</code> configuration options</caption>
+<caption class="title">Table 25. Category <code>kafka</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -1999,7 +2088,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_limits"><a class="anchor" href="#_category_limits"></a>Category <code>limits</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 25. Category <code>limits</code> configuration options</caption>
+<caption class="title">Table 26. Category <code>limits</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -2114,7 +2203,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_log"><a class="anchor" href="#_category_log"></a>Category <code>log</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 26. Category <code>log</code> configuration options</caption>
+<caption class="title">Table 27. Category <code>log</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -2145,7 +2234,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_mt"><a class="anchor" href="#_category_mt"></a>Category <code>mt</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 27. Category <code>mt</code> configuration options</caption>
+<caption class="title">Table 28. Category <code>mt</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -2323,7 +2412,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_redirects"><a class="anchor" href="#_category_redirects"></a>Category <code>redirects</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 28. Category <code>redirects</code> configuration options</caption>
+<caption class="title">Table 29. Category <code>redirects</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -2361,7 +2450,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_rest"><a class="anchor" href="#_category_rest"></a>Category <code>rest</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 29. Category <code>rest</code> configuration options</caption>
+<caption class="title">Table 30. Category <code>rest</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -2399,7 +2488,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_store"><a class="anchor" href="#_category_store"></a>Category <code>store</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 30. Category <code>store</code> configuration options</caption>
+<caption class="title">Table 31. Category <code>store</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
@@ -2444,7 +2533,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <div class="sect2">
 <h3 id="_category_ui"><a class="anchor" href="#_category_ui"></a>Category <code>ui</code>:</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 31. Category <code>ui</code> configuration options</caption>
+<caption class="title">Table 32. Category <code>ui</code> configuration options</caption>
 <colgroup>
 <col style="width: 26.3157%;">
 <col style="width: 10.5263%;">
