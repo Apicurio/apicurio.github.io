@@ -127,7 +127,7 @@
     <span class="nav-text">Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
+    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact and rule reference</a>
   </li>
 </ul>
   </li>
@@ -211,10 +211,10 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Client applications can use Registry REST API operations to manage schema and API artifacts in Apicurio Registry, for example, in a CI/CD pipeline deployed in production. The Registry REST API provides create, read, update, and delete operations for artifacts, versions, metadata, and rules stored in the registry. For detailed information, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<p>Client applications can use Apicurio Registry REST API operations to manage schema and API artifacts in Apicurio Registry, for example, in a CI/CD pipeline deployed in production. The Core Registry API v2 provides operations for artifacts, versions, metadata, and rules stored in Apicurio Registry. For detailed information, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
 </div>
 <div class="paragraph">
-<p>This chapter describes the Apicurio Registry core REST API and shows how to use it to manage schema and API artifacts stored in the registry:</p>
+<p>This chapter shows examples of how to use the Core Registry API v2 to perform the following tasks:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -225,10 +225,10 @@
 <p><a href="#managing-artifact-versions-using-rest-api_registry">Managing schema and API artifact versions using Apicurio Registry REST API commands</a></p>
 </li>
 <li>
-<p><a href="#managing-artifact-references-using-rest-api_registry">Managing artifact references using Apicurio Registry REST API commands</a></p>
+<p><a href="#managing-artifact-references-using-rest-api_registry">Managing schema and API artifact references using Apicurio Registry REST API commands</a></p>
 </li>
 <li>
-<p><a href="#exporting-importing-using-rest-api_registry">Exporting and importing registry content using Apicurio Registry REST API commands</a></p>
+<p><a href="#exporting-importing-using-rest-api_registry">Exporting and importing registry data using Apicurio Registry REST API commands</a></p>
 </li>
 </ul>
 </div>
@@ -254,13 +254,13 @@
 <h2 id="managing-artifacts-using-rest-api_registry"><a class="anchor" href="#managing-artifacts-using-rest-api_registry"></a>Managing schema and API artifacts using Apicurio Registry REST API commands</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section shows a simple curl-based example of using the Apicurio Registry core REST API to add and retrieve an Apache Avro schema artifact in Apicurio Registry.</p>
+<p>This section shows a simple curl-based example of using the Core Registry API v2 to add and retrieve a simple schema artifact in Apicurio Registry.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Apicurio Registry is installed and running in your environment</p>
+<p>Apicurio Registry is installed and running in your environment.</p>
 </li>
 </ul>
 </div>
@@ -268,7 +268,7 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Add an artifact to the registry using the <code>/groups/{group}/artifacts</code> operation. The following example <code>curl</code> command adds a simple artifact for a share price application:</p>
+<p>Add an artifact to Apicurio Registry using the <code>/groups/{group}/artifacts</code> operation. The following example <code>curl</code> command adds a simple schema artifact for a share price application:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST -H "Content-Type: application/json; artifactType=AVRO" \
@@ -282,7 +282,7 @@
 <div class="ulist">
 <ul>
 <li>
-<p>This example adds an Avro schema artifact with an artifact ID of <code>share-price</code>. If you do not specify a unique artifact ID, Apicurio Registry generates one automatically as a UUID.</p>
+<p>This example adds an Apache Avro schema artifact with an artifact ID of <code>share-price</code>. If you do not specify a unique artifact ID, Apicurio Registry generates one automatically as a UUID.</p>
 </li>
 <li>
 <p><code>MY-REGISTRY-URL</code> is the
@@ -309,17 +309,17 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <p>No version was specified when adding the artifact, so the default version <code>1</code> is created automatically.</p>
 </li>
 <li>
-<p>This was the second artifact added to the registry, so the global ID and content ID have a value of <code>2</code>.</p>
+<p>This was the second artifact added to Apicurio Registry, so the global ID and content ID have a value of <code>2</code>.</p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p>Retrieve the artifact content from the registry using its artifact ID in the API path. In this example, the specified ID is <code>share-price</code>:</p>
+<p>Retrieve the artifact content from Apicurio Registry using its artifact ID in the API path. In this example, the specified ID is <code>share-price</code>:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -H "Authorization: Bearer $ACCESS_TOKEN" \
- MY-REGISTRY-URL/apis/registry/v2/groups/my-group/artifacts/share-price \
+ MY-REGISTRY-URL/apis/registry/v2/groups/my-group/artifacts/share-price
  {"type":"record","name":"price","namespace":"com.example",
   "fields":[{"name":"symbol","type":"string"},{"name":"price","type":"string"}]}</code></pre>
 </div>
@@ -331,7 +331,7 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more REST API sample requests, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+<p>For more details, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
 </li>
 </ul>
 </div>
@@ -341,19 +341,19 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <h2 id="managing-artifact-versions-using-rest-api_registry"><a class="anchor" href="#managing-artifact-versions-using-rest-api_registry"></a>Managing schema and API artifact versions using Apicurio Registry REST API commands</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>If you do not specify an artifact version when adding schema and API artifacts to Apicurio Registry using the v2 core REST API, Apicurio Registry generates one automatically. The default version when creating a new artifact  is <code>1</code>.</p>
+<p>If you do not specify an artifact version when adding schema and API artifacts using the Core Registry API v2, Apicurio Registry generates a version automatically. The default version when creating a new artifact  is <code>1</code>.</p>
 </div>
 <div class="paragraph">
 <p>Apicurio Registry also supports custom versioning where you can specify a version using the <code>X-Registry-Version</code> HTTP request header as a string. Specifying a custom version value overrides the default version normally assigned when creating or updating an artifact. You can then use this version value when executing REST API operations that require a version.</p>
 </div>
 <div class="paragraph">
-<p>This section shows a simple curl-based example of using the registry v2 core REST API to add and retrieve a custom Apache Avro schema version in the registry. You can specify custom versions when using the REST API to add or update artifacts or to add artifact versions.</p>
+<p>This section shows a simple curl-based example of using the Core Registry API v2 to add and retrieve a custom Apache Avro schema version in Apicurio Registry. You can specify custom versions to add or update artifacts, or to add artifact versions.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Apicurio Registry is installed and running in your environment</p>
+<p>Apicurio Registry is installed and running in your environment.</p>
 </li>
 </ul>
 </div>
@@ -424,20 +424,20 @@ MY-REGISTRY-URL/apis/registry/v2/groups/my-group/artifacts/my-share-price/versio
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more REST API sample requests, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+<p>For more details, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="managing-artifact-references-using-rest-api_registry"><a class="anchor" href="#managing-artifact-references-using-rest-api_registry"></a>Managing artifact references using Apicurio Registry REST API commands</h2>
+<h2 id="managing-artifact-references-using-rest-api_registry"><a class="anchor" href="#managing-artifact-references-using-rest-api_registry"></a>Managing schema and API artifact references using Apicurio Registry REST API commands</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>Apicurio Registry artifact types such as Apache Avro, Protobuf, and JSON Schema can include <em>artifact references</em> from one artifact file to another. You can create efficiencies by defining reusable schema and API artifacts, and then referencing them from multiple locations.</p>
 </div>
 <div class="paragraph">
-<p>This section shows a simple curl-based example of using the Apicurio Registry core REST API to add and retrieve an artifact reference to a simple Avro schema artifact in Apicurio Registry.</p>
+<p>This section shows a simple curl-based example of using the Core Registry API v2 to add and retrieve an artifact reference to a simple Avro schema artifact in Apicurio Registry.</p>
 </div>
 <div class="paragraph">
 <p>This example first creates a schema artifact named <code>ItemId</code>:</p>
@@ -481,7 +481,7 @@ MY-REGISTRY-URL/apis/registry/v2/groups/my-group/artifacts/my-share-price/versio
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Apicurio Registry is installed and running in your environment</p>
+<p>Apicurio Registry is installed and running in your environment.</p>
 </li>
 </ul>
 </div>
@@ -556,7 +556,7 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <p>Verify that the response includes the expected JSON body to confirm that the artifact was created with the reference. For example:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"name":"Item","createdBy":"","createdOn":"2022-04-14T11:52:15+0000","modifiedBy":"","modifiedOn":"2022-04-14T11:52:15+0000","id":"Item","version":"1","type":"AVRO","globalId":2,"state":"ENABLED","groupId":"my-group","contentId":2,"references":[1]}</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"name":"Item","createdBy":"","createdOn":"2022-04-14T11:52:15+0000","modifiedBy":"","modifiedOn":"2022-04-14T11:52:15+0000","id":"Item","version":"1","type":"AVRO","globalId":2,"state":"ENABLED","groupId":"my-group","contentId":2, "references":[{"artifactId":"ItemId","groupId":"my-group","name":"ItemId","version":"1"}] }</code></pre>
 </div>
 </div>
 </li>
@@ -564,7 +564,7 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <p>Retrieve the artifact reference from Apicurio Registry by specifying the global ID of the artifact that includes the reference. In this example, the specified global ID is <code>2</code>:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl MY-REGISTRY-URL/apis/registry/v2/ids/globalIds/2/references</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -H "Authorization: Bearer $ACCESS_TOKEN" MY-REGISTRY-URL/apis/registry/v2/ids/globalIds/2/references</code></pre>
 </div>
 </div>
 </li>
@@ -582,20 +582,23 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+<p>For more details, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+</li>
+<li>
+<p>For more examples of artifact references, see the section on configuring each artifact type in <a href="assembly-configuring-kafka-client-serdes.html">Kafka client serializers/deserializers in Java clients</a>.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="exporting-importing-using-rest-api_registry"><a class="anchor" href="#exporting-importing-using-rest-api_registry"></a>Exporting and importing registry content using Apicurio Registry REST API commands</h2>
+<h2 id="exporting-importing-using-rest-api_registry"><a class="anchor" href="#exporting-importing-using-rest-api_registry"></a>Exporting and importing registry data using Apicurio Registry REST API commands</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>As an administrator, you can use the Apicurio Registry REST API to export data from one Apicurio Registry instance and import it into another Apicurio Registry instance, so you can migrate data between different instances.</p>
+<p>As an administrator, you can use the Core Registry API v2 to export data from one Apicurio Registry instance and import into another Apicurio Registry instance, so you can migrate data between different instances.</p>
 </div>
 <div class="paragraph">
-<p>This section shows a simple curl-based example of using the core registry v2 REST API to export and import existing registry data in <code>.zip</code> format from one Apicurio Registry instance to another. All of the artifact data contained in the Apicurio Registry instance is exported in the <code>.zip</code> file.</p>
+<p>This section shows a simple curl-based example of using the Core Registry API v2 to export and import existing data in <code>.zip</code> format from one Apicurio Registry instance to another. All of the artifact data contained in the Apicurio Registry instance is exported in the <code>.zip</code> file.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -604,7 +607,7 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-You can only import Apicurio Registry data that has been exported from another Apicurio Registry instance.
+You can import only Apicurio Registry data that has been exported from another Apicurio Registry instance.
 </td>
 </tr>
 </table>
@@ -613,17 +616,17 @@ You can only import Apicurio Registry data that has been exported from another A
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Apicurio Registry is installed and running in your environment</p>
+<p>Apicurio Registry is installed and running in your environment.</p>
 </li>
 <li>
 <p>Apicurio Registry instances have been created:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The source instance that you want to export data from contains at least one schema or API artifact</p>
+<p>The source instance that you want to export data from contains at least one schema or API artifact.</p>
 </li>
 <li>
-<p>The target instance that you want to import data into is empty to perserve unique IDs</p>
+<p>The target instance that you want to import data into is empty to preserve unique IDs.</p>
 </li>
 </ul>
 </div>
@@ -634,7 +637,7 @@ You can only import Apicurio Registry data that has been exported from another A
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Export the registry data from your existing source Apicurio Registry instance:</p>
+<p>Export the Apicurio Registry data from your existing source Apicurio Registry instance:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl MY-REGISTRY-URL/apis/registry/v2/admin/export \
@@ -667,10 +670,10 @@ host name on which the target Apicurio Registry is deployed. For example: <code>
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details, see the <code>admin</code> endpoint in the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+<p>For more details, see the <code>admin</code> endpoint in the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
 </li>
 <li>
-<p>For details on export tools for migrating from Apicurio Registry version 1.x to 2.x, see <a href="https://github.com/Apicurio/apicurio-registry/tree/main/utils/exportV1">Apicurio Registry export utility for 1.x versions</a></p>
+<p>For details on export tools for migrating from Apicurio Registry version 1.x to 2.x, see <a href="https://github.com/Apicurio/apicurio-registry/tree/main/utils/exportV1">Apicurio Registry export utility for 1.x versions</a>.</p>
 </li>
 </ul>
 </div>

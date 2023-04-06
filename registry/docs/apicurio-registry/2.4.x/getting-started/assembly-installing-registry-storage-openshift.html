@@ -127,7 +127,7 @@
     <span class="nav-text">Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
+    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact and rule reference</a>
   </li>
 </ul>
   </li>
@@ -433,6 +433,37 @@ spec:
 <div class="content">
 <pre class="highlightjs highlight"><code>http://example-apicurioregistry-kafkasql.my-project.my-domain-name.com/</code></pre>
 </div>
+</div>
+</li>
+<li>
+<p>To configure the Kafka topic that Apicurio Registry uses to store data, click <strong>Installed Operators</strong> &gt; <strong>Strimzi</strong> &gt; <strong>Provided APIs</strong> &gt; <strong>Kafka Topic</strong> &gt; <strong>kafkasql-journal</strong> &gt; <strong>YAML</strong>. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: kafkasql-journal
+  labels:
+    strimzi.io/cluster: my-cluster
+  namespace: ...
+spec:
+  partitions: 3
+  replicas: 3
+  config:
+    cleanup.policy: compact</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+You must configure the Kafka topic used by Apicurio Registry (named <code>kafkasql-journal</code> by default) with a compaction cleanup policy, otherwise a data loss might occur.
+</td>
+</tr>
+</table>
 </div>
 </li>
 </ol>

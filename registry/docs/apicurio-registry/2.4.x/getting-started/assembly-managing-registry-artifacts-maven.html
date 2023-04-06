@@ -127,7 +127,7 @@
     <span class="nav-text">Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact reference</a>
+    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact and rule reference</a>
   </li>
 </ul>
   </li>
@@ -211,7 +211,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter explains how to manage schema and API artifacts stored in the registry using the Apicurio Registry Maven plug-in:</p>
+<p>You can use the Apicurio Registry Maven plug-in to manage schema and API artifacts stored in Apicurio Registry when developing client applications:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -233,13 +233,10 @@
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>See <a href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a></p>
+<p>Apicurio Registry is installed and running in your environment.</p>
 </li>
 <li>
-<p>Apicurio Registry must be installed and running in your environment</p>
-</li>
-<li>
-<p>Maven must be installed and configured in your environment</p>
+<p>Apache Maven is installed and configured in your environment.</p>
 </li>
 </ul>
 </div>
@@ -249,20 +246,21 @@
 <h2 id="adding-artifacts-using-maven-plugin_registry"><a class="anchor" href="#adding-artifacts-using-maven-plugin_registry"></a>Adding schema and API artifacts using the Maven plug-in</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The most common use case for the Maven plug-in is adding artifacts during a build. You can accomplish this by using the <code>register</code> execution goal.</p>
+<p>The most common use case for the Maven plug-in is adding artifacts during a build of your client application. You can accomplish this by using the <code>register</code> execution goal.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Apicurio Registry is installed and running in your environment</p>
+<p>You have created a Maven project for your client application. For more details, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
+<div class="olist arabic">
 <div class="title">Procedure</div>
+<ol class="arabic">
+<li>
 <p>Update your Maven <code>pom.xml</code> file to use the <code>apicurio-registry-maven-plugin</code> to register an artifact. The following example shows registering Apache Avro and GraphQL schemas:</p>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
@@ -305,7 +303,7 @@
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Specify <code>register</code> as the execution goal to upload the schema artifact to the registry.</p>
+<p>Specify <code>register</code> as the execution goal to upload the schema artifact to Apicurio Registry.</p>
 </li>
 <li>
 <p>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</p>
@@ -321,6 +319,23 @@
 </li>
 </ol>
 </div>
+</li>
+<li>
+<p>Build your Maven project, for example, by using the <code>mvn package</code> command.</p>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more details on using Apache Maven, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+</li>
+<li>
+<p>For open source examples of using the Apicurio Registry Maven plug-in, see the <a href="https://github.com/Apicurio/apicurio-registry-examples">Apicurio Registry demonstration examples</a>.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -333,14 +348,15 @@
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Apicurio Registry is installed and running in your environment</p>
+<p>You have created a Maven project for your client application. For more details, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
+<div class="olist arabic">
 <div class="title">Procedure</div>
+<ol class="arabic">
+<li>
 <p>Update your Maven <code>pom.xml</code> file to use the <code>apicurio-registry-maven-plugin</code> to download an artifact. The following example shows downloading Apache Avro and GraphQL schemas.</p>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
@@ -398,13 +414,30 @@
 </li>
 </ol>
 </div>
+</li>
+<li>
+<p>Build your Maven project, for example, by using the <code>mvn package</code> command.</p>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more details on using Apache Maven, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+</li>
+<li>
+<p>For open source examples of using the Apicurio Registry Maven plug-in, see the <a href="https://github.com/Apicurio/apicurio-registry-examples">Apicurio Registry demonstration examples</a>.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="adding-artifact-references-using-maven-plugin_registry"><a class="anchor" href="#adding-artifact-references-using-maven-plugin_registry"></a>Adding artifact references using the Apicurio Registry Maven plug-in</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry artifact types such as Apache Avro, Protobuf, and JSON Schema can include <em>artifact references</em> from one artifact file to another. You can create efficiencies by defining reusable schema and API artifacts, and then referencing them from multiple locations in artifact references.</p>
+<p>Apicurio Registry artifact types such as Apache Avro, Google Protobuf, and JSON Schema can include <em>artifact references</em> from one artifact file to another. You can create efficiencies by defining reusable schema or API artifacts, and then referencing them from multiple locations in artifact references.</p>
 </div>
 <div class="paragraph">
 <p>This section shows a simple example of using the Apicurio Registry Maven plug-in to register an artifact reference to a simple Avro schema artifact stored in Apicurio Registry. This example assumes that the following <code>Exchange</code> schema artifact has already been created in Apicurio Registry:</p>
@@ -447,17 +480,18 @@
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Apicurio Registry is installed and running in your environment</p>
+<p>You have created a Maven project for your client application. For more details, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
 </li>
 <li>
-<p>The <code>Exchange</code> schema artifact is already created in Apicurio Registry</p>
+<p>The <code>Exchange</code> schema artifact is already created in Apicurio Registry.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
+<div class="olist arabic">
 <div class="title">Procedure</div>
+<ol class="arabic">
+<li>
 <p>Update your Maven <code>pom.xml</code> file to use the <code>apicurio-registry-maven-plugin</code> to register the <code>TradeKey</code> schema, which includes a nested reference to the <code>Exchange</code> schema as follows:</p>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
@@ -466,7 +500,7 @@
     &lt;version&gt;${apicurio-registry.version}&lt;/version&gt;
     &lt;executions&gt;
         &lt;execution&gt;
-            &lt;id&gt;register-artifact&lt;/id&gt;
+            &lt;phase&gt;generate-sources&lt;/phase&gt;
             &lt;goals&gt;
                 &lt;goal&gt;register&lt;/goal&gt; <i class="conum" data-value="1"></i><b>(1)</b>
             &lt;/goals&gt;
@@ -527,6 +561,26 @@
 </li>
 </ol>
 </div>
+</li>
+<li>
+<p>Build your Maven project, for example, by using the <code>mvn package</code> command.</p>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more details on using Apache Maven, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+</li>
+<li>
+<p>For open source examples of using the Apicurio Registry Maven plug-in, see the <a href="https://github.com/Apicurio/apicurio-registry-examples">Apicurio Registry demonstration examples</a>.</p>
+</li>
+<li>
+<p>For more examples of artifact references, see the section on configuring each artifact type in <a href="assembly-configuring-kafka-client-serdes.html">Kafka client serializers/deserializers in Java clients</a>.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -551,14 +605,15 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Apicurio Registry must be installed and running in your environment</p>
+<p>You have created a Maven project for your client application. For more details, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
+<div class="olist arabic">
 <div class="title">Procedure</div>
+<ol class="arabic">
+<li>
 <p>Update your Maven <code>pom.xml</code> file to use the <code>apicurio-registry-maven-plugin</code> to test an artifact. The following example shows testing an Apache Avro schema:</p>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
@@ -581,12 +636,6 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
                     &lt;groupId&gt;TestGroup&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
                     &lt;artifactId&gt;FullNameRecord&lt;/artifactId&gt;
                     &lt;file&gt;${project.basedir}/src/main/resources/schemas/record.avsc&lt;/file&gt; <i class="conum" data-value="5"></i><b>(5)</b>
-                &lt;/artifact&gt;
-                &lt;artifact&gt;
-                    &lt;groupId&gt;TestGroup&lt;/groupId&gt;
-                    &lt;artifactId&gt;ExampleAPI&lt;/artifactId&gt;
-                    &lt;type&gt;GRAPHQL&lt;/type&gt;
-                    &lt;file&gt;${project.basedir}/src/main/resources/apis/example.graphql&lt;/file&gt;
                 &lt;/artifact&gt;
             &lt;/artifacts&gt;
         &lt;/configuration&gt;
@@ -613,6 +662,23 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
 <p>You can test multiple artifacts from a specified directory using the artifact ID.</p>
 </li>
 </ol>
+</div>
+</li>
+<li>
+<p>Build your Maven project, for example, by using the <code>mvn package</code> command.</p>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more details on using Apache Maven, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+</li>
+<li>
+<p>For open source examples of using the Apicurio Registry Maven plug-in, see the <a href="https://github.com/Apicurio/apicurio-registry-examples">Apicurio Registry demonstration examples</a>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
