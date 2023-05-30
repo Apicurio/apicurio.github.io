@@ -467,7 +467,7 @@ For an example of setting environment variables on OpenShift, see <a href="#conf
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Access to create, read, update, and delete operations, except configuring global rules. This role can configure artifact rules.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to create, read, update, and delete operations, except configuring global rules. This role can configure artifact-specific rules.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-readonly</code></p></td>
@@ -790,7 +790,7 @@ of the following user roles in Keycloak. However, you can configure different us
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Access to create, read, update, and delete operations, except configuring global rules and import/export. This role can configure artifact rules only.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to create, read, update, and delete operations, except configuring global rules and import/export. This role can configure artifact-specific rules only.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-readonly</code></p></td>
@@ -1360,7 +1360,7 @@ The default values of the liveness and readiness environment variables are desig
 <li>
 <p>Click <strong>Save</strong> at the bottom.</p>
 <div class="paragraph">
-<p>Alternatively, you can perform these steps using the OpenShift <code>oc</code> command. For more details, see the <a href="https://docs.openshift.com/container-platform/4.11/cli_reference/openshift_cli/getting-started-cli.html">OpenShift CLI documentation</a>.</p>
+<p>Alternatively, you can perform these steps using the OpenShift <code>oc</code> command. For more details, see the <a href="https://docs.openshift.com/container-platform/4.13/cli_reference/openshift_cli/getting-started-cli.html">OpenShift CLI documentation</a>.</p>
 </div>
 </li>
 </ol>
@@ -1372,7 +1372,7 @@ The default values of the liveness and readiness environment variables are desig
 <p><a href="#registry-liveness-env-vars_registry">Environment variables for Apicurio Registry health checks</a></p>
 </li>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.11/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.13/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
 </li>
 </ul>
 </div>
@@ -1518,7 +1518,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <p><a href="#configuring-liveness-readiness-probes_registry">Configuring Apicurio Registry health checks on OpenShift</a></p>
 </li>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.11/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
+<p><a href="https://docs.openshift.com/container-platform/4.13/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
 </li>
 </ul>
 </div>
@@ -1714,6 +1714,13 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>token</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Auth roles source</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.role-source.header.name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.4.3.Final</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Header authorization name</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.roles.admin</code></p></td>
@@ -2313,6 +2320,13 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <td class="tableblock halign-left valign-top"><p class="tableblock">Multitenancy reaper period seconds</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.tenant.token-claim.names</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list&lt;string&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Token claims used to resolve the tenant id</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.types.context-path.base-path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>t</code></p></td>
@@ -2336,7 +2350,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.types.request-header.name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>X-Registry-Tenant-Id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>X-Tenant-Id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Multitenancy request header type name</p></td>
 </tr>
@@ -2367,6 +2381,13 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>(\w[\w\d\-]*)\.localhost\.local</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Multitenancy subdomain type pattern</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.types.token-claims.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable multitenancy request header type</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.organization-id.claim-name</code></p></td>
@@ -2642,7 +2663,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.ui.config.uiCodegenEnabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.4.2.Final</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">UI codegen enabled</p></td>
 </tr>

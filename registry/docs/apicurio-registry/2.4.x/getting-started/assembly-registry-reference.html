@@ -464,7 +464,7 @@
 <h2 id="registry-rule-types_registry"><a class="anchor" href="#registry-rule-types_registry"></a>Apicurio Registry content rule types</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can specify <code>VALIDITY</code> and <code>COMPATIBILITY</code> rule types to govern content evolution in Apicurio Registry.</p>
+<p>You can specify <code>VALIDITY</code>, <code>COMPATIBILITY</code>, and <code>INTEGRITY</code> rule types to govern content evolution in Apicurio Registry. Theses rule types apply to both global rules and artifact-specific rules.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 5. Apicurio Registry content rule types</caption>
@@ -482,7 +482,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>VALIDITY</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Validate data before adding it to the registry. The possible configuration values for this rule are:</p>
+<p>Validate content before adding it to Apicurio Registry. The possible configuration values for this rule are as follows:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -501,7 +501,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>COMPATIBILITY</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Ensure that newly added artifacts are compatible with previously added versions. The possible configuration values for this rule are:</p>
+<p>Enforce a compatibility level when updating artifacts (for example, select <code>BACKWARD</code> for backwards compatibility). Ensures that new artifacts are compatible with previously added artifact versions or clients. The possible configuration values for this rule are as follows:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -529,6 +529,31 @@
 </ul>
 </div></div></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INTEGRITY</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Enforce artifact reference integrity when creating or updating artifacts. Enable and configure this rule to ensure that any artifact references provided are correct. The possible configuration values for this rule are as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>FULL</code>: All artifact reference integrity checks are enabled.</p>
+</li>
+<li>
+<p><code>NO_DUPLICATES</code>: Detect if there are any duplicate artifact references.</p>
+</li>
+<li>
+<p><code>REFS_EXIST</code>: Detect if there are any references to non-existent artifacts.</p>
+</li>
+<li>
+<p><code>ALL_REFS_MAPPED</code>: Ensure that all artifact references are mapped.</p>
+</li>
+<li>
+<p><code>NONE</code>: All artifact reference integrity checks are disabled.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -542,20 +567,25 @@
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 6. Apicurio Registry content rule maturity matrix</caption>
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Artifact type</th>
 <th class="tableblock halign-left valign-top">Validity rule</th>
 <th class="tableblock halign-left valign-top">Compatibility rule</th>
+<th class="tableblock halign-left valign-top">Integrity rule</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Avro</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Full</p>
+</div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Full</p>
 </div></div></td>
@@ -571,6 +601,9 @@
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Full</p>
 </div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Full</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>JSON Schema</strong></p></td>
@@ -579,6 +612,9 @@
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Full</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Mapping detection not supported</p>
 </div></div></td>
 </tr>
 <tr>
@@ -589,6 +625,9 @@
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>None</p>
 </div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Full</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>AsyncAPI</strong></p></td>
@@ -597,6 +636,9 @@
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>None</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Full</p>
 </div></div></td>
 </tr>
 <tr>
@@ -607,6 +649,9 @@
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>None</p>
 </div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Mapping detection not supported</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Kafka Connect</strong></p></td>
@@ -615,6 +660,9 @@
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>None</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Mapping detection not supported</p>
 </div></div></td>
 </tr>
 <tr>
@@ -625,6 +673,9 @@
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>None</p>
 </div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Mapping detection not supported</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>XML</strong></p></td>
@@ -633,6 +684,9 @@
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>None</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Mapping detection not supported</p>
 </div></div></td>
 </tr>
 <tr>
@@ -643,6 +697,9 @@
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>None</p>
 </div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Mapping detection not supported</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -652,7 +709,7 @@
 <h2 id="registry-rule-precedence_registry"><a class="anchor" href="#registry-rule-precedence_registry"></a>Apicurio Registry content rule precedence</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>When you add or update an artifact, Apicurio Registry applies rules to check the validity and compatibility of the artifact content. Configured artifact rules override the equivalent configured global rules, as shown in the following table.</p>
+<p>When you add or update an artifact, Apicurio Registry applies rules to check the validity, compatibility, or integrity of the artifact content. Configured artifact rules override the equivalent configured global rules, as shown in the following table.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 7. Apicurio Registry content rule precedence</caption>

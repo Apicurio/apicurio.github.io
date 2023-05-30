@@ -211,7 +211,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter explains how to manage schema and API artifacts stored in Apicurio Registry by using the Apicurio Registry web console. This includes uploading and browsing Apicurio Registry content, and configuring optional rules:</p>
+<p>This chapter explains how to manage schema and API artifacts stored in Apicurio Registry by using the Apicurio Registry web console. This includes uploading and browsing Apicurio Registry content, and configuring optional rules for content:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -358,7 +358,7 @@
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Overview</strong>: Displays the artifact version metadata such as name, optional group and ID, global ID, content ID, labels, and properties. Also displays rules for validity and compatibility that you can configure for artifact content.</p>
+<p><strong>Overview</strong>: Displays artifact version metadata such as artifact name, artifact ID, global ID, content ID, labels, properties, and so on. Also displays rules for validity and compatibility that you can configure for artifact content.</p>
 </li>
 <li>
 <p><strong>Documentation</strong> (OpenAPI and AsyncAPI only): Displays automatically-generated REST API documentation.</p>
@@ -425,26 +425,14 @@ This section shows simple examples of uploading Apicurio Registry artifacts and 
 <p><strong>Group &amp; ID</strong>: Use the default empty settings to automatically generate an artifact ID and add the artifact to the <code>default</code> artifact group. Alternatively, you can enter an optional artifact group name or ID.</p>
 </li>
 <li>
-<p><strong>Type</strong>: Use the default <strong>Auto-Detect</strong> setting to automatically detect the artifact type, or select the artifact type from the list, for example, <strong>Avro Schema</strong> or <strong>OpenAPI</strong>.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Apicurio Registry cannot automatically detect the <strong>Kafka Connect Schema</strong> artifact type. You must manually select this artifact type.
-</td>
-</tr>
-</table>
-</div>
+<p><strong>Type</strong>: Use the default <strong>Auto-Detect</strong> setting to automatically detect the artifact type, or select the artifact type from the list, for example, <strong>Avro Schema</strong> or <strong>OpenAPI</strong>. You must manually select the <strong>Kafka Connect Schema</strong> artifact type, which cannot be automatically detected.</p>
 </li>
 <li>
 <p><strong>Artifact</strong>: Specify the artifact location using either of the following options:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>From file</strong>: Click <strong>Browse</strong>, and select a file, or drag and drop a file. For example, <code>my-openapi.json</code> or <code>my-schema.proto</code>.</p>
+<p><strong>From file</strong>: Click <strong>Browse</strong>, and select a file, or drag and drop a file. For example, <code>my-openapi.json</code> or <code>my-schema.proto</code>. Alternatively, you can enter the file contents in the text box.</p>
 </li>
 <li>
 <p><strong>From URL</strong>: Enter a valid and accessible URL, and click <strong>Fetch</strong>. For example: <code>https://petstore3.swagger.io/api/v3/openapi.json</code>.</p>
@@ -460,7 +448,7 @@ Apicurio Registry cannot automatically detect the <strong>Kafka Connect Schema</
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Overview</strong>: Displays the artifact version metadata such as name, artifact ID, global ID, content ID, labels, and properties. Also displays rules for validity and compatibility that you can configure for artifact content.</p>
+<p><strong>Overview</strong>: Displays artifact version metadata such as artifact name, artifact ID, global ID, content ID, labels, properties, and so on. Also displays rules for validity and compatibility that you can configure for artifact content.</p>
 </li>
 <li>
 <p><strong>Documentation</strong> (OpenAPI and AsyncAPI only): Displays automatically-generated REST API documentation.</p>
@@ -517,7 +505,7 @@ Apicurio Registry cannot automatically detect the <strong>Kafka Connect Schema</
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Deleting an artifact deletes the artifact and all of its versions, and cannot be undone. Artifact versions are immutable and cannot be deleted individually.
+Deleting an artifact deletes the artifact and all of its versions, and cannot be undone.
 </td>
 </tr>
 </table>
@@ -545,7 +533,7 @@ Deleting an artifact deletes the artifact and all of its versions, and cannot be
 <h2 id="configuring-rules-using-console_registry"><a class="anchor" href="#configuring-rules-using-console_registry"></a>Configuring content rules using the Apicurio Registry web console</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can use the Apicurio Registry web console to configure optional rules to prevent invalid content from being added to Apicurio Registry. All configured artifact rules or global rules must pass before a new artifact version can be uploaded to Apicurio Registry. Configured artifact rules override any configured global rules. This section shows a simple example of configuring global and artifact rules.</p>
+<p>You can use the Apicurio Registry web console to configure optional rules to prevent invalid or incompatible content from being added to Apicurio Registry. All configured artifact-specific rules or global rules must pass before a new artifact version can be uploaded to Apicurio Registry. Configured artifact-specific rules override any configured global rules. This section shows a simple example of configuring global and artifact-specific rules.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -562,6 +550,9 @@ Deleting an artifact deletes the artifact and all of its versions, and cannot be
 <li>
 <p>Artifacts have been added to Apicurio Registry using the web console, command line, Maven plug-in, or a Java client application.</p>
 </li>
+<li>
+<p>When role-based authorization is enabled, you have administrator access for global rules and artifact-specific rules, or developer access for artifact-specific rules only.</p>
+</li>
 </ul>
 </div>
 <div class="olist arabic">
@@ -574,7 +565,7 @@ Deleting an artifact deletes the artifact and all of its versions, and cannot be
 <p>Click an artifact to view its version details and content rules.</p>
 </li>
 <li>
-<p>In <strong>Content rules</strong>, click <strong>Enable</strong> to configure an validity rule or compatibility rule for artifact content, and select the appropriate rule configuration from the list, for example, <strong>Full</strong> for the validity rule.</p>
+<p>In <strong>Artifact-specific rules</strong>, click <strong>Enable</strong> to configure a validity, compatibility, or integrity rule for artifact content, and select the appropriate rule configuration from the list. For example, for <strong>Validity rule</strong>, select <strong>Full</strong>.</p>
 <div class="imageblock">
 <div class="content">
 <img src="../assets-images/images/getting-started/registry-web-console-rules.png" alt="Configure rules in Registry web console">
@@ -583,7 +574,7 @@ Deleting an artifact deletes the artifact and all of its versions, and cannot be
 </div>
 </li>
 <li>
-<p>To access global rules, click the Apicurio Registry instance, and click the <strong>Global rules</strong> tab. Click <strong>Enable</strong> to configure a global validity rule or compatibility rule for all artifact content, and select the appropriate rule configuration from the list.</p>
+<p>To access global rules, click the <strong>Global rules</strong> tab. Click <strong>Enable</strong> to configure global validity, compatibility, or integrity rules for all artifact content, and select the appropriate rule configuration from the list.</p>
 </li>
 <li>
 <p>To disable an artifact rule or global rule, click the trash icon next to the rule.</p>
