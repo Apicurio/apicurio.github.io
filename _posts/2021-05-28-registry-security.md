@@ -7,7 +7,7 @@ categories: blog registry security
 ---
 
 
-Hey everyone, in Apicurio Registry 2.0.0.Final we've introduced support for some new security features. In this blog post, I will explain these concepts and show you how to configure them.
+Hey everyone, in Apicurio Registry 2.0.0. Finally we've introduced support for some new security features. In this blog post, I will explain these concepts and show you how to configure them.
 
 ---
 
@@ -36,7 +36,7 @@ Below you have the required configuration for the clients.
 ![Configure Apicurio Registry_UI Client](/images/guides/registry-auth-client-ui-config.png)
 
 You will need to pay attention to the configuration - especially to the access types and the configuration URLs. 
-For the `registry-api` client, make sure to configure it as bearer-only, in latest keycloak releases you will have to uncheck all the Authentication flows in Capability config. For the `apicurio-registry` client, you will need to configure it as public, to allow users to connect to your UI.
+For the `registry-api` client, make sure to configure it as bearer-only, in the latest keycloak releases you will have to uncheck all the Authentication flows in the `capability config`. For the `apicurio-registry` client, you will need to configure it as public, to allow users to connect to your UI.
 You will also need to configure Web Origins, you can use `+` to allow Web Origins coming from the redirect URL.    
 
 Now, you will need to tweak the Apicurio Registry configuration to get this to work.
