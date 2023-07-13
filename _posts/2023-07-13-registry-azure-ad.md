@@ -53,20 +53,18 @@ REGISTRY_AUTH_URL_CONFIGURED=https://login.microsoftonline.com/6f8ef45b-456d-49e
 REGISTRY_OIDC_UI_CLIENT_ID=459569e9-c5f7-410a-a6e7-8db28d7e3647 #Azure AD > Admin > App registrations > Your app > Application (client) ID
 CORS_ALLOWED_ORIGINS=https://test-registry.com #The host for your Apicurio Registry deployment
 REGISTRY_OIDC_UI_REDIRECT_URL=https://test-registry.com/ui/ #The host for your Apicurio Registry console
+ROLE_BASED_AUTHZ_ENABLED=true
+QUARKUS_OIDC_ROLES_ROLE_CLAIM_PATH=roles
 ```
 
 ### Role based authorization
 
-To enable roles, you need to set the `ROLES_ENABLED` property to `true`.
+To enable roles, you need to set the `ROLE_BASED_AUTHZ_ENABLED` property to `true`.
 
-![Configure Apicurio Registry Auth_Properties](/images/guides/registry-auth-http-paths-config.png)
+Of course, if you enable roles in Apicurio Registry, you will also need to create them in Azure AD.
+You must create them as Application roles. The default roles expected by Apicurio Registry are `sr-admin`, `sr-developer`, and `sr-readonly`.
 
-Of course, if you enable roles in Apicurio Registry, you will also need to create them in Keycloak.
-You must create them as Realm roles. The default roles expected by Apicurio Registry are `sr-admin`, `sr-developer`, and `sr-readonly`.
-When you enable roles, this will result in some HTTP paths and operations available just for certain roles.
-You have the full configuration in the image above, but there are some operations like those around rules, logs levels, and so on that are restricted to the admin role.
-The developer role can perform most of the operations, and the read-only role can read or search artifacts.
-
+Another extremely important configuration is `QUARKUS_OIDC_ROLES_ROLE_CLAIM_PATH=true` since Azure AD stores the roles in a claim called `roles`.
 
 Last, but not least, we still have a lot of things to do!  As always, you can see the
 stuff we're tracking by viewing the [GitHub issues](https://github.com/Apicurio/apicurio-registry/issues) for the project.
