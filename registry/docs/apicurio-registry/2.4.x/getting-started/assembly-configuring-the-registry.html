@@ -103,10 +103,10 @@
     <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
   </li>
 </ul>
   </li>
@@ -127,7 +127,13 @@
     <span class="nav-text">Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact and rule reference</a>
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
   </li>
 </ul>
   </li>
@@ -211,7 +217,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter explains various configuration options for Apicurio Registry, such as authentication, logging, cloud events, and health checks on OpenShift.</p>
+<p>This chapter explains how to set important configuration options for Apicurio Registry. This includes features such as authentication and authorization, logging, events, and health checks:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -238,6 +244,18 @@
 </li>
 </ul>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For a list of available configuration options, see <a href="#registry-config-reference_registry">[registry-config-reference_registry]</a>.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -255,7 +273,7 @@
 <td class="content">
 <div class="paragraph">
 <p>Alternatively, for details on how to configure these settings automatically,
-see the <a href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/assembly-registry-maintenance.html#registry-security-keycloak">Apicurio Registry Operator documentation</a>.</p>
+see the <a href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.1.0/assembly-registry-maintenance.html#registry-security-keycloak">Apicurio Registry Operator documentation</a>.</p>
 </div>
 </td>
 </tr>
@@ -587,10 +605,10 @@ Apicurio Registry authentication and authorization options are disabled by defau
 </div>
 <h3 id="registry-security-authn-keycloak" class="discrete">Apicurio Registry authentication using OpenID Connect with Keycloak</h3>
 <div class="paragraph">
-<p>You can set the following environment variables to configure authentication for the Apicurio Registry web console and API using Keycloak:</p>
+<p>You can set the following environment variables to configure authentication for the Apicurio Registry web console and API with Keycloak:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 5. Configuration for Apicurio Registry authentication options</caption>
+<caption class="title">Table 5. Configuration for Apicurio Registry authentication with Keycloak</caption>
 <colgroup>
 <col style="width: 29.4117%;">
 <col style="width: 35.2941%;">
@@ -608,19 +626,19 @@ Apicurio Registry authentication and authorization options are disabled by defau
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables or disables authentication in Apicurio Registry.  When set to <code>true</code>, the environment variables that follow are required.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables authentication in Apicurio Registry. When set to <code>true</code>, the environment variables that follow are required.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The URL of the Keycloak authentication server to use. Must end with <code>/auth</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URL of the Keycloak authentication server. For example, <code>http://localhost:8080</code>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_REALM</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The Keycloak realm used for authentication.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Keycloak realm for authentication. For example,<code>registry.</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
@@ -639,17 +657,8 @@ Apicurio Registry authentication and authorization options are disabled by defau
 </tbody>
 </table>
 <h3 id="registry-security-authn-http" class="discrete">Apicurio Registry authentication using HTTP basic</h3>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-By default, Apicurio Registry supports authentication using OpenID Connect. Users (or API clients) must obtain an access token to make authenticated calls to the Apicurio Registry REST API.  However, because some tools do not support OpenID Connect, you can also configure Apicurio Registry to support HTTP basic authentication by setting the following configuration option to <code>true</code>.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>By default, Apicurio Registry supports authentication using OpenID Connect. Users or API clients must obtain an access token to make authenticated calls to the Apicurio Registry REST API.  However, because some tools do not support OpenID Connect, you can also configure Apicurio Registry to support HTTP basic authentication by setting the following configuration option to <code>true</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 6. Configuration for Apicurio Registry HTTP basic authentication</caption>
@@ -676,12 +685,44 @@ By default, Apicurio Registry supports authentication using OpenID Connect. User
 </tr>
 </tbody>
 </table>
+<h4 id="_apicurio_registry_http_basic_client_credentials_cache_expiry" class="discrete">Apicurio Registry HTTP basic client credentials cache expiry</h4>
+<div class="paragraph">
+<p>You can also configure the HTTP basic client credentials cache expiry time. By default, when using HTTP basic authentication, Apicurio Registry caches JWT tokens, and does not issue a new token when there is no need. You can configure the cache expiry time for JWT tokens, which is set to 10 mins by default.</p>
+</div>
+<div class="paragraph">
+<p>When using Keycloak, it is best to set this configuration to your Keycloak JWT expiry time minus one minute. For example, if you have the expiry time set to <code>5</code> mins in Keycloak, you should set the following configuration option to <code>4</code> mins:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Configuration for HTTP basic client credentials cache expiry</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Java system property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLIENT_CREDENTIALS_BASIC_CACHE_EXPIRATION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.basic-auth-client-credentials.cache-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10</code></p></td>
+</tr>
+</tbody>
+</table>
 <h3 id="registry-security-rbac-enabled" class="discrete">Apicurio Registry role-based authorization</h3>
 <div class="paragraph">
 <p>You can set the following option to <code>true</code> to enable role-based authorization in Apicurio Registry:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Configuration for Apicurio Registry role-based authorization</caption>
+<caption class="title">Table 8. Configuration for Apicurio Registry role-based authorization</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 40%;">
@@ -713,7 +754,7 @@ By default, Apicurio Registry supports authentication using OpenID Connect. User
 <p>To enable using roles assigned by Keycloak, set the following environment variables:</p>
 </div>
 <table id="registry-security-rbac-keycloak-settings" class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 8. Configuration for Apicurio Registry role-based authorization using Keycloak</caption>
+<caption class="title">Table 9. Configuration for Apicurio Registry role-based authorization using Keycloak</caption>
 <colgroup>
 <col style="width: 35.2941%;">
 <col style="width: 35.2941%;">
@@ -760,7 +801,7 @@ By default, Apicurio Registry supports authentication using OpenID Connect. User
 of the following user roles in Keycloak. However, you can configure different user role names using the environment variables in <a href="#registry-security-rbac-keycloak-settings">Configuration for Apicurio Registry role-based authorization using Keycloak</a>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 9. Apicurio Registry roles for authentication and authorization</caption>
+<caption class="title">Table 10. Apicurio Registry roles for authentication and authorization</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 16.6666%;">
@@ -806,7 +847,7 @@ of the following user roles in Keycloak. However, you can configure different us
 <p>To enable using roles managed internally by Apicurio Registry, set the following environment variables:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 10. Configuration for Apicurio Registry role-based authorization using internal role mappings</caption>
+<caption class="title">Table 11. Configuration for Apicurio Registry role-based authorization using internal role mappings</caption>
 <colgroup>
 <col style="width: 35.2941%;">
 <col style="width: 35.2941%;">
@@ -843,7 +884,7 @@ privileges can grant access to other users.</p>
 <p>Because there are no default admin users in Apicurio Registry, it is usually helpful to configure another way for users to be identified as admins. You can configure this admin-override feature using the following environment variables:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 11. Configuration for Apicurio Registry admin-override</caption>
+<caption class="title">Table 12. Configuration for Apicurio Registry admin-override</caption>
 <colgroup>
 <col style="width: 35.2941%;">
 <col style="width: 35.2941%;">
@@ -907,7 +948,7 @@ REST API (or associated UI) to grant roles to additional users (including additi
 <p>You can set the following options to <code>true</code> to enable owner-only authorization for updates to artifacts or artifact groups in Apicurio Registry:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 12. Configuration for owner-only authorization</caption>
+<caption class="title">Table 13. Configuration for owner-only authorization</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 40%;">
@@ -951,7 +992,7 @@ REST API (or associated UI) to grant roles to additional users (including additi
 <p>To enable authenticated read access, you must first enable role-based authorization, and then set the following option to <code>true</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. Configuration for authenticated read access</caption>
+<caption class="title">Table 14. Configuration for authenticated read access</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 40%;">
@@ -988,7 +1029,7 @@ supports an anonymous read-only access option.</p>
 calls to the REST API, set the following option to <code>true</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 14. Configuration for anonymous read-only access</caption>
+<caption class="title">Table 15. Configuration for anonymous read-only access</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 40%;">
@@ -1398,7 +1439,7 @@ The following environment variables are provided for reference only. The default
 </div>
 <h3 id="_liveness_environment_variables" class="discrete">Liveness environment variables</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 15. Environment variables for Apicurio Registry liveness probes</caption>
+<caption class="title">Table 16. Environment variables for Apicurio Registry liveness probes</caption>
 <colgroup>
 <col style="width: 29.4117%;">
 <col style="width: 29.4117%;">
@@ -1454,7 +1495,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 </div>
 <h3 id="_readiness_environment_variables" class="discrete">Readiness environment variables</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 16. Environment variables for Apicurio Registry readiness probes</caption>
+<caption class="title">Table 17. Environment variables for Apicurio Registry readiness probes</caption>
 <colgroup>
 <col style="width: 30.7692%;">
 <col style="width: 38.4615%;">
@@ -1521,1182 +1562,6 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 <p><a href="https://docs.openshift.com/container-platform/4.13/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
 </li>
 </ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="all-registry-configs_registry"><a class="anchor" href="#all-registry-configs_registry"></a>All the available Apicurio Registry configuration options</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This section contains a list of the configuration options available for Apicurio Registry.</p>
-</div>
-<div class="sect2">
-<h3 id="_category_api"><a class="anchor" href="#_category_api"></a>Category <code>api</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 17. Category <code>api</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.api.errors.include-stack-in-response</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.4.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Include stack trace in errors responses</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.disable.apis</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;list&lt;string&gt;&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Disable APIs</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_auth"><a class="anchor" href="#_category_auth"></a>Category <code>auth</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 18. Category <code>auth</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.admin-override.claim</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org-admin</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Auth admin override claim</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.admin-override.claim-value</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Auth admin override claim value</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.admin-override.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Auth admin override enabled</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.admin-override.from</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>token</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Auth admin override from</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.admin-override.role</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-admin</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Auth admin override role</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.admin-override.type</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>role</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Auth admin override type</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.anonymous-read-access.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean [dynamic]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Anonymous read access</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.audit.log.prefix</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>audit</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.6</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prefix used for application audit logging.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.authenticated-read-access.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean [dynamic]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.4.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Authenticated read access</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.basic-auth-client-credentials.cache-expiration</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.6.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Client credentials token expiration time.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.basic-auth-client-credentials.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean [dynamic]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable basic auth client credentials</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.client-id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Client identifier used by the server for authentication.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.client-secret</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Client secret used by the server for authentication.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable auth</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.owner-only-authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean [dynamic]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact owner-only authorization</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.owner-only-authorization.limit-group-access</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean [dynamic]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact group owner-only authorization</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.role-based-authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable role based authorization</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.role-source</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>token</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Auth roles source</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.role-source.header.name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.4.3.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Header authorization name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.roles.admin</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-admin</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Auth roles admin</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.roles.developer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-developer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Auth roles developer</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.roles.readonly</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-readonly</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Auth roles readonly</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.tenant-owner-is-admin.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Auth tenant owner admin enabled</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.token.endpoint</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Authentication server url.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_cache"><a class="anchor" href="#_category_cache"></a>Category <code>cache</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 19. Category <code>cache</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.config.cache.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Registry cache enabled</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_ccompat"><a class="anchor" href="#_category_ccompat"></a>Category <code>ccompat</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 20. Category <code>ccompat</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.ccompat.legacy-id-mode.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean [dynamic]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Legacy ID mode (compatibility API)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.ccompat.max-subjects</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer [dynamic]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.4.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of Subjects returned (compatibility API)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.ccompat.use-canonical-hash</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean [dynamic]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.3.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Canonical hash mode (compatibility API)</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_download"><a class="anchor" href="#_category_download"></a>Category <code>download</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 21. Category <code>download</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.download.href.ttl</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long [dynamic]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Download link expiry</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_events"><a class="anchor" href="#_category_events"></a>Category <code>events</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 22. Category <code>events</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.events.ksink</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Events Kafka sink enabled</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_health"><a class="anchor" href="#_category_health"></a>Category <code>health</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 23. Category <code>health</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.liveness.errors.ignored</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;list&lt;string&gt;&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.2.3.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ignored liveness errors</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.PersistenceExceptionLivenessCheck.counterResetWindowDurationSec</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Counter reset window duration of persistence liveness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.PersistenceExceptionLivenessCheck.disableLogging</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Disable logging of persistence liveness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.PersistenceExceptionLivenessCheck.errorThreshold</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Error threshold of persistence liveness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.PersistenceExceptionLivenessCheck.statusResetWindowDurationSec</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>300</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Status reset window duration of persistence liveness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.PersistenceTimeoutReadinessCheck.counterResetWindowDurationSec</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Counter reset window duration of persistence readiness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.PersistenceTimeoutReadinessCheck.errorThreshold</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Error threshold of persistence readiness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.PersistenceTimeoutReadinessCheck.statusResetWindowDurationSec</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>300</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Status reset window duration of persistence readiness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.PersistenceTimeoutReadinessCheck.timeoutSec</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>15</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Timeout of persistence readiness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.ResponseErrorLivenessCheck.counterResetWindowDurationSec</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Counter reset window duration of response liveness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.ResponseErrorLivenessCheck.disableLogging</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Disable logging of response liveness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.ResponseErrorLivenessCheck.errorThreshold</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Error threshold of response liveness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.ResponseErrorLivenessCheck.statusResetWindowDurationSec</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>300</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Status reset window duration of response liveness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.ResponseTimeoutReadinessCheck.counterResetWindowDurationSec</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Counter reset window duration of response readiness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.ResponseTimeoutReadinessCheck.errorThreshold</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Error threshold of response readiness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.ResponseTimeoutReadinessCheck.statusResetWindowDurationSec</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>300</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Status reset window duration of response readiness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.metrics.ResponseTimeoutReadinessCheck.timeoutSec</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Timeout of response readiness check</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.storage.metrics.cache.check-period</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30000</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Storage metrics cache check period</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_import"><a class="anchor" href="#_category_import"></a>Category <code>import</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 24. Category <code>import</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.import.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;url&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The import URL</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_kafka"><a class="anchor" href="#_category_kafka"></a>Category <code>kafka</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 25. Category <code>kafka</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.events.kafka.topic</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Events Kafka topic</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.events.kafka.topic-partition</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;integer&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Events Kafka topic partition</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_limits"><a class="anchor" href="#_category_limits"></a>Category <code>limits</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 26. Category <code>limits</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.limits.config.max-artifact-labels</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.3.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max artifact labels</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.limits.config.max-artifact-properties</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max artifact properties</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.limits.config.max-artifacts</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max artifacts</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.limits.config.max-description-length</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max artifact description length</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.limits.config.max-label-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max artifact label size</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.limits.config.max-name-length</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max artifact name length</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.limits.config.max-property-key-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max artifact property key size</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.limits.config.max-property-value-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max artifact property value size</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.limits.config.max-requests-per-second</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.3.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max artifact requests per second</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.limits.config.max-schema-size-bytes</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.3.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max schema size (bytes)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.limits.config.max-total-schemas</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max total schemas</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.limits.config.max-versions-per-artifact</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max versions per artifacts</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.storage.metrics.cache.max-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.4.1.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Storage metrics cache max size.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_log"><a class="anchor" href="#_category_log"></a>Category <code>log</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 27. Category <code>log</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.log.level</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Log level</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_mt"><a class="anchor" href="#_category_mt"></a>Category <code>mt</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 28. Category <code>mt</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.enable.multitenancy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable multitenancy</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.authorization.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable multitenancy authorization</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.reaper.every</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multitenancy reaper every</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.reaper.max-tenants-reaped</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>100</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multitenancy reaper max tenants reaped</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.reaper.period-seconds</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10800</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multitenancy reaper period seconds</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.tenant.token-claim.names</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list&lt;string&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Token claims used to resolve the tenant id</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.types.context-path.base-path</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>t</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multitenancy context path type base path</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.types.context-path.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable multitenancy context path type</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.types.request-header.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable multitenancy request header type</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.types.request-header.name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>X-Tenant-Id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multitenancy request header type name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.types.subdomain.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable multitenancy subdomain type</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.types.subdomain.header-name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Host</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multitenancy subdomain type header name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.types.subdomain.location</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>header</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multitenancy subdomain type location</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.types.subdomain.pattern</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>(\w[\w\d\-]*)\.localhost\.local</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multitenancy subdomain type pattern</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.multitenancy.types.token-claims.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable multitenancy request header type</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.organization-id.claim-name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list&lt;string&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Organization ID claim name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.tenant.manager.auth.client-id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tenant manager auth client ID</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.tenant.manager.auth.client-secret</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tenant manager auth client secret</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.tenant.manager.auth.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;boolean&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tenant manager auth enabled</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.tenant.manager.auth.token.expiration.reduction.ms</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;long&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tenant manager auth token expiration reduction ms</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.tenant.manager.auth.url.configured</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tenant manager auth url configured</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.tenant.manager.ssl.ca.path</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tenant manager SSL Ca path</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.tenant.manager.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tenant manager URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.tenants.context.cache.check-period</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60000</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tenants context cache check period</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.tenants.context.cache.max-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.4.1.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tenants context cache max size</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_redirects"><a class="anchor" href="#_category_redirects"></a>Category <code>redirects</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 29. Category <code>redirects</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.enable-redirects</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable redirects</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.redirects</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>map&lt;string, string&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Registry redirects</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_rest"><a class="anchor" href="#_category_rest"></a>Category <code>rest</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 30. Category <code>rest</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.rest.artifact.deletion.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean [dynamic]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.4.2-SNAPSHOT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables artifact version deletion</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.rest.artifact.download.maxSize</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000000</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.6-SNAPSHOT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max size of the artifact allowed to be downloaded from URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.rest.artifact.download.skipSSLValidation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.6-SNAPSHOT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Skip SSL validation when downloading artifacts from URL</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_store"><a class="anchor" href="#_category_store"></a>Category <code>store</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 31. Category <code>store</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifacts.skip.disabled.latest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.4.2-SNAPSHOT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Skip artifact versions with DISABLED state when retrieving latest artifact version</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.datasource.db-kind</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>postgresql</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Datasource Db kind</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.datasource.jdbc.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Datasource jdbc URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.sql.init</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SQL init</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_category_ui"><a class="anchor" href="#_category_ui"></a>Category <code>ui</code>:</h3>
-<table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 32. Category <code>ui</code> configuration options</caption>
-<colgroup>
-<col style="width: 26.3157%;">
-<col style="width: 10.5263%;">
-<col style="width: 26.3157%;">
-<col style="width: 15.7894%;">
-<col style="width: 21.0529%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Available from</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.oidc.tenant-enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">UI OIDC tenant enabled</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.ui.config.apiUrl</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">UI APIs URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.ui.config.auth.oidc.client-id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.6.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">UI auth OIDC client ID</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.ui.config.auth.oidc.redirect-url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.6.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">UI auth OIDC redirect URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.ui.config.auth.oidc.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.6.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">UI auth OIDC URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.ui.config.auth.type</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.6.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">UI auth type</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.ui.config.uiCodegenEnabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.4.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">UI codegen enabled</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.ui.config.uiContextPath</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/ui/</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">UI context path</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.ui.features.readOnly</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean [dynamic]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.2.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">UI read-only mode</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.ui.features.settings</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.2.2.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">UI features settings</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.ui.root</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.3.0.Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the UI root context (useful when relocating the UI context using an inbound proxy)</p></td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 </div>

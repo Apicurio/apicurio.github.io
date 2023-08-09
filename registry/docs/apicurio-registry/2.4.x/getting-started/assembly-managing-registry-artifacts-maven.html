@@ -102,11 +102,11 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
-  </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
   </li>
 </ul>
   </li>
@@ -127,7 +127,13 @@
     <span class="nav-text">Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact and rule reference</a>
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
   </li>
 </ul>
   </li>
@@ -211,7 +217,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can use the Apicurio Registry Maven plug-in to manage schema and API artifacts stored in Apicurio Registry when developing client applications:</p>
+<p>When developing client applications, you can use the Apicurio Registry Maven plug-in to manage schema and API artifacts stored in Apicurio Registry:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -222,10 +228,13 @@
 <p><a href="#downloading-artifacts-using-maven-plugin_registry">Downloading schema and API artifacts using the Maven plug-in</a></p>
 </li>
 <li>
-<p><a href="#adding-artifact-references-using-maven-plugin_registry">Adding artifact references using the Apicurio Registry Maven plug-in</a></p>
+<p><a href="#testing-artifacts-using-maven-plugin_registry">Testing schema and API artifacts using the Maven plug-in</a></p>
 </li>
 <li>
-<p><a href="#testing-artifacts-using-maven-plugin_registry">Testing schema and API artifacts using the Maven plug-in</a></p>
+<p><a href="#adding-artifact-references-manually-using-maven-plugin_registry">Adding artifact references manually using the Apicurio Registry Maven plug-in</a></p>
+</li>
+<li>
+<p><a href="#adding-artifact-references-automatically-using-maven-plugin_registry">Adding artifact references automatically using the Apicurio Registry Maven plug-in</a></p>
 </li>
 </ul>
 </div>
@@ -278,6 +287,7 @@
             &lt;authServerUrl&gt;MY-AUTH-SERVER&lt;/authServerUrl&gt;
             &lt;clientId&gt;MY-CLIENT-ID&lt;/clientId&gt;
             &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+            &lt;clientScope&gt;MY-CLIENT-SCOPE&lt;/clientScope&gt;
             &lt;artifacts&gt;
                 &lt;artifact&gt;
                     &lt;groupId&gt;TestGroup&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
@@ -300,24 +310,29 @@
  &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Specify <code>register</code> as the execution goal to upload the schema artifact to Apicurio Registry.</p>
-</li>
-<li>
-<p>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</p>
-</li>
-<li>
-<p>If authentication is required, you can specify your authentication server and client credentials.</p>
-</li>
-<li>
-<p>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group ID.</p>
-</li>
-<li>
-<p>You can register multiple artifacts using the specified group ID, artifact ID, and location.</p>
-</li>
-</ol>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify <code>register</code> as the execution goal to upload the schema artifact to Apicurio Registry.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>If authentication is required, you can specify your authentication server and client credentials.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group ID.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>You can register multiple artifacts using the specified group ID, artifact ID, and location.</td>
+</tr>
+</table>
 </div>
 </li>
 <li>
@@ -374,6 +389,7 @@
           &lt;authServerUrl&gt;MY-AUTH-SERVER&lt;/authServerUrl&gt;
           &lt;clientId&gt;MY-CLIENT-ID&lt;/clientId&gt;
           &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+          &lt;clientScope&gt;MY-CLIENT-SCOPE&lt;/clientScope&gt;
           &lt;artifacts&gt;
               &lt;artifact&gt;
                   &lt;groupId&gt;TestGroup&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
@@ -395,24 +411,29 @@
 &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Specify <code>download</code> as the execution goal.</p>
-</li>
-<li>
-<p>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</p>
-</li>
-<li>
-<p>If authentication is required, you can specify your authentication server and client credentials.</p>
-</li>
-<li>
-<p>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group.</p>
-</li>
-<li>
-<p>You can download multiple artifacts to a specified directory using the artifact ID.</p>
-</li>
-</ol>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify <code>download</code> as the execution goal.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>If authentication is required, you can specify your authentication server and client credentials.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>You can download multiple artifacts to a specified directory using the artifact ID.</td>
+</tr>
+</table>
 </div>
 </li>
 <li>
@@ -428,156 +449,6 @@
 </li>
 <li>
 <p>For open source examples of using the Apicurio Registry Maven plug-in, see the <a href="https://github.com/Apicurio/apicurio-registry-examples">Apicurio Registry demonstration examples</a>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="adding-artifact-references-using-maven-plugin_registry"><a class="anchor" href="#adding-artifact-references-using-maven-plugin_registry"></a>Adding artifact references using the Apicurio Registry Maven plug-in</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>Apicurio Registry artifact types such as Apache Avro, Google Protobuf, and JSON Schema can include <em>artifact references</em> from one artifact file to another. You can create efficiencies by defining reusable schema or API artifacts, and then referencing them from multiple locations in artifact references.</p>
-</div>
-<div class="paragraph">
-<p>This section shows a simple example of using the Apicurio Registry Maven plug-in to register an artifact reference to a simple Avro schema artifact stored in Apicurio Registry. This example assumes that the following <code>Exchange</code> schema artifact has already been created in Apicurio Registry:</p>
-</div>
-<div class="listingblock">
-<div class="title">Exchange schema</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "namespace": "com.kubetrade.schema.common",
-  "type": "enum",
-  "name": "Exchange",
-  "symbols" : ["GEMINI"]
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This example then creates a <code>TradeKey</code> schema artifact, which includes a reference to the nested <code>Exchange</code> schema artifact:</p>
-</div>
-<div class="listingblock">
-<div class="title">TradeKey schema with nested Exchange schema</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "namespace": "com.kubetrade.schema.trade",
-  "type": "record",
-  "name": "TradeKey",
-  "fields": [
-    {
-      "name": "exchange",
-      "type": "com.kubetrade.schema.common.Exchange"
-    },
-    {
-      "name": "key",
-      "type": "string"
-    }
-  ]
-}</code></pre>
-</div>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>You have created a Maven project for your client application. For more details, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
-</li>
-<li>
-<p>The <code>Exchange</code> schema artifact is already created in Apicurio Registry.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Update your Maven <code>pom.xml</code> file to use the <code>apicurio-registry-maven-plugin</code> to register the <code>TradeKey</code> schema, which includes a nested reference to the <code>Exchange</code> schema as follows:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
-    &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
-    &lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
-    &lt;version&gt;${apicurio-registry.version}&lt;/version&gt;
-    &lt;executions&gt;
-        &lt;execution&gt;
-            &lt;phase&gt;generate-sources&lt;/phase&gt;
-            &lt;goals&gt;
-                &lt;goal&gt;register&lt;/goal&gt; <i class="conum" data-value="1"></i><b>(1)</b>
-            &lt;/goals&gt;
-            &lt;configuration&gt;
-                &lt;registryUrl&gt;MY-REGISTRY-URL/apis/registry/v2&lt;/registryUrl&gt; <i class="conum" data-value="2"></i><b>(2)</b>
-                &lt;authServerUrl&gt;MY-AUTH-SERVER&lt;/authServerUrl&gt;
-                &lt;clientId&gt;MY-CLIENT-ID&lt;/clientId&gt;
-                &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt; <i class="conum" data-value="3"></i><b>(3)</b>
-                &lt;artifacts&gt;
-                    &lt;artifact&gt;
-                        &lt;groupId&gt;test-group&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
-                        &lt;artifactId&gt;TradeKey&lt;/artifactId&gt;
-                        &lt;version&gt;2.0&lt;/version&gt;
-                        &lt;type&gt;AVRO&lt;/type&gt;
-                        &lt;file&gt;
-                            ${project.basedir}/src/main/resources/schemas/TradeKey.avsc
-                        &lt;/file&gt;
-                        &lt;ifExists&gt;RETURN_OR_UPDATE&lt;/ifExists&gt;
-                        &lt;canonicalize&gt;true&lt;/canonicalize&gt;
-                        &lt;references&gt;
-                            &lt;reference&gt; <i class="conum" data-value="5"></i><b>(5)</b>
-                                &lt;name&gt;com.kubetrade.schema.common.Exchange&lt;/name&gt;
-                                &lt;groupId&gt;test-group&lt;/groupId&gt;
-                                &lt;artifactId&gt;Exchange&lt;/artifactId&gt;
-                                &lt;version&gt;2.0&lt;/version&gt;
-                                &lt;type&gt;AVRO&lt;/type&gt;
-                                &lt;file&gt;
-                                    ${project.basedir}/src/main/resources/schemas/Exchange.avsc
-                                &lt;/file&gt;
-                                &lt;ifExists&gt;RETURN_OR_UPDATE&lt;/ifExists&gt;
-                                &lt;canonicalize&gt;true&lt;/canonicalize&gt;
-                            &lt;/reference&gt;
-                        &lt;/references&gt;
-                    &lt;/artifact&gt;
-                &lt;/artifacts&gt;
-            &lt;/configuration&gt;
-        &lt;/execution&gt;
-    &lt;/executions&gt;
-&lt;/plugin&gt;</code></pre>
-</div>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Specify <code>register</code> as the execution goal to upload the schema artifact to the registry.</p>
-</li>
-<li>
-<p>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</p>
-</li>
-<li>
-<p>If authentication is required, you can specify your authentication server and client credentials.</p>
-</li>
-<li>
-<p>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group ID.</p>
-</li>
-<li>
-<p>Specify the Apicurio Registry artifact reference using its group ID, artifact ID, version, type, and location. You can register multiple artifact references in this way.</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Build your Maven project, for example, by using the <code>mvn package</code> command.</p>
-</li>
-</ol>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p>For more details on using Apache Maven, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
-</li>
-<li>
-<p>For open source examples of using the Apicurio Registry Maven plug-in, see the <a href="https://github.com/Apicurio/apicurio-registry-examples">Apicurio Registry demonstration examples</a>.</p>
-</li>
-<li>
-<p>For more examples of artifact references, see the section on configuring each artifact type in <a href="assembly-configuring-kafka-client-serdes.html">Kafka client serializers/deserializers in Java clients</a>.</p>
 </li>
 </ul>
 </div>
@@ -631,6 +502,7 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
             &lt;authServerUrl&gt;MY-AUTH-SERVER&lt;/authServerUrl&gt;
             &lt;clientId&gt;MY-CLIENT-ID&lt;/clientId&gt;
             &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+            &lt;clientScope&gt;MY-CLIENT-SCOPE&lt;/clientScope&gt;
             &lt;artifacts&gt;
                 &lt;artifact&gt;
                     &lt;groupId&gt;TestGroup&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
@@ -644,24 +516,29 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
  &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Specify <code>test-update</code> as the execution goal to test the schema artifact.</p>
-</li>
-<li>
-<p>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</p>
-</li>
-<li>
-<p>If authentication is required, you can specify your authentication server and client credentials.</p>
-</li>
-<li>
-<p>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group.</p>
-</li>
-<li>
-<p>You can test multiple artifacts from a specified directory using the artifact ID.</p>
-</li>
-</ol>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify <code>test-update</code> as the execution goal to test the schema artifact.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>If authentication is required, you can specify your authentication server and client credentials.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>You can test multiple artifacts from a specified directory using the artifact ID.</td>
+</tr>
+</table>
 </div>
 </li>
 <li>
@@ -677,6 +554,309 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
 </li>
 <li>
 <p>For open source examples of using the Apicurio Registry Maven plug-in, see the <a href="https://github.com/Apicurio/apicurio-registry-examples">Apicurio Registry demonstration examples</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adding-artifact-references-manually-using-maven-plugin_registry"><a class="anchor" href="#adding-artifact-references-manually-using-maven-plugin_registry"></a>Adding artifact references manually using the Apicurio Registry Maven plug-in</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry artifact types such as Apache Avro, Google Protobuf, and JSON Schema can include <em>artifact references</em> from one artifact file to another. You can create efficiencies by defining reusable schema or API artifacts, and then referencing them from multiple locations in artifact references.</p>
+</div>
+<div class="paragraph">
+<p>This section shows a simple example of using the Apicurio Registry Maven plug-in to manually register an artifact reference to a simple Avro schema artifact stored in Apicurio Registry. This example assumes that the following <code>Exchange</code> schema artifact has already been created in Apicurio Registry:</p>
+</div>
+<div class="listingblock">
+<div class="title">Exchange schema</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "namespace": "com.kubetrade.schema.common",
+  "type": "enum",
+  "name": "Exchange",
+  "symbols" : ["GEMINI"]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example then creates a <code>TradeKey</code> schema artifact, which includes a reference to the nested <code>Exchange</code> schema artifact:</p>
+</div>
+<div class="listingblock">
+<div class="title">TradeKey schema with nested reference to Exchange schema</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "namespace": "com.kubetrade.schema.trade",
+  "type": "record",
+  "name": "TradeKey",
+  "fields": [
+    {
+      "name": "exchange",
+      "type": "com.kubetrade.schema.common.Exchange"
+    },
+    {
+      "name": "key",
+      "type": "string"
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have created a Maven project for your client application. For more details, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+</li>
+<li>
+<p>The referenced <code>Exchange</code> schema artifact is already created in Apicurio Registry.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Update your Maven <code>pom.xml</code> file to use the <code>apicurio-registry-maven-plugin</code> to register the <code>TradeKey</code> schema, which includes a nested reference to the <code>Exchange</code> schema as follows:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+    &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+    &lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;${apicurio-registry.version}&lt;/version&gt;
+    &lt;executions&gt;
+        &lt;execution&gt;
+            &lt;phase&gt;generate-sources&lt;/phase&gt;
+            &lt;goals&gt;
+                &lt;goal&gt;register&lt;/goal&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+            &lt;/goals&gt;
+            &lt;configuration&gt;
+                &lt;registryUrl&gt;MY-REGISTRY-URL/apis/registry/v2&lt;/registryUrl&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+                &lt;authServerUrl&gt;MY-AUTH-SERVER&lt;/authServerUrl&gt;
+                &lt;clientId&gt;MY-CLIENT-ID&lt;/clientId&gt;
+                &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+                &lt;clientScope&gt;MY-CLIENT-SCOPE&lt;/clientScope&gt;
+                &lt;artifacts&gt;
+                    &lt;artifact&gt;
+                        &lt;groupId&gt;test-group&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+                        &lt;artifactId&gt;TradeKey&lt;/artifactId&gt;
+                        &lt;version&gt;2.0&lt;/version&gt;
+                        &lt;type&gt;AVRO&lt;/type&gt;
+                        &lt;file&gt;
+                            ${project.basedir}/src/main/resources/schemas/TradeKey.avsc
+                        &lt;/file&gt;
+                        &lt;ifExists&gt;RETURN_OR_UPDATE&lt;/ifExists&gt;
+                        &lt;canonicalize&gt;true&lt;/canonicalize&gt;
+                        &lt;references&gt;
+                            &lt;reference&gt; <i class="conum" data-value="5"></i><b>(5)</b>
+                                &lt;name&gt;com.kubetrade.schema.common.Exchange&lt;/name&gt;
+                                &lt;groupId&gt;test-group&lt;/groupId&gt;
+                                &lt;artifactId&gt;Exchange&lt;/artifactId&gt;
+                                &lt;version&gt;2.0&lt;/version&gt;
+                                &lt;type&gt;AVRO&lt;/type&gt;
+                                &lt;file&gt;
+                                    ${project.basedir}/src/main/resources/schemas/Exchange.avsc
+                                &lt;/file&gt;
+                                &lt;ifExists&gt;RETURN_OR_UPDATE&lt;/ifExists&gt;
+                                &lt;canonicalize&gt;true&lt;/canonicalize&gt;
+                            &lt;/reference&gt;
+                        &lt;/references&gt;
+                    &lt;/artifact&gt;
+                &lt;/artifacts&gt;
+            &lt;/configuration&gt;
+        &lt;/execution&gt;
+    &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify <code>register</code> as the execution goal to upload the schema artifacts to Apicurio Registry.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Specify the Apicurio Registry URL by using the <code>../apis/registry/v2</code> endpoint.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>If authentication is required, you can specify your authentication server and client credentials.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group ID.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Specify the Apicurio Registry artifact reference using its group ID, artifact ID, version, type, and location. You can register multiple artifact references in this way.</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Build your Maven project, for example, by using the <code>mvn package</code> command.</p>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more details on using Apache Maven, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+</li>
+<li>
+<p>For an open source example of using the Apicurio Registry Maven plug-in to manually register an artifact reference, see the <a href="https://github.com/Apicurio/apicurio-registry-examples/tree/main/avro-maven-with-references">avro-maven-with-references demonstration example</a>.</p>
+</li>
+<li>
+<p>For more examples of artifact references, see the section on configuring each artifact type in <a href="assembly-configuring-kafka-client-serdes.html">Kafka client serializers/deserializers in Java clients</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adding-artifact-references-automatically-using-maven-plugin_registry"><a class="anchor" href="#adding-artifact-references-automatically-using-maven-plugin_registry"></a>Adding artifact references automatically using the Apicurio Registry Maven plug-in</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry artifact types such as Apache Avro, Google Protobuf, and JSON Schema can include <em>artifact references</em> from one artifact file to another. You can create efficiencies by defining reusable schema or API artifacts, and then referencing them from multiple locations in artifact references.</p>
+</div>
+<div class="paragraph">
+<p>You can specify a single artifact and configure the Apicurio Registry Maven plugin to automatically detect all references to artifacts located in the same directory, and to automatically register those references.</p>
+</div>
+<div class="paragraph">
+<p>This section shows a simple example of using the Maven plug-in to register an Avro schema and automatically detect and register an artifact reference to a simple schema artifact. This example assumes that the parent <code>TradeKey</code> artifact and the nested <code>Exchange</code> schema artifact are both available in the same directory:</p>
+</div>
+<div class="listingblock">
+<div class="title">TradeKey schema with nested reference to Exchange schema</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "namespace": "com.kubetrade.schema.trade",
+  "type": "record",
+  "name": "TradeKey",
+  "fields": [
+    {
+      "name": "exchange",
+      "type": "com.kubetrade.schema.common.Exchange"
+    },
+    {
+      "name": "key",
+      "type": "string"
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Exchange schema</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "namespace": "com.kubetrade.schema.common",
+  "type": "enum",
+  "name": "Exchange",
+  "symbols" : ["GEMINI"]
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have created a Maven project for your client application. For more details, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+</li>
+<li>
+<p>The <code>TradeKey</code> schema artifact and the nested <code>Exchange</code> schema artifact files are both located in the same directory.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Update your Maven <code>pom.xml</code> file to use the <code>apicurio-registry-maven-plugin</code> to register the <code>TradeKey</code> schema, which includes a nested reference to the <code>Exchange</code> schema as follows:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+    &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+    &lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;${apicurio-registry.version}&lt;/version&gt;
+    &lt;executions&gt;
+        &lt;execution&gt;
+            &lt;phase&gt;generate-sources&lt;/phase&gt;
+            &lt;goals&gt;
+                &lt;goal&gt;register&lt;/goal&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+            &lt;/goals&gt;
+            &lt;configuration&gt;
+                &lt;registryUrl&gt;MY-REGISTRY-URL/apis/registry/v2&lt;/registryUrl&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+                &lt;authServerUrl&gt;MY-AUTH-SERVER&lt;/authServerUrl&gt;
+                &lt;clientId&gt;MY-CLIENT-ID&lt;/clientId&gt;
+                &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+                &lt;clientScope&gt;MY-CLIENT-SCOPE&lt;/clientScope&gt;
+                &lt;artifacts&gt;
+                    &lt;artifact&gt;
+                        &lt;groupId&gt;test-group&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+                        &lt;artifactId&gt;TradeKey&lt;/artifactId&gt;
+                        &lt;version&gt;2.0&lt;/version&gt;
+                        &lt;type&gt;AVRO&lt;/type&gt;
+                        &lt;file&gt;
+                            ${project.basedir}/src/main/resources/schemas/TradeKey.avsc <i class="conum" data-value="5"></i><b>(5)</b>
+                        &lt;/file&gt;
+                        &lt;ifExists&gt;RETURN_OR_UPDATE&lt;/ifExists&gt;
+                        &lt;canonicalize&gt;true&lt;/canonicalize&gt;
+                        &lt;analyzeDirectory&gt;true&lt;/analyzeDirectory&gt; <i class="conum" data-value="6"></i><b>(6)</b>
+                    &lt;/artifact&gt;
+                &lt;/artifacts&gt;
+            &lt;/configuration&gt;
+        &lt;/execution&gt;
+    &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify <code>register</code> as the execution goal to upload the schema artifacts to Apicurio Registry.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Specify the Apicurio Registry URL by using the <code>../apis/registry/v2</code> endpoint.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>If authentication is required, you can specify your authentication server and client credentials.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Specify the parent artifact group ID that contains the references. You can specify the <code>default</code> group if you do not want to use a unique group ID.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Specify the location of the parent artifact file. All referenced artifacts must also be located in the same directory.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Set the <code>&lt;analyzeDirectory&gt;</code> option to true to automatically detect and register all references to artifacts in the same directory. You can register multiple artifact references in this way.</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Build your Maven project, for example, by using the <code>mvn package</code> command.</p>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more details on using Apache Maven, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+</li>
+<li>
+<p>For an open source example of using the Apicurio Registry Maven plug-in to automatically register multiple artifact references, see the <a href="https://github.com/Apicurio/apicurio-registry-examples/tree/main/avro-maven-with-references-auto">avro-maven-with-references-auto demonstration example</a>.</p>
+</li>
+<li>
+<p>For more examples of artifact references, see the section on configuring each artifact type in <a href="assembly-configuring-kafka-client-serdes.html">Kafka client serializers/deserializers in Java clients</a>.</p>
 </li>
 </ul>
 </div>

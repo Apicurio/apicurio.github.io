@@ -103,10 +103,10 @@
     <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a>
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
   </li>
 </ul>
   </li>
@@ -127,7 +127,13 @@
     <span class="nav-text">Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-registry-reference.html">Apicurio Registry artifact and rule reference</a>
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
   </li>
 </ul>
   </li>
@@ -211,7 +217,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter explains how to manage schema and API artifacts stored in Apicurio Registry by using the Apicurio Registry web console. This includes uploading and browsing Apicurio Registry content, and configuring optional rules for content:</p>
+<p>You can manage schema and API artifacts stored in Apicurio Registry by using the Apicurio Registry web console. This includes uploading and browsing Apicurio Registry content, configuring optional rules for content, and generating client sdk code:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -228,10 +234,13 @@
 <p><a href="#configuring-rules-using-console_registry">Configuring content rules using the Apicurio Registry web console</a></p>
 </li>
 <li>
-<p><a href="#configuring-settings-using-console_registry">Configuring Apicurio Registry instance settings using the web console</a></p>
+<p><a href="#generating-client-sdk-using-web-console_registry">Generating client SDKs for OpenAPI artifacts using the Apicurio Registry web console</a></p>
 </li>
 <li>
 <p><a href="#changing-artifact-owner-using-console_registry">Changing an artifact owner using the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="#configuring-settings-using-console_registry">Configuring Apicurio Registry instance settings using the web console</a></p>
 </li>
 <li>
 <p><a href="#exporting-importing-using-web-console_registry">Exporting and importing data using the Apicurio Registry web console</a></p>
@@ -322,7 +331,7 @@
 <h2 id="browsing-artifacts-using-console_registry"><a class="anchor" href="#browsing-artifacts-using-console_registry"></a>Viewing artifacts using the Apicurio Registry web console</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can use the Apicurio Registry web console to browse the event schema and API artifacts stored in Apicurio Registry. This section shows a simple example of viewing Apicurio Registry artifacts, groups, versions, and artifact rules.</p>
+<p>You can use the Apicurio Registry web console to browse the schema and API artifacts stored in Apicurio Registry. This section shows a simple example of viewing Apicurio Registry artifacts, groups, versions, and artifact rules.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -366,6 +375,9 @@
 <li>
 <p><strong>Content</strong>: Displays a read-only view of the full artifact content. For JSON content, you can click <strong>JSON</strong> or <strong>YAML</strong> to display your preferred format.</p>
 </li>
+<li>
+<p><strong>References</strong>: Displays a read-only view of all artifacts referenced by this artifact. You can also click <strong>View artifacts that reference this artifact</strong>.</p>
+</li>
 </ul>
 </div>
 </li>
@@ -373,7 +385,7 @@
 <p>If additional versions of this artifact have been added, you can select them from the <strong>Version</strong> list in page header.</p>
 </li>
 <li>
-<p>To save the artifact contents to a local file, for example, <code>my-protobuf-schema.proto</code>, click <strong>Download</strong> at the end of the page.</p>
+<p>To save the artifact contents to a local file, for example, <code>my-openapi.json</code> or <code>my-protobuf-schema.proto</code>, and click <strong>Download</strong> at the end of the page.</p>
 </li>
 </ol>
 </div>
@@ -387,7 +399,7 @@
 <p><a href="#configuring-rules-using-console_registry">Configuring content rules using the Apicurio Registry web console</a></p>
 </li>
 <li>
-<p><a href="assembly-registry-reference.html">Apicurio Registry artifact and rule reference</a></p>
+<p><a href="#registry-rule-reference_registry">[registry-rule-reference_registry]</a></p>
 </li>
 </ul>
 </div>
@@ -397,8 +409,7 @@
 <h2 id="adding-artifacts-using-console_registry"><a class="anchor" href="#adding-artifacts-using-console_registry"></a>Adding artifacts using the Apicurio Registry web console</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can use the Apicurio Registry web console to upload event schema and API artifacts to Apicurio Registry.
-This section shows simple examples of uploading Apicurio Registry artifacts and adding new artifact versions.</p>
+<p>You can use the Apicurio Registry web console to upload schema and API artifacts to Apicurio Registry. This section shows simple examples of uploading Apicurio Registry artifacts and adding new artifact versions.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -455,8 +466,11 @@ This section shows simple examples of uploading Apicurio Registry artifacts and 
 </li>
 <li>
 <p><strong>Content</strong>: Displays a read-only view of the full artifact content. For JSON content, you can click <strong>JSON</strong> or <strong>YAML</strong> to display your preferred format.</p>
+</li>
+<li>
+<p><strong>References</strong>: Displays a read-only view of all artifacts referenced by this artifact. You can also click <strong>View artifacts that reference this artifact</strong>. You can add artifact references using the Apicurio Registry Maven plug-in or REST API only.</p>
 <div class="paragraph">
-<p>The following example shows an example Protobuf schema artifact:</p>
+<p>The following example shows an example OpenAPI artifact:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -491,7 +505,7 @@ This section shows simple examples of uploading Apicurio Registry artifacts and 
 </div>
 </li>
 <li>
-<p>To save the artifact contents to a local file, for example, <code>my-protobuf-schema.proto</code>, click <strong>Download</strong> at the end of the page.</p>
+<p>To save the artifact contents to a local file, for example, <code>my-protobuf-schema.proto</code> or <code>my-openapi.json</code>, click <strong>Download</strong> at the end of the page.</p>
 </li>
 <li>
 <p>To add a new artifact version, click <strong>Upload new version</strong> in the page header, and drag and drop or click <strong>Browse</strong> to upload the file, for example, <code>my-avro-schema.json</code> or <code>my-openapi.json</code>.</p>
@@ -523,7 +537,7 @@ Deleting an artifact deletes the artifact and all of its versions, and cannot be
 <p><a href="#configuring-rules-using-console_registry">Configuring content rules using the Apicurio Registry web console</a></p>
 </li>
 <li>
-<p><a href="assembly-registry-reference.html">Apicurio Registry artifact and rule reference</a></p>
+<p><a href="#registry-rule-reference_registry">[registry-rule-reference_registry]</a></p>
 </li>
 </ul>
 </div>
@@ -588,7 +602,205 @@ Deleting an artifact deletes the artifact and all of its versions, and cannot be
 <p><a href="#adding-artifacts-using-console_registry">Adding artifacts using the Apicurio Registry web console</a></p>
 </li>
 <li>
-<p><a href="assembly-registry-reference.html">Apicurio Registry artifact and rule reference</a></p>
+<p><a href="#registry-rule-reference_registry">[registry-rule-reference_registry]</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="generating-client-sdk-using-web-console_registry"><a class="anchor" href="#generating-client-sdk-using-web-console_registry"></a>Generating client SDKs for OpenAPI artifacts using the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the Apicurio Registry web console to configure, generate, and download client software development kits (SDKs) for OpenAPI artifacts. You can then use the generated client SDKs to build your client applications for specific platforms based on the OpenAPI.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry generates client SDKs for the following programming languages:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>C#</p>
+</li>
+<li>
+<p>Go</p>
+</li>
+<li>
+<p>Java</p>
+</li>
+<li>
+<p>PHP</p>
+</li>
+<li>
+<p>Python</p>
+</li>
+<li>
+<p>Ruby</p>
+</li>
+<li>
+<p>Swift</p>
+</li>
+<li>
+<p>TypeScript</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Client SDK generation for OpenAPI artifacts runs in your browser only, and cannot be automated by using an API. You must regenerate the client SDK each time a new artifact version is added in Apicurio Registry.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running in your environment.</p>
+</li>
+<li>
+<p>You are logged in to the Apicurio Registry web console:</p>
+<div class="paragraph">
+<p><code>http://MY_REGISTRY_URL/ui</code></p>
+</div>
+</li>
+<li>
+<p>An OpenAPI artifact has been added to Apicurio Registry using the web console, command line, Maven plug-in, or a Java client application.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>On the <strong>Artifacts</strong> tab, browse the list of artifacts stored in Apicurio Registry, or enter a search string to find a specific OpenAPI artifact. You can select from the list to search by criteria such as name, group, labels, or global ID.</p>
+</li>
+<li>
+<p>Click the OpenAPI artifact in the list to view its details.</p>
+</li>
+<li>
+<p>In the <strong>Version metadata</strong> section, click <strong>Generate client SDK</strong>, and configure the following settings in the dialog:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Language</strong>: Select the programming language in which to generate the client SDK, for example, <strong>Java</strong>.</p>
+</li>
+<li>
+<p><strong>Generated client class name</strong>: Enter the class name for the client SDK, for example, <code>MyJavaClientSDK.</code></p>
+</li>
+<li>
+<p><strong>Generated client package name</strong>: Enter the package name for the client SDK, for example, <code>io.my.example.sdk</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Show advanced settings</strong> to configure optional comma-separated lists of path patterns to include or exclude:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Include path patterns</strong>: Enter specific paths to include when generating the client SDK, for example, <code>**/.*, **/my-path/*</code>. If this field is empty, all paths are included.</p>
+</li>
+<li>
+<p><strong>Exclude path patterns</strong>: Enter specific paths to exclude when generating the client SDK, for example, <code>**/my-other-path/*</code>. If this field is empty, no paths are excluded.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../assets-images/images/getting-started/registry-web-console-client-sdk.png" alt="Generate a Java client SDK in the registry web console">
+</div>
+<div class="title">Figure 4. Generate a Java client SDK in Apicurio Registry web console</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>When you have configured the settings in the dialog, click <strong>Generate and download</strong>.</p>
+</li>
+<li>
+<p>Enter a file name for the client SDK in the dialog, for example, <code>my-client-java.zip</code>, and click <strong>Save</strong> to download.</p>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>Apicurio Registry uses Kiota from Microsoft to generate the client SDKs. For more information, see the <a href="https://github.com/microsoft/kiota" target="_blank" rel="noopener">Kiota project in GitHub</a>.</p>
+</li>
+<li>
+<p>For examples of how to get started with using the generated SDKs to build client applications, see the <a href="https://learn.microsoft.com/en-us/openapi/kiota/quickstarts" target="_blank" rel="noopener">Kiota API client quick starts</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="changing-artifact-owner-using-console_registry"><a class="anchor" href="#changing-artifact-owner-using-console_registry"></a>Changing an artifact owner using the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>As an administrator or as an owner of a schema or API artifact, you can use the Apicurio Registry web console to change the artifact owner to
+another user account.</p>
+</div>
+<div class="paragraph">
+<p>For example, this feature is useful if the <strong>Artifact owner-only authorization</strong> option is set for the Apicurio Registry instance on the <strong>Settings</strong> tab so that only owners or administrators can modify artifacts. You might need to change owner if the owner user leaves the organization or the owner account is deleted.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <strong>Artifact owner-only authorization</strong> setting and the artifact <strong>Owner</strong> field are displayed <em>only if</em> authentication was enabled when the Apicurio Registry instance was deployed. For more details, see
+<a href="assembly-configuring-the-registry.html" class="page">Configuring your Apicurio Registry deployment</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The Apicurio Registry instance is deployed and the artifact is created.</p>
+</li>
+<li>
+<p>You are logged in to the Apicurio Registry web console as the artifact&#8217;s current owner or as an administrator:</p>
+<div class="paragraph">
+<p><code>http://MY_REGISTRY_URL/ui</code></p>
+</div>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>On the <strong>Artifacts</strong> tab, browse the list of artifacts stored in Apicurio Registry, or enter a search string to find the artifact. You can select from the list to search by criteria such as name, group, labels, or global ID.</p>
+</li>
+<li>
+<p>Click the artifact that you want to reassign.</p>
+</li>
+<li>
+<p>In the <strong>Version metadata</strong> section, click the pencil icon next to the <strong>Owner</strong> field.</p>
+</li>
+<li>
+<p>In the <strong>New owner</strong> field, select or enter an account name.</p>
+</li>
+<li>
+<p>Click <strong>Change owner</strong>.</p>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-configuring-the-registry.html" class="page">Configuring your Apicurio Registry deployment</a></p>
 </li>
 </ul>
 </div>
@@ -734,73 +946,25 @@ regardless of their user role. Not selected by default.</p></td>
 </tr>
 </tbody>
 </table>
-</li>
-</ol>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="assembly-configuring-the-registry.html" class="page">Configuring your Apicurio Registry deployment</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="changing-artifact-owner-using-console_registry"><a class="anchor" href="#changing-artifact-owner-using-console_registry"></a>Changing an artifact owner using the Apicurio Registry web console</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>As an administrator or as an owner of a schema or API artifact, you can use the Apicurio Registry web console to change the artifact owner to
-another user account.</p>
-</div>
-<div class="paragraph">
-<p>For example, this feature is useful if the <strong>Artifact owner-only authorization</strong> option is set for the Apicurio Registry instance on the <strong>Settings</strong> tab so that only owners or administrators can modify artifacts. You might need to change owner if the owner user leaves the organization or the owner account is deleted.</p>
-</div>
-<div class="admonitionblock note">
-<table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Additional properties</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
 <tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The <strong>Artifact owner-only authorization</strong> setting and the artifact <strong>Owner</strong> field are displayed <em>only if</em> authentication was enabled when the Apicurio Registry instance was deployed. For more details, see
-<a href="assembly-configuring-the-registry.html" class="page">Configuring your Apicurio Registry deployment</a>.
-</td>
+<th class="tableblock halign-left valign-top">Setting</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Delete artifact version</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When selected, users are permitted to delete artifact versions in this instance by using the Core Registry API. Not selected by default.</p></td>
+</tr>
+</tbody>
 </table>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>The Apicurio Registry instance is deployed and the artifact is created.</p>
-</li>
-<li>
-<p>You are logged in to the Apicurio Registry web console as the artifact&#8217;s current owner or as an administrator:</p>
-<div class="paragraph">
-<p><code>http://MY_REGISTRY_URL/ui</code></p>
-</div>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>On the <strong>Artifacts</strong> tab, browse the list of artifacts stored in Apicurio Registry, or enter a search string to find the artifact. You can select from the list to search by criteria such as name, group, labels, or global ID.</p>
-</li>
-<li>
-<p>Click the artifact that you want to reassign.</p>
-</li>
-<li>
-<p>In the <strong>Version metadata</strong> section, click the pencil icon next to the <strong>Owner</strong> field.</p>
-</li>
-<li>
-<p>In the <strong>New owner</strong> field, select or enter an account name.</p>
-</li>
-<li>
-<p>Click <strong>Change owner</strong>.</p>
 </li>
 </ol>
 </div>
