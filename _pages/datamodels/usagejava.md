@@ -1,6 +1,6 @@
 ---
 layout: dm_usage
-title: "Data Models : Java Usage"
+title: "Apicurio Data Models: Java Usage"
 permalink: /datamodels/usagejava/
 excerpt: Learn how to use the Apicurio Data Models library
 ---
