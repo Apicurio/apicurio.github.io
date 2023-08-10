@@ -1,6 +1,6 @@
 ---
 layout: dm_usage
-title: "Data Models : Typescript Usage"
+title: "Apicurio Data Models: TypeScript Usage"
 permalink: /datamodels/usagets/
 excerpt: Learn how to use the Apicurio Data Models library
 ---
