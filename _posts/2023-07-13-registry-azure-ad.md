@@ -8,6 +8,8 @@ categories: blog registry security
 
 Hey everyone, in recent Apicurio Registry versions we've introduced support for securing the application using different OpenID Connect (OIDC) servers, and not just Keycloak. In this blog post, I will explain how to configure the application to secure it using Microsoft Azure Active Directory (Azure AD).
 
+---
+
 Core Features
 ===
 In this blog post, we will cover the following:
