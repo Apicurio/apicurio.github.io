@@ -273,7 +273,7 @@ For a list of available configuration options, see <a href="assembly-config-refe
 <td class="content">
 <div class="paragraph">
 <p>Alternatively, for details on how to configure these settings automatically,
-see the <a href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.1.0/assembly-registry-maintenance.html#registry-security-keycloak">Apicurio Registry Operator documentation</a>.</p>
+see the <a href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/assembly-registry-maintenance.html#registry-security-keycloak">Apicurio Registry Operator documentation</a>.</p>
 </div>
 </td>
 </tr>
@@ -289,7 +289,7 @@ see the <a href="https://www.apicur.io/registry/docs/apicurio-registry-operator/
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Keycloak is installed and running. For more details, see
+<p>Keycloak is installed and running. For more details, see the
 <a href="https://www.keycloak.org/documentation">Keycloak user documentation</a>.</p>
 </li>
 <li>
@@ -301,8 +301,8 @@ see the <a href="https://www.apicur.io/registry/docs/apicurio-registry-operator/
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>In the Keycloak Admin Console, create a Keycloak realm for Apicurio Registry. By default, Apicurio Registry expects a realm name of <code>registry</code>. For more details on creating realms, see
-<a href="https://www.keycloak.org/getting-started">Getting Started with Keycloak</a>.</p>
+<p>In the Keycloak Admin Console, create a Keycloak realm for Apicurio Registry. By default, Apicurio Registry expects a realm name of <code>registry</code>. For details on creating realms, see the
+<a href="https://www.keycloak.org/documentation">Keycloak user documentation</a>.</p>
 </li>
 <li>
 <p>Create a Keycloak client for the Apicurio Registry API. By default, Apicurio Registry expects the following settings:</p>
@@ -560,14 +560,14 @@ the <a href="https://www.keycloak.org/documentation">Keycloak documentation</a><
 </li>
 </ul>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Apicurio Registry authentication and authorization options are disabled by default.
+All authentication and authorization options in Apicurio Registry are disabled by default. Before enabling any of these options, you must first set the <code>AUTH_ENABLED</code> option to <code>true</code>.
 </td>
 </tr>
 </table>
@@ -578,10 +578,10 @@ Apicurio Registry authentication and authorization options are disabled by defau
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#registry-security-authn-keycloak">Apicurio Registry authentication using OpenID Connect with Keycloak</a></p>
+<p><a href="#registry-security-authn-keycloak">Apicurio Registry authentication by using OpenID Connect with Keycloak</a></p>
 </li>
 <li>
-<p><a href="#registry-security-authn-http">Apicurio Registry authentication using HTTP basic</a></p>
+<p><a href="#registry-security-authn-http">Apicurio Registry authentication by using HTTP basic</a></p>
 </li>
 <li>
 <p><a href="#registry-security-rbac-enabled">Apicurio Registry role-based authorization</a></p>
@@ -597,7 +597,7 @@ Apicurio Registry authentication and authorization options are disabled by defau
 </li>
 </ul>
 </div>
-<h3 id="registry-security-authn-keycloak" class="discrete">Apicurio Registry authentication using OpenID Connect with Keycloak</h3>
+<h3 id="registry-security-authn-keycloak" class="discrete">Apicurio Registry authentication by using OpenID Connect with Keycloak</h3>
 <div class="paragraph">
 <p>You can set the following environment variables to configure authentication for the Apicurio Registry web console and API with Keycloak:</p>
 </div>
@@ -620,7 +620,7 @@ Apicurio Registry authentication and authorization options are disabled by defau
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables authentication in Apicurio Registry. When set to <code>true</code>, the environment variables that follow are required.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables authentication in Apicurio Registry. When set to <code>true</code>, the environment variables that follow are required for authentication in Keycloak.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
@@ -650,9 +650,9 @@ Apicurio Registry authentication and authorization options are disabled by defau
 </tr>
 </tbody>
 </table>
-<h3 id="registry-security-authn-http" class="discrete">Apicurio Registry authentication using HTTP basic</h3>
+<h3 id="registry-security-authn-http" class="discrete">Apicurio Registry authentication by using HTTP basic</h3>
 <div class="paragraph">
-<p>By default, Apicurio Registry supports authentication using OpenID Connect. Users or API clients must obtain an access token to make authenticated calls to the Apicurio Registry REST API.  However, because some tools do not support OpenID Connect, you can also configure Apicurio Registry to support HTTP basic authentication by setting the following configuration option to <code>true</code>:</p>
+<p>By default, Apicurio Registry supports authentication by using OpenID Connect. Users or API clients must obtain an access token to make authenticated calls to the Apicurio Registry REST API.  However, because some tools do not support OpenID Connect, you can also configure Apicurio Registry to support HTTP basic authentication by setting the following configuration options to <code>true</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 6. Configuration for Apicurio Registry HTTP basic authentication</caption>
@@ -671,6 +671,12 @@ Apicurio Registry authentication and authorization options are disabled by defau
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLIENT_CREDENTIALS_BASIC_AUTH_ENABLED</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.basic-auth-client-credentials.enabled</code></p></td>
@@ -713,7 +719,7 @@ Apicurio Registry authentication and authorization options are disabled by defau
 </table>
 <h3 id="registry-security-rbac-enabled" class="discrete">Apicurio Registry role-based authorization</h3>
 <div class="paragraph">
-<p>You can set the following option to <code>true</code> to enable role-based authorization in Apicurio Registry:</p>
+<p>You can set the following options to <code>true</code> to enable role-based authorization in Apicurio Registry:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 8. Configuration for Apicurio Registry role-based authorization</caption>
@@ -733,6 +739,12 @@ Apicurio Registry authentication and authorization options are disabled by defau
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ROLE_BASED_AUTHZ_ENABLED</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.role-based-authorization</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
@@ -741,14 +753,14 @@ Apicurio Registry authentication and authorization options are disabled by defau
 </tbody>
 </table>
 <div class="paragraph">
-<p>You can then configure role-based authorization to use roles included in the user&#8217;s authentication token (for example, granted when authenticating using Keycloak), or to use role mappings managed internally by Apicurio Registry.</p>
+<p>You can then configure role-based authorization to use roles included in the user&#8217;s authentication token (for example, granted when authenticating by using Keycloak), or to use role mappings managed internally by Apicurio Registry.</p>
 </div>
 <h4 id="_use_roles_assigned_in_keycloak" class="discrete">Use roles assigned in Keycloak</h4>
 <div class="paragraph">
 <p>To enable using roles assigned by Keycloak, set the following environment variables:</p>
 </div>
 <table id="registry-security-rbac-keycloak-settings" class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 9. Configuration for Apicurio Registry role-based authorization using Keycloak</caption>
+<caption class="title">Table 9. Configuration for Apicurio Registry role-based authorization by using Keycloak</caption>
 <colgroup>
 <col style="width: 35.2941%;">
 <col style="width: 35.2941%;">
@@ -792,7 +804,7 @@ Apicurio Registry authentication and authorization options are disabled by defau
 </table>
 <div class="paragraph">
 <p>When Apicurio Registry is configured to use roles from Keycloak, you must assign Apicurio Registry users to at least one
-of the following user roles in Keycloak. However, you can configure different user role names using the environment variables in <a href="#registry-security-rbac-keycloak-settings">Configuration for Apicurio Registry role-based authorization using Keycloak</a>.</p>
+of the following user roles in Keycloak. However, you can configure different user role names by using the environment variables in <a href="#registry-security-rbac-keycloak-settings">Configuration for Apicurio Registry role-based authorization by using Keycloak</a>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 10. Apicurio Registry roles for authentication and authorization</caption>
@@ -838,10 +850,10 @@ of the following user roles in Keycloak. However, you can configure different us
 </table>
 <h4 id="_manage_roles_directly_in_apicurio_registry" class="discrete">Manage roles directly in Apicurio Registry</h4>
 <div class="paragraph">
-<p>To enable using roles managed internally by Apicurio Registry, set the following environment variables:</p>
+<p>To enable using roles managed internally by Apicurio Registry, set the following environment variable:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 11. Configuration for Apicurio Registry role-based authorization using internal role mappings</caption>
+<caption class="title">Table 11. Configuration for Apicurio Registry role-based authorization by using internal role mappings</caption>
 <colgroup>
 <col style="width: 35.2941%;">
 <col style="width: 35.2941%;">
@@ -866,7 +878,7 @@ of the following user roles in Keycloak. However, you can configure different us
 </tbody>
 </table>
 <div class="paragraph">
-<p>When using internally managed role mappings, users can be assigned a role using the <code>/admin/roleMappings</code>
+<p>When using internally managed role mappings, users can be assigned a role by using the <code>/admin/roleMappings</code>
 endpoint in the Apicurio Registry REST API.  For more details, see <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
 </div>
 <div class="paragraph">
@@ -875,7 +887,7 @@ privileges can grant access to other users.</p>
 </div>
 <h4 id="_apicurio_registry_admin_override_configuration" class="discrete">Apicurio Registry admin-override configuration</h4>
 <div class="paragraph">
-<p>Because there are no default admin users in Apicurio Registry, it is usually helpful to configure another way for users to be identified as admins. You can configure this admin-override feature using the following environment variables:</p>
+<p>Because there are no default admin users in Apicurio Registry, it is usually helpful to configure another way for users to be identified as admins. You can configure this admin-override feature by using the following environment variables:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 12. Configuration for Apicurio Registry admin-override</caption>
@@ -959,6 +971,12 @@ REST API (or associated UI) to grant roles to additional users (including additi
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_OBAC_ENABLED</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.owner-only-authorization</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
@@ -983,7 +1001,7 @@ REST API (or associated UI) to grant roles to additional users (including additi
 <p>When the authenticated read access option is enabled, Apicurio Registry grants at least read-only access to requests from any authenticated user in the same organization, regardless of their user role.</p>
 </div>
 <div class="paragraph">
-<p>To enable authenticated read access, you must first enable role-based authorization, and then set the following option to <code>true</code>:</p>
+<p>To enable authenticated read access, you must first enable role-based authorization, and then ensure that the following options are set to <code>true</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 14. Configuration for authenticated read access</caption>
@@ -1003,6 +1021,12 @@ REST API (or associated UI) to grant roles to additional users (including additi
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_AUTHENTICATED_READS_ENABLED</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.authenticated-read-access.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
@@ -1020,7 +1044,7 @@ supports an anonymous read-only access option.</p>
 </div>
 <div class="paragraph">
 <p>To allow anonymous users, such as REST API calls with no authentication credentials, to make read-only
-calls to the REST API, set the following option to <code>true</code>:</p>
+calls to the REST API, set the following options to <code>true</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 15. Configuration for anonymous read-only access</caption>
@@ -1039,6 +1063,12 @@ calls to the REST API, set the following option to <code>true</code>:</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_ANONYMOUS_READ_ACCESS_ENABLED</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.anonymous-read-access.enabled</code></p></td>
@@ -1198,14 +1228,27 @@ Content-Type: application/json
 <div class="sect1">
 <h2 id="registry-cloud-events_registry"><a class="anchor" href="#registry-cloud-events_registry"></a>Configuring Apicurio Registry event sourcing</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>You can configure Apicurio Registry to send events when changes are made to the registry. For example, Apicurio Registry can trigger events when schema and API artifacts are created, updated, deleted, and so on. You can configure Apicurio Registry to send events to your applications and to third-party integrations in this way.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This is a Technology Preview feature only, which might evolve in future releases. Before using this feature in production, make sure to test that your deployment works as expected. Review the Release Notes in future releases for updates on this feature.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>There are different protocols available for transporting the events. The currently implemented protocols are HTTP and Apache Kafka. However, regardless of the protocol, the events are sent using the CNCF CloudEvents specification.</p>
+<p>You can configure Apicurio Registry to send events when changes are made to registry content. For example, Apicurio Registry can trigger events when schema or API artifacts, groups, or content rules are created, updated, deleted, and so on. You can configure Apicurio Registry to send events to your applications and to third-party integrations for these kind of changes.</p>
 </div>
 <div class="paragraph">
-<p>All of the event types are defined in <code>io.apicurio.registry.events.dto.RegistryEventType</code>. For example, the event types include:</p>
+<p>There are different protocols available for transporting events. The currently implemented protocols are HTTP and Apache Kafka. However, regardless of the protocol, the events are sent by using the CNCF CloudEvents specification. You can configure Apicurio Registry event sourcing by using Java system properties or the equivalent environment variables.</p>
+</div>
+<h3 id="_apicurio_registry_event_types" class="discrete">Apicurio Registry event types</h3>
+<div class="paragraph">
+<p>All of the event types are defined in <code>io.apicurio.registry.events.dto.RegistryEventType</code>. For example, these include the following event types:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1216,15 +1259,18 @@ Content-Type: application/json
 <p><code>io.apicurio.registry.artifact-updated</code></p>
 </li>
 <li>
+<p><code>io.apicurio.registry.artifact-state-changed</code></p>
+</li>
+<li>
 <p><code>io.apicurio.registry.artifact-rule-created</code></p>
 </li>
 <li>
 <p><code>io.apicurio.registry.global-rule-created</code></p>
 </li>
+<li>
+<p><code>io.apicurio.registry.group-created</code></p>
+</li>
 </ul>
-</div>
-<div class="paragraph">
-<p>You can configure cloud events in Apicurio Registry using Java system properties or equivalent environment variables.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -1234,9 +1280,9 @@ Content-Type: application/json
 </li>
 </ul>
 </div>
-<h3 id="_configuring_apicurio_registry_event_sourcing_using_http" class="discrete">Configuring Apicurio Registry event sourcing using HTTP</h3>
+<h3 id="_configuring_apicurio_registry_event_sourcing_by_using_http" class="discrete">Configuring Apicurio Registry event sourcing by using HTTP</h3>
 <div class="paragraph">
-<p>The example in this section shows a custom application running at <code>http://my-app-host:8888/events</code>.</p>
+<p>The example in this section shows a custom application running on <code>http://my-app-host:8888/events</code>.</p>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
@@ -1266,7 +1312,7 @@ Content-Type: application/json
 </li>
 </ol>
 </div>
-<h3 id="_configuring_apicurio_registry_event_sourcing_using_apache_kafka" class="discrete">Configuring Apicurio Registry event sourcing using Apache Kafka</h3>
+<h3 id="_configuring_apicurio_registry_event_sourcing_by_using_apache_kafka" class="discrete">Configuring Apicurio Registry event sourcing by using Apache Kafka</h3>
 <div class="paragraph">
 <p>The example in this section shows a Kafka topic named <code>my-registry-events</code> running on <code>my-kafka-host:9092</code>.</p>
 </div>
@@ -1284,13 +1330,13 @@ Content-Type: application/json
 </div>
 </li>
 <li>
-<p>You can set the configuration for the Kafka producer using the <code>KAFKA_BOOTSTRAP_SERVERS</code> environment variable:</p>
+<p>You can set the configuration for the Kafka producer by using the <code>KAFKA_BOOTSTRAP_SERVERS</code> environment variable:</p>
 <div class="ulist">
 <ul>
 <li>
 <p><code>KAFKA_BOOTSTRAP_SERVERS=my-kafka-host:9092</code></p>
 <div class="paragraph">
-<p>Alternatively, you can set the properties for the kafka producer using the <code>registry.events.kafka.config</code> prefix, for example:
+<p>Alternatively, you can set the properties for the kafka producer by using the <code>registry.events.kafka.config</code> prefix, for example:
 <code>registry.events.kafka.config.bootstrap.servers=my-kafka-host:9092</code></p>
 </div>
 </li>
@@ -1313,7 +1359,7 @@ Content-Type: application/json
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details, see the <a href="https://cloudevents.io/">CNCF CloudEvents specification</a></p>
+<p>For more details, see the <a href="https://cloudevents.io/">CNCF CloudEvents specification</a>.</p>
 </li>
 </ul>
 </div>

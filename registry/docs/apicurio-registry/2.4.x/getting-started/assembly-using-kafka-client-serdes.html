@@ -565,15 +565,17 @@
    https://my-cluster-my-registry-my-project.example.com/apis/registry/v2/groups/my-group/artifacts -s <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Simple Avro schema artifact.</p>
-</li>
-<li>
-<p>OpenShift route name that exposes Apicurio Registry.</p>
-</li>
-</ol>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Simple Avro schema artifact.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>OpenShift route name that exposes Apicurio Registry.</td>
+</tr>
+</table>
 </div>
 <h3 id="_maven_plug_in_example" class="discrete">Maven plug-in example</h3>
 <div class="listingblock">
@@ -612,21 +614,25 @@
  &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Specify <code>register</code> as the execution goal to upload the schema artifact to the registry.</p>
-</li>
-<li>
-<p>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</p>
-</li>
-<li>
-<p>Specify the Apicurio Registry artifact group ID.</p>
-</li>
-<li>
-<p>You can upload multiple artifacts using the specified group ID, artifact ID, and location.</p>
-</li>
-</ol>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify <code>register</code> as the execution goal to upload the schema artifact to the registry.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Specify the Apicurio Registry URL with the <code>../apis/registry/v2</code> endpoint.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Specify the Apicurio Registry artifact group ID.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>You can upload multiple artifacts using the specified group ID, artifact ID, and location.</td>
+</tr>
+</table>
 </div>
 <h3 id="_configuration_using_a_producer_client_example" class="discrete">Configuration using a producer client example</h3>
 <div class="listingblock">
@@ -648,15 +654,17 @@ try (RegistryService service = RegistryClient.create(registryUrl_node1)) {
 }</code></pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>You can register properties against more than one URL node.</p>
-</li>
-<li>
-<p>Check to see if the schema already exists based on the artifact ID.</p>
-</li>
-</ol>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>You can register properties against more than one URL node.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Check to see if the schema already exists based on the artifact ID.</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -707,15 +715,17 @@ props.putIfAbsent(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
     AvroKafkaDeserializer.class.getName()); <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>1. The deserializer provided by Apicurio Registry.</p>
-</li>
-<li>
-<p>2. The deserialization is in Apache Avro JSON format.</p>
-</li>
-</ul>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The deserializer provided by Apicurio Registry.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The deserialization is in Apache Avro JSON format.</td>
+</tr>
+</table>
 </div>
 </li>
 </ol>
@@ -762,18 +772,21 @@ props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, AvroKafkaSerializer.clas
 props.put(SerdeConfig.FIND_LATEST_ARTIFACT, Boolean.TRUE); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>1. The serializer for the message key provided by Apicurio Registry.</p>
-</li>
-<li>
-<p>2. The serializer for the message value provided by Apicurio Registry.</p>
-</li>
-<li>
-<p>3. The lookup strategy to find the global ID for the schema.</p>
-</li>
-</ul>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The serializer for the message key provided by Apicurio Registry.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The serializer for the message value provided by Apicurio Registry.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The lookup strategy to find the global ID for the schema.</td>
+</tr>
+</table>
 </div>
 </li>
 </ol>
@@ -829,18 +842,21 @@ config.put(AvroKafkaSerdeConfig.USE_SPECIFIC_AVRO_READER, true);
 logSerde.configure(config, false); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>1. The Avro serializer provided by Apicurio Registry.</p>
-</li>
-<li>
-<p>2. The Avro deserializer provided by Apicurio Registry.</p>
-</li>
-<li>
-<p>3. Configures the Apicurio Registry URL and the Avro reader for deserialization in Avro format.</p>
-</li>
-</ul>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The Avro serializer provided by Apicurio Registry.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The Avro deserializer provided by Apicurio Registry.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Configures the Apicurio Registry URL and the Avro reader for deserialization in Avro format.</td>
+</tr>
+</table>
 </div>
 </li>
 <li>

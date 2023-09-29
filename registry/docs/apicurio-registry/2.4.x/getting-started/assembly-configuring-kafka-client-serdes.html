@@ -217,7 +217,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter provides detailed information on how to configure Kafka SerDes in your producer and consumer Java client applications:</p>
+<p>This chapter provides detailed information on how to configure Kafka serializers/deserializers (SerDes) in your producer and consumer Java client applications:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -255,10 +255,10 @@
 <h2 id="registry-serdes-concepts-constants_registry"><a class="anchor" href="#registry-serdes-concepts-constants_registry"></a>Apicurio Registry serializer/deserializer configuration in client applications</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can configure specific client serializer/deserializer (SerDe) services and schema lookup strategies directly in a client application using the example constants shown in this section. Alternatively, you can configure the corresponding Apicurio Registry application properties in a file or an instance.</p>
+<p>You can configure specific client serializer/deserializer services and schema lookup strategies directly in a client application using the example constants shown in this section. Alternatively, you can configure the corresponding Apicurio Registry application properties in a file or an instance.</p>
 </div>
 <div class="paragraph">
-<p>The following sections show examples of commonly used SerDe constants and configuration options.</p>
+<p>The following sections show examples of commonly used SerDes constants and configuration options.</p>
 </div>
 <h3 id="_configuration_for_serde_services" class="discrete">Configuration for SerDe services</h3>
 <div class="listingblock">
@@ -303,15 +303,17 @@ The setting should not be used with the <code>ID_HANDLER</code> option.</p>
 ...</code></pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Java class that implements the artifact resolver strategy and maps between the Kafka SerDe and artifact ID.  Defaults to the topic ID strategy. This is only used by the serializer class.</p>
-</li>
-<li>
-<p>Java class that implements the schema resolver. Defaults to <code>DefaultSchemaResolver</code>. This is used by the serializer and deserializer classes.</p>
-</li>
-</ol>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Java class that implements the artifact resolver strategy and maps between the Kafka SerDe and artifact ID.  Defaults to the topic ID strategy. This is only used by the serializer class.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Java class that implements the schema resolver. Defaults to <code>DefaultSchemaResolver</code>. This is used by the serializer and deserializer classes.</td>
+</tr>
+</table>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
@@ -353,7 +355,7 @@ The setting should not be used with the <code>ID_HANDLER</code> option.</p>
 </div>
 <h3 id="_configuration_for_different_schema_types" class="discrete">Configuration for different schema types</h3>
 <div class="paragraph">
-<p>For details on how to configure SerDe for different schema technologies, see the following:</p>
+<p>For details on how to configure SerDes for different schema technologies, see the following:</p>
 </div>
 <div class="ulist">
 <ul>
