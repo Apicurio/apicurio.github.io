@@ -163,6 +163,22 @@ You should now be able to not only link your GitHub account in Apicurio Studio b
 >
 > Note: to disable GitHub login, simply turn **Account Linking Only** on!
 
+### 7.1.1 GitHub Publishing
+
+To enable publishing of changes to repositories in GitHub, you will need to do the following:
+
+* In an Apicurio Keycloak Realm, navigate to `Roles`, then `Default Roles`, and select the `broker` Client Role. Add the `read-token` role to the `Client Default Roles` list.
+
+![Keycloak](/images/guides/kc-github-roles.png)
+
+* For existing users, add this role manually. Navigate to `Users` within the realm, select a user, go to `Role Mappings`, choose `broker` from the Client Roles list, and assign the `read-token` role.
+* In `Clients`, select the `apicurio-studio` client. Navigate to `Client Scopes`, and add the `roles` client scope to the Assigned Default Client Scopes list. Keycloak, by default, includes client roles in tokens via the `roles` client scope.
+
+![Keycloak](/images/guides/kc-github-client-scopes.png)
+
+
+With these settings, you should now be able to publish APIs to GitHub repositories.
+
 ### 7.2 Enable GitLab Account Linking
 In order to support account linking with GitLab, you must make some configuration changes in both Keycloak and GitLab.  This section explains the steps.
 
