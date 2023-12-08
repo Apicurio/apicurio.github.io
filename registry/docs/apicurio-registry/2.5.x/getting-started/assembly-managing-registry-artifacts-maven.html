@@ -582,7 +582,29 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
 <h2 id="adding-artifact-references-manually-using-maven-plugin_registry"><a class="anchor" href="#adding-artifact-references-manually-using-maven-plugin_registry"></a>Adding artifact references manually using the Apicurio Registry Maven plug-in</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry artifact types such as Apache Avro, Google Protobuf, and JSON Schema can include <em>artifact references</em> from one artifact file to another. You can create efficiencies by defining reusable schema or API artifacts, and then referencing them from multiple locations in artifact references.</p>
+<p>Some Apicurio Registry artifact types can include <em>artifact references</em> from one artifact file to another. You can create efficiencies by defining reusable schema or API artifacts, and then referencing them from multiple locations in artifact references.</p>
+</div>
+<div class="paragraph">
+<p>The following artifact types support artifact references:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apache Avro</p>
+</li>
+<li>
+<p>Google Protobuf</p>
+</li>
+<li>
+<p>JSON Schema</p>
+</li>
+<li>
+<p>OpenAPI</p>
+</li>
+<li>
+<p>AsyncAPI</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>This section shows a simple example of using the Apicurio Registry Maven plug-in to manually register an artifact reference to a simple Avro schema artifact stored in Apicurio Registry. This example assumes that the following <code>Exchange</code> schema artifact has already been created in Apicurio Registry:</p>
@@ -738,10 +760,51 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
 <h2 id="adding-artifact-references-automatically-using-maven-plugin_registry"><a class="anchor" href="#adding-artifact-references-automatically-using-maven-plugin_registry"></a>Adding artifact references automatically using the Apicurio Registry Maven plug-in</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry artifact types such as Apache Avro, Google Protobuf, and JSON Schema can include <em>artifact references</em> from one artifact file to another. You can create efficiencies by defining reusable schema or API artifacts, and then referencing them from multiple locations in artifact references.</p>
+<p>Some Apicurio Registry artifact types can include <em>artifact references</em> from one artifact file to another. You can create efficiencies by defining reusable schema or API artifacts, and then referencing them from multiple locations in artifact references.</p>
 </div>
 <div class="paragraph">
-<p>You can specify a single artifact and configure the Apicurio Registry Maven plugin to automatically detect all references to artifacts located in the same directory, and to automatically register those references.</p>
+<p>The following artifact types support artifact references:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apache Avro</p>
+</li>
+<li>
+<p>Google Protobuf</p>
+</li>
+<li>
+<p>JSON Schema</p>
+</li>
+<li>
+<p>OpenAPI</p>
+</li>
+<li>
+<p>AsyncAPI</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can specify a single artifact and configure the Apicurio Registry Maven plugin to automatically detect all references to artifacts located in the same directory, and to automatically register those references. This is a Technology Preview feature.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Technology Preview features are not supported with RedHat production service level agreements (SLAs) and might not be functionally complete.
+RedHat does not recommend using them in production.
+These features provide early access to upcoming product features, enabling customers to test functionality and provide feedback during the development process.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the support scope of RedHat Technology Preview features, see <a href="https://access.redhat.com/support/offerings/techpreview/">Technology Preview Features Support Scope</a>.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>This section shows a simple example of using the Maven plug-in to register an Avro schema and automatically detect and register an artifact reference to a simple schema artifact. This example assumes that the parent <code>TradeKey</code> artifact and the nested <code>Exchange</code> schema artifact are both available in the same directory:</p>
@@ -822,7 +885,7 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
                         &lt;/file&gt;
                         &lt;ifExists&gt;RETURN_OR_UPDATE&lt;/ifExists&gt;
                         &lt;canonicalize&gt;true&lt;/canonicalize&gt;
-                        &lt;analyzeDirectory&gt;true&lt;/analyzeDirectory&gt; <i class="conum" data-value="6"></i><b>(6)</b>
+                        &lt;autoRefs&gt;true&lt;/autoRefs&gt; <i class="conum" data-value="6"></i><b>(6)</b>
                     &lt;/artifact&gt;
                 &lt;/artifacts&gt;
             &lt;/configuration&gt;
@@ -855,7 +918,7 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
 </tr>
 <tr>
 <td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>Set the <code>&lt;analyzeDirectory&gt;</code> option to true to automatically detect and register all references to artifacts in the same directory. You can register multiple artifact references in this way.</td>
+<td>Set the <code>&lt;autoRefs&gt;</code> option to true to automatically detect and register all references to artifacts in the same directory. You can register multiple artifact references in this way.</td>
 </tr>
 </table>
 </div>
