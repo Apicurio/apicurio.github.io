@@ -382,12 +382,12 @@ If you are using Keycloak service accounts, the client <strong>Access Type</stro
 <li>
 <p>In your Apicurio Registry deployment on OpenShift, set the following Apicurio Registry environment variables to configure authentication using Keycloak:</p>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 1. Configuration for Apicurio Registry authentication</caption>
+<caption class="title">Table 1. Configuration for Apicurio Registry authentication with Keycloak</caption>
 <colgroup>
-<col style="width: 31.25%;">
-<col style="width: 31.25%;">
-<col style="width: 12.5%;">
-<col style="width: 25%;">
+<col style="width: 29.4117%;">
+<col style="width: 35.2941%;">
+<col style="width: 11.7647%;">
+<col style="width: 23.5295%;">
 </colgroup>
 <thead>
 <tr>
@@ -400,27 +400,33 @@ If you are using Keycloak service accounts, the client <strong>Access Type</stro
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If set to <code>true</code>, the environment variables that follow are required.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables authentication for Apicurio Registry. When set to <code>true</code>, the environment variables that follow are required for authentication using Keycloak.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The URL of the Keycloak authentication server to use.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_REALM</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The Keycloak realm used for authentication.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URL of the Keycloak authentication server. For example, <code>http://localhost:8080</code>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_API_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_REALM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Keycloak realm for authentication. For example, <code>registry.</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_API_CLIENT_ID</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The client ID for the Apicurio Registry REST API.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry-api</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_UI_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The client ID for the Apicurio Registry web console.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio-registry</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -636,7 +642,7 @@ All authentication and authorization options in Apicurio Registry are disabled b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables authentication in Apicurio Registry. When set to <code>true</code>, the environment variables that follow are required for authentication in Keycloak.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables authentication for Apicurio Registry. When set to <code>true</code>, the environment variables that follow are required for authentication using Keycloak.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
@@ -648,7 +654,7 @@ All authentication and authorization options in Apicurio Registry are disabled b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_REALM</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The Keycloak realm for authentication. For example,<code>registry.</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Keycloak realm for authentication. For example, <code>registry.</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
