@@ -3,7 +3,7 @@ layout: post
 title: "Resolving a bug in KafkaSQL storage for Apicurio Registry"
 date:   2021-12-09 12:00:00
 author: jakub
-categories: blog registry security
+categories: blog registry kafkasql
 ---
 
 One of the major changes introduced in Apicurio Registry `2.x` were improvements in the supported storage options.
@@ -476,4 +476,4 @@ curl -X POST -H 'content-type: application/zip' --data-binary "@$PWD/export.zip"
 generated from an empty Apicurio Registry instance, version `2.1.3.Final`.*
 
 Thank you for using and supporting Apicurio projects! As always, if you have any suggestions or encounter any problem, 
-feel free to contact the team by [filling an issue in GitHub](https://github.com/Apicurio/apicurio-registry/issues)
+feel free to contact the team by [filing an issue in GitHub](https://github.com/Apicurio/apicurio-registry/issues)

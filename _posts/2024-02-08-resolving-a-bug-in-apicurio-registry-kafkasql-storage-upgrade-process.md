@@ -27,8 +27,8 @@ Before I explain what happened, let me first review a few relevant features of A
 
 In Apicurio Registry, artifact content can be addressed by several identifiers, most commonly:
 
-- *group ID*, *artifact ID*, and *version* triple (GAV);
-- *global ID*, which is unique for every artifact version; and
+- *group ID*, *artifact ID*, and *version* triple (GAV)
+- *global ID*, which is unique for every artifact version
 - *content ID*, which is unique for every piece of content (sequence of bytes).
 
 In some situations, however, these identifiers are not known up front. For example, the user might want to determine whether a piece of content already exists in Apicurio Registry and find out its identifiers, or create a new artifact version **only if** the content does not already exist. Therefore, it's useful to have a way of asking Apicurio Registry about the **content itself** (sequence of bytes).
@@ -56,7 +56,7 @@ message Error {
 }
 ```
 
-but they do not result in the same SHA-256 hash. To support searching for content that is not equal content, but is equivalent, Apicurio Registry also stores a *canonical content hash*, which is a SHA-256 hash of the content after it has been converted to a canonical form.
+but they do not result in the same SHA-256 hash. To support searching for content that is equivalent to the input, but not necessarily equal, Apicurio Registry also stores a *canonical content hash*, which is a SHA-256 hash of the content after it has been converted to a canonical form.
 
 The extended list of identifiers for artifact content in Apicurio Registry is therefore:
 
@@ -64,7 +64,7 @@ The extended list of identifiers for artifact content in Apicurio Registry is th
 - *global ID*
 - *content ID*
 - *content hash*
-- *canonical content hash*
+- *canonical content hash*.
 
 <a id="protobuf-canonical-content-hash-upgrader"></a> The support for content hashes has evolved across Apicurio Registry versions. For example, in version `2.1.2.Final`, we have implemented a canonicalizer for Protobuf artifacts. Before this version, the *content hash* and *canonical content hash* were computed using the same algorithm. These kinds of changes require careful consideration and implementation of a special process that executes during Apicurio Registry version upgrades. In the case of the KafkaSQL storage option, this upgrade process is performed by the `KafkaSqlProtobufCanonicalizerUpgrader` class.
 
@@ -167,7 +167,7 @@ When Apicurio Registry is restarted, it consumes all messages in the topic to lo
 
 For this bug analysis, we will focus on the Kafka messages responsible for replicating artifact content data.
 
-When new content is inserted into Apicurio Registry, KafkaSQL storage produces a new content message on the `kafkasql-journal` topic. The message has the following structure <a id="note-3-back"></a> [\[3\]](#note-3):
+When new content is inserted into Apicurio Registry, KafkaSQL storage produces a new *content message* on the `kafkasql-journal` topic. The message has the following structure <a id="note-3-back"></a> [\[3\]](#note-3):
 
 ```
 key = {content_id, content_hash} // partition_key = content_hash
@@ -175,11 +175,11 @@ value = {operation, canonical_content_hash, content, references}
 ```
 
 where `operation` is one of:
-- `CREATE`, which is used when the content is inserted into Apicurio Registry;
-- `UPDATE`, which is currently only used by `KafkaSqlProtobufCanonicalizerUpgrader`; or
+- `CREATE`, which is used when the content is inserted into Apicurio Registry,
+- `UPDATE`, which is currently only used by `KafkaSqlProtobufCanonicalizerUpgrader`, or
 - `IMPORT`, which is used by the export-import feature.
 
-Structure of the content message key is important for determining which Kafka messages can be safely compacted. When [Kafka log compaction](https://kafka.apache.org/documentation/#compaction) runs, only the last message with a given key is preserved, and previous messages are deleted. This has the advantage of reducing the size of the topic by removing stale messages, but has the potential of causing problems in case of a bug, as we'll see later. Apicurio Registry automatically creates the `kafkasql-journal` topic if it **does not** already exist, and it configures the topic with **log compaction enabled** by default.
+Structure of the *content message key* is important for determining which Kafka messages can be safely compacted. When [Kafka log compaction](https://kafka.apache.org/documentation/#compaction) runs, only the last message with a given key is preserved, and previous messages are deleted. This has the advantage of reducing the size of the topic by removing stale messages, but has the potential of causing problems in case of a bug, as we'll see later. Apicurio Registry automatically creates the `kafkasql-journal` topic if it **does not** already exist, and it configures the topic with **log compaction enabled** by default.
 
 ## Version History
 
@@ -201,7 +201,7 @@ content_hash = sha256(content)
 canonical_content_hash = sha256(canonicalize(content))
 ```
 
-Let's call these *legacy content hash* and *legacy canonical hash* to differentiate between the current content hash algorithm implemented in version `2.4.2.Final`.
+Let's call these *legacy content hash* and *legacy canonical content hash* to differentiate between the current hash algorithm implemented in version `2.4.2.Final`.
 
 ### **Version 2.1.3.Final**
 
@@ -220,9 +220,9 @@ content_hash = sha256(content ++ references)
 canonical_content_hash = sha256(canonicalize(content, dependencies) ++ references)
 ```
 
-Let's call these *current content hash* and *current canonical content hash* to differentiate between the legacy content hash algorithm implemented in version `2.1.2.Final` for Protobuf artifacts.
+Let's call these *current content hash* and *current canonical content hash* to differentiate between the legacy hash algorithm implemented in version `2.1.2.Final` for Protobuf artifacts.
 
-By mistake, `KafkaSqlProtobufCanonicalizerUpgrader` was not updated, so it still attempts to change the canonical content hash to the legacy value during Apicurio Registry restart.
+By mistake, `KafkaSqlProtobufCanonicalizerUpgrader` was not updated, so it still attempts to change the *canonical content hash* to the legacy value during Apicurio Registry restart.
 
 [`ReferencesContentHashUpgrader`](https://github.com/Apicurio/apicurio-registry/blob/2.4.2.Final/app/src/main/java/io/apicurio/registry/storage/impl/sql/upgrader/ReferencesContentHashUpgrader.java) is implemented to upgrade the *legacy content hash* to the *current content hash* in the in-memory database. It's not executed for KafkaSQL storage option by mistake.
 
@@ -230,7 +230,7 @@ By mistake, `KafkaSqlProtobufCanonicalizerUpgrader` was not updated, so it still
 
 User reports an [issue related to content hashes in KafkaSQL](https://github.com/Apicurio/apicurio-registry/issues/3414). This is fixed in the next version.
 
-This version also fixes a bug in `KafkaSqlProtobufCanonicalizerUpgrader` <a id="note-8-back"></a> [\[8\]](#note-8), that resulted in an SQL error when the content hash change was being applied:
+This version also fixes a bug in `KafkaSqlProtobufCanonicalizerUpgrader` <a id="note-8-back"></a> [\[8\]](#note-8), that resulted in an SQL error when the *canonical content hash* change was being applied:
 
 ```
 2024-02-07 13:54:26 DEBUG <> [io.apicurio.registry.storage.impl.kafkasql.sql.KafkaSqlSink] (KSQL Kafka Consumer Thread) Registry exception detected: io.apicurio.registry.storage.impl.sql.jdb.RuntimeSqlException: org.h2.jdbc.JdbcSQLDataException: Parameter "#4" is not set [90012-214]
@@ -240,7 +240,7 @@ resulting in the operation failing, and in-memory database containing the same *
 
 ### **Version: 2.4.4.Final**
 
-[`ReferencesCanonicalHashUpgrader`](https://github.com/Apicurio/apicurio-registry/blob/2.4.4.Final/app/src/main/java/io/apicurio/registry/storage/impl/sql/upgrader/ReferencesCanonicalHashUpgrader.java) is implemented <a id="note-9-back"></a> [\[9\]](#note-9) to upgrade the *legacy canonical content hash* to the *new canonical content hash* in the in-memory database.
+[`ReferencesCanonicalHashUpgrader`](https://github.com/Apicurio/apicurio-registry/blob/2.4.4.Final/app/src/main/java/io/apicurio/registry/storage/impl/sql/upgrader/ReferencesCanonicalHashUpgrader.java) is implemented <a id="note-9-back"></a> [\[9\]](#note-9) to upgrade the *legacy canonical content hash* to the *current canonical content hash* in the in-memory database.
 
 Both `References*` upgraders are now executed for the KafkaSQL storage option.
 
@@ -262,45 +262,45 @@ When examining the Kafka topic dump <a id="note-10-back"></a> [\[10\]](#note-10)
 </div>
 </div>
 
-which is missing the content bytes (the four bytes `\u0000\u0000\u0000\u0000` encode the length of the content, which is zero). This means that the previous content messages must have been compacted. How is the message above produced? It is produced by `KafkaSqlProtobufCanonicalizerUpgrader`.
+which is missing the content bytes (the four bytes `\u0000\u0000\u0000\u0000` encode the length of the content, which is zero). This means that the previous *content messages* must have been compacted. How is the message above produced? It is produced by `KafkaSqlProtobufCanonicalizerUpgrader`.
 
 We now have the information I needed to formulate a hypothesis about what happened. There are two related bugs:
 
-1. `KafkaSqlProtobufCanonicalizerUpgrader` [was not updated to use the current canonical content hash algorithm](https://github.com/Apicurio/apicurio-registry/blob/2.5.8.Final/storage/kafkasql/src/main/java/io/apicurio/registry/storage/impl/kafkasql/KafkaSqlProtobufCanonicalizerUpgrader.java#L83-L91), so it still attempts to change any Protobuf content that uses *current canonical hash* back to *legacy canonical hash* after each Apicurio Registry restart. Since the hashes are equal for Protobuf content without references, only Protobuf content *with references* is affected.
-2. `KafkaSqlProtobufCanonicalizerUpgrader` performs the hash change [using the following Kafka content message](https://github.com/Apicurio/apicurio-registry/blob/2.5.8.Final/storage/kafkasql/src/main/java/io/apicurio/registry/storage/impl/kafkasql/KafkaSqlProtobufCanonicalizerUpgrader.java#L80):
+1. `KafkaSqlProtobufCanonicalizerUpgrader` [was not updated to use the *current canonical content hash* algorithm](https://github.com/Apicurio/apicurio-registry/blob/2.5.8.Final/storage/kafkasql/src/main/java/io/apicurio/registry/storage/impl/kafkasql/KafkaSqlProtobufCanonicalizerUpgrader.java#L83-L91), so it always attempts to change any Protobuf content that uses *current canonical content hash* back to *legacy canonical content hash* after each Apicurio Registry restart. Since the hashes are equal for Protobuf content without references, only Protobuf content with references is affected.
+1. `KafkaSqlProtobufCanonicalizerUpgrader` performs the hash change [using the following Kafka *content message*](https://github.com/Apicurio/apicurio-registry/blob/2.5.8.Final/storage/kafkasql/src/main/java/io/apicurio/registry/storage/impl/kafkasql/KafkaSqlProtobufCanonicalizerUpgrader.java#L80):
 
    ```
    key = {content_id = (unchanged), content_hash = (unchanged)}
    value = {operation = UPDATE, canonical_content_hash = (legacy value), content = null, references = (unchanged)}
    ```
 
-   Which has the same message key as the Kafka message that was used to insert the content. The previous content message might become compacted and the content lost.
+   Which has the same *content message key* as the Kafka message that was used to insert the content. The previous *content message* might become compacted and the content lost.
 
 ## Reproducer Scenario
 
 This is a more detailed list of steps that I think should reproduce the problem:
 
-1. User starts with Apicurio Registry version `2.2.2.Final-2.4.1.Final` (inclusive), using **KafkaSQL** storage.
+1. User starts with Apicurio Registry version `2.2.2.Final-2.4.1.Final` (inclusive), using KafkaSQL storage.
 
-1. User adds some Protobuf artifacts with references, let's call them **set A**. The content hashes for these artifacts are computed using the legacy algorithm. Therefore, the content message keys contain *legacy content hash*, and content message values contain *legacy canonical content hash*. The in-memory database contains the same.
+1. User adds some Protobuf artifacts with references, let's call them **set A**. The content hashes for these artifacts are computed using the legacy algorithm. Therefore, the *content message keys* contain *legacy content hash*, and *content message values* contain *legacy canonical content hash*. The in-memory database contains the same.
 
 1. User upgrades Apicurio Registry to version `2.4.2.Final-2.4.3.Final` (inclusive).
 
     1. The `KafkaSqlProtobufCanonicalizerUpgrader` is executed. For each Protobuf artifact in the database, it computes the  *legacy canonical content hash*, which is equal to the canonical content hash of **set A**, so nothing changes. The `Reference*` upgraders are not executed for KafkaSQL in this version.
 
-1. User adds some more Protobuf artifacts with references, let's call them **set B**. The content hashes for these artifacts are computed using the new algorithm. Therefore, the content message keys contain *new content hash*, and content message values contain *new canonical content hash*.
+1. User adds some more Protobuf artifacts with references, let's call them **set B**. The content hashes for these artifacts are computed using the current algorithm. Therefore, the *content message keys* contain *current content hash*, and *content message values* contain *current canonical content hash*.
 
 1. User restarts their Apicurio Registry instance.
  
-   1. `KafkaSqlProtobufCanonicalizerUpgrader` is executed again. It's not necessary to upgrade Apicurio Registry to a later version, because KafkaSQL upgraders are executed every time Apicurio Registry starts. For each Protobuf artifact in the database, it computes the *legacy canonical content hash*, which equals to the content hash of **set A**, but **not set B**. Therefore, it changes the *canonical content hash* of **set B** to the legacy value, by sending a content message value that is missing the content by mistake.
+   1. `KafkaSqlProtobufCanonicalizerUpgrader` is executed again. It's not necessary to upgrade Apicurio Registry to a later version, because KafkaSQL upgraders are executed every time Apicurio Registry starts. For each Protobuf artifact in the database, it computes the *legacy canonical content hash*, which equals to the *canonical content hash* of **set A**, but **not set B**. Therefore, it changes the *canonical content hash* of **set B** to the legacy value, by sending a *content message value* that is missing the content by mistake.
 
-1. At some later time, Kafka compaction runs, which effectively deletes the content of **set B**. The missing data is only noticed after another restart of Apicurio Registry, when the in-memory database is loaded from the Kafka topic.
+1. Some time later, Kafka compaction runs, which effectively deletes the content of **set B**. The missing data is only noticed after another restart of Apicurio Registry, when the in-memory database is loaded from the Kafka topic.
 
 1. User upgrades Apicurio Registry to version `2.4.4.Final-2.5.8.Final` (inclusive) <a id="note-11-back"></a> [\[11\]](#note-11).
 
     1. The `KafkaSqlProtobufCanonicalizerUpgrader` is executed again.
-    1. The `ReferencesContentHashUpgrader` is executed, which updates any *legacy content hash* it finds to *new content hash*, but only in the in-memory database. This currently does not cause any problems, but since content hash is part of the content message key, there is a risk of a potential bug in the future. See [Additional bug risk](#additional-bug-risk) section for more details.
-    1. The `ReferencesCanonicalHashUpgrader` is executed, which updates any *legacy canonical content hash* it finds to *new canonical content hash*, but only in the in-memory database. This currently does not cause any problems.
+    1. The `ReferencesContentHashUpgrader` is executed, which updates any *legacy content hash* it finds to *current content hash*, but only in the in-memory database. This currently does not cause any problems, but since *content hash* is part of the *content message key*, there is a risk of a potential bug in the future. See [Additional bug risk](#additional-bug-risk) section for more details.
+    1. The `ReferencesCanonicalHashUpgrader` is executed, which updates any *legacy canonical content hash* it finds to *current canonical content hash*, but only in the in-memory database. This currently does not cause any problems.
 
 ## Reproducer
 
@@ -334,7 +334,7 @@ The following shows abbreviated contents of the `CONTENT` table in the in-memory
 </div>
 </div>
 
-Notice that the canonical content hash value in the second row is `b5a276ddf3fc1724dbe206cbc6da60adf8e32af5613ef0fe52fb1dde8da6b67a`. This is the correct (**current**) value that was computed when the content was inserted.
+Notice that the *canonical content hash* value in the second row is `b5a276ddf3fc1724dbe206cbc6da60adf8e32af5613ef0fe52fb1dde8da6b67a`. This is the correct value that was computed using the current hash algorithm when the content was inserted.
 
 We restart Apicurio Registry, and see the following message in the log, which means that the `KafkaSqlProtobufCanonicalizerUpgrader` has been executed:
 
@@ -342,7 +342,7 @@ We restart Apicurio Registry, and see the following message in the log, which me
 2024-02-07 12:29:47 DEBUG <> [io.apicurio.registry.storage.impl.kafkasql.KafkaSqlProtobufCanonicalizerUpgrader] (KSQL Kafka Consumer Thread) Protobuf content canonicalHash outdated value detected, updating contentId 2
 ```
 
-The `CONTENT` table now shows that the `KafkaSqlProtobufCanonicalizerUpgrader` upgraded the canonical hash to the incorrect (**legacy**) value:
+The `CONTENT` table now shows that the `KafkaSqlProtobufCanonicalizerUpgrader` updated the *canonical content hash* to the incorrect legacy value:
 
 <div class="language-plaintext highlighter-rouge">
 <div class="highlight">
@@ -491,7 +491,7 @@ We will wait for Kafka log compaction to run, and observe the contents of the `k
 </div>
 </div>
 
-Notice that the bootstrap messages at offset `0` and `9` have been deleted, because they are empty (this is on purpose), however message `6` has also been deleted because it shares the key with message `10`; this was not intended and is the bug we need to fix.
+Notice that the bootstrap messages at offset `0` and `9` have been deleted, because they are empty (this is on purpose). However, message `6` has also been deleted because it shares the key with message `10`. This was not intended and is the bug we need to fix.
 
 After another restart, the Protobuf content with references is missing in the `CONTENT` table:
 
@@ -512,12 +512,13 @@ After another restart, the Protobuf content with references is missing in the `C
 </div>
 </div>
 
+<span class="big">&#x220e;</span>
 
 ## <a id="additional-bug-risk"></a> Additional Bug Risk
 
-Because the `ReferencesContentHashUpgrader` does not write the updated content hashes to the Kafka topic in step 7.2., there might be a mismatch between the content hash value in the `kafkasql-journal` topic and the in-memory database. If Apicurio Registry produced a new content message for a given *content ID* (for example, to upgrade the canonical content hash, content, or references), the content message key that would be used is different than the content key present in the topic, because the key would contain a content hash that has changed.
+Because the `ReferencesContentHashUpgrader` does not write the updated content hashes to the Kafka topic in step 7.2., there might be a mismatch between the content hash value in the `kafkasql-journal` topic and the in-memory database. If Apicurio Registry produced a new *content message* for a given *content ID* (for example, to upgrade the canonical content hash, content, or references), the *content message key* that would be used is different from the one present in the topic, because the key would contain a *content hash* that has changed.
 
-Currently, the only operation that updates content via content message is the one that `KafkaSqlProtobufCanonicalizerUpgrader` uses and this operation is always executed **before** the `Reference*` upgraders, so it does not cause issues, but it is still a potential bug. To fix this, we would need to change the format of the content message key.
+Currently, the only operation that updates content via *content message* is the one that `KafkaSqlProtobufCanonicalizerUpgrader` uses. This operation is always executed **before** the `Reference*` upgraders, so it does not cause issues, but it is still a potential bug. To fix this, we would need to change the format of the *content message key*.
 
 ## <a id="summary"></a> Summary
 
@@ -533,7 +534,7 @@ You are affected if:
 Symptoms are different based on your Kafka log compaction configuration:
 
 - If Kafka compaction runs, some Protobuf artifacts with references **might be deleted**, and disappear from Apicurio Registry after restart.
-- If Kafka compaction is disabled, data is **not** lost, but some Protobuf artifacts with references might have their *canonical content hash* updated to the **legacy** version. If you are on version `2.4.2.Final`, because of a different bug, the hash change fails to be applied to the in-memory database, so the side effect is mitigated.
+- If Kafka compaction is disabled, data is **not** lost, but some Protobuf artifacts with references might have their *canonical content hash* updated to the **legacy** version. If you are on version `2.4.2.Final`, because of a different bug, the hash change fails to be applied to the in-memory database, so the side effect is avoided at the cost of `Reference*` upgraders not being present in this version.
 
 ## <a id="mitigation"></a> Mitigation
 
@@ -542,9 +543,9 @@ If you are affected, you can mitigate the bug using the following steps:
 1. Back up your Apicurio Registry data by either backing up the `kafkasql-journal` topic directly, or by using the export-import feature.
 1. Disable compaction of `kafkasql-journal` topic.
 1. Avoid using features that rely on *canonical content hash*, such as:
-    - Search for artifacts using canonical content (*POST* to `/search/artifacts` with `canonical=true` query parameter),
-    - Skipping updating of an artifact on duplicate content (*POST* to `/groups/{groupId}/artifacts`, with `ifExists=RETURN_OR_UPDATE` and `canonical=true`)
-    - Search artifact metadata by canonical content (*POST* to `/groups/{groupId}/artifacts/{artifactId}/meta` with `canonical=true`)
+    - Searching for artifacts using canonical content (*POST* to `/search/artifacts` with `canonical=true` query parameter),
+    - Searching artifact metadata by canonical content (*POST* to `/groups/{groupId}/artifacts/{artifactId}/meta` with `canonical=true`), or
+    - Skipping updating of an artifact on duplicate content (*POST* to `/groups/{groupId}/artifacts`, with `ifExists=RETURN_OR_UPDATE` and `canonical=true`);
 
    with Protobuf artifacts that have references, unless your Apicurio Registry version is `2.4.2.Final`.
 1. Do not restart or upgrade Apicurio Registry (if possible), until a fixed version is released [\[11\]](#note-11), and then upgrade directly to the fixed version, skipping any intermediate versions.
@@ -557,7 +558,7 @@ We are working on a fix at the moment. I will update this article when it is ava
 
 <a id="note-1"></a> **[1]** As of the writing of this article, latest Apicurio Registry version is `2.5.8.Final`. [\[Go back\]](#note-1-back)
 
-<a id="note-2"></a> **[2]** If you come across a bug that you suspect is related to KafkaSQL, we have written a [guide on how to generate a `kafkasql-journal` topic dump](https://www.apicur.io/registry/docs/apicurio-registry/2.5.x/getting-started/guide-exporting-registry-kafka-topic-data.html) that could help us during investigation. [\[Go back\]](#note-2-back)
+<a id="note-2"></a> **[2]** If you come across a bug that you suspect is related to KafkaSQL, I have written a [guide on how to generate a `kafkasql-journal` topic dump](https://www.apicur.io/registry/docs/apicurio-registry/2.5.x/getting-started/guide-exporting-registry-kafka-topic-data.html) that could help us during investigation. [\[Go back\]](#note-2-back)
 
 <a id="note-3"></a> **[3]** Ignoring multitenancy for simplicity. [\[Go back\]](#note-3-back)
 
