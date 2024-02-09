@@ -2,7 +2,7 @@
 FROM ruby:2.7.8
 
 # Install dependencies
-RUN gem install bundler
+RUN gem install bundler -v 2.4.22
 
 # Copy the custom startup script to the container
 COPY _startup.sh /opt/startup.sh
