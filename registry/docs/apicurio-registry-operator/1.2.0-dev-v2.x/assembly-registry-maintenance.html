@@ -255,44 +255,20 @@ The example configuration in this procedure is intended for development and test
 <p>In the OpenShift web console, click <strong>Installed Operators</strong> and <strong>Keycloak Operator</strong>, and then the <strong>Keycloak</strong> tab.</p>
 </li>
 <li>
-<p>Click <strong>Create Keycloak</strong> to provision a new Keycloak instance for securing a Apicurio Registry deployment. You can use the default value, for example:</p>
+<p>To create the Keycloak instance, see the <a href="https://www.keycloak.org/operator/basic-deployment">Keycloak documentation on how to create a basic deployment</a>.</p>
+</li>
+<li>
+<p>When your Keycloak instance is available, you can import the following example realm by using the steps in the <a href="https://www.keycloak.org/operator/realm-import">Keycloak Operator documentation</a>:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: keycloak.org/v1alpha1
-kind: Keycloak
-metadata:
-  name: example-keycloak
-  labels:
-    app: sso
-spec:
-  instances: 1
-  externalAccess:
-    enabled: True
-  podDisruptionBudget:
-    enabled: True</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Wait until the instance has been created, and click <strong>Networking</strong>  and then <strong>Routes</strong> to access the new route for the <strong>keycloak</strong> instance.</p>
-</li>
-<li>
-<p>Click the <strong>Location</strong> URL and copy the displayed URL value for later use when deploying Apicurio Registry.</p>
-</li>
-<li>
-<p>Click <strong>Installed Operators</strong> and <strong>Keycloak Operator</strong>, and click the <strong>Keycloak Realm</strong> tab, and then <strong>Create Keycloak Realm</strong> to create a <code>registry</code> example realm:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: keycloak.org/v1alpha1
-kind: KeycloakRealm
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: k8s.keycloak.org/v2alpha1
+kind: KeycloakRealmImport
 metadata:
   name: registry-keycloakrealm
   labels:
-    app: registry
+    app: keycloak
 spec:
-  instanceSelector:
-    matchLabels:
-      app: sso
+  keycloakCRName: example-keycloak
   realm:
     displayName: Registry
     enabled: true
@@ -355,7 +331,7 @@ spec:
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-You must customize this <code>KeycloakRealm</code> resource with values suitable for your environment if you are deploying to production. You can also create and manage realms using the Keycloak web console.
+You must customize this <code>KeycloakRealmImport</code> resource with values suitable for your environment if you are deploying to production. You can also create and manage realms using the Keycloak web console.
 </td>
 </tr>
 </table>
