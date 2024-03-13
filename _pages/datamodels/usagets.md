@@ -7,7 +7,7 @@ excerpt: Learn how to use the Apicurio Data Models library
 
 A typescript library for reading, manipulating, and writing OpenAPI and AsyncAPI documents.
 
-Install with `npm install apicurio-data-models`.
+Install with `npm install @apicurio/data-models`.
 
 ## Overview
 
