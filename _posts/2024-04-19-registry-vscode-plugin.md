@@ -13,7 +13,7 @@ Jean-Etienne Martin](https://github.com/jetmartin). 🎉
 
 # Installation
 
-Installation easy, because the extension is [published to the Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=apicurio.apicurio-registry-explorer). In Visual Studio Code, go to the quick open dialog with `ctrl+P`, and execute the following command:
+Installation is easy, because the extension is [published to the Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=apicurio.apicurio-registry-explorer). In Visual Studio Code, go to the quick open dialog with `ctrl+P`, and execute the following command:
 
 ```
 ext install apicurio.apicurio-registry-explorer
