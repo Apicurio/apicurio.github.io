@@ -512,7 +512,7 @@ After another restart, the Protobuf content with references is missing in the `C
 </div>
 </div>
 
-<span class="big">&#x220e;</span>
+<span>&#x220e;</span>
 
 ## <a id="additional-bug-risk"></a> Additional Bug Risk
 
@@ -552,7 +552,7 @@ If you are affected, you can mitigate the bug using the following steps:
 
 ## Solution
 
-We are working on a fix at the moment. I will update this article when it is available.  
+We have released a fixed version `2.5.9.Final`🎉. Please update your deployment directly to this version.
 
 ## Notes
 
@@ -576,7 +576,7 @@ We are working on a fix at the moment. I will update this article when it is ava
 
 <a id="note-10"></a> **[10]** This is an illustrative example, not the actual topic dump provided by the user. [\[Go back\]](#note-10-back)
 
-<a id="note-11"></a> **[11]** Expected fixed version is `2.5.9.Final`. [\[Go back\]](#note-11-back)
+<a id="note-11"></a> **[11]** We have released a fixed version `2.5.9.Final`🎉. [\[Go back\]](#note-11-back)
 
 <a id="note-12"></a> **[12]** To do this, we create the topic manually before starting Apicurio Registry, using the following command:
 
