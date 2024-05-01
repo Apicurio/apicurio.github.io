@@ -636,7 +636,7 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <p>There are some cases where returning artifact content with referenced content inline might be helpful. For these cases, the Core Registry API v2 supports the <code>dereference</code> query parameter in certain operations.</p>
 </div>
 <div class="paragraph">
-<p>This support is currently implemented only for Avro and Protobuf artifacts when the <code>dereference</code> parameter is specified in the API operation. This parameter is not supported for any other artifact types.</p>
+<p>This support is currently implemented only for Avro, Protobuf, OpenAPI, AsyncAPI, and JSON Schema artifacts when the <code>dereference</code> parameter is specified in the API operation. This parameter is not supported for any other artifact types.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -645,7 +645,19 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-For Protobuf artifacts, dereferencing content is supported only when all of the schemas belong to the same package.
+For Protobuf artifacts, dereferencing content is supported only when all the schemas belong to the same package.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Circular dependencies are allowed by some artifact types (e.g. JSON Schema) but are not supported by Apicurio Registry.
 </td>
 </tr>
 </table>
