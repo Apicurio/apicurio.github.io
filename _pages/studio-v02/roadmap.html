@@ -1,0 +1,88 @@
+---
+title: "Studio : Roadmap"
+permalink: /studio-v02/roadmap/
+layout: page
+excerpt: Find out what's happening soon, and not-so-soon...
+---
+
+<div class="announcement">
+    <div class="info">
+        <span class="fa fa-fw fa-info"></span>
+        Apicurio Studio 0.2 has been deprecated (<a href="https://www.apicur.io/blog/2024/03/22/studio-1.0">more info here</a>).
+    </div>
+</div>
+
+<div class="container projpage">
+    <div class="row">
+        <div class="col-md-3">
+            {%- include studio-v02/_projnav.html -%}
+        </div>
+        <div class="col-md-9">
+            <div id="roadmap">
+                <div class="row summary">
+                    <div class="col-lg-10">
+                        <h1 class="section-header first">Apicurio Studio Roadmap</h1>
+                        <p>
+                            Here you will find a very high level roadmap for the Apicurio Studio project. The details are subject to change,
+                            but this page can provide a basic sense of the project's priorities and releases. Additional information can typically
+                            be found on <a href="{{ site.github_url }}/issues">GitHub</a>.
+                        </p>
+                        <p>
+                            The intention is to release new versions of the Apicurio Studio very frequently.  This roadmap represents a high
+                            level set of features that make up a given release series (for example, <strong>Beta</strong>.  The list of tasks
+                            for each release series is an indication of the work to be done in that series, but not an implication of the order
+                            in which that work will be done.  Finally, we will not wait until <strong>all</strong> of the tasks are complete,
+                            but will instead release iteratively as soon as useful functionality is completed.
+                        </p>
+                    </div>
+                </div>
+                <div id="content" class="row tbd">
+
+                    {%- for section in site.data.studio.roadmap -%}
+                    <div class="section col-lg-12 {% if section.released %}released{% endif %}">
+                        <div class="section-header">
+                            <h2 class="section-label">
+                                <a data-toggle="collapse" class="{% if section.current == false %}collapsed{% endif %}" data-target="#{{ section.id }}-body">{{ section.name }}</a>
+                                {%- if section.current -%}
+                                <span class="current-series">(current release series)</span>
+                                {%- endif -%}
+                                {%- if section.released -%}
+                                <span class="released-series">[released]</span>
+                                {%- endif -%}
+                            </h2>
+                        </div>
+                        <div class="section-body collapse {% if section.released != true %}in{% endif %}" id="{{ section.id }}-body">
+                            <div class="col-lg-12">
+                                <ul class="release">
+                                    <div class="headers">
+                                        <span class="header">Feature</span>
+                                        <span class="header pull-right">Released In</span>
+                                    </div>
+
+                                    {%- for category in section.categories -%}
+                                    <li>
+                                        <span>{{ category.name }}</span>
+                                        <ul>
+                                            {%- for task in category.tasks -%}
+                                            <li>
+                                                <span class="{% if task.released %}completed{% endif %}">{{ task.name }}</span>
+                                                {%- if task.released -%}
+                                                <span class="in-version">{{ task.released }}</span>
+                                                {%- endif -%}
+                                            </li>
+                                            {%- endfor -%}
+                                        </ul>
+                                    </li>
+                                    {%- endfor -%}
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                    {%- endfor -%}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

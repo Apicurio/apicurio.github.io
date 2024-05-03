@@ -1,0 +1,50 @@
+---
+title: "Studio : Documentation"
+permalink: /studio-v02/docs/
+layout: page
+excerpt: Read all documentation for Apicurio Studio.
+---
+
+{% assign latestRelease = site.data.studio.latestRelease %}
+{% assign version = site.data.studio.latestRelease.tag_name | remove_first: "v" %}
+
+<div class="announcement">
+    <div class="info">
+        <span class="fa fa-fw fa-info"></span>
+        Apicurio Studio 0.2 has been deprecated (<a href="https://www.apicur.io/blog/2024/03/22/studio-1.0">more info here</a>).
+    </div>
+</div>
+
+<div class="container projpage">
+    <div class="row">
+        <div class="col-md-3">
+            {%- include studio-v02/_projnav.html -%}
+        </div>
+        <div class="col-md-9">
+            <div id="guides">
+                <div id="content" class="row">
+                    <div class="col-lg-10">
+                        <h1 class="section-header first">Apicurio Studio Documentation</h1>
+                        <p>Select a guide from the following list to learn more about a specific Apicurio Studio topic:</p>
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="guide-list">
+                            {% for page in site.pages %}
+                                {% if page.guide-v02 == true %}
+                                    <div class="guide-list-item">
+                                        <div class="guide-list-item-title">
+                                            <a href="{{ page.url }}"><span>{{ page.title }}</span></a>
+                                        </div>
+                                        <div class="guide-list-item-excerpt">
+                                            {{ page.excerpt }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

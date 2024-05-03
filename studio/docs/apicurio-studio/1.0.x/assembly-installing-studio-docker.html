@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Installing Apicurio Studio using Docker :: Apicurio Studio</title>
+    <link rel="canonical" href="https://www.apicur.io/studio/docs/apicurio-studio/1.0.x/assembly-installing-studio-docker.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-studio" data-version="1.0.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Apicurio Studio</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-introduction.html">Introduction to Apicurio Studio</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-migrating-studio-v0-v1.html">Migrating an existing Apicurio Studio deployment</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-installing-studio-docker.html">Installing Apicurio Studio using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-studio-kubernetes.html">Installing Apicurio Studio on Kubernetes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-studio-storage.html">Configuring Apicurio Studio storage</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-getting-started.html">Getting started with Apicurio Studio</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-maintenance.html">Configuring and managing Apicurio Studio deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Studio configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Studio</span>
+    <span class="version">1.0.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Studio</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">1.0.x</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Apicurio Studio</a></li>
+    <li>Installation</li>
+    <li><a href="assembly-installing-studio-docker.html">Installing Apicurio Studio using Docker</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-studio">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Installing Apicurio Studio using Docker</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This chapter explains how to install and run Apicurio Studio using Docker with the following storage options:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#installing-studio-in-memory-storage-docker">Installing Apicurio Studio with in-memory storage</a></p>
+</li>
+<li>
+<p><a href="#installing-studio-sql-storage-docker">Installing Apicurio Studio with SQL database storage</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p><a href="assembly-introduction.html#introduction" class="page">Introduction to Apicurio Studio</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can install more than one instance of Apicurio Studio depending on your environment. The number of instances depends on your storage option, and on the number and type of designs stored in Apicurio Studio.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For details on building from source, see <a href="https://github.com/Apicurio/apicurio-studio" class="bare">https://github.com/Apicurio/apicurio-studio</a>.</p>
+</li>
+<li>
+<p>For installation examples, including Docker Compose files, Kubernetes resources, and OpenShift templates, see <a href="https://github.com/Apicurio/apicurio-studio/tree/main/examples" class="bare">https://github.com/Apicurio/apicurio-studio/tree/main/examples</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-studio-in-memory-storage-docker"><a class="anchor" href="#installing-studio-in-memory-storage-docker"></a>Installing Apicurio Studio with in-memory storage</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This section explains how to install and run Apicurio Studio with simple in-memory storage from a container image.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The in-memory storage option is suitable for development only. All data is lost when the container image is restarted.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have Docker installed and the Docker daemon running.</p>
+</li>
+<li>
+<p>Ensure that you can connect to the quay.io container repository.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Get the Apicurio Studio application and web console container images:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker pull quay.io/apicurio/apicurio-studio:VERSION
+$ docker pull quay.io/apicurio/apicurio-studio-ui:VERSION</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>VERSION</code> is the Apicurio Studio release version, for example, <code>latest-snapshot</code>.</p>
+</div>
+</li>
+<li>
+<p>Run the application container image:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker run -it -p 8080:8080 quay.io/apicurio/apicurio-studio:latest-snapshot</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the web console container image:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker run -it -p 8888:8080 quay.io/apicurio/apicurio-studio-ui:latest-snapshot</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Apicurio Studio web console will be available at <a href="http://localhost:8888" class="bare">http://localhost:8888</a>.</p>
+</div>
+</li>
+<li>
+<p>Send a test request using the Apicurio Studio REST API. For example, enter the following <code>curl</code> command to get a list of API designs:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl http://localhost:8080/apis/studio/v1/designs</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that the response is similar to the following example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"kind":"DesignSearchResults","count":0,"page":1,"pageSize":20,"designs":[]}</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more REST API sample requests, see the <a href="files/studio-rest-api.htm">Apicurio Studio REST API documentation</a>.</p>
+</li>
+<li>
+<p>For demonstration examples, see <a href="https://github.com/Apicurio/apicurio-studio/tree/main/examples" class="bare">https://github.com/Apicurio/apicurio-studio/tree/main/examples</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-studio-sql-storage-docker"><a class="anchor" href="#installing-studio-sql-storage-docker"></a>Installing Apicurio Studio with SQL database storage</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This section explains how to install and run Apicurio Studio with storage in a PostgreSQL database from a container image. This storage option is suitable for production environments.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have Docker installed and the Docker daemon running.</p>
+</li>
+<li>
+<p>Ensure that you can connect to the quay.io container repository.</p>
+</li>
+<li>
+<p>You must already have a PostgreSQL database server installed and running. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ postgres -D /usr/local/pgsql/data</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more details, see <a href="https://www.postgresql.org/docs/12/server-start.html" class="bare">https://www.postgresql.org/docs/12/server-start.html</a></p>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker run -it -p 5432:5432 -e POSTGRES_USER=apicurio-studio -e POSTGRES_PASSWORD=password postgres</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Get the Apicurio Studio application and web console container images:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker pull quay.io/apicurio/apicurio-studio:VERSION
+$ docker pull quay.io/apicurio/apicurio-studio-ui:VERSION</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>VERSION</code> is the Apicurio Studio release version, for example, <code>latest-snapshot</code>.</p>
+</div>
+</li>
+<li>
+<p>Run the application container image:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker run -it -p 8080:8080 \
+  -e APICURIO_STORAGE_DB_KIND=postgresql \
+  -e APICURIO_DATASOURCE_URL=jdbc:postgresql://localhost:5432/apicurio-studio \
+  -e APICURIO_DATASOURCE_USERNAME=apicurio-studio \
+  -e APICURIO_DATASOURCE_PASSWORD=password \
+  --network host \
+  quay.io/apicurio/apicurio-studio:latest-snapshot</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the web console container image:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker run -it -p 8888:8080 quay.io/apicurio/apicurio-studio-ui:latest-snapshot</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Apicurio Studio web console will be available at <a href="http://localhost:8888" class="bare">http://localhost:8888</a>.</p>
+</div>
+</li>
+<li>
+<p>Send a test request using the Apicurio Studio REST API. For example, enter the following <code>curl</code> command to get a list of API designs:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl http://localhost:8080/apis/studio/v1/designs</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that the response is similar to the following example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"kind":"DesignSearchResults","count":0,"page":1,"pageSize":20,"designs":[]}</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more REST API sample requests, see the <a href="files/studio-rest-api.htm">Apicurio Studio REST API documentation</a>.</p>
+</li>
+<li>
+<p>For demonstration examples, see <a href="https://github.com/Apicurio/apicurio-studio/tree/main/examples" class="bare">https://github.com/Apicurio/apicurio-studio/tree/main/examples</a>.</p>
+</li>
+<li>
+<p>For more details on PostgreSQL, see the <a href="https://www.postgresql.org/docs/12/index.html">PostgreSQL documentation</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../assets/js/site.js"></script>
+<script src="../../assets/js/vendor/lunr.js"></script>
+<script src="../../assets/js/vendor/search.js" id="search-script" data-base-path="../.." data-page-path="/apicurio-studio/1.0.x/assembly-installing-studio-docker.html"></script>
+<script async src="../../assets/../search-index.js"></script>
+<script async src="../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>

@@ -1,8 +1,8 @@
 ---
-title: "Studio : Download"
-permalink: /studio/download/
+title: "Studio : Getting Started"
+permalink: /studio/getting-started/
 layout: page
-excerpt: Download the Apicurio Studio quickstart and get started fast!
+excerpt: Get started fast with Apicurio Studio!
 ---
 
 {% assign latestRelease = site.data.studio.latestRelease %}
@@ -18,62 +18,51 @@ excerpt: Download the Apicurio Studio quickstart and get started fast!
             <div id="download">
                 <div id="content" class="row">
                     <div class="col-lg-10">
-                        <h1 class="section-header first">Download and Get Started with Apicurio Studio</h1>
-                        <p>The easiest way to get started with Apicurio Studio is to download the quickstart based on WildFly and fire it up!  
-                        All you need is Java version 11, and you're ready to rock.</p>
+                        <h1 class="section-header first">Get Started with Apicurio Studio</h1>
+                        <p>The easiest way to get started with Apicurio Studio is by using Docker to quickly start up an in-memory server.</p>
+                        <p><em>Note: </em>This server is non-persistent, so don't use this for production!</p>
                     </div>
-
                     <div class="">
-                        <div class="col-lg-7">
+                        <div class="col-lg-9">
                             <h3>Prerequisites</h3>
                             <ul>
-                                <li>You have <a href="https://jdk.java.net/java-se-ri/11">Java 11+</a> installed.</li>
+                                <li>You have <a href="https://docs.docker.com/get-docker/">Docker</a> installed.</li>
                             </ul>
 
-                            <h3>Download and Install Apicurio Studio</h3>
-                            <ol>
-                                <li>
-                                   Download <a href="{{ theasset.browser_download_url }}">Apicurio Studio {{ latestRelease.tag_name }}</a>.
-                                </li>
-                                <li>Unpack the Apicurio Studio Quickstart .zip file.</li>
-                            </ol>
-
-                            <h3>Configure Apicurio Studio</h3>
+                            <h3>Pull the Apicurio Studio images</h3>
                             <p>
-                                The Apicurio Studio quickstart is designed to work automatically if you download and run it on your 
-                                local machine. If you want to run the quickstart on a different machine, or put it into production, 
-                                see the <a href="../docs">Apicurio Studio documentation</a>.
-                            </p>
-
-                            <h3>Run Apicurio Studio</h3>
-                            <ol>
-                                <li>Start WildFly.</li>
-                                <li>
-                                    Open <a href="https://localhost:8443/studio" rel="nofollow" target="_blank">Apicurio Studio</a> in your browser and log in, or register a new account!
-                                </li>
-                            </ol>
-                        </div>
-                        <div class="col-lg-5">
-                            <h3>Or try this...</h3>
-                            <pre class="code-block">
-mkdir ~/apicurio-studio-{{ version }}
-cd ~/apicurio-studio-{{ version }}
-curl -L {{ theasset.browser_download_url }} -o {{ theasset.name }}
-unzip {{ theasset.name }}
-cd apicurio-studio-{{ version }}
-./bin/standalone.sh -c standalone-apicurio.xml
+                                Two container images are needed to run Apicurio Studio:
+                                <ul>
+                                    <li>Backend: <a href="https://quay.io/repository/apicurio/apicurio-studio">apicurio/apicurio-studio</a></li>
+                                    <li>User Interface: <a href="https://quay.io/repository/apicurio/apicurio-studio-ui">apicurio/apicurio-studio-ui</a></li>
+                                </ul>
+                                 Pull the Docker images from Quay as follows:
+<pre class="code-block">
+docker pull quay.io/apicurio/apicurio-studio:{{ version }}
+docker pull quay.io/apicurio/apicurio-studio-ui:{{ version }}
 </pre>
+                            </p>
+                            <h3>Run the Apicurio Studio images</h3>
+                            <p>
+                                Apicurio Studio supports different storage options, but the quickest way to get started is to 
+                                use the non-persistent in-memory image with no external dependencies.  See the documentation 
+                                to learn how to run a persistent server (e.g. using Postgresql).
+                            </p>
+                            <p>
+                                Run both the <code>apicurio-studio</code> and <code>apicurio-studio-ui</code> Docker images as follows:
+<pre class="code-block">
+docker run -it -p 8080:8080 quay.io/apicurio/apicurio-studio:{{ version }}
+</pre>
+<pre class="code-block">
+docker run -it -p 8888:8080 quay.io/apicurio/apicurio-studio-ui:{{ version }}
+</pre>
+                                </p>
+                            <h3>Open the Apicurio Studio web console</h3>
+                            <p>
+                              Open the <a href="http://localhost:8888/">Apicurio Studio web console</a> in your browser to start designing your own APIs and Schemas!
+                            </p>                            
                         </div>
                     </div>
-
-                    <div class="col-lg-10 docker-note">
-                        <div class="alert alert-info">
-                            <span class="pficon pficon-info"></span>
-                            <strong>Note:</strong> Docker users can really quickly get Apicurio Studio up and running by using
-                            our <a href="https://github.com/Apicurio/apicurio-studio/blob/master/distro/docker-compose/Readme.md">Docker Compose script</a>.
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>

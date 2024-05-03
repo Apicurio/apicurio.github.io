@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Configuring and managing Apicurio Studio deployment :: Apicurio Studio</title>
+    <link rel="canonical" href="https://www.apicur.io/studio/docs/apicurio-studio/1.0.x/assembly-maintenance.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-studio" data-version="1.0.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Apicurio Studio</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-introduction.html">Introduction to Apicurio Studio</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-migrating-studio-v0-v1.html">Migrating an existing Apicurio Studio deployment</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-studio-docker.html">Installing Apicurio Studio using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-studio-kubernetes.html">Installing Apicurio Studio on Kubernetes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-studio-storage.html">Configuring Apicurio Studio storage</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-getting-started.html">Getting started with Apicurio Studio</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="assembly-maintenance.html">Configuring and managing Apicurio Studio deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Studio configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Studio</span>
+    <span class="version">1.0.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Studio</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">1.0.x</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Apicurio Studio</a></li>
+    <li><a href="assembly-maintenance.html">Configuring and managing Apicurio Studio deployment</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-studio">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Configuring and managing Apicurio Studio deployment</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter explains how to configure and manage your Apicurio Studio deployment:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#studio-security-keycloak">Configuring Apicurio Studio authentication and authorization with Keycloak</a></p>
+</li>
+<li>
+<p><a href="#manage-studio-environment-variables">Managing Apicurio Studio environment variables</a></p>
+</li>
+<li>
+<p><a href="#studio-sql-backup">Backing up Apicurio Studio PostgreSQL storage</a></p>
+</li>
+<li>
+<p><a href="#studio-sql-restore">Restoring Apicurio Studio PostgreSQL storage</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="studio-security-keycloak"><a class="anchor" href="#studio-security-keycloak"></a>Configuring Apicurio Studio authentication and authorization with Keycloak</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This section explains how to manually configure authentication and authorization options for Apicurio Studio and Keycloak.</p>
+</div>
+<div class="paragraph">
+<p><strong><em>TODO</em></strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="manage-studio-environment-variables"><a class="anchor" href="#manage-studio-environment-variables"></a>Managing Apicurio Studio environment variables</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong><em>TODO</em></strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="studio-sql-backup"><a class="anchor" href="#studio-sql-backup"></a>Backing up Apicurio Studio PostgreSQL storage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When using storage in a PostgreSQL database, you must ensure that the data stored by Apicurio Studio is backed up regularly.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://www.postgresql.org/docs/12/backup-dump.html">SQL Dump</a> is a simple procedure that works with any PostgreSQL installation.
+This uses the <a href="https://www.postgresql.org/docs/12/app-pgdump.html">pg_dump</a> utility to generate a file with SQL commands that you can use to recreate the database in the same state that it was in at the time of the dump.</p>
+</div>
+<div class="paragraph">
+<p><code>pg_dump</code> is a regular PostgreSQL client application, which you can execute from any remote host that has access to the database.
+Like any other client, the operations that can perform are limited to the user permissions.</p>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Use the <code>pg_dump</code> command to redirect the output to a file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"> $ pg_dump dbname &gt; dumpfile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can specify the database server that <code>pg_dump</code> connects to using the <code>-h host</code> and <code>-p port</code> options.</p>
+</div>
+</li>
+<li>
+<p>You can reduce large dump files using a compression tool, such as gzip, for example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"> $ pg_dump dbname | gzip &gt; filename.gz</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For details on client authentication, see the <a href="https://www.postgresql.org/docs/12/client-authentication.html">PostgreSQL documentation</a>.</p>
+</li>
+<li>
+<p>For details on importing and exporting Apicurio Studio content, see <strong><em>TODO</em></strong>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="studio-sql-restore"><a class="anchor" href="#studio-sql-restore"></a>Restoring Apicurio Studio PostgreSQL storage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can restore SQL Dump files created by <code>pg_dump</code> using the <code>psql</code> utility.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have already backed up your PostgreSQL database using <code>pg_dump</code>. See <a href="#studio-sql-backup">Backing up Apicurio Studio PostgreSQL storage</a>.</p>
+</li>
+<li>
+<p>All users who own objects or have permissions on objects in the dumped database must already exist.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Enter the following command to create the database:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"> $ createdb -T template0 dbname</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Enter the following command to restore the SQL dump</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"> $ psql dbname &lt; dumpfile</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run <a href="https://www.postgresql.org/docs/12/sql-analyze.html">ANALYZE</a> on each database so the query optimizer has useful statistics.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../assets/js/site.js"></script>
+<script src="../../assets/js/vendor/lunr.js"></script>
+<script src="../../assets/js/vendor/search.js" id="search-script" data-base-path="../.." data-page-path="/apicurio-studio/1.0.x/assembly-maintenance.html"></script>
+<script async src="../../assets/../search-index.js"></script>
+<script async src="../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>

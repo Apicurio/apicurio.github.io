@@ -1,0 +1,89 @@
+---
+title: "Studio : Download"
+permalink: /studio-v02/download/
+layout: page
+excerpt: Download the Apicurio Studio quickstart and get started fast!
+---
+
+{% assign latestRelease = site.data.studio.latestRelease %}
+{% assign version = site.data.studio.latestRelease.tag_name | remove_first: "v" %}
+{% assign theasset = site.data.studio.latestRelease.assets[0] %}
+
+
+<div class="announcement">
+    <div class="info">
+        <span class="fa fa-fw fa-info"></span>
+        Apicurio Studio 0.2 has been deprecated (<a href="https://www.apicur.io/blog/2024/03/22/studio-1.0">more info here</a>).
+    </div>
+</div>
+
+<div class="container projpage">
+    <div class="row">
+        <div class="col-md-3">
+            {%- include studio-v02/_projnav.html -%}
+        </div>
+        <div class="col-md-9">
+            <div id="download">
+                <div id="content" class="row">
+                    <div class="col-lg-10">
+                        <h1 class="section-header first">Download and Get Started with Apicurio Studio</h1>
+                        <p>The easiest way to get started with Apicurio Studio is to download the quickstart based on WildFly and fire it up!  
+                        All you need is Java version 11, and you're ready to rock.</p>
+                    </div>
+
+                    <div class="">
+                        <div class="col-lg-7">
+                            <h3>Prerequisites</h3>
+                            <ul>
+                                <li>You have <a href="https://jdk.java.net/java-se-ri/11">Java 11+</a> installed.</li>
+                            </ul>
+
+                            <h3>Download and Install Apicurio Studio</h3>
+                            <ol>
+                                <li>
+                                   Download <a href="{{ theasset.browser_download_url }}">Apicurio Studio {{ latestRelease.tag_name }}</a>.
+                                </li>
+                                <li>Unpack the Apicurio Studio Quickstart .zip file.</li>
+                            </ol>
+
+                            <h3>Configure Apicurio Studio</h3>
+                            <p>
+                                The Apicurio Studio quickstart is designed to work automatically if you download and run it on your 
+                                local machine. If you want to run the quickstart on a different machine, or put it into production, 
+                                see the <a href="../docs">Apicurio Studio documentation</a>.
+                            </p>
+
+                            <h3>Run Apicurio Studio</h3>
+                            <ol>
+                                <li>Start WildFly.</li>
+                                <li>
+                                    Open <a href="https://localhost:8443/studio" rel="nofollow" target="_blank">Apicurio Studio</a> in your browser and log in, or register a new account!
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="col-lg-5">
+                            <h3>Or try this...</h3>
+                            <pre class="code-block">
+mkdir ~/apicurio-studio-{{ version }}
+cd ~/apicurio-studio-{{ version }}
+curl -L {{ theasset.browser_download_url }} -o {{ theasset.name }}
+unzip {{ theasset.name }}
+cd apicurio-studio-{{ version }}
+./bin/standalone.sh -c standalone-apicurio.xml
+</pre>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-10 docker-note">
+                        <div class="alert alert-info">
+                            <span class="pficon pficon-info"></span>
+                            <strong>Note:</strong> Docker users can really quickly get Apicurio Studio up and running by using
+                            our <a href="https://github.com/Apicurio/apicurio-studio/blob/master/distro/docker-compose/Readme.md">Docker Compose script</a>.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
