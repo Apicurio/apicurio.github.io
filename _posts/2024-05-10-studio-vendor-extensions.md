@@ -13,7 +13,7 @@ time support for vendor extensions has evolved somewhat.  It started with:
 
 Eventually we added a Vendor Extension section in various places, which made 
 things a bit better.  However, the UI was rather basic - just a list of the
-extensions with values displayed as raw JSON.  Editing the values was the same -
+extensions with values displayed as raw JSON.  Editing the values was also basic -
 simply a source editor for the raw JSON value of the extension.
 
 We've made another incremental improvement in this area, which is to use form
@@ -23,13 +23,13 @@ vendor extension!
 ---
 
 # What are OpenAPI Vendor Extensions?
-When using OpenAPI to describe a REST API, the specification defines a set of semantics
-for this purpose.  Endpoints, data types, operations, inputs and outputs, etc are 
+The [OpenAPI specification](https://www.openapis.org/) defines a set of semantics for describing a REST API.
+Endpoints, data types, operations, inputs and outputs, etc are 
 all concepts defined by the specification.  These first order concepts are often all
 you need to fully define the shape of your API.
 
 However, there may be aspects of your API that you want to define which go beyond the
-common semantics defined by the [OpenAPI specification](https://www.openapis.org/).
+common semantics defined by the OpenAPI specification.
 In these cases, OpenAPI defines the concept of a Vendor Extension, which are open 
 ended property names that must begin with `x-`.
 
@@ -69,16 +69,16 @@ requests per second per user.  Neat!
 # What inspired this feature?
 Apicurio Studio will be included as a component of a new Red Hat product called
 [Connectivity Link](https://developers.redhat.com/products/red-hat-connectivity-link/overview).
-This new product will have a lot of functionality in the network connectivity
+This new product has a lot of functionality in the network connectivity
 and API management spaces, and one of the things it supports is enabling and
 configuring its various features by adding some vendor extensions to the OpenAPI
 document.
 
-In particular, another component of Connectivity Link is [Kuadrant](https://kuadrant.io/), 
+Another component of Connectivity Link is [Kuadrant](https://kuadrant.io/), 
 which is an open source project that brings policy based application connectivity features 
 to Kubernetes.  That project defines some 
 [OpenAPI kuadrant extensions](https://docs.kuadrant.io/0.7.0/kuadrantctl/doc/openapi-kuadrant-extensions/) 
-that can be used to configure things like routes and rate limits.
+that you can use to configure things like routes and rate limits.
 
 We thought it would be nice if users could use a form to enter the Kuadrant 
 vendor extension values, rather than having to copy/paste the correct JSON from
@@ -90,7 +90,7 @@ Of course, we could have simply added UI support for Kuadrant vendor extensions.
 that would only add support for this one specific type of extension.  What we really
 wanted was a way to easily configure Studio to support a wide range of vendor extensions,
 without having to write code and release new versions.  So what we've done is implement
-a dynamic form generation approach that allows Studio to be configured with a list of
+a dynamic form generation approach that allows you to configure Studio with a list of
 vendor extensions at deploy time.  More details on that later.
 
 
@@ -100,7 +100,7 @@ Right, let's show some stuff!  Here's what things used to look like in the edito
 ![Studio (before)](/images/posts/vendor-extensions/before.png)
 
 Notice that you have to provide the full vendor extension property name as well as 
-the value in raw JSON format.  I've seen worse, but it's not great.
+the value in raw JSON format.  It's not great.
 
 Now here's what it looks like:
 
@@ -111,11 +111,11 @@ Cool!
 
 # How do I use this feature?
 Unfortunately the feature isn't magic, which means there is some configuration
-needed to leverage it.  Let's dig into that in this final section.
+needed.  Let's dig into that in this final section.
 
 ## Creating a vendor-extensions configuration
-What you need to do is create a `vendor-extensions.json` file with the correct
-information (note: the file name does not matter).  You'll need to create this
+What you need to do is create a JSON file with the correct
+information (for example `vendor-extensions.json`).  You'll need to create this
 file and then eventually make it available to the Studio backend application
 (see the next section).
 
@@ -123,7 +123,7 @@ The vendor extension configuration file is just a JSON file with an array of
 supported vendor extensions.  Each vendor extension item in the array should 
 have the following properties:
 
-* `name` : the name of the vendor extension property, which should begin with `x-`
+* `name` : the name of the vendor extension property, which must begin with `x-`
 * `schema` : a JSON schema that describes the format of the vendor extension value
 * `model` : a JSON object that is the default values for the vendor extension value
 * `components` : an (optional) array of OpenAPI component names indicating valid placement of the vendor extension
@@ -182,7 +182,7 @@ The above example has only a single vendor extension defined, but you can specif
 as many as you like.
 
 Note that the `components` property allows you to specify where in the OpenAPI document
-the vendor extension is allowed to be.  In the above example it will only appear when
+the vendor extension is valid.  In the above example it will only appear when
 adding a vendor extension to the root of the document.  Other allowed values for this
 are:
 
@@ -211,7 +211,7 @@ docker run -it -p 8080:8080 --env APICURIO_UI_OPENAPI_VENDOR-EXTENSIONS_URL="htt
 
 Any valid URL that can be resolved by the application should work.  Just be careful
 of using local file paths when running a docker image - if you want that to work then
-you'll obviously need to mount the file into the container in some way.
+you'll obviously need to mount the file into the container.
 
 # Conclusion
 Thanks for reading.  This feature is still in Beta and can do with some feedback and
