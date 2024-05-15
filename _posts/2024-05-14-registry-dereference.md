@@ -18,7 +18,7 @@ Intro
 The code example used for this blog post can be found in the Apicurio Registry [examples](https://github.com/Apicurio/apicurio-registry/blob/2.6.x/examples/serdes-with-references/src/main/java/io/apicurio/registry/examples/references/JsonSerdeReferencesDereferencedExample.java).
 
 One of the limitations of the JSON Schema format is that, given some data that adheres to a particular schema it does not allow to discover the full schema from that content. That's the main reason why, for this serde, the schema being used has to be registered upfront, and that's what you see
-in the code example from line [57](https://github.com/Apicurio/apicurio-registry/blob/2.6.x/examples/serdes-with-references/src/main/java/io/apicurio/registry/examples/references/JsonSerdeReferencesDereferencedExample.java#L57) to line [132](https://github.com/Apicurio/apicurio-registry/blob/2.6.x/examples/serdes-with-references/src/main/java/io/apicurio/registry/examples/references/JsonSerdeReferencesDereferencedExample.java#L132).
+in the code example from line [57 to line 132](https://github.com/Apicurio/apicurio-registry/blob/2.6.x/examples/serdes-with-references/src/main/java/io/apicurio/registry/examples/references/JsonSerdeReferencesDereferencedExample.java#L57-L132).
 Where the main schema _city.json_ is registered with all the references in the hierarchy. Along those lines, a full hierarchy of schemas is registered in Apicurio Registry. The hierarchy can be described as follows and represented as a tree:
 
 ```
@@ -190,6 +190,7 @@ As you can see, that's the content of the full hierarchy, not just the schema of
 ```
 curl --location 'http://localhost:8080/apis/registry/v2/ids/globalIds/7?dereference=true'
 curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/JsonSerdeReferencesExample?dereference=true'
+curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/JsonSerdeReferencesExample/versions/1?dereference=true'
 ```
 
 JSON Schema Kafka Serde dereference
@@ -211,7 +212,7 @@ props.putIfAbsent(SerdeConfig.EXPLICIT_ARTIFACT_GROUP_ID, "default");
 props.putIfAbsent(SerdeConfig.REGISTRY_URL, REGISTRY_URL);
 
 //This is the most important configuration for this particular example.
-props.putIfAbsent(SchemaResolverConfig.SERIALIZER_DEREFERENCE_SCHEMA, "true");
+props.putIfAbsent(SchemaResolverConfig.SERIALIZER_DEREFERENCE_SCHEMA, true);
 
 
 // Create the Kafka producer
@@ -242,7 +243,7 @@ Properties props = new Properties();
 
 props.putIfAbsent(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, SERVERS);
 props.putIfAbsent(ConsumerConfig.GROUP_ID_CONFIG, "Consumer-" + TOPIC_NAME);
-props.putIfAbsent(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
+props.putIfAbsent(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
 props.putIfAbsent(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
 props.putIfAbsent(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 props.putIfAbsent(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
@@ -252,7 +253,7 @@ props.putIfAbsent(SerdeConfig.EXPLICIT_ARTIFACT_GROUP_ID, "default");
 props.putIfAbsent(SerdeConfig.VALIDATION_ENABLED, true);
 
 //This is the most important configuration for this example, that instructs the deserializer to fetch the dereferenced schema.
-props.putIfAbsent(SchemaResolverConfig.DESERIALIZER_DEREFERENCE_SCHEMA, "true");
+props.putIfAbsent(SchemaResolverConfig.DESERIALIZER_DEREFERENCE_SCHEMA, true);
 
 // Configure Service Registry location
 props.putIfAbsent(SerdeConfig.REGISTRY_URL, REGISTRY_URL);
