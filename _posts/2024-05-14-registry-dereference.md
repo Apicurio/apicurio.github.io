@@ -195,7 +195,7 @@ curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts
 JSON Schema Kafka Serde dereference
 ===
 
-Now, in order to make good use of all of this, we can use a Kafka producer. For this example, in the Kafka Producer there is one extremely important property we must set, the schema resolver configuration option _SERIALIZER_DEREFERENCE_SCHEMA_. This is the option what will instruct the Schema Resolver the use the dereference parameter in the globalIds endpoint above (since that is the endpoint used by default to resolve the schema).
+Now, in order to make good use of all of this, we can use a Kafka producer. For this example, in the Kafka Producer there is one extremely important property we must set, the schema resolver configuration option _SERIALIZER_DEREFERENCE_SCHEMA_. This is the option that will instruct the Schema Resolver to use the dereference parameter in the globalIds endpoint above (since that is the endpoint used by default to resolve the schema).
 
 ```java
 Properties props = new Properties();
