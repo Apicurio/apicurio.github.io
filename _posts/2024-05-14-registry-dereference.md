@@ -6,7 +6,7 @@ author: carles
 categories: registry openapi jsonchema asyncapi avro
 ---
 
-As it can be seen in the [documentation](https://www.apicur.io/registry/docs/apicurio-registry/2.5.x/getting-started/assembly-managing-registry-artifacts-api.html), Apicurio Registry allows to manage artifacts with references.
+Apicurio Registry allows to manage artifacts with references as shown in the [documentation](https://www.apicur.io/registry/docs/apicurio-registry/2.5.x/getting-started/assembly-managing-registry-artifacts-api.html).
 One of the cool features we've added on top of this is the possibility of using a dereference parameter for certain API endpoints that, when used, allows you to fetch the full content of an artifact with all the references inlined within the same content.
 This is especially useful in certain contexts to reduce the number of HTTP requests, like, as we will see in this blog, in the Kafka Serializers and Deserializers.
 
