@@ -282,5 +282,5 @@ while (messageCount < 5) {
 ```
 
 
-With all of this, instead of doing an HTTP request to get the _citizen schema_, another one to fetch the pointers to the references, and, in this case (this process grows with the hierarchy size), another nine HTTP requests to discover the full hierarchy, a single HTTP request is made that gets the full content of the hierarchy and then uses it to produce/consume messages.
+Instead of doing an HTTP request to get the _citizen schema_, another request to fetch the pointers to the references, and, in this case (this process grows with the hierarchy size), another nine requests to discover the full hierarchy, a single HTTP request gets the full content of the hierarchy and then uses it to produce/consume messages.
 
