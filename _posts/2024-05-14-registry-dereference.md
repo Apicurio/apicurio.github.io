@@ -19,7 +19,7 @@ The code example used for this blog post can be found in the Apicurio Registry [
 
 One of the limitations of the JSON Schema format is that you cannot discover the full schema from some data that adheres to the schema. That's the main reason why, for this serde, the schema being used has to be registered upfront, and that's what you see
 in the code example from line [57 to line 132](https://github.com/Apicurio/apicurio-registry/blob/2.6.x/examples/serdes-with-references/src/main/java/io/apicurio/registry/examples/references/JsonSerdeReferencesDereferencedExample.java#L57-L132).
-Where the main schema _city.json_ is registered with all the references in the hierarchy. Along those lines, a full hierarchy of schemas is registered in Apicurio Registry. The hierarchy can be described as follows and represented as a tree:
+where the main schema _city.json_ is registered with all the references in the hierarchy. Along those lines, a full hierarchy of schemas is registered in Apicurio Registry. The hierarchy can be described as follows and represented as a tree:
 
 ```
                           citizen
