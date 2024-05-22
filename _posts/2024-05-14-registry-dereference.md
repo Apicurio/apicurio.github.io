@@ -22,7 +22,7 @@ in the code example from line [57 to line 132](https://github.com/Apicurio/apicu
 Where the main schema _city.json_ is registered with all the references in the hierarchy. Along those lines, a full hierarchy of schemas is registered in Apicurio Registry. The hierarchy can be described as follows and represented as a tree:
 
 ```
-                          cityzen
+                          citizen
      |          |                     |                   |
     city   qualification        sample.address     citizenIdentifier
      |                                                     |
