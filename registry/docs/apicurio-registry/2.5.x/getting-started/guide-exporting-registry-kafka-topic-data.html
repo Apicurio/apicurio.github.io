@@ -456,15 +456,17 @@ done</code></pre>
 <h2 id="_importing_the_kafkasql_journal_topic_data"><a class="anchor" href="#_importing_the_kafkasql_journal_topic_data"></a>Importing the kafkasql-journal topic data</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To import <code>kafkasql-journal</code> topic data that has been created with <code>kcat</code>, use an <a href="https://github.com/Apicurio/apicurio-registry-examples/tree/main/tools/kafkasql-topic-import">application from the Apicurio Registry examples repository</a> as follows:</p>
+<p>To import <code>kafkasql-journal</code> topic data that has been created with <code>kcat</code>, use an <a href="https://github.com/Apicurio/apicurio-registry/tree/2.5.x/examples/tools/kafkasql-topic-import">application from the Apicurio Registry examples repository</a> as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone https://github.com/Apicurio/apicurio-registry-examples.git
-cd apicurio-registry-examples/tools/kafkasql-topic-import
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone https://github.com/Apicurio/apicurio-registry.git
+cd apicurio-registry
+git checkout 2.5.x
+cd examples/tools/kafkasql-topic-import
 mvn clean install
 export VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-java -jar target/apicurio-registry-tools-kafkasql-topic-import-$VERSION-jar-with-dependencies.jar -b &lt;optional-kafka-bootstrap-server-url&gt; -f &lt;path-to-topic-dump-file&gt;</code></pre>
+java -jar target/apicurio-registry-tools-kafkasql-topic-import-$VERSION-jar-with-dependencies.jar -b <optional-kafka-bootstrap-server-url> -f <path-to-topic-dump-file></code></pre>
 </div>
 </div>
 <div class="ulist _additional-resources">
