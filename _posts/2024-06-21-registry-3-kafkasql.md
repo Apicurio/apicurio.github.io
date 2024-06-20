@@ -117,3 +117,44 @@ We already needed a solution to that problem, and now we need it even
 more!  Which leads us to...
 
 ## State snapshots...for speed!
+
+As it's already stated in this blog, whenever a new instance of Registry 
+is started pointing to an existing journal topic, it has to process every
+single message to restore the internal state of the application that is 
+used for reads. This has two main effects, the first one being that in the
+event of data loss in the topic, there is no backup strategy by default 
+and it also causes the replica start to be fairly slow (depending on the 
+topic size, of course). To address these problems, a new feature has 
+been implemented in Registry 3, snapshots of the internal store. 
+
+The way snapshots work in Registry 3 is that, when a (POST) call to the
+endpoint `/admin/config/triggerSnapshot` is made, it sends a snapshot 
+marker message with a snapshot id (randomly generated) to the journal topic, 
+meaning that, at that point, a snapshot was requested.
+
+After this, the consumer thread, the same process that is responsible for
+processing all the other messages reads the marker message above and it 
+creates a sql dump of the internal store, creating it in a location that
+can be configured using the property `apicurio.storage.snapshot.location`
+(by default set to `/tmp`), and sends a message to a snapshots topic 
+using the snapshotId above as the key of this message. This topic 
+is used to keep track of all the snapshots. This implies, as you 
+might be already thinking that in Registry 3, instead of having just one Kafka
+topi, we have two, the journal topic for the application data and a separate one
+to keep track of the snapshots.
+
+Once the snapshot has been created, when a new replica is created, the snapshots 
+topic is consumed by looking for the most recent snapshot. If there's one present, 
+the application loads the sql dump retrieved from the location in the message and 
+restores the internal database using it. This dramatically improves the application
+startup time, since the internal state is restored by issuing a single SQL command
+(H2 `RESTORE TO`) instead of processing every single message present in the Kafka topic.
+
+Once the database has been restored, the consumer thread starts consuming the messages
+present in the journal topic, discarding all the messages until the corresponding 
+snapshot marker message is found. The rest of the messages on top of the snapshot
+are processed as normal and dispatched to the sql storage as appropriate.
+
+With this new feature you can now set up a backup strategy of your Apicurio Registry data
+when Kafka is used as the storage option, preventing potential data loses and also
+improving replicas startup time.
