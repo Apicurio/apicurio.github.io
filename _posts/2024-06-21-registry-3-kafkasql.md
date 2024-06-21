@@ -175,3 +175,9 @@ dispatched to the SQL store as appropriate.
 With this new feature you can now set up a backup strategy of your Apicurio Registry data
 when Kafka is used as the storage option, preventing potential data loss and also
 improving replica startup time.
+
+Finally, here are two graphics comparing the startup times with and without snapshotting.
+In the snapshot graph snapshots were created for each 250.000 artifacts:
+
+
+![Startup times comparison](/images/posts/snapshotting/application_startup_times.png)
