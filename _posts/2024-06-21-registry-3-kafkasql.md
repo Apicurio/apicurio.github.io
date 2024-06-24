@@ -53,7 +53,7 @@ The flow is therefore this:
 1. An HTTP request is received representing a registry data change
 2. The change is turned into a Kafka message
 3. The Kafka message is published to the Kafka topic (the journal)
-4The thread **waits** for the message to be consumed
+4. The thread **waits** for the message to be consumed
 
 **Registry Kafka consumer thread consumes messages from the Kafka topic *(Consumer Thread)***
 1. The message is consumed from the kafka topic
