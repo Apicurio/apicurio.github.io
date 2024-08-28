@@ -37,7 +37,289 @@ Since an image is way better than trying to describe it, this is the structure i
 
 ![Registry (before)](/images/posts/registry-dereference/file-system.png)
 
-In the code example there are also [java classes](https://github.com/Apicurio/apicurio-registry/tree/2.6.x/examples/serdes-with-references/src/main/java/io/apicurio/registry/examples/references/model) that represent each of the objects we have in the structure, so we can use them when producing Kafka messages. There is one Java class per each JSON Schema file.
+In the code example there are
+also [java classes](https://github.com/Apicurio/apicurio-registry/tree/2.6.x/examples/serdes-with-references/src/main/java/io/apicurio/registry/examples/references/model)
+that represent each of the objects we have in the structure, so we can use them when producing Kafka messages. There is
+one Java class per each JSON Schema file.
+
+Using the REST API
+====
+
+Although the example above uses the Apicurio Registry Java client to register the full hierarchy of schemas, it's also
+possible to use the REST API. Note that, when an artifact with references is created, the artifact content itself in the request must be quoted. Here's a set of Curl commands that delivers this result:
+
+First we must start creating the leaves, in this case, those are the city qualification and the citizenIdentifier qualification:
+```
+//Creates the city qualification
+curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/' \
+--header 'X-Registry-ArtifactId: cityQualification' \
+--header 'Content-Type: application/json; artifactType=JSON' \
+--data '{
+"$id": "https://example.com/types/city/qualification.json",
+"$schema": "http://json-schema.org/draft-07/schema#",
+"title": "Qualification",
+"type": "object",
+"properties": {
+"name": {
+"type": "string",
+"description": "The subject'\''s name"
+},
+"qualification": {
+"type": "integer",
+"description": "The city qualification",
+"minimum": 10
+}
+}
+}'
+```
+
+```
+//Creates the citizen identifier qualification
+curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/' \
+--header 'X-Registry-ArtifactId: identifierQualification' \
+--header 'Content-Type: application/json; artifactType=JSON' \
+--data '{
+"$id": "https://example.com/types/identifier/qualification.json",
+"$schema": "http://json-schema.org/draft-07/schema#",
+"title": "Qualification",
+"type": "object",
+"properties": {
+"name": {
+"type": "string",
+"description": "The subject'\''s name"
+},
+"qualification": {
+"type": "integer",
+"description": "The identifier qualification",
+"minimum": 20
+}
+}
+}'
+```
+
+Once the leaves are created, we can go up through the hierarchy, creating the schemas that will be referenced by the citizen. First we create the city schema:
+```
+curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/' \
+--header 'X-Registry-ArtifactId: city' \
+--header 'Content-Type: application/create.extended+json' \
+--header 'X-Registry-ArtifactType: JSON' \
+--data '{
+"content": "{\r\n  \"$id\": \"https:\/\/example.com\/types\/city\/city.json\",\r\n  \"$schema\": \"http:\/\/json-schema.org\/draft-07\/schema#\",\r\n  \"title\": \"City\",\r\n  \"type\": \"object\",\r\n  \"properties\": {\r\n    \"name\": {\r\n      \"type\": \"string\",\r\n      \"description\": \"The city'\''s name.\"\r\n    },\r\n    \"zipCode\": {\r\n      \"type\": \"integer\",\r\n      \"description\": \"The zip code.\",\r\n      \"minimum\": 0\r\n    },\r\n    \"qualification\": {\r\n      \"$ref\": \"qualification.json\"\r\n    }\r\n  }\r\n}",
+"references": [
+{
+"groupId": "default",
+"artifactId": "cityQualification",
+"name": "qualification.json",
+"version": "1"
+}
+]
+}'
+```
+
+Then the citizen identifier schema:
+```
+curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/' \
+--header 'X-Registry-ArtifactId: citizenIdentifier' \
+--header 'Content-Type: application/create.extended+json' \
+--header 'X-Registry-ArtifactType: JSON' \
+--data '{
+"content": "{\r\n \"$id\": \"https:\/\/example.com\/types\/identifier\/citizenIdentifier.json\",\r\n \"$schema\":\"http:
+\/\/json-schema.org\/draft-07\/schema#\",\r\n \"title\": \"Identifier\",\r\n \"type\": \"object\",\r\n \"properties\":
+{\r\n \"identifier\": {\r\n \"type\": \"integer\",\r\n \"description\": \"The citizen identifier.\",\r\n \"minimum\":
+0\r\n },\r\n \"qualification\": {\r\n \"$ref\": \"qualification.json\"\r\n }\r\n }\r\n}",
+"references": [
+{
+"groupId": "default",
+"artifactId": "identifierQualification",
+"name": "qualification.json",
+"version": "1"
+}
+]
+}'
+```
+
+The citizen qualification schema:
+```
+curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/' \
+--header 'X-Registry-ArtifactId: qualification' \
+--header 'Content-Type: application/json; artifactType=JSON' \
+--data '{
+"$id": "https://example.com/qualification.json",
+"$schema": "http://json-schema.org/draft-07/schema#",
+"title": "Qualification",
+"type": "object",
+"properties": {
+"name": {
+"type": "string",
+"description": "The subject'\''s name"
+},
+"qualification": {
+"type": "integer",
+"description": "The qualification.",
+"minimum": 0
+}
+}
+}'
+```
+
+The citizen address:
+```curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/' \
+--header 'X-Registry-ArtifactId: address' \
+--header 'Content-Type: application/json; artifactType=JSON' \
+--data '{
+"$schema": "http://json-schema.org/draft/2019-09/schema",
+"$id": "https://example.com/sample.address.json",
+"additionalProperties": false,
+"type": "object",
+"required": [
+"effectiveDate"
+],
+"properties": {
+"geoDemographicGroupCd": {
+"description": "Geo-demographic group based on zipcode/postcode. This data is usually available from marketing systems
+like Mosaic. Acorn. etc.",
+"type": "string",
+"maxLength": 50
+},
+"zipPostcode": {
+"description": "Zip/postal code",
+"type": "string",
+"maxLength": 50
+},
+"city": {
+"description": "Identifies the city",
+"type": "string",
+"maxLength": 100
+},
+"stateProvinceCd": {
+"description": "Unique code for the state or province. Can be an organization'\''s internal spelling or a standard
+abbreviation. as long as they are consistent.",
+"type": "string",
+"maxLength": 50
+},
+"countryCd": {
+"description": "Unique identifier for the country of the address.  ",
+"type": "string",
+"maxLength": 50
+},
+"isStructured": {
+"description": "Whether the addresses of individual components are identified (eg: Street. Apt.#. etc.) - set to 1. If
+not (only Address_Line_1 to 5) then set to 0.",
+"type": "boolean"
+},
+"poBox": {
+"description": "Post office box number.",
+"type": "string",
+"maxLength": 25
+},
+"apartmentSuiteNumber": {
+"description": "If the street address is an apartment building or business complex - the individual apartment number",
+"type": "string",
+"maxLength": 50
+},
+"street": {
+"description": "Street name",
+"type": "string",
+"maxLength": 255
+},
+"isPrimary": {
+"description": "Whether this address is the primary address for the corresponding Entity_Id of type Entity_Type_Cd (e.g.
+Party) for the Tenant (Tenant_Cd) and for the specified address type (Address_Relation_Type_Cd). Only one address per
+Entity. Tenant. and address type can be the primary. 1= True 0 = False",
+"type": "boolean"
+},
+"addressLine1": {
+"description": "When the source address is unformatted and not in specific fields such as street. city. zip. etc. This
+is the first line of the address. Note that all party addresses must either be unformatted or formatted.",
+"type": "string",
+"maxLength": 255
+},
+"buildingNumber": {
+"description": "House or building number of the street address (residential home. apartment building. commercial).",
+"type": "string",
+"maxLength": 50
+},
+"addressLine2": {
+"description": "When the source address is unformatted and not in specific fields such as street. city. zip. etc. This
+is the second line of the address.",
+"type": "string",
+"maxLength": 255
+},
+"addressLine3": {
+"description": "When the source address is unformatted and not in specific fields such as street. city. zip. etc. This
+is the third line of the address.",
+"type": "string",
+"maxLength": 255
+},
+"addressLine4": {
+"description": "When the source address is unformatted and not in specific fields such as street. city. zip. etc. This
+is the fourth line of the address.",
+"type": "string",
+"maxLength": 255
+},
+"addressLine5": {
+"description": "When the source address is unformatted and not in specific fields such as street. city. zip. etc. This
+is the fifth line of the address.",
+"type": "string",
+"maxLength": 255
+},
+"effectiveDate": {
+"description": "Indicates when the entity started using this address.",
+"type": "string",
+"format": "date-time"
+},
+"expirationDate": {
+"description": "Indicates when the entity stopped using this address.",
+"type": "string",
+"format": "date-time"
+}
+}
+}'
+```
+
+And, finally, the citizen schema itself with references to qualification, city, identifier and address
+```
+curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/' \
+--header 'X-Registry-ArtifactId: citizen' \
+--header 'Content-Type: application/create.extended+json' \
+--header 'X-Registry-ArtifactType: JSON' \
+--data '{
+"content": "{\r\n \"$id\": \"https:\/\/example.com\/citizen.json\",\r\n \"$schema\": \"http:
+\/\/json-schema.org\/draft-07\/schema#\",\r\n \"title\": \"Citizen\",\r\n \"type\": \"object\",\r\n \"properties\":{\r\n
+\"firstName\": {\r\n \"type\": \"string\",\r\n \"description\": \"The citizen'\''s first name.\"\r\n },\r\n
+\"lastName\": {\r\n \"type\": \"string\",\r\n \"description\": \"The citizen'\''s last name.\"\r\n },\r\n \"age\": {\r\n
+\"description\": \"Age in years which must be equal to or greater than zero.\",\r\n \"type\": \"integer\",\r\n
+\"minimum\": 0\r\n },\r\n \"city\": {\r\n \"$ref\": \"types\/city\/city.json\"\r\n },\r\n \"identifier\": {\r\n
+\"$ref\": \"types\/identifier\/citizenIdentifier.json\"\r\n },\r\n \"qualifications\": {\r\n \"type\": \"array\",\r\n
+\"items\": {\r\n \"$ref\": \"qualification.json\"\r\n }\r\n }\r\n },\r\n \"required\": [\r\n \"city\"\r\n  ]\r\n}",
+"references": [
+{
+"groupId": "default",
+"artifactId": "qualification",
+"name": "qualification.json",
+"version": "1"
+},
+{
+"groupId": "default",
+"artifactId": "city",
+"name": "types/city/city.json",
+"version": "1"
+},
+{
+"groupId": "default",
+"artifactId": "citizenIdentifier",
+"name": "types/identifier/citizenIdentifier.json",
+"version": "1"
+},
+{
+"groupId": "default",
+"artifactId": "address",
+"name": "sample.address.json",
+"version": "1"
+}
+]
+}'
+```
 
 ---
 JSON Schema dereference
