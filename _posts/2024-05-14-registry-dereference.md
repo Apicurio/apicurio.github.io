@@ -163,7 +163,9 @@ curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts
 ```
 
 The citizen address:
-```curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/' \
+
+```
+curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/' \
 --header 'X-Registry-ArtifactId: address' \
 --header 'Content-Type: application/json; artifactType=JSON' \
 --data '{
@@ -278,6 +280,7 @@ is the fifth line of the address.",
 ```
 
 And, finally, the citizen schema itself with references to qualification, city, identifier and address
+
 ```
 curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/' \
 --header 'X-Registry-ArtifactId: citizen' \
