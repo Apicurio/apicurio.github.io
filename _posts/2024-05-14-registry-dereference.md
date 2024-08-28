@@ -478,6 +478,315 @@ curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts
 curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/JsonSerdeReferencesExample/versions/1?dereference=true'
 ```
 
+---
+Referencing options
+===
+
+Note that, even though referencing a whole schema definition is the most common use case, it's also possible to reference a single object definition defined in a json file with multiple schemas. For example, we might have the following schema definition:
+
+```{json}
+{
+  "$id": "https://example.com/types/all-types.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "City": {
+      "title": "City",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The city's name."
+        },
+        "zipCode": {
+          "type": "integer",
+          "description": "The zip code.",
+          "minimum": 0
+        }
+      }
+    },
+    "Identifier": {
+      "title": "Identifier",
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "integer",
+          "description": "The citizen identifier.",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}
+```
+With definitions for both an identifier and the city objects. Then we might decide that we want to have a separate schema that points to an entire definition, like the one below:
+
+```
+{
+  "$id": "https://example.com/citizen.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Citizen",
+  "type": "object",
+  "properties": {
+    "firstName": {
+      "type": "string",
+      "description": "The citizen's first name."
+    },
+    "lastName": {
+      "type": "string",
+      "description": "The citizen's last name."
+    },
+    "age": {
+      "description": "Age in years which must be equal to or greater than zero.",
+      "type": "integer",
+      "minimum": 0
+    },
+    "city": {
+      "$ref": "types/all-types.json#/definitions/City"
+    },
+    "identifier": {
+      "$ref": "types/all-types.json#/definitions/Identifier"
+    }
+  },
+  "required": [
+    "city"
+  ]
+}
+```
+
+Or we might decide to just reference a single property inside a schema definition, like the schema below does:
+
+```
+{
+  "$id": "https://example.com/citizen.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Citizen",
+  "type": "object",
+  "properties": {
+    "firstName": {
+      "type": "string",
+      "description": "The citizen's first name."
+    },
+    "lastName": {
+      "type": "string",
+      "description": "The citizen's last name."
+    },
+    "age": {
+      "description": "Age in years which must be equal to or greater than zero.",
+      "type": "integer",
+      "minimum": 0
+    },
+    "city": {
+      "$ref": "types/all-types.json#/definitions/City/properties/name"
+    },
+    "identifier": {
+      "$ref": "types/all-types.json#/definitions/Identifier"
+    }
+  },
+  "required": [
+    "city"
+  ]
+}
+```
+
+The three options work exactly the same way when it comes to registering those schemas using the REST API as if we were registering a schema that references another. First we must register the schema that will be referenced, in this case, the one with the definitions:
+
+```json
+curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/' \
+--header 'X-Registry-ArtifactId: all-types' \
+--header 'Content-Type: application/json; artifactType=JSON' \
+--data '{
+  "$id": "https://example.com/types/all-types.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "City": {
+      "title": "City",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The city'\''s name."
+        },
+        "zipCode": {
+          "type": "integer",
+          "description": "The zip code.",
+          "minimum": 0
+        },
+        "qualification": {
+          "$ref": "city/qualification.json"
+        }
+      }
+    },
+    "Identifier": {
+      "title": "Identifier",
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "integer",
+          "description": "The citizen identifier.",
+          "minimum": 0
+        },
+        "qualification": {
+          "$ref": "identifier/qualification.json"
+        }
+      }
+    }
+  }
+}'
+```
+
+Once this schema has been registered, we can now decide to register two separate schemas, the first one referencing the entire city object:
+
+```
+curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts' \
+--header 'X-Registry-ArtifactId: citizen-object-level' \
+--header 'Content-Type: application/create.extended+json' \
+--header 'X-Registry-ArtifactType: JSON' \
+--data '{
+    "content": "{\r\n  \"$id\": \"https:\/\/example.com\/citizen.json\",\r\n  \"$schema\": \"http:\/\/json-schema.org\/draft-07\/schema#\",\r\n  \"title\": \"Citizen\",\r\n  \"type\": \"object\",\r\n  \"properties\": {\r\n    \"firstName\": {\r\n      \"type\": \"string\",\r\n      \"description\": \"The citizen'\''s first name.\"\r\n    },\r\n    \"lastName\": {\r\n      \"type\": \"string\",\r\n      \"description\": \"The citizen'\''s last name.\"\r\n    },\r\n    \"age\": {\r\n      \"description\": \"Age in years which must be equal to or greater than zero.\",\r\n      \"type\": \"integer\",\r\n      \"minimum\": 0\r\n    },\r\n    \"city\": {\r\n      \"$ref\": \"types\/all-types.json#\/definitions\/City\"\r\n    },\r\n    \"identifier\": {\r\n      \"$ref\": \"types\/all-types.json#\/definitions\/Identifier\"\r\n    }\r\n  },\r\n  \"required\": [\r\n    \"city\"\r\n  ]\r\n}",
+    "references": [
+        {
+            "groupId": "default",
+            "artifactId": "all-types",
+            "name": "types/all-types.json#/definitions/City",
+            "version": "1"
+        },
+                {
+            "groupId": "default",
+            "artifactId": "all-types",
+            "name": "types/all-types.json#/definitions/Identifier",
+            "version": "1"
+        }
+    ]
+}'
+```
+
+And then register the second schema, where just the city name property is referenced:
+
+```
+curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts' \
+--header 'X-Registry-ArtifactId: citizen-property-level' \
+--header 'Content-Type: application/create.extended+json' \
+--header 'X-Registry-ArtifactType: JSON' \
+--data '{
+    "content": "{\r\n  \"$id\": \"https:\/\/example.com\/citizen.json\",\r\n  \"$schema\": \"http:\/\/json-schema.org\/draft-07\/schema#\",\r\n  \"title\": \"Citizen\",\r\n  \"type\": \"object\",\r\n  \"properties\": {\r\n    \"firstName\": {\r\n      \"type\": \"string\",\r\n      \"description\": \"The citizen'\''s first name.\"\r\n    },\r\n    \"lastName\": {\r\n      \"type\": \"string\",\r\n      \"description\": \"The citizen'\''s last name.\"\r\n    },\r\n    \"age\": {\r\n      \"description\": \"Age in years which must be equal to or greater than zero.\",\r\n      \"type\": \"integer\",\r\n      \"minimum\": 0\r\n    },\r\n    \"city\": {\r\n      \"$ref\": \"types\/all-types.json#\/definitions\/City\/properties\/name\"\r\n    },\r\n    \"identifier\": {\r\n      \"$ref\": \"types\/all-types.json#\/definitions\/Identifier\"\r\n    }\r\n  },\r\n  \"required\": [\r\n    \"city\"\r\n  ]\r\n}",
+    "references": [
+        {
+            "groupId": "default",
+            "artifactId": "all-types",
+            "name": "types/all-types.json#/definitions/City/properties/name",
+            "version": "1"
+        },
+                {
+            "groupId": "default",
+            "artifactId": "all-types",
+            "name": "types/all-types.json#/definitions/Identifier",
+            "version": "1"
+        }
+    ]
+}'
+```
+
+The most relevant part here is the name of the reference (apart from the content itself, of course). The name of the reference is what's going to determine the part of the schema to be used to fill the reference in the main content. In the first case, in the object scenario, the reference name is ``types/all-types.json#/definitions/City`` creating a reference to the ``all-types.json`` file in general, and to the city definition in particular. In the second scenario, the property path is used for the reference name ``types/all-types.json#/definitions/City/properties/name``, creating a reference to the all-types.json file in general, and to the city name in particular.
+
+This is especially important for dereferencing content, since the final result will be different for each schema. In the object scenario, the city object will be inlined within the main schema as follows:
+
+```json
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Citizen",
+    "type": "object",
+    "properties": {
+        "firstName": {
+            "description": "The citizen's first name.",
+            "type": "string"
+        },
+        "lastName": {
+            "description": "The citizen's last name.",
+            "type": "string"
+        },
+        "identifier": {
+            "title": "Identifier",
+            "type": "object",
+            "properties": {
+                "identifier": {
+                    "description": "The citizen identifier.",
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        },
+        "city": {
+            "title": "City",
+            "type": "object",
+            "properties": {
+                "zipCode": {
+                    "description": "The zip code.",
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "name": {
+                    "description": "The city's name.",
+                    "type": "string"
+                }
+            }
+        },
+        "age": {
+            "description": "Age in years which must be equal to or greater than zero.",
+            "type": "integer",
+            "minimum": 0
+        }
+    },
+    "required": [
+        "city"
+    ],
+    "$id": "https://example.com/citizen.json"
+}
+```
+
+Whereas in the second scenario, the property one, just the city name will be inlined:
+
+```
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Citizen",
+    "type": "object",
+    "properties": {
+        "firstName": {
+            "description": "The citizen's first name.",
+            "type": "string"
+        },
+        "lastName": {
+            "description": "The citizen's last name.",
+            "type": "string"
+        },
+        "identifier": {
+            "title": "Identifier",
+            "type": "object",
+            "properties": {
+                "identifier": {
+                    "description": "The citizen identifier.",
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        },
+        "city": {
+            "description": "The city's name.",
+            "type": "string"
+        },
+        "age": {
+            "description": "Age in years which must be equal to or greater than zero.",
+            "type": "integer",
+            "minimum": 0
+        }
+    },
+    "required": [
+        "city"
+    ],
+    "$id": "https://example.com/citizen.json"
+}
+```
+
 JSON Schema Kafka Serde dereference
 ===
 
