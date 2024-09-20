@@ -1,0 +1,61 @@
+---
+title: "Registry : Getting Started"
+permalink: /registry-v2/getting-started/
+layout: page
+excerpt: Use docker to get started with Apicurio Registry fast!
+---
+
+{% assign latestRelease = site.data.registry-v2.latestRelease %}
+{% assign version = site.data.registry-v2.latestRelease.tag_name | remove_first: "v" %}
+{% assign theasset = site.data.registry-v2.latestRelease.assets[0] %}
+
+<div class="container projpage">
+    <div class="row">
+        <div class="col-md-3">
+            {%- include registry-v2/_projnav.html -%}
+        </div>
+        <div class="col-md-9">
+            <div id="download">
+                <div id="content" class="row">
+                    <div class="col-lg-10">
+                        <h1 class="section-header first">Get Started with Apicurio Registry</h1>
+                        <p>The easiest way to get started with Apicurio Registry is by using Docker to quickly start up an in-memory server. 
+                           This server is non-persistent, so don't use this for production!</p>
+                        </div>
+                    <div class="">
+                        <div class="col-lg-9">
+                            <h3>Prerequisites</h3>
+                            <ul>
+                                <li>You have <a href="https://docs.docker.com/get-docker/">Docker</a> (or <a href="https://podman.io/">Podman</a>) installed.</li>
+                            </ul>
+
+                            <h3>Pull the Apicurio Registry image</h3>
+                            <p>
+                             Pull the <a href="{{ site.docker_hub_url }}/apicurio-registry-mem">apicurio-registry-mem</a> Docker image from Docker Hub as follows:                                               
+<pre class="code-block">
+docker pull apicurio/apicurio-registry-mem:{{ version }}
+</pre>
+</p>
+                            <h3>Run the Apicurio Registry image</h3>
+                            <p>
+                                Apicurio Registry supports different storage options, but the quickest way to get started is to 
+                                use the non-persistent in-memory image with no external dependencies.  Each option has its own 
+                                Docker image. For more options, see the <a href="../docs">Apicurio Registry documentation</a>.
+                            </p>
+                            <p>
+                                Run the <code>apicurio-registry-mem</code> Docker image as follows:
+<pre class="code-block">
+docker run -it -p 8080:8080 apicurio/apicurio-registry-mem:{{ version }}
+</pre>
+</p>
+                            <h3>Open the Apicurio Registry web console</h3>
+                            <p>
+                              Open the <a href="http://localhost:8080/">Apicurio Registry web console</a> in your browser to add API and schema artifacts to Apicurio Registry.
+                            </p>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
