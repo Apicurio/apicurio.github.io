@@ -2,7 +2,7 @@
 layout: post
 title: "A Practical Step-by-Step Guide to Securing Your Apicurio Registry with Azure Entra ID"
 date:   2024-09-23 12:00:00
-author: abel
+author: Abel
 categories: blog registry security
 ---
 
@@ -101,7 +101,7 @@ postgresql                      ClusterIP   172.30.209.37   <none>        5432/T
 ```
 oc get routes
 NAME                                  HOST/PORT                                                                                 PATH   SERVICES                        PORT   TERMINATION   WILDCARD
-apicurioregistry-psql-ingress-hnz2f   apicurioregistry-psql.registry.router-default.apps.abouchama-amq18.emea.aws.cee.support   /      apicurioregistry-psql-service   http                 None
+apicurioregistry-psql-ingress-hnz2f   apicurioregistry-psql.registry.router-default.apps.com   /      apicurioregistry-psql-service   http                 None
 ```
 
 #### 2.3 Create Route for HTTPS (outside connection) required for the Azure Entra ID (AD) for the redirect URL:
@@ -117,7 +117,7 @@ metadata:
   labels:
     app: apicurioregistry-psql
 spec:
-  host: apicurioregistry-psql.registry.router-default.apps.abouchama-amq18.emea.aws.cee.support
+  host: apicurioregistry-psql.registry.router-default.apps.com
   to:
     kind: Service
     name: apicurioregistry-psql-service
@@ -134,13 +134,6 @@ EOF
 output:
 ```
 route.route.openshift.io/apicurioregistry-psql created
-```
-Check:
-```
-oc get routes
-NAME                                  HOST/PORT                                                                                 PATH   SERVICES                        PORT   TERMINATION     WILDCARD
-apicurioregistry-psql                 apicurioregistry-psql.registry.router-default.apps.abouchama-amq17.emea.aws.cee.support          apicurioregistry-psql-service   8080   edge/Redirect   None
-apicurioregistry-psql-ingress-hnz2f   apicurioregistry-psql.registry.router-default.apps.abouchama-amq18.emea.aws.cee.support   /      apicurioregistry-psql-service   http                   None
 ```
 
 ## 3. Secure the ApiCurio Registry with Azure Entra ID:
@@ -163,8 +156,8 @@ REGISTRY_OIDC_UI_CLIENT_ID=459569e9-c5f7-410a-a6e7-8db28d7e3647 #Azure AD > Admi
 Redirect Settings:
 - Change the host for your Apicurio Registry deployment (`oc get route`) 
 ```
-CORS_ALLOWED_ORIGINS=https://apicurioregistry-psql.registry.router-default.apps.abouchama-amq18.emea.aws.cee.support #The host for your Apicurio Registry deployment
-REGISTRY_OIDC_UI_REDIRECT_URL=https://apicurioregistry-psql.registry.router-default.apps.abouchama-amq18.emea.aws.cee.support/ui/ #The host for your Apicurio Registry console
+CORS_ALLOWED_ORIGINS=https://apicurioregistry-psql.registry.router-default.apps.com #The host for your Apicurio Registry deployment
+REGISTRY_OIDC_UI_REDIRECT_URL=https://apicurioregistry-psql.registry.router-default.apps.com/ui/ #The host for your Apicurio Registry console
 ```
 Authorization settings:
 ```
@@ -196,9 +189,9 @@ spec:
       - name: REGISTRY_OIDC_UI_CLIENT_ID
         value: '1fc88f64-2303-42f6-b9df-609edee94efe'
       - name: CORS_ALLOWED_ORIGINS
-        value: 'https://apicurioregistry-psql.registry.router-default.apps.abouchama-amq18.emea.aws.cee.support'
+        value: 'https://apicurioregistry-psql.registry.router-default.apps.com'
       - name: REGISTRY_OIDC_UI_REDIRECT_URL
-        value: 'https://apicurioregistry-psql.registry.router-default.apps.abouchama-amq18.emea.aws.cee.support/ui/'
+        value: 'https://apicurioregistry-psql.registry.router-default.apps.com/ui/'
       - name: ROLE_BASED_AUTHZ_ENABLED
         value: 'true'
       - name: QUARKUS_OIDC_ROLES_ROLE_CLAIM_PATH
@@ -290,11 +283,10 @@ Decode your JWT token (you can use tools like [jwt.io](https://jwt.io/)) to insp
 ```
 response=$(curl -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'client_id=53d7fab9-8cbd-4c3b-84e8-d91a33eb90f8&scope=api://6ac8d309-0dcd-4aeb-b186-4911266038a8/.default&client_secret=Frs8Q~dUD8EwK2-RZ0JNEYS_Lbxlrs01m5F3tbx8&grant_type=client_credentials' 'https://login.microsoftonline.com/93a47e43-9ded-45a5-a855-eb462dd234b2/oauth2/v2.0/token'  | jq ".access_token")
 
-
 ACCESS_TOKEN=$(echo "$response" | sed 's/^"//; s/"$//')
 echo "$ACCESS_TOKEN"
 
-MYREGISTRYURL=https://apicurioregistry-psql.registry.router-default.apps.abouchama-fuse4.emea.aws.cee.support
+MYREGISTRYURL=https://apicurioregistry-psql.registry.router-default.apps.com
 ```
 
 ### Get list of groups
