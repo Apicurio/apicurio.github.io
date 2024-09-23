@@ -235,18 +235,18 @@ Here are the steps:
 - Create a `new app registration` that represents your client application. You can leave everything blank in the creation screen besides the name.
 - In the `Overview` tab of your `new application registration`, Click on the link of `Client credentials`, you will be redirected to a page `Certificates & secrets`: create a new secret.
     
-    ![Client Secret](img/EntraID-ClientSecret.png)
+    ![Client Secret](/images/guides/EntraID-ClientSecret.png)
 
 - In the `API permissions`, add a new API Permission to your client application, and, inside this option, add the role you want to use. This role should have been created in the last section as an Application role in the Registry server app registration. This is done **so the role is sent within the token**.
 - In your client identifying the application and in the one identifying the Registry server, in the API permissions section, you **must grant admin consent for your directory**. Note that it may take a few seconds for this to take effect.
 
-    ![API Permissions](img/EntraID-ApiPermissions.png)
+    ![API Permissions](/images/guides/EntraID-ApiPermissions.png)
 
 **NOTE**: The registration of Registry server application **must** have an `exposed api` and the box checked for `ID tokens (used for implicit and hybrid flows)`
 
-![Exposed API](img/EntraID-ExposedApi.png)
+![Exposed API](/images/guides/EntraID-ExposedApi.png)
 
-![ID Tokens](img/EntraID-IDTokens.png)
+![ID Tokens](/images/guides/EntraID-IDTokens.png)
 
 ## 2. Requesting a Token:
 
