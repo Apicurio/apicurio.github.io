@@ -138,9 +138,7 @@ route.route.openshift.io/apicurioregistry-psql created
 
 ## 3. Secure the ApiCurio Registry with Azure Entra ID:
 
-**NOTE:** From this chapter, we will perform the instructions with instructor.
-
-- Login to https://portal.azure.com/ with your kerberos ID.
+- Login to https://portal.azure.com/
 - Follow the steps in the blog (Chapter - Azure Entra ID Configuration): Blog https://www.apicur.io/blog/2023/07/13/registry-azure-ad
 
 Prepare the values for the following env from the app registration `apicurio-registry-example` in Azure Entra ID:
