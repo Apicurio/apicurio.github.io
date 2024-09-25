@@ -107,9 +107,9 @@ curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts
 "content": "{\r\n  \"$id\": \"https:\/\/example.com\/types\/city\/city.json\",\r\n  \"$schema\": \"http:\/\/json-schema.org\/draft-07\/schema#\",\r\n  \"title\": \"City\",\r\n  \"type\": \"object\",\r\n  \"properties\": {\r\n    \"name\": {\r\n      \"type\": \"string\",\r\n      \"description\": \"The city'\''s name.\"\r\n    },\r\n    \"zipCode\": {\r\n      \"type\": \"integer\",\r\n      \"description\": \"The zip code.\",\r\n      \"minimum\": 0\r\n    },\r\n    \"qualification\": {\r\n      \"$ref\": \"qualification.json\"\r\n    }\r\n  }\r\n}",
 "references": [
 {
+"name": "qualification.json",
 "groupId": "default",
 "artifactId": "cityQualification",
-"name": "qualification.json",
 "version": "1"
 }
 ]
@@ -129,9 +129,9 @@ curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts
 0\r\n },\r\n \"qualification\": {\r\n \"$ref\": \"qualification.json\"\r\n }\r\n }\r\n}",
 "references": [
 {
+"name": "qualification.json",
 "groupId": "default",
 "artifactId": "identifierQualification",
-"name": "qualification.json",
 "version": "1"
 }
 ]
@@ -297,27 +297,27 @@ curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts
 \"items\": {\r\n \"$ref\": \"qualification.json\"\r\n }\r\n }\r\n },\r\n \"required\": [\r\n \"city\"\r\n  ]\r\n}",
 "references": [
 {
+"name": "qualification.json",
 "groupId": "default",
 "artifactId": "qualification",
-"name": "qualification.json",
 "version": "1"
 },
 {
+"name": "types/city/city.json",
 "groupId": "default",
 "artifactId": "city",
-"name": "types/city/city.json",
 "version": "1"
 },
 {
+"name": "types/identifier/citizenIdentifier.json",
 "groupId": "default",
 "artifactId": "citizenIdentifier",
-"name": "types/identifier/citizenIdentifier.json",
 "version": "1"
 },
 {
+"name": "sample.address.json",
 "groupId": "default",
 "artifactId": "address",
-"name": "sample.address.json",
 "version": "1"
 }
 ]
@@ -645,15 +645,15 @@ curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts
     "content": "{\r\n  \"$id\": \"https:\/\/example.com\/citizen.json\",\r\n  \"$schema\": \"http:\/\/json-schema.org\/draft-07\/schema#\",\r\n  \"title\": \"Citizen\",\r\n  \"type\": \"object\",\r\n  \"properties\": {\r\n    \"firstName\": {\r\n      \"type\": \"string\",\r\n      \"description\": \"The citizen'\''s first name.\"\r\n    },\r\n    \"lastName\": {\r\n      \"type\": \"string\",\r\n      \"description\": \"The citizen'\''s last name.\"\r\n    },\r\n    \"age\": {\r\n      \"description\": \"Age in years which must be equal to or greater than zero.\",\r\n      \"type\": \"integer\",\r\n      \"minimum\": 0\r\n    },\r\n    \"city\": {\r\n      \"$ref\": \"types\/all-types.json#\/definitions\/City\"\r\n    },\r\n    \"identifier\": {\r\n      \"$ref\": \"types\/all-types.json#\/definitions\/Identifier\"\r\n    }\r\n  },\r\n  \"required\": [\r\n    \"city\"\r\n  ]\r\n}",
     "references": [
         {
+            "name": "types/all-types.json#/definitions/City",
             "groupId": "default",
             "artifactId": "all-types",
-            "name": "types/all-types.json#/definitions/City",
             "version": "1"
         },
-                {
+        {
+            "name": "types/all-types.json#/definitions/Identifier",
             "groupId": "default",
             "artifactId": "all-types",
-            "name": "types/all-types.json#/definitions/Identifier",
             "version": "1"
         }
     ]
@@ -671,15 +671,15 @@ curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts
     "content": "{\r\n  \"$id\": \"https:\/\/example.com\/citizen.json\",\r\n  \"$schema\": \"http:\/\/json-schema.org\/draft-07\/schema#\",\r\n  \"title\": \"Citizen\",\r\n  \"type\": \"object\",\r\n  \"properties\": {\r\n    \"firstName\": {\r\n      \"type\": \"string\",\r\n      \"description\": \"The citizen'\''s first name.\"\r\n    },\r\n    \"lastName\": {\r\n      \"type\": \"string\",\r\n      \"description\": \"The citizen'\''s last name.\"\r\n    },\r\n    \"age\": {\r\n      \"description\": \"Age in years which must be equal to or greater than zero.\",\r\n      \"type\": \"integer\",\r\n      \"minimum\": 0\r\n    },\r\n    \"city\": {\r\n      \"$ref\": \"types\/all-types.json#\/definitions\/City\/properties\/name\"\r\n    },\r\n    \"identifier\": {\r\n      \"$ref\": \"types\/all-types.json#\/definitions\/Identifier\"\r\n    }\r\n  },\r\n  \"required\": [\r\n    \"city\"\r\n  ]\r\n}",
     "references": [
         {
+            "name": "types/all-types.json#/definitions/City/properties/name",
             "groupId": "default",
             "artifactId": "all-types",
-            "name": "types/all-types.json#/definitions/City/properties/name",
             "version": "1"
         },
-                {
+        {
+            "name": "types/all-types.json#/definitions/Identifier",
             "groupId": "default",
             "artifactId": "all-types",
-            "name": "types/all-types.json#/definitions/Identifier",
             "version": "1"
         }
     ]
