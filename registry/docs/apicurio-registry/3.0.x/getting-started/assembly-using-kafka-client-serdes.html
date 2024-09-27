@@ -701,38 +701,6 @@
 </tr>
 </table>
 </div>
-<h3 id="_configuration_using_a_producer_client_example" class="discrete">Configuration using a producer client example</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">String registryUrl_node1 = PropertiesUtil.property(clientProperties, "apicurio.url.node1",
-    "https://my-cluster-service-registry-myproject.example.com/apis/registry/v3"); <i class="conum" data-value="1"></i><b>(1)</b>
-try (RegistryService service = RegistryClient.create(registryUrl_node1)) {
-    String artifactId = ApplicationImpl.INPUT_TOPIC + "-value";
-    try {
-        service.getArtifactMetaData(artifactId); <i class="conum" data-value="2"></i><b>(2)</b>
-    } catch (WebApplicationException e) {
-        CompletionStage &lt;ArtifactMetaData&gt; csa = service.createArtifact(
-            "AVRO",
-            artifactId,
-            new ByteArrayInputStream(LogInput.SCHEMA$.toString().getBytes())
-        );
-        csa.toCompletableFuture().get();
-    }
-}</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>You can register properties against more than one URL node.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Check to see if the schema already exists based on the artifact ID.</td>
-</tr>
-</table>
-</div>
 </div>
 </div>
 <div class="sect1">
