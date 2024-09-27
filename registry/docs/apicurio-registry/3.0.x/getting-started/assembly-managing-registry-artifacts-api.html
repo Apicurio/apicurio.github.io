@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Managing Apicurio Registry content using the REST API :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.0.x/getting-started/assembly-managing-registry-artifacts-api.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.0.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/index.html">Apicurio Registry Operator documentation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating an existing Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.0.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.5.x/index.html">2.5.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.4.x/index.html">2.4.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.3.x/index.html">2.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Client applications</li>
+    <li><a href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.0.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-managing-registry-artifacts-api.html">3.0.x</a>
+    <a class="version" href="../../2.6.x/getting-started/assembly-managing-registry-artifacts-api.html">2.6.x</a>
+    <a class="version" href="../../2.5.x/getting-started/assembly-managing-registry-artifacts-api.html">2.5.x</a>
+    <a class="version" href="../../2.4.x/getting-started/assembly-managing-registry-artifacts-api.html">2.4.x</a>
+    <a class="version" href="../../2.3.x/getting-started/assembly-managing-registry-artifacts-api.html">2.3.x</a>
+    <a class="version" href="../../2.2.x/getting-started/assembly-managing-registry-artifacts-api.html">2.2.x</a>
+    <a class="version" href="../../2.1.x/getting-started/assembly-managing-registry-artifacts-api.html">2.1.x</a>
+    <a class="version" href="../../2.0.x/getting-started/assembly-managing-registry-artifacts-api.html">2.0.x</a>
+    <a class="version" href="../../1.3.3.Final/getting-started/assembly-managing-registry-artifacts-api.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Managing Apicurio Registry content using the REST API</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Client applications can use Apicurio Registry REST API operations to manage schema and API artifacts in Apicurio Registry, for example, in a CI/CD pipeline deployed in production. The Core Registry API v3 provides operations for artifacts, versions, metadata, and rules stored in Apicurio Registry. For detailed information, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>This chapter shows examples of how to use the Core Registry API v3 to perform the following tasks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#managing-artifacts-using-rest-api_registry">Managing schema and API artifacts using Apicurio Registry REST API commands</a></p>
+</li>
+<li>
+<p><a href="#managing-artifact-versions-using-rest-api_registry">Managing schema and API artifact versions using Apicurio Registry REST API commands</a></p>
+</li>
+<li>
+<p><a href="#managing-artifact-references-using-rest-api_registry">Managing schema and API artifact references using Apicurio Registry REST API commands</a></p>
+</li>
+<li>
+<p><a href="#exporting-importing-using-rest-api_registry">Exporting and importing registry data using Apicurio Registry REST API commands</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p><a href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="managing-artifacts-using-rest-api_registry"><a class="anchor" href="#managing-artifacts-using-rest-api_registry"></a>Managing schema and API artifacts using Apicurio Registry REST API commands</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This section shows a simple curl-based example of using the Core Registry API v3 to add and retrieve a simple schema artifact in Apicurio Registry.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running in your environment.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add an artifact to Apicurio Registry using the <code>/groups/{groupId}/artifacts</code> operation. The following example <code>curl</code> command adds a simple schema artifact for a share price application:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  --data-raw '{
+    "artifactId": "share-price",
+    "artifactType": "AVRO",
+    "firstVersion": {
+        "content": {
+            "content": "{\"type\":\"record\",\"name\":\" p\",\"namespace\":\"com.example\", \"fields\":[{\"name\":\"symbol\",\"type\":\"string\"},{\"name\":\"price\",\"type\":\"string\"}]}",
+            "contentType": "application/json"
+        }
+    }
+}'</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>This example adds an Apache Avro schema artifact with an artifact ID of <code>share-price</code>. If you do not specify a unique artifact ID, Apicurio Registry generates one automatically as a UUID.</p>
+</li>
+<li>
+<p><code>MY-REGISTRY-URL</code> is the
+host name on which Apicurio Registry is deployed. For example: <code>http://localhost:8080</code>.</p>
+</li>
+<li>
+<p>This example specifies a group ID of <code>my-group</code> in the API path. If you do not specify a unique group ID, you must specify <code>../groups/default</code> in the API path.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Verify that the response includes the expected JSON body to confirm that the artifact was added. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"artifact":{"owner":"","createdOn":"2024-09-26T17:24:21Z","modifiedBy":"","modifiedOn":"2024-09-26T17:24:21Z","artifactType":"AVRO","groupId":"my-group","artifactId":"share-price"},"version":{"version":"1","owner":"","createdOn":"2024-09-26T17:24:21Z","artifactType":"AVRO","globalId":2,"state":"ENABLED","groupId":"my-group","contentId":2,"artifactId":"share-price"}}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>No version was specified when adding the artifact, so the default version <code>1</code> is created automatically.</p>
+</li>
+<li>
+<p>This was the second artifact added to Apicurio Registry, so the global ID and content ID have a value of <code>2</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Retrieve the artifact version content from Apicurio Registry using its artifact ID in the API path. In this example, the specified ID is <code>share-price</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -H "Authorization: Bearer $ACCESS_TOKEN" \
+ MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts/share-price/versions/1/content
+ {"type":"record","name":"price","namespace":"com.example",
+  "fields":[{"name":"symbol","type":"string"},{"name":"price","type":"string"}]}</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more details, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="managing-artifact-versions-using-rest-api_registry"><a class="anchor" href="#managing-artifact-versions-using-rest-api_registry"></a>Managing schema and API artifact versions using Apicurio Registry REST API commands</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>If you do not specify an artifact version number when adding schema and API artifacts using the Core Registry API v3, Apicurio Registry generates a version number automatically. The default version when creating a new artifact is <code>1</code>.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry also supports custom versioning where you can specify a version number when creating the artifact or artifact version.  Specifying a custom version value overrides the default version normally assigned when creating an artifact or artifact version. You can then use this version value when executing REST API operations that require a version number.</p>
+</div>
+<div class="paragraph">
+<p>This section shows a simple curl-based example of using the Core Registry API v3 to add and retrieve a custom Apache Avro schema version in Apicurio Registry. You can specify custom version numbers to create artifacts, or to add artifact versions.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running in your environment.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add an artifact version in the registry using the <code>/groups/{groupId}/artifacts</code> operation. The following example <code>curl</code> command adds a simple artifact for a share price application:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  --data-raw '{
+    "artifactId": "my-share-price",
+    "artifactType": "AVRO",
+    "firstVersion": {
+        "version": "1.1.1",
+        "content": {
+            "content": "{\"type\":\"record\",\"name\":\" p\",\"namespace\":\"com.example\", \"fields\":[{\"name\":\"symbol\",\"type\":\"string\"},{\"name\":\"price\",\"type\":\"string\"}]}",
+            "contentType": "application/json"
+        }
+    }
+}'</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>This example adds an Avro schema artifact with an artifact ID of <code>my-share-price</code> and version of <code>1.1.1</code>. If you do not specify a version, Apicurio Registry automatically generates a default version of <code>1</code>.</p>
+</li>
+<li>
+<p><code>MY-REGISTRY-URL</code> is the
+host name on which Apicurio Registry is deployed. For example: <code>http://localhost:8080</code>.</p>
+</li>
+<li>
+<p>This example specifies a group ID of <code>my-group</code> in the API path. If you do not specify a unique group ID, you must specify <code>../groups/default</code> in the API path.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Verify that the response includes the expected JSON body to confirm that the custom artifact version was added. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"artifact":{"owner":"","createdOn":"2024-09-26T17:06:21Z","modifiedBy":"","modifiedOn":"2024-09-26T17:06:21Z","artifactType":"AVRO","groupId":"my-group","artifactId":"my-share-price"},"version":{"version":"1.1.1","owner":"","createdOn":"2024-09-26T17:06:21Z","artifactType":"AVRO","globalId":4,"state":"ENABLED","groupId":"my-group","contentId":4,"artifactId":"my-share-price"}}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A custom version of <code>1.1.1</code> was specified when adding the artifact.</p>
+</li>
+<li>
+<p>This was the fourth artifact added to the registry, so the global ID and content ID have a value of <code>4</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Retrieve the artifact content from the registry using its artifact ID and version in the API path. In this example, the specified ID is <code>my-share-price</code> and the version is <code>1.1.1</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -H "Authorization: Bearer $ACCESS_TOKEN" \
+    MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts/my-share-price/versions/1.1.1/content
+{"type":"record","name":"price","namespace":"com.example",
+  "fields":[{"name":"symbol","type":"string"},{"name":"price","type":"string"}]}</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more details, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="managing-artifact-references-using-rest-api_registry"><a class="anchor" href="#managing-artifact-references-using-rest-api_registry"></a>Managing schema and API artifact references using Apicurio Registry REST API commands</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Some Apicurio Registry artifact types can include <em>artifact references</em> from one artifact file to another. You can create efficiencies by defining reusable schema or API artifacts, and then referencing them from multiple locations in artifact references.</p>
+</div>
+<div class="paragraph">
+<p>The following artifact types support artifact references:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apache Avro</p>
+</li>
+<li>
+<p>Google Protobuf</p>
+</li>
+<li>
+<p>JSON Schema</p>
+</li>
+<li>
+<p>OpenAPI</p>
+</li>
+<li>
+<p>AsyncAPI</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This section shows a simple curl-based example of using the Core Registry API v3 to add and retrieve an artifact reference to a simple Avro schema artifact in Apicurio Registry.</p>
+</div>
+<div class="paragraph">
+<p>This example first creates a schema artifact named <code>ItemId</code>:</p>
+</div>
+<div class="listingblock">
+<div class="title">ItemId schema</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "namespace":"com.example.common",
+    "name":"ItemId",
+    "type":"record",
+    "fields":[
+        {
+            "name":"id",
+            "type":"int"
+        }
+    ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example then creates a schema artifact named <code>Item</code>, which includes a reference to the nested <code>ItemId</code> artifact.</p>
+</div>
+<div class="listingblock">
+<div class="title">Item schema with nested ItemId schema</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "namespace":"com.example.common",
+    "name":"Item",
+    "type":"record",
+    "fields":[
+        {
+            "name":"itemId",
+            "type":"com.example.common.ItemId"
+        }
+    ]
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running in your environment.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add the <code>ItemId</code> schema artifact that you want to create the nested artifact reference to using the <code>/groups/{groupId}/artifacts</code> operation:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer $ACCESS_TOKEN" \
+   --data '{"artifactId":"ItemId","artifactType":"AVRO","firstVersion":{"version":"1.0.0","content":{"content":"{\"namespace\":\"com.example.common\",\"name\":\"ItemId\",\"type\":\"record\",\"fields\":[{\"name\":\"id\",\"type\":\"int\"}]}","contentType":"application/json"}}}'</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>This example adds an Avro schema artifact with an artifact ID of <code>ItemId</code>. If you do not specify a unique artifact ID, Apicurio Registry generates one automatically as a UUID.</p>
+</li>
+<li>
+<p><code>MY-REGISTRY-URL</code> is the
+host name on which Apicurio Registry is deployed. For example: <code>http://localhost:8080</code>.</p>
+</li>
+<li>
+<p>This example specifies a group ID of <code>my-group</code> in the API path. If you do not specify a unique group ID, you must specify <code>../groups/default</code> in the API path.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Verify that the response includes the expected JSON body to confirm that the artifact was added. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"artifact":{"owner":"","createdOn":"2024-09-26T16:27:38Z","modifiedBy":"","modifiedOn":"2024-09-26T16:27:38Z","artifactType":"AVRO","groupId":"my-group","artifactId":"ItemId"},"version":{"version":"1.0.0","owner":"","createdOn":"2024-09-26T16:27:38Z","artifactType":"AVRO","globalId":2,"state":"ENABLED","groupId":"my-group","contentId":2,"artifactId":"ItemId"}}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add the <code>Item</code> schema artifact that includes the artifact reference to the <code>ItemId</code> schema using the <code>/groups/{groupId}/artifacts</code> operation:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts \
+-H 'Content-Type: application/json' \
+-H "Authorization: Bearer $ACCESS_TOKEN" \
+--data-raw '{
+	"artifactId": "Item",
+	"artifactType": "AVRO",
+	"firstVersion": {
+		"version": "1.0.0",
+		"content": {
+			"content": "{\"namespace\":\"com.example.common\",\"name\":\"Item\",\"type\":\"record\",\"fields\":[{\"name\":\"itemId\",\"type\":\"com.example.common.ItemId\"}]}",
+			"contentType": "application/json",
+			"references": [
+				{
+					"name": "com.example.common.ItemId",
+					"groupId": "my-group",
+					"artifactId": "ItemId",
+					"version": "1.0.0"
+				}
+			]
+		}
+	}
+}'</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For artifact references, you must specify the custom content type of <code>application/create.extended+json</code>, which extends the <code>application/json</code> content type.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Verify that the response includes the expected JSON body to confirm that the artifact was created with the reference. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"artifact":{"owner":"","createdOn":"2024-09-26T16:28:45Z","modifiedBy":"","modifiedOn":"2024-09-26T16:28:45Z","artifactType":"AVRO","groupId":"my-group","artifactId":"Item"},"version":{"version":"1.0.0","owner":"","createdOn":"2024-09-26T16:28:45Z","artifactType":"AVRO","globalId":3,"state":"ENABLED","groupId":"my-group","contentId":3,"artifactId":"Item"}}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Retrieve the artifact reference from Apicurio Registry by specifying the coordinates of the artifact that includes the reference:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -H "Authorization: Bearer $ACCESS_TOKEN" MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts/Item/versions/1.0.0/references</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that the response includes the expected JSON body for this artifact reference. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[{"groupId":"my-group","artifactId":"ItemId","version":"1.0.0","name":"com.example.common.ItemId"}]</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><strong>Dereference</strong></p>
+</div>
+<div class="paragraph">
+<p>There are some situations where having an artifact&#8217;s content with the referenced content inlined might be helpful. For those situations, the Core Registry API v3 supports the <em>references parameter</em> in certain operations.</p>
+</div>
+<div class="paragraph">
+<p>This support is currently implemented for Avro, JSON Schema, Protobuf, OpenAPI and AsyncAPI when the parameter is present in a particular API operation. The parameter is not supported in other schema types.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Retrieve the dereferenced (inlined) schema content:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -H "Authorization: Bearer $ACCESS_TOKEN" MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts/Item/versions/1.0.0/content?references=DEREFERENCE</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that the response includes the expected JSON body for this artifact content with the references inlined. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"type":"record","name":"Item","namespace":"com.example.common","fields":[{"name":"itemId","type":{"type":"record","name":"ItemId","fields":[{"name":"id","type":"int"}]}}]}</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><mark>In Protobuf dereferencing content is only supported when all the schemas in the try belong to the same package.</mark></p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more details, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+</li>
+<li>
+<p>For more examples of artifact references, see the section on configuring each artifact type in <a href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="exporting-importing-using-rest-api_registry"><a class="anchor" href="#exporting-importing-using-rest-api_registry"></a>Exporting and importing registry data using Apicurio Registry REST API commands</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>As an administrator, you can use the Core Registry API v3 to export data from one Apicurio Registry instance and import into another Apicurio Registry instance, so you can migrate data between different instances.</p>
+</div>
+<div class="paragraph">
+<p>This section shows a simple curl-based example of using the Core Registry API v3 to export and import existing data in <code>.zip</code> format from one Apicurio Registry instance to another. All the artifact data contained in the Apicurio Registry instance is exported in the <code>.zip</code> file.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running in your environment.</p>
+</li>
+<li>
+<p>Apicurio Registry instances have been created:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The source instance that you want to export data from contains at least one schema or API artifact.</p>
+</li>
+<li>
+<p>The target instance that you want to import data into is empty to preserve unique IDs.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Export the Apicurio Registry data from your existing source Apicurio Registry instance:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl MY-REGISTRY-URL/apis/registry/v3/admin/export \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  --output my-registry-data.zip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>MY-REGISTRY-URL</code> is the
+host name on which the source Apicurio Registry is deployed. For example: <code>http://my-source-registry:8080</code>.</p>
+</div>
+</li>
+<li>
+<p>Import the registry data into your target Apicurio Registry instance:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST "MY-REGISTRY-URL/apis/registry/v3/admin/import" \
+  -H "Content-Type: application/zip" -H "Authorization: Bearer $ACCESS_TOKEN" \
+  --data-binary @my-registry-data.zip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>MY-REGISTRY-URL</code> is the
+host name on which the target Apicurio Registry is deployed. For example: <code>http://my-target-registry:8080</code>.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more details, see the <code>admin</code> endpoint in the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+</li>
+<li>
+<p>For details on export tools for migrating from Apicurio Registry version 1.x to 2.x, see <a href="https://github.com/Apicurio/apicurio-registry/tree/main/utils/exportV1">Apicurio Registry export utility for 1.x versions</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.0.x/getting-started/assembly-managing-registry-artifacts-api.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
