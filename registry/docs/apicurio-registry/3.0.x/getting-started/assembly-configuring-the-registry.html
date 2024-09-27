@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Configuring your Apicurio Registry deployment :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.0.x/getting-started/assembly-configuring-the-registry.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.0.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/index.html">Apicurio Registry Operator documentation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating an existing Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.0.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.5.x/index.html">2.5.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.4.x/index.html">2.4.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.3.x/index.html">2.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Configuration</li>
+    <li><a href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.0.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-configuring-the-registry.html">3.0.x</a>
+    <a class="version" href="../../2.6.x/getting-started/assembly-configuring-the-registry.html">2.6.x</a>
+    <a class="version" href="../../2.5.x/getting-started/assembly-configuring-the-registry.html">2.5.x</a>
+    <a class="version" href="../../2.4.x/getting-started/assembly-configuring-the-registry.html">2.4.x</a>
+    <a class="version" href="../../2.3.x/getting-started/assembly-configuring-the-registry.html">2.3.x</a>
+    <a class="version" href="../../2.2.x/getting-started/assembly-configuring-the-registry.html">2.2.x</a>
+    <a class="version" href="../../2.1.x/getting-started/assembly-configuring-the-registry.html">2.1.x</a>
+    <a class="version" href="../../2.0.x/getting-started/assembly-configuring-the-registry.html">2.0.x</a>
+    <a class="version" href="../../1.3.3.Final/getting-started/assembly-configuring-the-registry.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Configuring your Apicurio Registry deployment</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This chapter explains how to set important configuration options for your Apicurio Registry deployment. This includes features such as the Apicurio Registry web console, logging, and health checks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#configuring-registry-ui_registry">Configuring the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="#configuring-liveness-readiness-probes_registry">Configuring Apicurio Registry health checks on OpenShift</a></p>
+</li>
+<li>
+<p><a href="#registry-liveness-env-vars_registry">Environment variables for Apicurio Registry health checks</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For a list of all available configuration options, see <a href="assembly-config-reference.html">Apicurio Registry configuration reference</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-registry-ui_registry"><a class="anchor" href="#configuring-registry-ui_registry"></a>Configuring the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can set optional environment variables to configure the Apicurio Registry web console specifically for your deployment environment or to customize its behavior.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have already installed Apicurio Registry.</p>
+</li>
+</ul>
+</div>
+<h3 id="_configuring_the_web_console_deployment_environment" class="discrete">Configuring the web console deployment environment</h3>
+<div class="paragraph">
+<p>When you access the Apicurio Registry web console in your browser, some initial configuration settings are loaded. The following configuration settings are required:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>URL for core Apicurio Registry server REST API v3</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Typically the Apicurio Registry operator will automatically configure the UI component with the REST API v3 URL.  However, you can override this value by configuring the appropriate environment variable in the UI component deployment configuration.</p>
+</div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>Configure the following environment variables to override the default URL:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>REGISTRY_API_URL</code>: Specifies the URL for the core Apicurio Registry server REST API v3. For example, <code>https://registry-api.my-domain.com/apis/registry/v3</code></p>
+</li>
+</ul>
+</div>
+<h3 id="_configuring_the_web_console_in_read_only_mode" class="discrete">Configuring the web console in read-only mode</h3>
+<div class="paragraph">
+<p>You can configure the Apicurio Registry web console in read-only mode as an optional feature. This mode disables all features in the Apicurio Registry web console that allow users to make changes to registered artifacts. For example, this includes the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Creating a group</p>
+</li>
+<li>
+<p>Creating an artifact</p>
+</li>
+<li>
+<p>Uploading a new artifact version</p>
+</li>
+<li>
+<p>Updating artifact metadata</p>
+</li>
+<li>
+<p>Deleting an artifact</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>Configure the following environment variable:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>REGISTRY_FEATURE_READ_ONLY</code>: Set to <code>true</code> to enable read-only mode. Defaults to <code>false</code>.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="configuring-liveness-readiness-probes_registry"><a class="anchor" href="#configuring-liveness-readiness-probes_registry"></a>Configuring Apicurio Registry health checks on OpenShift</h3>
+<div class="paragraph _abstract">
+<p>You can configure optional environment variables for liveness and readiness probes to monitor the health of the Apicurio Registry server on OpenShift:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>Liveness probes</em> test if the application can make progress. If the application cannot make progress, OpenShift automatically restarts the failing Pod.</p>
+</li>
+<li>
+<p><em>Readiness probes</em> test if the application is ready to process requests. If the application is not ready, it can become overwhelmed by requests, and OpenShift stops sending requests for the time that the probe fails. If other Pods are OK, they continue to receive requests.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The default values of the liveness and readiness environment variables are designed for most cases and should only be changed if required by your environment. Any changes to the defaults depend on your hardware, network, and amount of data stored. These values should be kept as low as possible to avoid unnecessary overhead.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have an OpenShift cluster with cluster administrator access.</p>
+</li>
+<li>
+<p>You must have already installed Apicurio Registry on OpenShift.</p>
+</li>
+<li>
+<p>You must have already installed and configured your chosen Apicurio Registry storage in either Strimzi or PostgreSQL.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the OpenShift Container Platform web console, log in using an account with cluster administrator privileges.</p>
+</li>
+<li>
+<p>Click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong>.</p>
+</li>
+<li>
+<p>On the <strong>ApicurioRegistry</strong> tab, click the Operator custom resource for your deployment, for example, <strong>example-apicurioregistry</strong>.</p>
+</li>
+<li>
+<p>In the main overview page, find the <strong>Deployment Name</strong> section and the corresponding <code>DeploymentConfig</code> name for your Apicurio Registry deployment, for example, <strong>example-apicurioregistry</strong>.</p>
+</li>
+<li>
+<p>In the left navigation menu, click <strong>Workloads</strong> &gt; <strong>Deployment Configs</strong>, and select your <code>DeploymentConfig</code> name.</p>
+</li>
+<li>
+<p>Click the <strong>Environment</strong> tab, and enter your environment variables in the <strong>Single values env</strong> section, for example:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>NAME</strong>: <code>LIVENESS_STATUS_RESET</code></p>
+</li>
+<li>
+<p><strong>VALUE</strong>: <code>350</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Save</strong> at the bottom.</p>
+<div class="paragraph">
+<p>Alternatively, you can perform these steps using the OpenShift <code>oc</code> command. For more details, see the <a href="https://docs.openshift.com/container-platform/4.14/cli_reference/openshift_cli/getting-started-cli.html">OpenShift CLI documentation</a>.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#registry-liveness-env-vars_registry">Environment variables for Apicurio Registry health checks</a></p>
+</li>
+<li>
+<p><a href="https://docs.openshift.com/container-platform/4.14/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-liveness-env-vars_registry"><a class="anchor" href="#registry-liveness-env-vars_registry"></a>Environment variables for Apicurio Registry health checks</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes the available environment variables for Apicurio Registry health checks on OpenShift. These include liveness and readiness probes to monitor the health of the Apicurio Registry server on OpenShift. For an example procedure, see <a href="#configuring-liveness-readiness-probes_registry">Configuring Apicurio Registry health checks on OpenShift</a>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The following environment variables are provided for reference only. The default values are designed for most cases and should only be changed if required by your environment. Any changes to the defaults depend on your hardware, network, and amount of data stored. These values should be kept as low as possible to avoid unnecessary overhead.
+</td>
+</tr>
+</table>
+</div>
+<h3 id="_liveness_environment_variables" class="discrete">Liveness environment variables</h3>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 1. Environment variables for Apicurio Registry liveness probes</caption>
+<colgroup>
+<col style="width: 29.4117%;">
+<col style="width: 29.4117%;">
+<col style="width: 11.7647%;">
+<col style="width: 29.4119%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LIVENESS_ERROR_THRESHOLD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of liveness issues or errors that can occur before the liveness probe fails.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LIVENESS_COUNTER_RESET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Period in which the threshold number of errors must occur. For example, if this value is 60 and the threshold is 1, the check fails after two errors occur in 1 minute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LIVENESS_STATUS_RESET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of seconds that must elapse without any more errors for the liveness probe to reset to OK status.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>300</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LIVENESS_ERRORS_IGNORED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma-separated list of ignored liveness exceptions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.grpc.StatusRuntimeException,org.apache.kafka.streams.errors.InvalidStateStoreException</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Because OpenShift automatically restarts a Pod that fails a liveness check, the liveness settings, unlike readiness settings, do not directly affect behavior of Apicurio Registry on OpenShift.
+</td>
+</tr>
+</table>
+</div>
+<h3 id="_readiness_environment_variables" class="discrete">Readiness environment variables</h3>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 2. Environment variables for Apicurio Registry readiness probes</caption>
+<colgroup>
+<col style="width: 30.7692%;">
+<col style="width: 38.4615%;">
+<col style="width: 15.3846%;">
+<col style="width: 15.3847%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>READINESS_ERROR_THRESHOLD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of readiness issues or errors that can occur before the readiness probe fails.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>READINESS_COUNTER_RESET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Period in which the threshold number of errors must occur. For example, if this value is 60 and the threshold is 1, the check fails after two errors occur in 1 minute.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>READINESS_STATUS_RESET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of seconds that must elapse without any more errors for the liveness probe to reset to OK status. In this case, this means how long the Pod stays not ready, until it returns to normal operation.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>300</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>READINESS_TIMEOUT</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Readiness tracks the timeout of two operations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>How long it takes for storage requests to complete</p>
+</li>
+<li>
+<p>How long it takes for HTTP REST API requests to return a response</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If these operations take more time than the configured timeout, this is counted as a readiness issue or error. This value controls the timeouts for both operations.</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#configuring-liveness-readiness-probes_registry">Configuring Apicurio Registry health checks on OpenShift</a></p>
+</li>
+<li>
+<p><a href="https://docs.openshift.com/container-platform/4.14/applications/application-health.html">OpenShift documentation on monitoring application health</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.0.x/getting-started/assembly-configuring-the-registry.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>

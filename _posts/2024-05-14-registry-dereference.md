@@ -23,10 +23,10 @@ where the main schema _city.json_ is registered with all the references in the h
 
 ```
                           citizen
-     |          |                     |                   |
-    city   qualification        sample.address     citizenIdentifier
-     |                                                     |
- qualification                                       qualification
+     |          |                     |           
+    city   qualification        citizenIdentifier
+     |                                |
+ qualification                   qualification
     
 ```
 
@@ -123,10 +123,7 @@ curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts
 --header 'Content-Type: application/create.extended+json' \
 --header 'X-Registry-ArtifactType: JSON' \
 --data '{
-"content": "{\r\n \"$id\": \"https:\/\/example.com\/types\/identifier\/citizenIdentifier.json\",\r\n \"$schema\":\"http:
-\/\/json-schema.org\/draft-07\/schema#\",\r\n \"title\": \"Identifier\",\r\n \"type\": \"object\",\r\n \"properties\":
-{\r\n \"identifier\": {\r\n \"type\": \"integer\",\r\n \"description\": \"The citizen identifier.\",\r\n \"minimum\":
-0\r\n },\r\n \"qualification\": {\r\n \"$ref\": \"qualification.json\"\r\n }\r\n }\r\n}",
+"content": "{\r\n  \"$id\": \"https:\/\/example.com\/types\/identifier\/citizenIdentifier.json\",\r\n  \"$schema\": \"http:\/\/json-schema.org\/draft-07\/schema#\",\r\n  \"title\": \"Identifier\",\r\n  \"type\": \"object\",\r\n  \"properties\": {\r\n    \"identifier\": {\r\n      \"type\": \"integer\",\r\n      \"description\": \"The citizen identifier.\",\r\n      \"minimum\": 0\r\n    },\r\n    \"qualification\": {\r\n      \"$ref\": \"qualification.json\"\r\n    }\r\n  }\r\n}",
 "references": [
 {
 "name": "qualification.json",
@@ -162,124 +159,7 @@ curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts
 }'
 ```
 
-The citizen address:
-
-```
-curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/' \
---header 'X-Registry-ArtifactId: address' \
---header 'Content-Type: application/json; artifactType=JSON' \
---data '{
-"$schema": "http://json-schema.org/draft/2019-09/schema",
-"$id": "https://example.com/sample.address.json",
-"additionalProperties": false,
-"type": "object",
-"required": [
-"effectiveDate"
-],
-"properties": {
-"geoDemographicGroupCd": {
-"description": "Geo-demographic group based on zipcode/postcode. This data is usually available from marketing systems
-like Mosaic. Acorn. etc.",
-"type": "string",
-"maxLength": 50
-},
-"zipPostcode": {
-"description": "Zip/postal code",
-"type": "string",
-"maxLength": 50
-},
-"city": {
-"description": "Identifies the city",
-"type": "string",
-"maxLength": 100
-},
-"stateProvinceCd": {
-"description": "Unique code for the state or province. Can be an organization'\''s internal spelling or a standard
-abbreviation. as long as they are consistent.",
-"type": "string",
-"maxLength": 50
-},
-"countryCd": {
-"description": "Unique identifier for the country of the address.  ",
-"type": "string",
-"maxLength": 50
-},
-"isStructured": {
-"description": "Whether the addresses of individual components are identified (eg: Street. Apt.#. etc.) - set to 1. If
-not (only Address_Line_1 to 5) then set to 0.",
-"type": "boolean"
-},
-"poBox": {
-"description": "Post office box number.",
-"type": "string",
-"maxLength": 25
-},
-"apartmentSuiteNumber": {
-"description": "If the street address is an apartment building or business complex - the individual apartment number",
-"type": "string",
-"maxLength": 50
-},
-"street": {
-"description": "Street name",
-"type": "string",
-"maxLength": 255
-},
-"isPrimary": {
-"description": "Whether this address is the primary address for the corresponding Entity_Id of type Entity_Type_Cd (e.g.
-Party) for the Tenant (Tenant_Cd) and for the specified address type (Address_Relation_Type_Cd). Only one address per
-Entity. Tenant. and address type can be the primary. 1= True 0 = False",
-"type": "boolean"
-},
-"addressLine1": {
-"description": "When the source address is unformatted and not in specific fields such as street. city. zip. etc. This
-is the first line of the address. Note that all party addresses must either be unformatted or formatted.",
-"type": "string",
-"maxLength": 255
-},
-"buildingNumber": {
-"description": "House or building number of the street address (residential home. apartment building. commercial).",
-"type": "string",
-"maxLength": 50
-},
-"addressLine2": {
-"description": "When the source address is unformatted and not in specific fields such as street. city. zip. etc. This
-is the second line of the address.",
-"type": "string",
-"maxLength": 255
-},
-"addressLine3": {
-"description": "When the source address is unformatted and not in specific fields such as street. city. zip. etc. This
-is the third line of the address.",
-"type": "string",
-"maxLength": 255
-},
-"addressLine4": {
-"description": "When the source address is unformatted and not in specific fields such as street. city. zip. etc. This
-is the fourth line of the address.",
-"type": "string",
-"maxLength": 255
-},
-"addressLine5": {
-"description": "When the source address is unformatted and not in specific fields such as street. city. zip. etc. This
-is the fifth line of the address.",
-"type": "string",
-"maxLength": 255
-},
-"effectiveDate": {
-"description": "Indicates when the entity started using this address.",
-"type": "string",
-"format": "date-time"
-},
-"expirationDate": {
-"description": "Indicates when the entity stopped using this address.",
-"type": "string",
-"format": "date-time"
-}
-}
-}'
-```
-
-And, finally, the citizen schema itself with references to qualification, city, identifier and address
+And, finally, the citizen schema itself with references to qualification, city and identifier 
 
 ```
 curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/' \
@@ -287,14 +167,7 @@ curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts
 --header 'Content-Type: application/create.extended+json' \
 --header 'X-Registry-ArtifactType: JSON' \
 --data '{
-"content": "{\r\n \"$id\": \"https:\/\/example.com\/citizen.json\",\r\n \"$schema\": \"http:
-\/\/json-schema.org\/draft-07\/schema#\",\r\n \"title\": \"Citizen\",\r\n \"type\": \"object\",\r\n \"properties\":{\r\n
-\"firstName\": {\r\n \"type\": \"string\",\r\n \"description\": \"The citizen'\''s first name.\"\r\n },\r\n
-\"lastName\": {\r\n \"type\": \"string\",\r\n \"description\": \"The citizen'\''s last name.\"\r\n },\r\n \"age\": {\r\n
-\"description\": \"Age in years which must be equal to or greater than zero.\",\r\n \"type\": \"integer\",\r\n
-\"minimum\": 0\r\n },\r\n \"city\": {\r\n \"$ref\": \"types\/city\/city.json\"\r\n },\r\n \"identifier\": {\r\n
-\"$ref\": \"types\/identifier\/citizenIdentifier.json\"\r\n },\r\n \"qualifications\": {\r\n \"type\": \"array\",\r\n
-\"items\": {\r\n \"$ref\": \"qualification.json\"\r\n }\r\n }\r\n },\r\n \"required\": [\r\n \"city\"\r\n  ]\r\n}",
+"content": "{\r\n \"$id\": \"https:\/\/example.com\/citizen.json\",\r\n \"$schema\": \"http:\/\/json-schema.org\/draft-07\/schema#\",\r\n \"title\": \"Citizen\",\r\n \"type\": \"object\",\r\n \"properties\":{\r\n\"firstName\": {\r\n \"type\": \"string\",\r\n \"description\": \"The citizen'\''s first name.\"\r\n },\r\n\"lastName\": {\r\n \"type\": \"string\",\r\n \"description\": \"The citizen'\''s last name.\"\r\n },\r\n \"age\": {\r\n\"description\": \"Age in years which must be equal to or greater than zero.\",\r\n \"type\": \"integer\",\r\n\"minimum\": 0\r\n },\r\n \"city\": {\r\n \"$ref\": \"types\/city\/city.json\"\r\n },\r\n \"identifier\": {\r\n\"$ref\": \"types\/identifier\/citizenIdentifier.json\"\r\n },\r\n \"qualifications\": {\r\n \"type\": \"array\",\r\n\"items\": {\r\n \"$ref\": \"qualification.json\"\r\n }\r\n }\r\n },\r\n \"required\": [\r\n \"city\"\r\n  ]\r\n}",
 "references": [
 {
 "name": "qualification.json",
@@ -324,7 +197,6 @@ curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts
 }'
 ```
 
----
 JSON Schema dereference
 ===
 
@@ -473,7 +345,7 @@ Without dereferencing in order to be able to produce Kafka messages to adhere to
 As you can see, that's the content of the full hierarchy, not just the schema of the _citizen_ element alone. There are two endpoints where you can get the content dereferenced, with the following curl commands:
 
 ```
-curl --location 'http://localhost:8080/apis/registry/v2/ids/globalIds/7?dereference=true'
+curl --location 'http://localhost:8080/apis/registry/v2/ids/globalIds/6?dereference=true'
 curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/JsonSerdeReferencesExample?dereference=true'
 curl --location 'http://localhost:8080/apis/registry/v2/groups/default/artifacts/JsonSerdeReferencesExample/versions/1?dereference=true'
 ```

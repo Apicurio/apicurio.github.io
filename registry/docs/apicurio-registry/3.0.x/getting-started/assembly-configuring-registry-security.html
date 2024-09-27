@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Configuring Apicurio Registry security options :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.0.x/getting-started/assembly-configuring-registry-security.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.0.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.0.0/index.html">Apicurio Registry Operator documentation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating an existing Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.0.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.5.x/index.html">2.5.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.4.x/index.html">2.4.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.3.x/index.html">2.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Configuration</li>
+    <li><a href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.0.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-configuring-registry-security.html">3.0.x</a>
+    <a class="version" href="../../2.6.x/getting-started/assembly-configuring-registry-security.html">2.6.x</a>
+    <a class="version" href="../../2.5.x/getting-started/assembly-configuring-registry-security.html">2.5.x</a>
+    <a class="version is-missing" href="../../2.4.x/index.html">2.4.x</a>
+    <a class="version is-missing" href="../../2.3.x/index.html">2.3.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Configuring Apicurio Registry security options</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This chapter explains how to set configuration options for Apicurio Registry security. For example, this includes authentication in Keycloak or Microsoft Azure Active Directory and role-based authorization in Apicurio Registry.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#registry-security-keycloak_registry">Configuring Apicurio Registry authentication and authorization with Keycloak</a></p>
+</li>
+<li>
+<p><a href="#registry-security-azure_registry">Configuring Apicurio Registry authentication and authorization with Microsoft Azure Active Directory</a></p>
+</li>
+<li>
+<p><a href="#registry-security-settings_registry">Apicurio Registry authentication and authorization configuration options</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For a list of all available configuration options, see <a href="assembly-config-reference.html">Apicurio Registry configuration reference</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-security-keycloak_registry"><a class="anchor" href="#registry-security-keycloak_registry"></a>Configuring Apicurio Registry authentication and authorization with Keycloak</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This section explains how to manually configure authentication and authorization options for Apicurio Registry and Keycloak.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Alternatively, for details on how to configure these settings automatically,
+see the <a href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.1.0-v2.4.12.final/assembly-registry-maintenance.html#registry-security-keycloak">Apicurio Registry Operator documentation</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The Apicurio Registry web console and core REST API support authentication in Keycloak based on OAuth and OpenID Connect (OIDC). The same Keycloak realm and users are federated across the Apicurio Registry web console and core REST API using OpenID Connect so that you only require one set of credentials.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry provides role-based authorization for default admin, write, and read-only user roles. Apicurio Registry provides content-based authorization at the schema or API level, where only the creator of the registry artifact can update or delete it. Apicurio Registry authentication and authorization settings are disabled by default.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Keycloak is installed and running. For more details, see the
+<a href="https://www.keycloak.org/documentation">Keycloak user documentation</a>.</p>
+</li>
+<li>
+<p>Apicurio Registry is installed and running.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the Keycloak Admin Console, create a Keycloak realm for Apicurio Registry. By default, Apicurio Registry expects a realm name of <code>registry</code>. For details on creating realms, see the
+<a href="https://www.keycloak.org/documentation">Keycloak user documentation</a>.</p>
+</li>
+<li>
+<p>Create a Keycloak client for the Apicurio Registry API. By default, Apicurio Registry expects the following settings:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Client ID</strong>: <code>registry-api</code></p>
+</li>
+<li>
+<p><strong>Client Protocol</strong>: <code>openid-connect</code></p>
+</li>
+<li>
+<p><strong>Access Type</strong>: <code>bearer-only</code></p>
+<div class="paragraph">
+<p>You can use the defaults for the other client settings.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you are using Keycloak service accounts, the client <strong>Access Type</strong> must be <code>confidential</code> instead of <code>bearer-only</code>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Create a Keycloak client for the Apicurio Registry web console. By default, Apicurio Registry expects the following settings:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Client ID</strong>: <code>apicurio-registry</code></p>
+</li>
+<li>
+<p><strong>Client Protocol</strong>: <code>openid-connect</code></p>
+</li>
+<li>
+<p><strong>Access Type</strong>: <code>public</code></p>
+</li>
+<li>
+<p><strong>Valid Redirect URLs</strong>: <code>http://my-registry-url:8080/*</code></p>
+</li>
+<li>
+<p><strong>Web Origins</strong>: <code>+</code></p>
+<div class="paragraph">
+<p>You can use the defaults for the other client settings.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In your Apicurio Registry deployment on OpenShift, set the following Apicurio Registry environment variables to configure authentication using Keycloak:</p>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 1. Configuration for Apicurio Registry authentication with Keycloak</caption>
+<colgroup>
+<col style="width: 29.4117%;">
+<col style="width: 35.2941%;">
+<col style="width: 11.7647%;">
+<col style="width: 23.5295%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_TENANT_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables authentication for Apicurio Registry. When set to <code>true</code>, the environment variables that follow are required for authentication using Keycloak.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_AUTH_SERVER_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URL of the Keycloak authentication server. For example, <code>http://localhost:8080</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The client ID for the Apicurio Registry REST API.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry-api</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_UI_AUTH_OIDC_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The client ID for the Apicurio Registry web console.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio-registry</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+For an example of setting environment variables on OpenShift, see <a href="#configuring-liveness-readiness-probes_registry">[configuring-liveness-readiness-probes_registry]</a>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Set the following option to <code>true</code> to enable Apicurio Registry user roles in Keycloak:</p>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Configuration for Apicurio Registry role-based authorization</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6668%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Java system property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ROLE_BASED_AUTHORIZATION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.role-based-authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>When Apicurio Registry user roles are enabled, you must assign Apicurio Registry users to at least one of the following default user roles in your Keycloak realm:</p>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 3. Default user roles for registry authentication and authorization</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3336%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Role</th>
+<th class="tableblock halign-left valign-top">Read artifacts</th>
+<th class="tableblock halign-left valign-top">Write artifacts</th>
+<th class="tableblock halign-left valign-top">Global rules</th>
+<th class="tableblock halign-left valign-top">Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-admin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full access to all create, read, update, and delete operations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-developer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to create, read, update, and delete operations, except configuring global rules. This role can configure artifact-specific rules.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-readonly</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to read and search operations only. This role cannot configure any rules.</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Set the following to <code>true</code> to enable owner-only authorization for updates to schema and API artifacts in Apicurio Registry:</p>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 4. Configuration for owner-only authorization</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6668%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Java system property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_OWNER_ONLY_AUTHORIZATION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.owner-only-authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For details on configuring non-default user role names, see <a href="#registry-security-settings_registry">Apicurio Registry authentication and authorization configuration options</a>.</p>
+</li>
+<li>
+<p>For an open source example application and Keycloak realm, see <a href="https://github.com/Apicurio/apicurio-registry/tree/3.0.x/distro/docker-compose">Docker Compose example of Apicurio Registry with Keycloak</a>.</p>
+</li>
+<li>
+<p>For details on how to use Keycloak in a production environment, see
+the <a href="https://www.keycloak.org/documentation">Keycloak documentation</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-security-azure_registry"><a class="anchor" href="#registry-security-azure_registry"></a>Configuring Apicurio Registry authentication and authorization with Microsoft Azure Active Directory</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This section explains how to manually configure authentication and authorization options for Apicurio Registry and Microsoft Azure Active Directory (Azure AD).</p>
+</div>
+<div class="paragraph">
+<p>The Apicurio Registry web console and core REST API support authentication in Azure AD based on OpenID Connect (OIDC) and the OAuth Authorization Code Flow. Apicurio Registry provides role-based authorization for default admin, write, and read-only user roles. Apicurio Registry authentication and authorization settings are disabled by default.</p>
+</div>
+<div class="paragraph">
+<p>To secure Apicurio Registry with Azure AD, you require a valid directory in Azure AD with specific configuration. This involves registering the Apicurio Registry application in the Azure AD portal with recommended settings and configuring environment variables in Apicurio Registry.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Azure AD is installed and running. For more details, see the <a href="https://learn.microsoft.com/en-us/azure">Microsoft Azure AD user documentation</a>.</p>
+</li>
+<li>
+<p>Apicurio Registry is installed and running.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Log in to the Azure AD portal using your email address or GitHub account.</p>
+</li>
+<li>
+<p>In the navigation menu, select <strong>Manage &gt; App registrations &gt; New registration</strong>, and complete the following settings:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Name</strong>: Enter your application name. For example: <code>apicurio-registry-example</code></p>
+</li>
+<li>
+<p><strong>Supported account types</strong>: Click <strong>Accounts in any organizational directory</strong>.</p>
+</li>
+<li>
+<p><strong>Redirect URI</strong>: Select <strong>Single-page application</strong> from the list, and enter your Apicurio Registry web console application host. For example: <code>https://test-registry.com/ui/</code></p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You must register your Apicurio Registry application host as a <strong>Redirect URI</strong>. When logging in, users are redirected from Apicurio Registry to Azure AD for authentication, and you want to send them back to your application afterwards. Azure AD does not allow any redirect URLs that are not registered.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Register</strong>. You can view your app registration details by selecting <strong>Manage &gt; App registrations</strong> &gt; <strong>apicurio-registry-example</strong>.</p>
+</li>
+<li>
+<p>Select <strong>Manage &gt; Authentication</strong> and ensure that the application is configured with your redirect URLs and tokens as follows:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Redirect URIs</strong>: For example: <code>https://test-registry.com/ui/</code></p>
+</li>
+<li>
+<p><strong>Implicit grant and hybrid flows</strong>: Click <strong>ID tokens (used for implicit and hybrid flows)</strong></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Select <strong>Azure AD &gt; Admin &gt; App registrations &gt; Your app &gt; Application (client) ID</strong>. For example: <code>123456a7-b8c9-012d-e3f4-5fg67h8i901</code></p>
+</li>
+<li>
+<p>Select <strong>Azure AD &gt; Admin &gt; App registrations &gt; Your app &gt; Directory (tenant) ID</strong>. For example: <code>https://login.microsoftonline.com/1a2bc34d-567e-89f1-g0hi-1j2kl3m4no56/v2.0</code></p>
+</li>
+<li>
+<p>In Apicurio Registry, configure the following environment variables with your Azure AD settings:</p>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 5. Configuration for Azure AD settings in Apicurio Registry</caption>
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Setting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The client application ID for the Apicurio Registry REST API</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Your Azure AD Application (client) ID obtained in step 5. For example: <code>123456a7-b8c9-012d-e3f4-5fg67h8i901</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_OIDC_UI_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The client application ID for the Apicurio Registry web console.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Your Azure AD Application (client) ID obtained in step 5. For example: <code>123456a7-b8c9-012d-e3f4-5fg67h8i901</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_AUTH_SERVER_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URL for authentication in Azure AD.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Your Azure AD Application (tenant) ID obtained in step 6. For example: <code>https://login.microsoftonline.com/1a2bc34d-567e-89f1-g0hi-1j2kl3m4no56/v2.0</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>In Apicurio Registry, configure the following environment variables for Apicurio Registry-specific settings:</p>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 6. Configuration for Apicurio Registry-specific settings</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 33.3333%;">
+<col style="width: 26.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Setting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_TENANT_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables authentication for Apicurio Registry.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_UI_AUTH_TYPE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Apicurio Registry authentication type.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>oidc</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_CORS_ORIGINS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The host for your Apicurio Registry deployment for cross-origin resource sharing (CORS).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For example: <code>https://test-registry.com</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_OIDC_UI_REDIRECT_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The host for your Apicurio Registry web console.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For example: <code>https://test-registry.com/ui</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ROLE_BASED_AUTHORIZATION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables role-based authorization in Apicurio Registry.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_ROLES_ROLE_CLAIM_PATH</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the claim in which Azure AD stores roles.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>roles</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When you enable roles in Apicurio Registry, you must also create the same roles in Azure AD as application roles. The default roles expected by Apicurio Registry are <code>sr-admin</code>, <code>sr-developer</code>, and <code>sr-readonly</code>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For details on configuring non-default user role names, see <a href="#registry-security-settings_registry">Apicurio Registry authentication and authorization configuration options</a>.</p>
+</li>
+<li>
+<p>For more details on using Azure AD, see the <a href="https://learn.microsoft.com/en-us/azure">Microsoft Azure AD user documentation</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-security-settings_registry"><a class="anchor" href="#registry-security-settings_registry"></a>Apicurio Registry authentication and authorization configuration options</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry provides authentication options for OpenID Connect with Keycloak and HTTP basic authentication.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry provides authorization options for role-based and content-based approaches:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Role-based authorization for default admin, write, and read-only user roles.</p>
+</li>
+<li>
+<p>Content-based authorization for schema or API artifacts, where only the owner of the artifacts or artifact group can update or delete artifacts.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+All authentication and authorization options in Apicurio Registry are disabled by default. Before enabling any of these options, you must first set the <code>QUARKUS_OIDC_TENANT_ENABLED</code> option to <code>true</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This chapter provides details on the following configuration options:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#registry-security-authn-keycloak">Apicurio Registry authentication by using OpenID Connect with Keycloak</a></p>
+</li>
+<li>
+<p><a href="#registry-security-authn-http">Apicurio Registry authentication by using HTTP basic</a></p>
+</li>
+<li>
+<p><a href="#registry-security-rbac-enabled">Apicurio Registry role-based authorization</a></p>
+</li>
+<li>
+<p><a href="#registry-security-obac-enabled">Apicurio Registry owner-only authorization</a></p>
+</li>
+<li>
+<p><a href="#registry-security-auth-read">Apicurio Registry authenticated read access</a></p>
+</li>
+<li>
+<p><a href="#registry-security-anon-read">Apicurio Registry anonymous read-only access</a></p>
+</li>
+</ul>
+</div>
+<h3 id="registry-security-authn-keycloak" class="discrete">Apicurio Registry authentication by using OpenID Connect with Keycloak</h3>
+<div class="paragraph">
+<p>You can set the following environment variables to configure authentication for the Apicurio Registry web console and API with Keycloak:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 7. Configuration for Apicurio Registry authentication with Keycloak</caption>
+<colgroup>
+<col style="width: 29.4117%;">
+<col style="width: 35.2941%;">
+<col style="width: 11.7647%;">
+<col style="width: 23.5295%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_TENANT_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables authentication for Apicurio Registry. When set to <code>true</code>, the environment variables that follow are required for authentication using Keycloak.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_AUTH_SERVER_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The URL of the Keycloak authentication server. For example, <code>http://localhost:8080</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_REALM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Keycloak realm for authentication. For example, <code>registry.</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The client ID for the Apicurio Registry REST API.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry-api</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_UI_AUTH_OIDC_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The client ID for the Apicurio Registry web console.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio-registry</code></p></td>
+</tr>
+</tbody>
+</table>
+<h3 id="registry-security-authn-http" class="discrete">Apicurio Registry authentication by using HTTP basic</h3>
+<div class="paragraph">
+<p>By default, Apicurio Registry supports authentication by using OpenID Connect. Users or API clients must obtain an access token to make authenticated calls to the Apicurio Registry REST API.  However, because some tools do not support OpenID Connect, you can also configure Apicurio Registry to support HTTP basic authentication by setting the following configuration options to <code>true</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Configuration for Apicurio Registry HTTP basic authentication</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Java system property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_TENANT_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLIENT_CREDENTIALS_BASIC_QUARKUS_OIDC_TENANT_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.basic-auth-client-credentials.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+</tbody>
+</table>
+<h4 id="_apicurio_registry_http_basic_client_credentials_cache_expiry" class="discrete">Apicurio Registry HTTP basic client credentials cache expiry</h4>
+<div class="paragraph">
+<p>You can also configure the HTTP basic client credentials cache expiry time. By default, when using HTTP basic authentication, Apicurio Registry caches JWT tokens, and does not issue a new token when there is no need. You can configure the cache expiry time for JWT tokens, which is set to 10 mins by default.</p>
+</div>
+<div class="paragraph">
+<p>When using Keycloak, it is best to set this configuration to your Keycloak JWT expiry time minus one minute. For example, if you have the expiry time set to <code>5</code> mins in Keycloak, you should set the following configuration option to <code>4</code> mins:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. Configuration for HTTP basic client credentials cache expiry</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Java system property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLIENT_CREDENTIALS_BASIC_CACHE_EXPIRATION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.basic-auth-client-credentials.cache-expiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10</code></p></td>
+</tr>
+</tbody>
+</table>
+<h3 id="registry-security-rbac-enabled" class="discrete">Apicurio Registry role-based authorization</h3>
+<div class="paragraph">
+<p>You can set the following options to <code>true</code> to enable role-based authorization in Apicurio Registry:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. Configuration for Apicurio Registry role-based authorization</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Java system property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_TENANT_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ROLE_BASED_AUTHORIZATION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.role-based-authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>You can then configure role-based authorization to use roles included in the user&#8217;s authentication token (for example, granted when authenticating by using Keycloak), or to use role mappings managed internally by Apicurio Registry.</p>
+</div>
+<h4 id="_use_roles_assigned_in_keycloak" class="discrete">Use roles assigned in Keycloak</h4>
+<div class="paragraph">
+<p>To enable using roles assigned by Keycloak, set the following environment variables:</p>
+</div>
+<table id="registry-security-rbac-keycloak-settings" class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 11. Configuration for Apicurio Registry role-based authorization by using Keycloak</caption>
+<colgroup>
+<col style="width: 35.2941%;">
+<col style="width: 35.2941%;">
+<col style="width: 11.7647%;">
+<col style="width: 17.6471%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ROLE_BASED_AUTHZ_SOURCE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to <code>token</code>, user roles are taken from the authentication token.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>token</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ROLES_ADMIN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the role that indicates a user is an admin.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-admin</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ROLES_DEVELOPER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the role that indicates a user is a developer.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-developer</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ROLES_READONLY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the role that indicates a user has read-only access.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-readonly</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>When Apicurio Registry is configured to use roles from Keycloak, you must assign Apicurio Registry users to at least one
+of the following user roles in Keycloak. However, you can configure different user role names by using the environment variables in <a href="#registry-security-rbac-keycloak-settings">Configuration for Apicurio Registry role-based authorization by using Keycloak</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 12. Apicurio Registry roles for authentication and authorization</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3336%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Role name</th>
+<th class="tableblock halign-left valign-top">Read artifacts</th>
+<th class="tableblock halign-left valign-top">Write artifacts</th>
+<th class="tableblock halign-left valign-top">Global rules</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-admin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full access to all create, read, update, and delete operations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-developer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to create, read, update, and delete operations, except configuring global rules and import/export. This role can configure artifact-specific rules only.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-readonly</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access to read and search operations only. This role cannot configure any rules.</p></td>
+</tr>
+</tbody>
+</table>
+<h4 id="_manage_roles_directly_in_apicurio_registry" class="discrete">Manage roles directly in Apicurio Registry</h4>
+<div class="paragraph">
+<p>To enable using roles managed internally by Apicurio Registry, set the following environment variable:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 13. Configuration for Apicurio Registry role-based authorization by using internal role mappings</caption>
+<colgroup>
+<col style="width: 35.2941%;">
+<col style="width: 35.2941%;">
+<col style="width: 11.7647%;">
+<col style="width: 17.6471%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ROLE_BASED_AUTHZ_SOURCE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to <code>application</code>, user roles are managed internally by Apicurio Registry.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>token</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>When using internally managed role mappings, users can be assigned a role by using the <code>/admin/roleMappings</code>
+endpoint in the Apicurio Registry REST API.  For more details, see <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>Users can be granted exactly one role: <code>ADMIN</code>, <code>DEVELOPER</code>, or <code>READ_ONLY</code>. Only users with admin
+privileges can grant access to other users.</p>
+</div>
+<h4 id="_apicurio_registry_admin_override_configuration" class="discrete">Apicurio Registry admin-override configuration</h4>
+<div class="paragraph">
+<p>Because there are no default admin users in Apicurio Registry, it is usually helpful to configure another way for users to be identified as admins. You can configure this admin-override feature by using the following environment variables:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 14. Configuration for Apicurio Registry admin-override</caption>
+<colgroup>
+<col style="width: 35.2941%;">
+<col style="width: 35.2941%;">
+<col style="width: 11.7647%;">
+<col style="width: 17.6471%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ADMIN_OVERRIDE_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables the admin-override feature.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ADMIN_OVERRIDE_FROM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where to look for admin-override information.  Only <code>token</code> is currently supported.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>token</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ADMIN_OVERRIDE_TYPE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The type of information used to determine if a user is an admin.  Values depend on the value of the FROM variable, for example, <code>role</code> or <code>claim</code> when FROM is <code>token</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>role</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ADMIN_OVERRIDE_ROLE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the role that indicates a user is an admin.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sr-admin</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ADMIN_OVERRIDE_CLAIM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of a JWT token claim to use for determining admin-override.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org-admin</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ADMIN_OVERRIDE_CLAIM_VALUE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value that the JWT token claim indicated by the CLAIM variable must be for the user to be granted admin-override.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For example, you can use this admin-override feature to assign the <code>sr-admin</code> role to a single user
+in Keycloak, which grants that user the admin role.  That user can then use the <code>/admin/roleMappings</code>
+REST API (or associated UI) to grant roles to additional users (including additional admins).</p>
+</div>
+<h3 id="registry-security-obac-enabled" class="discrete">Apicurio Registry owner-only authorization</h3>
+<div class="paragraph">
+<p>You can set the following options to <code>true</code> to enable owner-only authorization for updates to artifacts or artifact groups in Apicurio Registry:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 15. Configuration for owner-only authorization</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Java system property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_TENANT_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_OBAC_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.owner-only-authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_OBAC_LIMIT_GROUP_ACCESS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.owner-only-authorization.limit-group-access</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>When owner-only authorization is enabled, only the user who created an artifact can modify or delete that artifact.</p>
+</div>
+<div class="paragraph">
+<p>When owner-only authorization and group owner-only authorization are both enabled, only the user who created an artifact group has write access to that artifact group, for example, to add or remove artifacts in that group.</p>
+</div>
+<h3 id="registry-security-auth-read" class="discrete">Apicurio Registry authenticated read access</h3>
+<div class="paragraph">
+<p>When the authenticated read access option is enabled, Apicurio Registry grants at least read-only access to requests from any authenticated user in the same organization, regardless of their user role.</p>
+</div>
+<div class="paragraph">
+<p>To enable authenticated read access, you must first enable role-based authorization, and then ensure that the following options are set to <code>true</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 16. Configuration for authenticated read access</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Java system property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_TENANT_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_AUTHENTICATED_READS_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.authenticated-read-access.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For more details, see <a href="#registry-security-rbac-enabled">Apicurio Registry role-based authorization</a>.</p>
+</div>
+<h3 id="registry-security-anon-read" class="discrete">Apicurio Registry anonymous read-only access</h3>
+<div class="paragraph">
+<p>In addition to the two main types of authorization (role-based and owner-based authorization), Apicurio Registry
+supports an anonymous read-only access option.</p>
+</div>
+<div class="paragraph">
+<p>To allow anonymous users, such as REST API calls with no authentication credentials, to make read-only
+calls to the REST API, set the following options to <code>true</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 17. Configuration for anonymous read-only access</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Java system property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_TENANT_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.auth.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ANONYMOUS_READ_ACCESS_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.anonymous-read-access.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For an example of how to set environment variables in your Apicurio Registry deployment on OpenShift, see <a href="#configuring-liveness-readiness-probes_registry">[configuring-liveness-readiness-probes_registry]</a></p>
+</li>
+<li>
+<p>For details on configuring custom authentication for Apicurio Registry, the see <a href="https://quarkus.io/guides/security-openid-connect-web-authentication">Quarkus Open ID Connect documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.0.x/getting-started/assembly-configuring-registry-security.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
