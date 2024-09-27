@@ -2,7 +2,7 @@
 layout: post
 title: "Apicurio Registry 3.0 - KafkaSQL Storage"
 date:   2024-06-21 16:00:00
-author: eric carles
+author: eric,carles
 categories: registry 3.0 kafka storage
 ---
 

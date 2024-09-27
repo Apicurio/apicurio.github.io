@@ -19,9 +19,17 @@ excerpt: Use docker to get started with Apicurio Registry fast!
                 <div id="content" class="row">
                     <div class="col-lg-10">
                         <h1 class="section-header first">Get Started with Apicurio Registry</h1>
-                        <p>The easiest way to get started with Apicurio Registry is by using Docker to quickly start up an in-memory server. 
-                           This server is non-persistent, so don't use this for production!</p>
-                        </div>
+                        <p>
+                            The easiest way to get started with Apicurio Registry is by using Docker to quickly start up 
+                            an in-memory server and UI.
+                        </p>
+                        <p>
+                            <b>Note</b>: Apicurio Registry's back end and UI are now separate container images.
+                        </p>
+                        <p>
+                            <b>Note</b>: this server is non-persistent, so don't use it for production!
+                        </p>
+                    </div>
                     <div class="">
                         <div class="col-lg-9">
                             <h3>Prerequisites</h3>
@@ -29,28 +37,58 @@ excerpt: Use docker to get started with Apicurio Registry fast!
                                 <li>You have <a href="https://docs.docker.com/get-docker/">Docker</a> (or <a href="https://podman.io/">Podman</a>) installed.</li>
                             </ul>
 
+                            <h2><b>Back End Server (REST API)</b></h2>
+
                             <h3>Pull the Apicurio Registry image</h3>
                             <p>
-                             Pull the <a href="{{ site.docker_hub_url }}/apicurio-registry-mem">apicurio-registry-mem</a> Docker image from Docker Hub as follows:                                               
+                             Pull the <a href="{{ site.docker_hub_url }}/apicurio-registry">apicurio-registry</a> Docker image from Docker Hub as follows:
 <pre class="code-block">
-docker pull apicurio/apicurio-registry-mem:{{ version }}
+docker pull apicurio/apicurio-registry:{{ version }}
 </pre>
 </p>
                             <h3>Run the Apicurio Registry image</h3>
                             <p>
                                 Apicurio Registry supports different storage options, but the quickest way to get started is to 
-                                use the non-persistent in-memory image with no external dependencies.  Each option has its own 
-                                Docker image. For more options, see the <a href="../docs">Apicurio Registry documentation</a>.
+                                use the non-persistent in-memory image with no external dependencies.  Which storage variant that
+                                gets used depends on the configuration (ENV variables) you configure.  By default, the in-memory
+                                variant will be chosen.
                             </p>
                             <p>
-                                Run the <code>apicurio-registry-mem</code> Docker image as follows:
+                                For more options, see the <a href="../docs">Apicurio Registry documentation</a>.
+                            </p>
+                            <p>
+                                Run the <code>apicurio-registry</code> Docker image as follows:
 <pre class="code-block">
-docker run -it -p 8080:8080 apicurio/apicurio-registry-mem:{{ version }}
+docker run -it -p 8080:8080 apicurio/apicurio-registry:{{ version }}
 </pre>
 </p>
+
+                            <h2><b>User Interface</b></h2>
+
+                            <h3>Pull the Apicurio Registry UI image</h3>
+                            <p>
+                             Pull the <a href="{{ site.docker_hub_url }}/apicurio-registry-ui">apicurio-registry-ui</a> Docker image from Docker Hub as follows:
+<pre class="code-block">
+docker pull apicurio/apicurio-registry-ui:{{ version }}
+</pre>
+</p>
+
+                            <h3>Run the Apicurio Registry UI image</h3>
+                            <p>
+                                Run the UI image on port 8888, because the back-end server's default settings
+                                allow it!
+                            </p>
+                            <p>
+                                Run the `apicurio-registry-ui` Docker image as follows:
+<pre class="code-block">
+docker run -it -p 8888:8080 apicurio/apicurio-registry-ui:{{ version }}
+</pre>
+                            </p>
+
+
                             <h3>Open the Apicurio Registry web console</h3>
                             <p>
-                              Open the <a href="http://localhost:8080/">Apicurio Registry web console</a> in your browser to add API and schema artifacts to Apicurio Registry.
+                              Open the <a href="http://localhost:8888/">Apicurio Registry web console</a> in your browser to add API and schema artifacts to Apicurio Registry.
                             </p>                            
                         </div>
                     </div>
