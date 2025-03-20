@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Apicurio Registry 3.0.0.Final Migration Guide"
-date:   2025-03-030 12:00:00
+title: "Apicurio Registry 3.0 Migration Guide"
+date: 2025-03-30 12:00:00
 author: carles
 categories: registry guide
 ---

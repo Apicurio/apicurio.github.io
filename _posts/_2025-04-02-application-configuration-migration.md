@@ -1,16 +1,16 @@
 ---
 layout: post
-title: "Apicurio Registry 3.0.0.Final Migration Guide"
-date: 2025-03-30 12:00:00
+title: "Apicurio Registry 3.0 Migration Guide (Configuration)"
+date: 2025-04-02 12:00:00
 author: carles
 categories: registry guide
 ---
 
-# Migrating Apicurio Registry Configuration from 2.x to 3.x
-
 With the release of Apicurio Registry 3.0.0.Final, we've significantly redesigned the configuration model to improve consistency and maintainability. If you're upgrading from Registry 2.x, you'll need to update your application properties to match the new format.
 
 This guide provides a comprehensive walkthrough of all the changes and offers clear examples to ensure a smooth migration process.
+
+---
 
 ## Key Migration Concepts
 
