@@ -13,7 +13,7 @@ artifacts. Let's explore how this feature works and why it's valuable for API go
 
 ---
 
-## Understanding Semantic Versioning
+# Understanding Semantic Versioning
 Before diving into Apicurio's implementation, let's quickly review semantic versioning. 
 Often abbreviated as "SemVer," semantic versioning follows a pattern of `MAJOR.MINOR.PATCH`:
 
@@ -24,12 +24,12 @@ Often abbreviated as "SemVer," semantic versioning follows a pattern of `MAJOR.M
 This structured approach to versioning makes it clear to users how a new version might impact
 their existing implementations.
 
-## How Semantic Versioning Works in Apicurio Registry 3.0
+# How Semantic Versioning Works in Apicurio Registry 3.0
 Apicurio Registry now automatically creates and manages branch hierarchies based on semantic
 version numbers. When you add artifacts with semantic version numbers, the registry intelligently
 organizes them into appropriate branches.
 
-## Automatic Branch Creation
+# Automatic Branch Creation
 Whenever versions are created with semantic versioning patterns, Apicurio Registry automatically
 creates corresponding branches at different levels of specificity:
 
@@ -40,7 +40,7 @@ creates corresponding branches at different levels of specificity:
 For example, when creating versions like `1.0.0`, `1.0.1`, and `2.5.2`, the registry automatically
 creates branches such as `1.x`, `2.x`, `1.0.x`, and `2.5.x` without any additional configuration.
 
-## Branch Behavior and Characteristics
+# Branch Behavior and Characteristics
 The test code reveals several important aspects of these semantic versioning branches:
 
 1. **System-defined branches**: These branches are created and managed by the system, not manually created by users.
@@ -48,7 +48,7 @@ The test code reveals several important aspects of these semantic versioning bra
 3. **Automatic content management**: Each branch automatically contains the relevant versions that match its pattern.
 4. **Latest version awareness**: Each branch knows which version is the latest within its scope.
 
-## Example Workflow
+# Example Workflow
 Let's walk through an example scenario based on the test case:
 
 Create an artifact with version: `1.0.0`
@@ -66,32 +66,32 @@ After these operations, Apicurio Registry automatically creates these branches:
 * `3.x` (containing all versions starting with `3.`, with `3.0.0` as the latest)
 * `3.0.x` (containing all `3.0.` versions, with `3.0.0` as the latest)
 
-## Configuring Semantic Versioning in Apicurio Registry
+# Configuring Semantic Versioning in Apicurio Registry
 It's important to note that semantic versioning support in Apicurio Registry 3.0 is disabled
 by default. To take advantage of this feature, you need to explicitly enable it through
 configuration settings.
 
-### Enabling Semantic Versioning
+## Enabling Semantic Versioning
 You can enable semantic versioning in Apicurio Registry 3.0 by setting the appropriate 
 environment variable.
 
-#### Environment Variable
+### Environment Variable
 When deploying Apicurio Registry, set the following environment variable:
 ```
 APICURIO_SEMVER_BRANCHING_ENABLED=true
 ```
 
-#### Configuring via Docker
+### Configuring via Docker
 ```bash
 docker run -p 8080:8080 -e APICURIO_SEMVER_BRANCHING_ENABLED=true apicurio/apicurio-registry:latest-release
 ```
 
-### Verifying the Configuration
+## Verifying the Configuration
 You can verify that semantic versioning is enabled by checking the registry's API documentation
 or by creating an artifact with a semantic version and confirming that the expected branches are
 automatically created.
 
-## Benefits of Semantic Versioning in Apicurio Registry
+# Benefits of Semantic Versioning in Apicurio Registry
 The implementation of semantic versioning in Apicurio Registry 3.0 brings several significant benefits:
 1. **Simplified Version Navigation**
    With automatically created branches, you can easily access specific version families. Need the latest stable version in the 1.x series? Simply reference the 1.x branch. This eliminates the need to manually search through all versions to find the one you need.
@@ -102,11 +102,11 @@ The implementation of semantic versioning in Apicurio Registry 3.0 brings severa
 4. **Reduced Manual Configuration**
    Since branches are automatically created and managed by the system based on semantic version patterns, users don't need to manually create and maintain branch structures.
 
-## Using Semantic Versioning in Practice
+# Using Semantic Versioning in Practice
 To use semantic versioning in Apicurio Registry 3.0 with curl commands, follow these examples
 that demonstrate how to create and work with semantically versioned artifacts:
 
-### Create a Group
+## Create a Group
 First, let's create a group to organize our artifacts:
 ```bash
 curl -X POST "http://localhost:8080/apis/registry/v3/groups" \
@@ -114,7 +114,7 @@ curl -X POST "http://localhost:8080/apis/registry/v3/groups" \
      -d '{"groupId": "my-semver-group"}'
 ```
 
-### Creating an Artifact with Initial Semantic Version
+## Creating an Artifact with Initial Semantic Version
 Now, let's create an artifact with an initial semantic version (`1.0.0`):
 
 ```bash
@@ -136,7 +136,7 @@ This creates the artifact with an explicitly specified semantic version `1.0.0` 
 using the default version numbering scheme for a new artifact version, which in this case
 would result in `1`.
 
-### Adding Additional Semantic Versions
+## Adding Additional Semantic Versions
 To add a new version to the artifact following the semantic versioning pattern:
 
 ```bash
@@ -177,7 +177,7 @@ curl -X POST "http://localhost:8080/apis/registry/v3/groups/my-semver-group/arti
      }'
 ```
 
-### Accessing Branches
+## Accessing Branches
 Once you've created several versions with semantic versioning, you can access the automatically
 generated branches:
 
@@ -189,7 +189,7 @@ curl "http://localhost:8080/apis/registry/v3/groups/my-semver-group/artifacts/my
 The response will include all automatically created branches based on the semantic versioning
 structure, such as `latest`, `1.x`, `1.0.x`, `1.1.x`, and `2.x`.
 
-### Accessing Versions Within a Specific Branch
+## Accessing Versions Within a Specific Branch
 To retrieve all versions within a specific branch, such as the `1.x` branch:
 
 ```bash
@@ -199,7 +199,7 @@ curl "http://localhost:8080/apis/registry/v3/groups/my-semver-group/artifacts/my
 This will return all versions that match the `1.x` pattern, with the latest version in that
 branch listed first.
 
-### Getting the Latest Version in a Branch
+## Getting the Latest Version in a Branch
 To access the latest version's content or metadata from a specific branch:
 
 **Metadata**
@@ -218,7 +218,7 @@ curl "http://localhost:8080/apis/registry/v3/groups/my-semver-group/artifacts/my
 This will return the content for version `1.1.0`, because that is the most recent version
 on the `1.x` branch.
 
-## Conclusion
+# Conclusion
 Semantic versioning support in Apicurio Registry 3.0 represents a significant enhancement for
 managing schema evolution. The automatic creation and management of version-based branches
 simplifies navigation, improves governance, and provides a more intuitive way to work with
@@ -233,11 +233,11 @@ provides a powerful framework for maintaining order in what could otherwise beco
 version management challenge. Remember to explicitly enable this feature in your deployment
 configuration to take advantage of its benefits.
 
-## Bonus Content
+# Bonus Content
 There are two additional optional features that can be enabled to improve the functionality
 of the semantic versioning support in Apicurio Registry 3.0.
 
-### Version Validation
+## Version Validation
 Apicurio Registry can validate that every artifact version you add conforms to the SemVer
 format, or else it will be rejected. This feature can be enabled by setting the following
 environment variable:
@@ -246,7 +246,7 @@ environment variable:
 APICURIO_SEMVER_VALIDATION_ENABLED=true
 ```
 
-### Version Coercion
+## Version Coercion
 **Note**: wonderful name for a feature.  Just say that out loud and delight in it.
 
 Apicurio Registry can be configured to automatically coerce invalid versions into
