@@ -3,7 +3,7 @@ layout: post
 title: "Exporting from Confluent Schema Registry to Apicurio Registry"
 date: 2025-03-20 13:22:00
 author: eric
-categories: apicurio confluent migration
+categories: registry confluent migration
 ---
 
 If you're using Confluent Schema Registry and looking to migrate your schemas to **Apicurio Registry**, you're
