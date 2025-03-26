@@ -1,13 +1,15 @@
 ---
 layout: post
-title: "Apicurio Registry 3.0.0 - Evolving Our Serialization and Deserialization Modules"
+title: "Apicurio Registry 3.x - Evolving Our Serialization and Deserialization Modules"
 date: 2025-04-03 12:00:00
 author: carles
 categories: registry guide
 ---
 
-# Apicurio Registry 3.x: Evolving Our Serialization and Deserialization Modules
 Serialization and deserialization (SerDes) are critical functionalities within Apicurio Registry, enabling users to seamlessly manage schema evolution and compatibility. With the release of Apicurio Registry 3.x, we've significantly evolved our SerDes modules, focusing on flexibility, reusability, and broader integration.
+
+---
+
 
 ## What's Changed?
 
