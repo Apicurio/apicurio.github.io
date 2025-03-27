@@ -6,10 +6,11 @@ author: eric
 categories: registry semantic_versioning
 ---
 
-Apicurio Registry 3.0 introduces a powerful new feature: (preliminary) support for semantic
-versioning. This enhancement brings automatic branch management based on semantic versioning
-patterns, making it easier to organize, track, and access different versions of your schema
-artifacts. Let's explore how this feature works and why it's valuable for API governance.
+Apicurio Registry 3.0 introduces a powerful new feature: support for automatic semantic
+versioning branches. This enhancement brings automatic branch management based on semantic
+versioning patterns, making it easier to organize, track, and access different versions of
+your schema artifacts. Let's explore how this feature works and why it's valuable for API
+governance.
 
 ---
 
@@ -257,3 +258,11 @@ feature is enabled and you create a new version `2.0`, the version will be coerc
 ```bash
 APICURIO_SEMVER_BRANCHING_COERCE=true
 ```
+
+# Future Plans
+Automatic creation of semantic versioning branches is a great start to our overall planned
+support for semantic versioning.  We will continue exploring this space in the future to
+push semver support even further.  For example, it might be nice if the Compatibility Rule
+understood semver so that its concept of compatibility was consistent with the version of
+a schema or API being added.  In other words, the compatibility rules might differ if you
+are adding version `1.0.7` (a patch release) vs. version `4.0.0` (a major release).
