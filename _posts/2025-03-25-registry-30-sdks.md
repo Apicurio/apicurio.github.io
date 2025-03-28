@@ -2,7 +2,7 @@
 layout: post
 title: "Apicurio Registry 3.0: Generated API SDKs (by Kiota)"
 date: 2025-03-25 16:39:00
-author: eric
+author: eric,jakub
 categories: registry rest_api sdk
 ---
 
@@ -53,6 +53,10 @@ Let's look at how you might invoke different endpoints across languages:
    // TypeScript
    const results = await client.search.artifacts.get();
    ```
+   ```go
+   // Go
+   results, err := client.Search().Artifacts().Get(context.Background(), nil)
+   ```
 
 2. **Creating an Artifact** - Invoke **POST** on the `/groups/:groupId/artifacts` endpoint
    ```java
@@ -62,6 +66,12 @@ Let's look at how you might invoke different endpoints across languages:
    ```typescript
    // TypeScript
    const newArtifact = await client.groups.byGroupId('my-group').artifacts.post(artifactData);
+   ```
+   ```go
+   // Go
+   artifactData := models.NewCreateArtifact()
+   // Set fields of artifactData...
+	newArtifact, err := client.Groups().ByGroupId("my-group").Artifacts().Post(context.Background(), artifactData, nil)
    ```
 
 ## Benefits of Kiota-Generated SDKs
@@ -207,6 +217,91 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
+### **Example: Go SDK**
+
+To use the Apicurio Registry Go SDK, add the dependency to your `go.mod` file:
+
+```
+module example
+
+go 1.23.0
+
+toolchain go1.24.1
+
+require (
+	github.com/apicurio/apicurio-registry/go-sdk v0.0.0-20241211181742-779f0994a1de // v3.0.6
+	github.com/microsoft/kiota-abstractions-go v1.9.1
+	github.com/microsoft/kiota-http-go v1.5.1
+)
+
+require (
+    // Indirect dependencies...
+)
+```
+
+Then use it in your Go project:
+
+```go
+package main
+
+import (
+   "context"
+   "fmt"
+   registry3 "github.com/apicurio/apicurio-registry/go-sdk/pkg/registryclient-v3"
+   "github.com/apicurio/apicurio-registry/go-sdk/pkg/registryclient-v3/models"
+   kiotaAuth "github.com/microsoft/kiota-abstractions-go/authentication"
+   kiotaHttp "github.com/microsoft/kiota-http-go"
+)
+
+func initClient(registryUrl *string) *registry3.ApiClient {
+   // Compression is not currently supported by the Apicurio Registry server.
+   httpClient := kiotaHttp.GetDefaultClient(
+      kiotaHttp.NewRetryHandler(),
+      kiotaHttp.NewRedirectHandler(),
+      kiotaHttp.NewParametersNameDecodingHandler(),
+      kiotaHttp.NewCompressionHandlerWithOptions(kiotaHttp.NewCompressionOptions(false)),
+      kiotaHttp.NewUserAgentHandler(),
+      kiotaHttp.NewHeadersInspectionHandler(),
+   )
+   adapter, err := kiotaHttp.NewNetHttpRequestAdapterWithParseNodeFactoryAndSerializationWriterFactoryAndHttpClient(
+      &kiotaAuth.AnonymousAuthenticationProvider{}, nil, nil, httpClient)
+   if err != nil {
+      panic("Unexpected error: " + err.Error())
+   }
+   adapter.SetBaseUrl(*registryUrl)
+   return registry3.NewApiClient(adapter)
+}
+
+func getServerInfo(client *registry3.ApiClient) {
+   res, err := client.System().Info().Get(context.Background(), nil)
+   if res != nil {
+      fmt.Printf("Server name: %s\n", *res.GetName())
+      fmt.Printf("Server version: %s\n", *res.GetVersion())
+   } else {
+      handleError(err)
+   }
+}
+
+func handleError(err error) {
+   if err == nil {
+      panic("No error value")
+   }
+   if details, ok := err.(*models.ProblemDetails); ok {
+      fmt.Printf("Server error: %s\n", *details.GetDetail())
+   } else {
+      fmt.Printf("Unknown error: %s\n", err.Error())
+   }
+}
+
+func main() {
+   registryUrl := "http://localhost:8080/apis/registry/v3"
+   client := initClient(&registryUrl)
+   getServerInfo(client)
+}
+```
+
+See the [full code of the example in our Apicurio Registry repository](https://github.com/Apicurio/apicurio-registry/tree/main/examples/sdk/go-sdk).
 
 ## Conclusion
 
