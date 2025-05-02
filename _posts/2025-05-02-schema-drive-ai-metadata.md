@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "Schema-Driven AI Metadata with Apicurio Registry and MCP"
-date: 2025-05-2 12:00:00
+title: "Schema-Driven AI Metadata with Apicurio Registry"
+date: 2025-05-02 12:00:00
 author: carles
 categories: ai use-case
 ---
 
-# Schema-Driven AI Metadata: Validating Model Context Protocol with Apicurio Registry
+# Schema-Driven AI Metadata: Validating Model metadata with Apicurio Registry
 
 In modern AI systems, model metadata plays a crucial role in enabling discovery, governance, and interoperability. This Model metadata demo defines a standard way to describe machine learning models—what inputs they expect, what outputs they produce, and contextual metadata like authorship, framework, or creation date.
 
