@@ -6,9 +6,13 @@ author: carles
 categories: ai use-case
 ---
 
+In this blog post, we will explore how to ensure AI model metadata is valid, consistent, and trustworthy across systems through schema validation. We demonstrate how Apicurio Registry can be used to store and validate machine learning model metadata using JSON Schema, providing a strong foundation for governance in AI workflows.
+
+---
+
 # Schema-Driven AI Metadata: Validating Model metadata with Apicurio Registry
 
-In modern AI systems, model metadata plays a crucial role in enabling discovery, governance, and interoperability. This Model metadata demo defines a standard way to describe machine learning models—what inputs they expect, what outputs they produce, and contextual metadata like authorship, framework, or creation date.
+In modern AI systems, model metadata plays a crucial role in enabling discovery, governance, and interoperability. This Model metadata demo defines a standard way to describe machine learning models - what inputs they expect, what outputs they produce, and contextual metadata like authorship, framework, or creation date.
 
 But how do we ensure the metadata is valid and consistent across systems? How do we prevent malformed or incomplete descriptions from entering the pipeline?
 
