@@ -7,4 +7,4 @@ you can get started:
 
 1) Make sure you have docker or podman installed.
 2) Run the local script: `./_serve.sh`
-3) Point your browser at http://localhost:8080
+3) Point your browser at http://localhost:8180
