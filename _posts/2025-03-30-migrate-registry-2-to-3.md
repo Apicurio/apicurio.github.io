@@ -65,7 +65,7 @@ Once your Registry 3.x instance is running, you can import the exported ZIP file
 Use the following command to send the data to the import API:
 
 ```bash
-curl -X POST http://<registry-v3-url>/apis/registry/v2/admin/import \
+curl -X POST http://<registry-v3-url>/apis/registry/v3/admin/import \
 -H "Content-Type: application/zip" \
 --data-binary @registry-export.zip
 ```
