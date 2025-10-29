@@ -563,7 +563,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.oidc.token-path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/protocol/openid-connect/token/</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.1.0.Final</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Authentication server token endpoint.</p></td>
 </tr>
@@ -1068,9 +1068,105 @@
 </table>
 </div>
 <div class="sect2">
+<h3 id="_log"><a class="anchor" href="#_log"></a>log</h3>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 10. log configuration options</caption>
+<colgroup>
+<col style="width: 31.5789%;">
+<col style="width: 15.7894%;">
+<col style="width: 10.5263%;">
+<col style="width: 15.7894%;">
+<col style="width: 26.316%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Available from</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.log.level</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string [dynamic]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WARN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dynamic log level for Apicurio Registry</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_observability"><a class="anchor" href="#_observability"></a>observability</h3>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 11. observability configuration options</caption>
+<colgroup>
+<col style="width: 31.5789%;">
+<col style="width: 15.7894%;">
+<col style="width: 10.5263%;">
+<col style="width: 15.7894%;">
+<col style="width: 26.316%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Available from</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.metrics.rest.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable collecting metrics about REST API requests.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.metrics.rest.explicit-status-codes-list</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list&lt;string&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>401</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only the general category of the HTTP status code is added as a tag/label on REST API request metrics,
+        e.g. <code>1xx</code>, <code>2xx</code>, &#8230;&#8203;         If you are interested in metrics for a specific status code, e.g. 401 for authentication errors,
+        this property allows you to specify a list of such codes.         Each request will be counted only once, i.e. either as the specific status code or in the general category.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.metrics.rest.method-tag-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add the HTTP method tag/label on REST API request metrics.         You might disable this tag to reduce metrics cardinality.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.metrics.rest.path-filter-pattern</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/.*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only requests with a path matching this pattern (Java syntax) will be considered for metrics collection.         The pattern is applied to the request path only,
+        e.g. <code>curl 'http://localhost:8080/apis/registry/v3/groups/default/artifacts?offset=42&amp;limit=10'</code>
+        will be matched against <code>/apis/registry/v3/groups/default/artifacts</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.metrics.rest.path-tag-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add the unsubstituted path tag/label on REST API request metrics,
+        e.g. <code>/apis/registry/v3/groups/{groupId}/artifacts/{artifactId}</code>.         You might disable this tag to reduce metrics cardinality.         When an unsubstituted REST API resource path could not be determined,
+        the tag value will be <code>(unspecified)</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
 <h3 id="_redirects"><a class="anchor" href="#_redirects"></a>redirects</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 10. redirects configuration options</caption>
+<caption class="title">Table 12. redirects configuration options</caption>
 <colgroup>
 <col style="width: 31.5789%;">
 <col style="width: 15.7894%;">
@@ -1122,7 +1218,7 @@
 <div class="sect2">
 <h3 id="_rest"><a class="anchor" href="#_rest"></a>rest</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 11. rest configuration options</caption>
+<caption class="title">Table 13. rest configuration options</caption>
 <colgroup>
 <col style="width: 31.5789%;">
 <col style="width: 15.7894%;">
@@ -1195,7 +1291,7 @@
 <div class="sect2">
 <h3 id="_semver"><a class="anchor" href="#_semver"></a>semver</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 12. semver configuration options</caption>
+<caption class="title">Table 14. semver configuration options</caption>
 <colgroup>
 <col style="width: 31.5789%;">
 <col style="width: 15.7894%;">
@@ -1240,7 +1336,7 @@
 <div class="sect2">
 <h3 id="_storage"><a class="anchor" href="#_storage"></a>storage</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 13. storage configuration options</caption>
+<caption class="title">Table 15. storage configuration options</caption>
 <colgroup>
 <col style="width: 31.5789%;">
 <col style="width: 15.7894%;">
@@ -1532,6 +1628,13 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">SQL init</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.storage.enable-automatic-group-creation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.15</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable automatic creation of group when creating an artifact</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.storage.kind</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -1542,7 +1645,7 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.storage.read-only.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean [dynamic]</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.5.0.Final</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enable Registry storage read-only mode</p></td>
 </tr>
 <tr>
@@ -1572,7 +1675,7 @@
 <div class="sect2">
 <h3 id="_system"><a class="anchor" href="#_system"></a>system</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 14. system configuration options</caption>
+<caption class="title">Table 16. system configuration options</caption>
 <colgroup>
 <col style="width: 31.5789%;">
 <col style="width: 15.7894%;">
@@ -1624,7 +1727,7 @@
 <div class="sect2">
 <h3 id="_types"><a class="anchor" href="#_types"></a>types</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 15. types configuration options</caption>
+<caption class="title">Table 17. types configuration options</caption>
 <colgroup>
 <col style="width: 31.5789%;">
 <col style="width: 15.7894%;">
@@ -1655,7 +1758,7 @@
 <div class="sect2">
 <h3 id="_ui"><a class="anchor" href="#_ui"></a>ui</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 16. ui configuration options</caption>
+<caption class="title">Table 18. ui configuration options</caption>
 <colgroup>
 <col style="width: 31.5789%;">
 <col style="width: 15.7894%;">
@@ -1673,6 +1776,13 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.app.context-path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Context path for application (useful when behind a proxy)</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.auth.oidc.client-id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
@@ -1716,6 +1826,13 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">URL of the Documentation component</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.editorsUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/editors/</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL of the Editors component</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.features.breadcrumbs</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
@@ -1749,7 +1866,7 @@
 <div class="sect2">
 <h3 id="_unknown"><a class="anchor" href="#_unknown"></a>unknown</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 17. unknown configuration options</caption>
+<caption class="title">Table 19. unknown configuration options</caption>
 <colgroup>
 <col style="width: 31.5789%;">
 <col style="width: 15.7894%;">
@@ -1936,6 +2053,13 @@
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.log.level.dynamic.allow</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unknown</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>${apicurio.config.dynamic.allow-all}</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.logconfigjob.delayed</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>unknown</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1s</code></p></td>
@@ -2053,7 +2177,7 @@ For each configuration property you can override the value by using the correspo
 <div class="sect2">
 <h3 id="_api_2"><a class="anchor" href="#_api_2"></a>api</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 18. api configuration options</caption>
+<caption class="title">Table 20. api configuration options</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2079,7 +2203,7 @@ For each configuration property you can override the value by using the correspo
 <div class="sect2">
 <h3 id="_auth_2"><a class="anchor" href="#_auth_2"></a>auth</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 19. auth configuration options</caption>
+<caption class="title">Table 21. auth configuration options</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2201,7 +2325,7 @@ For each configuration property you can override the value by using the correspo
 <div class="sect2">
 <h3 id="_cache_2"><a class="anchor" href="#_cache_2"></a>cache</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 20. cache configuration options</caption>
+<caption class="title">Table 22. cache configuration options</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2223,7 +2347,7 @@ For each configuration property you can override the value by using the correspo
 <div class="sect2">
 <h3 id="_ccompat_2"><a class="anchor" href="#_ccompat_2"></a>ccompat</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 21. ccompat configuration options</caption>
+<caption class="title">Table 23. ccompat configuration options</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2253,7 +2377,7 @@ For each configuration property you can override the value by using the correspo
 <div class="sect2">
 <h3 id="_download_2"><a class="anchor" href="#_download_2"></a>download</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 22. download configuration options</caption>
+<caption class="title">Table 24. download configuration options</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2275,7 +2399,7 @@ For each configuration property you can override the value by using the correspo
 <div class="sect2">
 <h3 id="_events"><a class="anchor" href="#_events"></a>events</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 23. events configuration options</caption>
+<caption class="title">Table 25. events configuration options</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2297,7 +2421,7 @@ For each configuration property you can override the value by using the correspo
 <div class="sect2">
 <h3 id="_health_2"><a class="anchor" href="#_health_2"></a>health</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 24. health configuration options</caption>
+<caption class="title">Table 26. health configuration options</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2387,7 +2511,7 @@ For each configuration property you can override the value by using the correspo
 <div class="sect2">
 <h3 id="_import_2"><a class="anchor" href="#_import_2"></a>import</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 25. import configuration options</caption>
+<caption class="title">Table 27. import configuration options</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2409,7 +2533,7 @@ For each configuration property you can override the value by using the correspo
 <div class="sect2">
 <h3 id="_kafka"><a class="anchor" href="#_kafka"></a>kafka</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 26. kafka configuration options</caption>
+<caption class="title">Table 28. kafka configuration options</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2435,7 +2559,7 @@ For each configuration property you can override the value by using the correspo
 <div class="sect2">
 <h3 id="_limits_2"><a class="anchor" href="#_limits_2"></a>limits</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 27. limits configuration options</caption>
+<caption class="title">Table 29. limits configuration options</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2505,7 +2629,7 @@ For each configuration property you can override the value by using the correspo
 <div class="sect2">
 <h3 id="_redirects_2"><a class="anchor" href="#_redirects_2"></a>redirects</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 28. redirects configuration options</caption>
+<caption class="title">Table 30. redirects configuration options</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2539,7 +2663,7 @@ For each configuration property you can override the value by using the correspo
 <div class="sect2">
 <h3 id="_rest_2"><a class="anchor" href="#_rest_2"></a>rest</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 29. rest configuration options</caption>
+<caption class="title">Table 31. rest configuration options</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2569,7 +2693,7 @@ For each configuration property you can override the value by using the correspo
 <div class="sect2">
 <h3 id="_store"><a class="anchor" href="#_store"></a>store</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 30. store configuration options</caption>
+<caption class="title">Table 32. store configuration options</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2595,7 +2719,7 @@ For each configuration property you can override the value by using the correspo
 <div class="sect2">
 <h3 id="_ui_2"><a class="anchor" href="#_ui_2"></a>ui</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 31. ui configuration options</caption>
+<caption class="title">Table 33. ui configuration options</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
