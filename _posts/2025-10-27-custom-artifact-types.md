@@ -124,6 +124,77 @@ Registry executes JavaScript using the QuickJS engine via the [quickjs4j](https:
 project. Scripts run in a sandboxed environment for security, which means they have limited access to system
 resources and cannot perform potentially dangerous operations like file system access or network requests.
 
+## Using TypeScript Types for Better Development Experience
+
+For TypeScript and JavaScript developers, Apicurio provides an npm package with complete type definitions for all
+custom artifact type interfaces. This significantly improves the development experience by providing:
+
+- **Full type safety** - Catch errors at compile time rather than runtime
+- **IDE autocomplete** - Get intelligent code completion for request and response objects
+- **Better documentation** - Types serve as inline documentation for available properties
+- **Compatibility assurance** - Ensure your implementation matches Registry's expectations
+
+### Installation
+
+Install the TypeScript definitions package:
+
+```bash
+npm install @apicurio/artifact-type-builtins
+```
+
+### Using the Types
+
+Import the type definitions at the top of your TypeScript file:
+
+```typescript
+import type {
+    ContentAccepterRequest,
+    ContentValidatorRequest,
+    ContentValidatorResponse,
+    CompatibilityCheckerRequest,
+    CompatibilityCheckerResponse,
+    ContentCanonicalizerRequest,
+    ContentCanonicalizerResponse,
+    ContentDereferencerRequest,
+    ContentDereferencerResponse,
+    ReferenceFinderRequest,
+    ReferenceFinderResponse
+} from '@apicurio/artifact-type-builtins';
+```
+
+Then apply these types to your function signatures:
+
+```typescript
+// Content Validator with types
+export function validate(request: ContentValidatorRequest): ContentValidatorResponse {
+    const violations: any[] = [];
+    const content: string = request.content.content;
+    const contentType: string = request.content.contentType;
+
+    // Your validation logic here
+
+    return {
+        ruleViolations: violations
+    };
+}
+
+// Content Accepter with types
+export function acceptsContent(request: ContentAccepterRequest): boolean {
+    return request.typedContent.content.startsWith("#%RAML 1.0");
+}
+
+// Compatibility Checker with types
+export function testCompatibility(request: CompatibilityCheckerRequest): CompatibilityCheckerResponse {
+    // Your compatibility checking logic here
+    return {
+        incompatibleDifferences: []
+    };
+}
+```
+
+The typed interfaces provide IDE autocomplete for all properties, making it much easier to discover what data is
+available in requests and what structure is expected in responses.
+
 ## Example: RAML Content Validator
 
 Here's a simple example that validates RAML content:
@@ -645,6 +716,7 @@ Ready to try it out? Here are your next steps:
 
 For more information:
 - [Custom Artifact Type Example](https://github.com/Apicurio/apicurio-registry/tree/main/examples/custom-artifact-type) - Complete working example
+- [TypeScript Type Definitions](https://www.npmjs.com/package/@apicurio/artifact-type-builtins) - npm package with TypeScript types
 - [Apicurio Registry GitHub Repository](https://github.com/Apicurio/apicurio-registry)
 - [Apicurio Registry Documentation](https://www.apicur.io/registry/docs/)
 - [Webhook API Specification](https://github.com/Apicurio/apicurio-registry/blob/main/common/src/main/resources/META-INF/artifact-type-webhooks.json)
