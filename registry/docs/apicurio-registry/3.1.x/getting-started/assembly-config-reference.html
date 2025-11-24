@@ -1460,6 +1460,13 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">Storage event topic</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.events.kafka.topic.*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>map&lt;string, string&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.3</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka sql events topic properties. There is an optional Registry-specific configuration property: 'replication.factor'. IMPORTANT: As a temporary compatibility measure, configuration properties for this topic are also inherited from 'apicurio.kafkasql.topic' unless explicitly overridden by this property. This will be removed in a next minor version.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.bootstrap.servers</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -1478,14 +1485,14 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5000</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka sql storage consumer poll timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka sql storage consumer poll timeout in milliseconds</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.coordinator.response-timeout</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>integer</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>30000</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka sql storage coordinator response timeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka sql storage coordinator response timeout in milliseconds</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.security.protocol</code></p></td>
@@ -1562,7 +1569,14 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafkasql-snapshots</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka sql storage topic name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka sql snapshots topic name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.snapshots.topic.*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>map&lt;string, string&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.3</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka sql snapshots topic properties. There are two optional Registry-specific configuration properties: 'partitions' and 'replication.factor'. IMPORTANT: As a temporary compatibility measure, configuration properties for this topic are also inherited from 'apicurio.kafkasql.topic' unless explicitly overridden by this property. This will be removed in a next minor version.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.ssl.key.password</code></p></td>
@@ -1605,6 +1619,20 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafkasql-journal</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Kafka sql storage topic name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.topic-configuration-verification-override-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.3</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When using KafkaSQL storage, Apicurio Registry verifies that the topic configuration will not cause accidental data loss or corruption. Setting this property to true will partially disable this verification for <strong>all</strong> Apicurio Registry topics. Specifically, 'retention.ms=-1' is not enforced to support automatic cleanup when Apicurio Registry snapshotting feature is used. In this case, snapshots have to be made more frequently than messages are deleted. IMPORTANT: We might change which topics and which verification checks are affected by this configuration property in the future.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.topic.*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>map&lt;string, string&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka sql storage topic properties. There are two optional Registry-specific configuration properties: 'partitions' and 'replication.factor'.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.topic.auto-create</code></p></td>
