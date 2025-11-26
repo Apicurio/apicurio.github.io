@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Deploying Apicurio Registry for high availability :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.1.x/getting-started/assembly-registry-high-availability.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.1.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating an existing Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.1.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.5.x/index.html">2.5.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.4.x/index.html">2.4.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.3.x/index.html">2.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Installation</li>
+    <li><a href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.1.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-registry-high-availability.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.5.x/index.html">2.5.x</a>
+    <a class="version is-missing" href="../../2.4.x/index.html">2.4.x</a>
+    <a class="version is-missing" href="../../2.3.x/index.html">2.3.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Deploying Apicurio Registry for high availability</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This chapter explains how to configure Apicurio Registry for high availability in a single Kubernetes cluster:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ha-architecture-overview_registry">High availability architecture overview</a></p>
+</li>
+<li>
+<p><a href="#ha-application-scaling_registry">Configuring application component high availability</a></p>
+</li>
+<li>
+<p><a href="#ha-sql-storage_registry">Configuring SQL database storage for high availability</a></p>
+</li>
+<li>
+<p><a href="#ha-kafkasql-storage_registry">Configuring KafkaSQL storage for high availability</a></p>
+</li>
+<li>
+<p><a href="#ha-monitoring_registry">Monitoring high availability deployments</a></p>
+</li>
+<li>
+<p><a href="#ha-rolling-updates_registry">Performing rolling updates</a></p>
+</li>
+<li>
+<p><a href="#ha-backup-restore_registry">Backup and restore procedures</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p><a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ha-architecture-overview_registry"><a class="anchor" href="#ha-architecture-overview_registry"></a>High availability architecture overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A highly available Apicurio Registry deployment consists of the following components:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Application (backend) pods</strong> - Multiple stateless replicas that process REST API requests. These pods can
+scale horizontally and are distributed across cluster nodes for fault tolerance.</p>
+</li>
+<li>
+<p><strong>UI pods</strong> - Multiple stateless replicas serving the web console (static files). Typically fewer replicas are
+needed compared to the backend.</p>
+</li>
+<li>
+<p><strong>Storage layer</strong> - The stateful component requiring HA configuration. Strategy depends on whether you use SQL
+database or KafkaSQL storage.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The application and UI components are stateless and can be scaled horizontally. High availability is achieved
+by running multiple replicas distributed across failure domains (availability zones) and implementing a highly
+available storage layer.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ha-application-scaling_registry"><a class="anchor" href="#ha-application-scaling_registry"></a>Configuring application component high availability</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Apicurio Registry backend and UI components are stateless and can scale horizontally to provide high availability
+and increased throughput.</p>
+</div>
+<div class="sect2">
+<h3 id="_configuring_multiple_replicas"><a class="anchor" href="#_configuring_multiple_replicas"></a>Configuring multiple replicas</h3>
+<div class="paragraph">
+<p>Configure the number of replicas for each component in the <code>ApicurioRegistry3</code> custom resource:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry-ha
+spec:
+  app:
+    replicas: 3
+    storage:
+      type: postgresql
+      sql:
+        dataSource:
+          url: jdbc:postgresql://postgresql-ha.my-project.svc:5432/registry
+          username: registry_user
+          password:
+            name: postgresql-credentials
+            key: password
+    ingress:
+      host: registry.example.com
+  ui:
+    replicas: 2
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Running multiple replicas requires a production-ready storage backend (PostgreSQL, MySQL, or KafkaSQL
+with persistent Kafka). Do not use in-memory storage with multiple replicas.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_distributing_pods_across_nodes"><a class="anchor" href="#_distributing_pods_across_nodes"></a>Distributing pods across nodes</h3>
+<div class="paragraph">
+<p>To ensure high availability, distribute Apicurio Registry pods across different nodes and availability zones:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    replicas: 3
+    podTemplateSpec:
+      spec:
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      app: example-registry
+                      app.kubernetes.io/component: app
+                      app.kubernetes.io/part-of: apicurio-registry
+                  topologyKey: kubernetes.io/hostname
+              - weight: 50
+                podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      app: example-registry
+                      app.kubernetes.io/component: app
+                      app.kubernetes.io/part-of: apicurio-registry
+                  topologyKey: topology.kubernetes.io/zone</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This configuration spreads pods across different nodes (hostname) and availability zones when possible.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_resource_requests_and_limits"><a class="anchor" href="#_configuring_resource_requests_and_limits"></a>Configuring resource requests and limits</h3>
+<div class="paragraph">
+<p>Set appropriate resource requests and limits to ensure pod scheduling and prevent resource contention:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    podTemplateSpec:
+      spec:
+        containers:
+          - name: apicurio-registry-app
+            resources:
+              requests:
+                memory: "512Mi"
+                cpu: "500m"
+              limits:
+                memory: "1Gi"
+                cpu: "1000m"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_poddisruptionbudget"><a class="anchor" href="#_configuring_poddisruptionbudget"></a>Configuring PodDisruptionBudget</h3>
+<div class="paragraph">
+<p>Ensure minimum availability during voluntary disruptions such as node drains or cluster upgrades. The operator
+creates a PodDisruptionBudget with <code>maxUnavailable: 1</code> by default, but you can customize it by creating your own:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    replicas: 3
+    podDisruptionBudget:
+      enabled: false</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+    name: example-registry-app-poddisruptionbudget
+spec:
+    minAvailable: 1
+    selector:
+      matchLabels:
+        app: example-registry
+        app.kubernetes.io/component: app
+        app.kubernetes.io/part-of: apicurio-registry</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ha-sql-storage_registry"><a class="anchor" href="#ha-sql-storage_registry"></a>Configuring SQL database storage for high availability</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When using PostgreSQL or MySQL storage, high availability depends on your database configuration. The database
+must be configured with replication and automatic failover.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+MySQL storage is not yet supported by the operator and requires manual configuration using environment variables.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_database_high_availability_options"><a class="anchor" href="#_database_high_availability_options"></a>Database high availability options</h3>
+<div class="paragraph">
+<p>Consider these database HA strategies:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>PostgreSQL with streaming replication</strong> - Primary-replica configuration with automatic failover using tools
+like Patroni, CloudNativePG, or Crunchy PostgreSQL Operator</p>
+</li>
+<li>
+<p><strong>PostgreSQL with synchronous replication</strong> - Ensures zero data loss but may impact performance</p>
+</li>
+<li>
+<p><strong>MySQL with Group Replication</strong> - Multi-primary or single-primary mode with automatic failover</p>
+</li>
+<li>
+<p><strong>Managed database services</strong> - Cloud provider managed databases (RDS, Cloud SQL, Azure Database) with built-in HA</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_connection_pool_for_failover"><a class="anchor" href="#_configuring_connection_pool_for_failover"></a>Configuring connection pool for failover</h3>
+<div class="paragraph">
+<p>Configure the Agroal connection pool to handle database failover gracefully. Add these environment variables
+to the <code>app</code> component:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    env:
+      # Connection pool sizing
+      - name: APICURIO_DATASOURCE_JDBC_INITIAL-SIZE
+        value: "10"
+      - name: APICURIO_DATASOURCE_JDBC_MIN-SIZE
+        value: "10"
+      - name: APICURIO_DATASOURCE_JDBC_MAX-SIZE
+        value: "50"
+
+      # Connection acquisition timeout (5 seconds)
+      - name: QUARKUS_DATASOURCE_JDBC_ACQUISITION-TIMEOUT
+        value: "5S"
+
+      # Background validation to detect stale connections (every 2 minutes)
+      - name: QUARKUS_DATASOURCE_JDBC_BACKGROUND-VALIDATION-INTERVAL
+        value: "2M"
+
+      # Foreground validation before use (every 1 minute)
+      - name: QUARKUS_DATASOURCE_JDBC_FOREGROUND-VALIDATION-INTERVAL
+        value: "1M"
+
+      # Maximum connection lifetime (30 minutes)
+      - name: QUARKUS_DATASOURCE_JDBC_MAX-LIFETIME
+        value: "30M"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These settings ensure that:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Connections are validated regularly to detect database failovers</p>
+</li>
+<li>
+<p>Stale connections are removed and recreated</p>
+</li>
+<li>
+<p>Connection acquisition times out rather than hanging indefinitely</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_postgresql_with_cloudnativepg"><a class="anchor" href="#_example_postgresql_with_cloudnativepg"></a>Example: PostgreSQL with CloudNativePG</h3>
+<div class="paragraph">
+<p>When using the CloudNativePG operator for PostgreSQL HA:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: registry-db-cluster
+spec:
+  instances: 3
+  storage:
+    size: 20Gi
+    storageClass: standard
+  postgresql:
+    parameters:
+      max_connections: "200"
+  backup:
+    barmanObjectStore:
+      # Configure backup storage</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then reference the cluster in your <code>ApicurioRegistry3</code> CR:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: postgresql
+      sql:
+        dataSource:
+          url: jdbc:postgresql://registry-db-cluster-rw:5432/app
+          username: app
+          password:
+            name: registry-db-cluster-app
+            key: password</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ha-kafkasql-storage_registry"><a class="anchor" href="#ha-kafkasql-storage_registry"></a>Configuring KafkaSQL storage for high availability</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When using KafkaSQL storage, high availability depends on the Kafka cluster configuration. Each Apicurio Registry
+replica independently consumes all messages from the Kafka journal topic.</p>
+</div>
+<div class="sect2">
+<h3 id="_kafka_cluster_high_availability"><a class="anchor" href="#_kafka_cluster_high_availability"></a>Kafka cluster high availability</h3>
+<div class="paragraph">
+<p>Configure your Kafka cluster for high availability:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: registry-kafka
+spec:
+  kafka:
+    version: 3.5.0
+    replicas: 3
+    config:
+      # Replication settings for HA
+      offsets.topic.replication.factor: 3
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      default.replication.factor: 3
+      min.insync.replicas: 2
+    storage:
+      type: persistent-claim
+      size: 100Gi
+  zookeeper:
+    replicas: 3
+    storage:
+      type: persistent-claim
+      size: 10Gi</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Key configuration for HA:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Kafka replicas: 3</strong> - Provides fault tolerance for broker failures</p>
+</li>
+<li>
+<p><strong>Replication factor: 3</strong> - Each partition has 3 copies</p>
+</li>
+<li>
+<p><strong>min.insync.replicas: 2</strong> - Requires at least 2 replicas to acknowledge writes</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kafkasql_topic_configuration"><a class="anchor" href="#_kafkasql_topic_configuration"></a>KafkaSQL topic configuration</h3>
+<div class="paragraph">
+<p>Apicurio Registry uses three Kafka topics for various purposes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Journal topic</strong> - Stores all changes to the registry data. Named <code>kafkasql-journal</code> by default and is the most important topic for data durability.</p>
+</li>
+<li>
+<p><strong>Snapshots topic</strong> - Stores periodic snapshots of the registry state for faster startup, if the snapshotting feature is used. It&#8217;s named <code>kafkasql-snapshots</code> by default and should be configured with similar replication settings as the journal topic.</p>
+</li>
+<li>
+<p><strong>Events topic</strong> - Stores events to support Kafka-based Registry eventing feature. Named <code>registry-events</code> by default, its configuration depends on your event processing needs. <strong>Currently, Apicurio Registry sends messages to only 1 partition of this topic.</strong></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Configure the Kafka topics used by Apicurio Registry with appropriate replication:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: kafkasql-journal
+  labels:
+    strimzi.io/cluster: registry-kafka
+spec:
+  partitions: 3
+  replicas: 3
+  config:
+    cleanup.policy: delete
+    min.insync.replicas: 2
+    retention.ms: -1  # Infinite retention
+    retention.bytes: -1  # Infinite retention</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The journal topic and the snapshots topic must use <code>cleanup.policy: delete</code> with infinite retention (<code>retention.ms: -1</code> and <code>retention.bytes: -1</code>) to prevent accidental data loss. As of the latest version, Apicurio Registry will check these settings on startup and refuse to start if they are not configured correctly.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry automatically creates the journal, snapshots, and events topics on startup by default, if they do not exist. While this is not recommended in a high-availability production scenario, if you want the topics to be created automatically, the following environment variables provide the equivalent configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">APICURIO_KAFKASQL_TOPIC_PARTITIONS=3
+APICURIO_KAFKASQL_TOPIC_REPLICATION_FACTOR=3
+APICURIO_KAFKASQL_TOPIC_MIN_INSYNC_REPLICAS=2
+APICURIO_KAFKASQL_SNAPSHOTS_TOPIC_PARTITIONS=3
+APICURIO_KAFKASQL_SNAPSHOTS_TOPIC_REPLICATION_FACTOR=3
+APICURIO_KAFKASQL_SNAPSHOTS_TOPIC_MIN_INSYNC_REPLICAS=2</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_consumer_behavior_with_multiple_replicas"><a class="anchor" href="#_consumer_behavior_with_multiple_replicas"></a>Consumer behavior with multiple replicas</h3>
+<div class="paragraph">
+<p>When running multiple Apicurio Registry replicas with KafkaSQL storage:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Each replica uses a unique consumer group ID (automatically generated using UUID)</p>
+</li>
+<li>
+<p>Each replica independently consumes all messages from the journal topic</p>
+</li>
+<li>
+<p>There is no consumer group rebalancing between replicas</p>
+</li>
+<li>
+<p>All replicas build the same in-memory state from the Kafka topic</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This design ensures that:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>New replicas can be added without affecting existing replicas</p>
+</li>
+<li>
+<p>Pod restarts only affect the restarting pod, not others</p>
+</li>
+<li>
+<p>Each replica maintains a consistent view of the data</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ha-monitoring_registry"><a class="anchor" href="#ha-monitoring_registry"></a>Monitoring high availability deployments</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apicurio Registry exposes Prometheus metrics for monitoring application health and performance.</p>
+</div>
+<div class="sect2">
+<h3 id="_enabling_metrics"><a class="anchor" href="#_enabling_metrics"></a>Enabling metrics</h3>
+<div class="paragraph">
+<p>Metrics are enabled by default. Access the metrics endpoint at <code>/q/metrics</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_key_metrics_to_monitor"><a class="anchor" href="#_key_metrics_to_monitor"></a>Key metrics to monitor</h3>
+<div class="paragraph">
+<p>Monitor these metrics for HA deployments:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>REST API metrics:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>http_server_requests_seconds</code> - Request latency</p>
+</li>
+<li>
+<p><code>http_server_active_requests</code> - Concurrent requests</p>
+</li>
+<li>
+<p><code>http_server_requests_total</code> - Total request count</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Storage metrics:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>apicurio_storage_operation_seconds</code> - Storage operation latency</p>
+</li>
+<li>
+<p><code>apicurio_storage_concurrent_operations</code> - Concurrent storage operations</p>
+</li>
+<li>
+<p><code>apicurio_storage_operation_total</code> - Total storage operations</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Health check metrics:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Readiness probe: <code>/q/health/ready</code></p>
+</li>
+<li>
+<p>Liveness probe: <code>/q/health/live</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>JVM metrics:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>jvm_memory_used_bytes</code> - Memory usage</p>
+</li>
+<li>
+<p><code>jvm_gc_pause_seconds</code> - Garbage collection pauses</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_servicemonitor_for_prometheus_operator"><a class="anchor" href="#_configuring_servicemonitor_for_prometheus_operator"></a>Configuring ServiceMonitor for Prometheus Operator</h3>
+<div class="paragraph">
+<p>If using the Prometheus Operator, create a ServiceMonitor to scrape metrics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: apicurio-registry-metrics
+  labels:
+    app: apicurio-registry
+spec:
+  selector:
+    matchLabels:
+      app: apicurio-registry
+  endpoints:
+    - port: http
+      path: /q/metrics
+      interval: 30s</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_alerting_recommendations"><a class="anchor" href="#_alerting_recommendations"></a>Alerting recommendations</h3>
+<div class="paragraph">
+<p>Configure alerts for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Pod restarts or crash loops</p>
+</li>
+<li>
+<p>High error rates (5xx responses)</p>
+</li>
+<li>
+<p>Storage operation timeouts</p>
+</li>
+<li>
+<p>Database connection pool exhaustion</p>
+</li>
+<li>
+<p>Kafka consumer lag (for KafkaSQL storage)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ha-rolling-updates_registry"><a class="anchor" href="#ha-rolling-updates_registry"></a>Performing rolling updates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When updating Apicurio Registry to a new version, use rolling updates to minimize downtime.</p>
+</div>
+<div class="sect2">
+<h3 id="_rolling_update_strategy"><a class="anchor" href="#_rolling_update_strategy"></a>Rolling update strategy</h3>
+<div class="paragraph">
+<p>The operator performs rolling updates automatically when you update the <code>ApicurioRegistry3</code> CR. The default
+strategy ensures:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Pods are updated one at a time</p>
+</li>
+<li>
+<p>Each new pod must pass readiness checks before the next pod is updated</p>
+</li>
+<li>
+<p>PodDisruptionBudget prevents too many pods being unavailable</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_updating_apicurio_registry_version"><a class="anchor" href="#_updating_apicurio_registry_version"></a>Updating Apicurio Registry version</h3>
+<div class="paragraph">
+<p>Apicurio Registry and Apicurio Registry Operator are versioned together. To update Apicurio Registry to a new version, update Apicurio Registry Operator, which will automatically update the application.</p>
+</div>
+<div class="paragraph">
+<p>For production environments, we strongly recommend using Operator Lifecycle Manager (OLM) with manual install plan confirmation enabled. This prevents automatic updates from occurring immediately when a new version becomes available, giving you time to review release notes and prepare for the update.</p>
+</div>
+<div class="paragraph">
+<p>If you need to update the application without updating Apicurio Registry Operator (<strong>not recommended</strong> except as a workaround for critical issues), you can override the application image in your pod template:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    podTemplateSpec:
+      spec:
+        containers:
+          - name: apicurio-registry-app
+            image: quay.io/apicurio/apicurio-registry:3.1.0</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_safe_update_practices"><a class="anchor" href="#_safe_update_practices"></a>Safe update practices</h3>
+<div class="paragraph">
+<p>Follow these practices for safe updates:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Test in non-production first</strong> - Validate the new version in a test environment</p>
+</li>
+<li>
+<p><strong>Monitor during rollout</strong> - Watch metrics and logs during the update</p>
+</li>
+<li>
+<p><strong>Maintain minimum replicas</strong> - Keep at least 2 replicas to ensure availability during updates</p>
+</li>
+<li>
+<p><strong>Review release notes</strong> - Check for breaking changes or migration steps</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+For patch releases (e.g., 3.1.0 to 3.1.1), rolling updates typically complete without issues. For major or minor version updates, always review the migration guide.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ha-backup-restore_registry"><a class="anchor" href="#ha-backup-restore_registry"></a>Backup and restore procedures</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Regular backups are essential for disaster recovery and data protection.</p>
+</div>
+<div class="sect2">
+<h3 id="_sql_database_backup"><a class="anchor" href="#_sql_database_backup"></a>SQL database backup</h3>
+<div class="paragraph">
+<p>For SQL storage (PostgreSQL or MySQL), backup strategies depend on your database setup:</p>
+</div>
+<div class="sect3">
+<h4 id="_postgresql_backup_options"><a class="anchor" href="#_postgresql_backup_options"></a>PostgreSQL backup options</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>pg_dump logical backups:</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pg_dump -h postgresql-host -U registry_user -d registry &gt; registry-backup.sql</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Continuous archiving with WAL</strong> - For point-in-time recovery</p>
+</li>
+<li>
+<p><strong>Operator-managed backups</strong> - If using CloudNativePG or Crunchy PostgreSQL Operator:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://my-backups/registry-db
+      s3Credentials:
+        accessKeyId:
+          name: backup-credentials
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: backup-credentials
+          key: ACCESS_SECRET_KEY
+      wal:
+        compression: gzip
+    retentionPolicy: "30d"</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_mysql_backup_options"><a class="anchor" href="#_mysql_backup_options"></a>MySQL backup options</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>mysqldump logical backups:</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mysqldump -h mysql-host -u registry_user -p registry &gt; registry-backup.sql</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Binary backups</strong> - Using tools like Percona XtraBackup or MySQL Enterprise Backup</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_restoring_from_sql_backup"><a class="anchor" href="#_restoring_from_sql_backup"></a>Restoring from SQL backup</h4>
+<div class="paragraph">
+<p>To restore from a logical backup:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># PostgreSQL
+psql -h postgresql-host -U registry_user -d registry &lt; registry-backup.sql
+
+# MySQL
+mysql -h mysql-host -u registry_user -p registry &lt; registry-backup.sql</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kafkasql_storage_backup"><a class="anchor" href="#_kafkasql_storage_backup"></a>KafkaSQL storage backup</h3>
+<div class="paragraph">
+<p>For KafkaSQL storage, back up the Kafka journal topic and snapshots topic.</p>
+</div>
+<div class="sect3">
+<h4 id="_backing_up_kafka_topics"><a class="anchor" href="#_backing_up_kafka_topics"></a>Backing up Kafka topics</h4>
+<div class="paragraph">
+<p>Use Kafka&#8217;s MirrorMaker 2 or Strimzi Mirror Maker for topic replication (recommended):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaMirrorMaker2
+metadata:
+  name: registry-backup-mirror
+spec:
+  version: 3.5.0
+  replicas: 1
+  connectCluster: "backup-cluster"
+  clusters:
+    - alias: "source-cluster"
+      bootstrapServers: registry-kafka-bootstrap:9092
+    - alias: "backup-cluster"
+      bootstrapServers: backup-kafka-bootstrap:9092
+  mirrors:
+    - sourceCluster: "source-cluster"
+      targetCluster: "backup-cluster"
+      topicsPattern: "kafkasql-.*"
+      groupsPattern: ".*"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, export and import topics using Kafka&#8217;s console consumer or CLI tools like <code>kcat</code>/<code>kafkacat</code>. Since the topics might contain binary data, which might be affected by text file encoding, make sure they are exported correctly when using CLI tools. See our <a href="guide-exporting-registry-kafka-topic-data.html" class="page">Exporting Apicurio Registry Kafka topic data</a> guide for more details.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_testing_backup_and_restore"><a class="anchor" href="#_testing_backup_and_restore"></a>Testing backup and restore</h3>
+<div class="paragraph">
+<p>Regularly test your backup and restore procedures:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a test Apicurio Registry deployment in a separate namespace</p>
+</li>
+<li>
+<p>Restore from backup to the test deployment</p>
+</li>
+<li>
+<p>Verify that all artifacts and metadata are present</p>
+</li>
+<li>
+<p>Test API functionality to ensure data integrity</p>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more information on Apicurio Registry configuration, see <a href="assembly-deploying-registry-operator.html" class="page">Deploying Apicurio Registry using the Operator</a>.</p>
+</li>
+<li>
+<p>For Kafka HA configuration with Strimzi, see <a href="https://access.redhat.com/documentation/en-us/red_hat_amq_streams/2.6/html-single/deploying_and_managing_amq_streams_on_openshift/index">Deploying and Managing AMQ Streams on OpenShift</a>.</p>
+</li>
+<li>
+<p>For health checks and metrics, see the
+<a href="/q/health">Health UI</a> and <a href="/q/metrics">Metrics endpoint</a> in your Apicurio Registry deployment.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.1.x/getting-started/assembly-registry-high-availability.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>

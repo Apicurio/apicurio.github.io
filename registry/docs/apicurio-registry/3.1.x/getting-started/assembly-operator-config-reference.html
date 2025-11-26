@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Apicurio Registry Operator configuration reference :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.1.x/getting-started/assembly-operator-config-reference.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.1.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating an existing Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.1.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.5.x/index.html">2.5.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.4.x/index.html">2.4.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.3.x/index.html">2.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Reference</li>
+    <li><a href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.1.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-operator-config-reference.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.5.x/index.html">2.5.x</a>
+    <a class="version is-missing" href="../../2.4.x/index.html">2.4.x</a>
+    <a class="version is-missing" href="../../2.3.x/index.html">2.3.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Apicurio Registry Operator configuration reference</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This chapter provides a complete reference for configuring Apicurio Registry instances using the <code>ApicurioRegistry3</code>
+custom resource.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#operator-cr-structure_registry">ApicurioRegistry3 custom resource structure</a></p>
+</li>
+<li>
+<p><a href="#operator-app-spec-reference_registry">Apicurio Registry backend (REST API) component configuration reference</a></p>
+</li>
+<li>
+<p><a href="#operator-ui-spec-reference_registry">UI component configuration reference</a></p>
+</li>
+<li>
+<p><a href="#operator-storage-reference_registry">Storage configuration reference</a></p>
+</li>
+<li>
+<p><a href="#operator-auth-reference_registry">Authentication and authorization configuration reference</a></p>
+</li>
+<li>
+<p><a href="#operator-ingress-reference_registry">Ingress configuration reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="operator-cr-structure_registry"><a class="anchor" href="#operator-cr-structure_registry"></a>ApicurioRegistry3 custom resource structure</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>ApicurioRegistry3</code> custom resource defines the desired state of a Apicurio Registry instance. The resource is
+organized into two main sections under <code>spec</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry
+spec:
+  app:
+    # Configuration for the Apicurio Registry backend (REST API) component.
+  ui:
+    # Configuration for the Apicurio Registry web console component.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="operator-app-spec-reference_registry"><a class="anchor" href="#operator-app-spec-reference_registry"></a>Apicurio Registry backend (REST API) component configuration reference</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>spec.app</code> section configures the backend component, which provides the REST API.</p>
+</div>
+<div class="sect2">
+<h3 id="_common_component_fields"><a class="anchor" href="#_common_component_fields"></a>Common component fields</h3>
+<div class="paragraph">
+<p>The following fields are available for both <code>spec.app</code> and <code>spec.ui</code> components:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>replicas</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of pod replicas for the component</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>env</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of environment variables to pass to the component&#8217;s container</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array of EnvVar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[]</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ingress</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ingress configuration for the component</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_ingressspec">IngressSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#operator-ingress-reference_registry">Ingress configuration reference</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>podTemplateSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Custom PodTemplateSpec for advanced pod configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PodTemplateSpec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Operator-generated defaults</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>podDisruptionBudget</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PodDisruptionBudget configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PodDisruptionSpec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{ enabled: true }</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>networkPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NetworkPolicy configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NetworkPolicySpec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{ enabled: true }</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>host</code> <em>(deprecated)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use <code>ingress.host</code> instead</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>""</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_application_specific_fields"><a class="anchor" href="#_application_specific_fields"></a>Application-specific fields</h3>
+<div class="paragraph">
+<p>The following fields are specific to <code>spec.app</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>storage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage configuration for the backend</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_storagespec">StorageSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#operator-storage-reference_registry">Storage configuration reference</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>features</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Feature flags for the backend</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_appfeaturesspec">AppFeaturesSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See below</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>auth</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authentication and authorization configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_authspec">AuthSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#operator-auth-reference_registry">Authentication and authorization configuration reference</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLS configuration for the application</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_tlsspec">TLSSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See below</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_appfeaturesspec"><a class="anchor" href="#_appfeaturesspec"></a>AppFeaturesSpec</h3>
+<div class="paragraph">
+<p>Configure optional features for Apicurio Registry:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resourceDeleteEnabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow deletion of groups, artifacts, and artifact versions. By default, resources in Apicurio Registry are
+immutable.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>versionMutabilityEnabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow artifact versions in DRAFT state to be mutable. Enabling this also unlocks Studio functionality in the UI.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    features:
+      resourceDeleteEnabled: true
+      versionMutabilityEnabled: true</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tlsspec"><a class="anchor" href="#_tlsspec"></a>TLSSpec</h3>
+<div class="paragraph">
+<p>Configure TLS certificates for the application:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keystoreSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the keystore (PKCS12 format). Default key: <code>keystore.p12</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keystorePasswordSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the keystore password. Default key: <code>password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    tls:
+      keystoreSecretRef:
+        name: registry-tls
+        key: keystore.p12
+      keystorePasswordSecretRef:
+        name: registry-tls
+        key: keystore.password</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="operator-ui-spec-reference_registry"><a class="anchor" href="#operator-ui-spec-reference_registry"></a>UI component configuration reference</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>spec.ui</code> section configures the Apicurio Registry web console component.</p>
+</div>
+<div class="sect2">
+<h3 id="_ui_specific_fields"><a class="anchor" href="#_ui_specific_fields"></a>UI-specific fields</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the operator should deploy the UI component</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The UI component also supports all common component fields listed in
+<a href="#operator-app-spec-reference_registry">Apicurio Registry backend (REST API) component configuration reference</a>.</p>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  ui:
+    enabled: true
+    replicas: 2
+    env:
+      - name: REGISTRY_API_URL
+        value: https://registry-api.example.com/apis/registry/v3
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="operator-storage-reference_registry"><a class="anchor" href="#operator-storage-reference_registry"></a>Storage configuration reference</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>spec.app.storage</code> section configures the storage backend for Apicurio Registry.</p>
+</div>
+<div class="sect2">
+<h3 id="_storagespec"><a class="anchor" href="#_storagespec"></a>StorageSpec</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage type: <code>&lt;empty&gt;</code> (in-memory), <code>postgresql</code>, or <code>kafkasql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>""</code> (in-memory)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL database configuration. Required when <code>type</code> is <code>postgresql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_sqlspec">SqlSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafkasql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">KafkaSQL storage configuration. Required when <code>type</code> is <code>kafkasql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_kafkasqlspec">KafkaSqlSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The default in-memory storage is not suitable for production environments.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sqlspec"><a class="anchor" href="#_sqlspec"></a>SqlSpec</h3>
+<div class="paragraph">
+<p>Configure SQL database storage (PostgreSQL or MySQL):</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 50%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dataSource</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data source configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_datasourcespec">DataSourceSpec</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_datasourcespec"><a class="anchor" href="#_datasourcespec"></a>DataSourceSpec</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC connection URL. Example: <code>jdbc:postgresql://postgresql.my-ns.svc:5432/registry</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>username</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database username</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the database password. Default key: <code>password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example for PostgreSQL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: postgresql
+      sql:
+        dataSource:
+          url: jdbc:postgresql://postgresql.my-project.svc:5432/registry
+          username: registry_user
+          password:
+            name: postgresql-credentials
+            key: password</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kafkasqlspec"><a class="anchor" href="#_kafkasqlspec"></a>KafkaSqlSpec</h3>
+<div class="paragraph">
+<p>Configure KafkaSQL storage:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bootstrapServers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka bootstrap servers address. Required for KafkaSQL storage.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLS configuration for connecting to Kafka</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_kafkasqltlsspec">KafkaSqlTLSSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>auth</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authentication configuration for connecting to Kafka</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_kafkasqlauthspec">KafkaSqlAuthSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        bootstrapServers: my-cluster-kafka-bootstrap.my-project.svc:9092</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kafkasqltlsspec"><a class="anchor" href="#_kafkasqltlsspec"></a>KafkaSqlTLSSpec</h3>
+<div class="paragraph">
+<p>Configure TLS for KafkaSQL storage:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>truststoreSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the TLS truststore (PKCS12 format). Default key: <code>ca.p12</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>truststorePasswordSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the truststore password. Default key: <code>ca.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        bootstrapServers: my-cluster-kafka-bootstrap.my-project.svc:9093
+        tls:
+          truststoreSecretRef:
+            name: kafka-cluster-ca-cert
+            key: ca.p12
+          truststorePasswordSecretRef:
+            name: kafka-cluster-ca-cert
+            key: ca.password</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kafkasqlauthspec"><a class="anchor" href="#_kafkasqlauthspec"></a>KafkaSqlAuthSpec</h3>
+<div class="paragraph">
+<p>Configure SASL authentication for KafkaSQL storage:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mechanism</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SASL mechanism. Examples: <code>SCRAM-SHA-512</code>, <code>PLAIN</code>, <code>OAUTHBEARER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>usernameSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the username. Default key: <code>username</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>passwordSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the password. Default key: <code>password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>clientIdSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the OAuth client ID (for OAUTHBEARER). Default key: <code>clientId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>clientSecretSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the OAuth client secret (for OAUTHBEARER). Default key: <code>clientSecret</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tokenEndpointUri</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth token endpoint URI (for OAUTHBEARER)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example with SCRAM-SHA-512:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        bootstrapServers: my-cluster-kafka-bootstrap.my-project.svc:9093
+        auth:
+          mechanism: SCRAM-SHA-512
+          usernameSecretRef:
+            name: kafka-credentials
+            key: username
+          passwordSecretRef:
+            name: kafka-credentials
+            key: password</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="operator-auth-reference_registry"><a class="anchor" href="#operator-auth-reference_registry"></a>Authentication and authorization configuration reference</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>spec.app.auth</code> section configures OIDC authentication and role-based authorization.</p>
+</div>
+<div class="sect2">
+<h3 id="_authspec"><a class="anchor" href="#_authspec"></a>AuthSpec</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable authentication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>appClientId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OIDC client ID for the backend application</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>uiClientId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OIDC client ID for the UI application</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>authServerUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL of the identity server (OIDC issuer)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>redirectUri</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redirect URI after successful authentication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>logoutUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redirect URI after logout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>anonymousReadsEnabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow anonymous users to make read-only calls to the REST API</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>authz</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authorization configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_authzspec">AuthzSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See below</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basicAuth</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Client credentials basic authentication configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_basicauthspec">BasicAuthSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See below</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLS configuration for OIDC connections</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_authtlsspec">AuthTLSSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See below</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    auth:
+      enabled: true
+      appClientId: registry-client-api
+      uiClientId: registry-client-ui
+      authServerUrl: https://keycloak.example.com/realms/registry
+      redirectUri: https://registry-ui.example.com
+      logoutUrl: https://registry-ui.example.com
+      anonymousReadsEnabled: false</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_authzspec"><a class="anchor" href="#_authzspec"></a>AuthzSpec</h3>
+<div class="paragraph">
+<p>Configure role-based authorization:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable role-based authorization</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ownerOnlyEnabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, only the user who created an artifact can modify or delete it</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groupAccessEnabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled with owner-only authorization, only the user who created an artifact group has write access</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>readAccessEnabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, grants at least read-only access to all authenticated users in the organization</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>roles</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Role configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_authzrolesspec">AuthzRolesSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See below</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>adminOverride</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Admin override configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_adminoverridespec">AdminOverrideSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See below</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    auth:
+      authz:
+        enabled: true
+        ownerOnlyEnabled: true
+        groupAccessEnabled: false
+        readAccessEnabled: true
+        roles:
+          source: token
+          admin: sr-admin
+          developer: sr-developer
+          readOnly: sr-readonly</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_authzrolesspec"><a class="anchor" href="#_authzrolesspec"></a>AuthzRolesSpec</h3>
+<div class="paragraph">
+<p>Configure authorization roles:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>source</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Role source. Use <code>token</code> to extract roles from the authentication token</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>admin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the admin role</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>developer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the developer role</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>readOnly</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the read-only role</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_adminoverridespec"><a class="anchor" href="#_adminoverridespec"></a>AdminOverrideSpec</h3>
+<div class="paragraph">
+<p>Configure admin override functionality:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable admin override</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>from</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where to look for admin override information. Only <code>token</code> is currently supported</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type of information used to determine admin status: <code>role</code> or <code>claim</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>role</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the role that indicates admin status (when <code>type</code> is <code>role</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>claimName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the JWT claim to use for admin override (when <code>type</code> is <code>claim</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>claimValue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required value of the JWT claim (when <code>type</code> is <code>claim</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example using role-based admin override:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    auth:
+      authz:
+        enabled: true
+        adminOverride:
+          enabled: true
+          from: token
+          type: role
+          role: sr-admin</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example using claim-based admin override:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    auth:
+      authz:
+        enabled: true
+        adminOverride:
+          enabled: true
+          from: token
+          type: claim
+          claimName: org-admin
+          claimValue: "true"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_basicauthspec"><a class="anchor" href="#_basicauthspec"></a>BasicAuthSpec</h3>
+<div class="paragraph">
+<p>Configure basic authentication for client credentials:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable client credentials basic authentication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cacheExpiration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Token cache expiration time (e.g., <code>25m</code>, <code>1h</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    auth:
+      basicAuth:
+        enabled: true
+        cacheExpiration: 25m</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_authtlsspec"><a class="anchor" href="#_authtlsspec"></a>AuthTLSSpec</h3>
+<div class="paragraph">
+<p>Configure TLS for OIDC connections:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tlsVerificationType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLS verification type: <code>all</code>, <code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>all</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>truststoreSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the TLS truststore (PKCS12 format). Default key: <code>ca.p12</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>truststorePasswordSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the truststore password. Default key: <code>ca.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    auth:
+      tls:
+        tlsVerificationType: all
+        truststoreSecretRef:
+          name: keycloak-ca-cert
+          key: ca.p12
+        truststorePasswordSecretRef:
+          name: keycloak-ca-cert
+          key: ca.password</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="operator-ingress-reference_registry"><a class="anchor" href="#operator-ingress-reference_registry"></a>Ingress configuration reference</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>ingress</code> section is available for both <code>spec.app</code> and <code>spec.ui</code> components.</p>
+</div>
+<div class="sect2">
+<h3 id="_ingressspec"><a class="anchor" href="#_ingressspec"></a>IngressSpec</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the operator should manage an Ingress resource. Set to <code>false</code> to create your own Ingress</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>host</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hostname for the Ingress. If empty, the operator will not create an Ingress resource</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>""</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ingressClassName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IngressClass to use for the Ingress resource</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>annotations</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Additional annotations for the Ingress resource</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map[String]String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{}</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    ingress:
+      host: registry-api.example.com
+      ingressClassName: nginx
+      annotations:
+        nginx.org/proxy-connect-timeout: "30s"
+  ui:
+    ingress:
+      host: registry-ui.example.com
+      ingressClassName: nginx
+      annotations:
+        nginx.org/proxy-connect-timeout: "30s"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_secretkeyref"><a class="anchor" href="#_secretkeyref"></a>SecretKeyRef</h3>
+<div class="paragraph">
+<p>Many configuration fields use <code>SecretKeyRef</code> to reference Kubernetes Secrets:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the Secret</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>key</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Key within the Secret containing the target data</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Field-specific default (e.g., <code>password</code>, <code>ca.p12</code>)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">password:
+  name: db-credentials
+  key: db-password</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_for_developers"><a class="anchor" href="#_for_developers"></a>For Developers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Java model classes for the <code>ApicurioRegistry3</code> custom resource are available as a Maven artifact:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+    &lt;artifactId&gt;apicurio-registry-operator-model&lt;/artifactId&gt;
+    &lt;version&gt;3.1.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and can be used with the <a href="https://github.com/fabric8io/kubernetes-client">Fabric8 Kubernetes Client library</a> to programmatically create and manage Apicurio Registry Operator resources.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For deployment examples, see <a href="assembly-deploying-registry-operator.html" class="page">Deploying Apicurio Registry using the Operator</a>.</p>
+</li>
+<li>
+<p>For Kubernetes PodTemplateSpec documentation, see
+<a href="https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-template-v1/#PodTemplateSpec" class="bare">https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-template-v1/#PodTemplateSpec</a></p>
+</li>
+<li>
+<p>For Kubernetes EnvVar documentation, see
+<a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.32/#envvar-v1-core" class="bare">https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.32/#envvar-v1-core</a></p>
+</li>
+<li>
+<p>You can also explore the <a href="https://github.com/Apicurio/apicurio-registry/tree/3.1.0/operator/model/src/main/java/io/apicurio/registry/operator/api/v1">Apicurio Registry Operator Java model source code in GitHub</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.1.x/getting-started/assembly-operator-config-reference.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
