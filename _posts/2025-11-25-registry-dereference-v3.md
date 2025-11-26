@@ -1,14 +1,16 @@
 ---
 layout: post
-title: "Apicurio Registry - JSON Schema dereference"
+title: "Apicurio Registry - JSON Schema and OpenAPI dereference"
 date:   2025-11-25 16:00:00
 author: carles
-categories: registry openapi jsonchema asyncapi avro
+categories: registry openapi jsonschema asyncapi avro
 ---
 
 Apicurio Registry allows to manage artifacts with references as shown in the [documentation](https://www.apicur.io/registry/docs/apicurio-registry/3.0.x/getting-started/assembly-managing-registry-artifacts-api.html).
 One of the cool features we've added on top of this is the possibility of using a dereference parameter for certain API endpoints that optionally allows you to fetch the full content of an artifact with all the references inlined within the same content.
 This is especially useful in certain contexts to reduce the number of HTTP requests in the Kafka Serializers and Deserializers, as you will see in this blog.
+
+The dereference feature is supported for Avro, JSON Schema, Protobuf, OpenAPI, and AsyncAPI artifact types.
 
 ---
 
@@ -27,10 +29,6 @@ where the main schema _citizen.json_ is registered with all the references in th
       city
 ```
 
-Since an image is way better than trying to describe it, this is the structure in the file system:
-
-![Registry (before)](/images/posts/registry-dereference/file-system.png)
-
 In the code example there are
 also [java classes](https://github.com/Apicurio/apicurio-registry/tree/main/examples/serdes-with-references/src/main/java/io/apicurio/registry/examples/references/model)
 that represent each of the objects we have in the structure, so we can use them when producing Kafka messages. There is
@@ -40,7 +38,7 @@ Using the REST API
 ====
 
 Although the example above uses the Apicurio Registry Java client to register the full hierarchy of schemas, it's also
-possible to use the REST API. Note that, in Apicurio Registry v3, when an artifact with references is created, the request body follows a new structured format with `artifactId`, `artifactType`, and `firstVersion` containing the content and references. Here's a set of Curl commands that delivers this result:
+possible to use the REST API. Note that, in Apicurio Registry v3, when an artifact with references is created, the request body follows a structured format with `artifactId`, `artifactType`, and `firstVersion` containing the content and references. Here's a set of Curl commands that delivers this result:
 
 First we must start creating the leaves, in this case, the city schema:
 ```
@@ -166,6 +164,63 @@ curl 'http://localhost:8080/apis/registry/v3/groups/default/artifacts/citizen/ve
 ```
 
 ---
+OpenAPI dereference
+===
+
+The dereference feature also works for OpenAPI specifications. OpenAPI specs commonly use `$ref` to reference external schema components, and the dereference parameter allows you to inline those references.
+
+Here's an example of how to register OpenAPI specs with references:
+
+First, create a shared schema component:
+```
+//Creates the address types OpenAPI component
+curl -X POST 'http://localhost:8080/apis/registry/v3/groups/default/artifacts' \
+-H 'Content-Type: application/json' \
+-d '{
+  "artifactId": "address-types",
+  "artifactType": "OPENAPI",
+  "firstVersion": {
+    "content": {
+      "content": "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Address Types\",\"version\":\"1.0.0\"},\"paths\":{},\"components\":{\"schemas\":{\"Address\":{\"title\":\"Address\",\"type\":\"object\",\"properties\":{\"street\":{\"type\":\"string\",\"description\":\"Street address\"},\"city\":{\"type\":\"string\",\"description\":\"City name\"},\"zipCode\":{\"type\":\"string\",\"description\":\"Postal code\"}}}}}}",
+      "contentType": "application/json"
+    }
+  }
+}'
+```
+
+Then create an API that references the address component:
+```
+//Creates the User API with reference to address
+curl -X POST 'http://localhost:8080/apis/registry/v3/groups/default/artifacts' \
+-H 'Content-Type: application/json' \
+-d '{
+  "artifactId": "user-api",
+  "artifactType": "OPENAPI",
+  "firstVersion": {
+    "content": {
+      "content": "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"User API\",\"version\":\"1.0.0\"},\"paths\":{\"/users\":{\"get\":{\"summary\":\"List users\",\"operationId\":\"getUsers\",\"responses\":{\"200\":{\"description\":\"Success\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/User\"}}}}}}}}},\"components\":{\"schemas\":{\"User\":{\"title\":\"User\",\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"address\":{\"$ref\":\"#/components/schemas/Address\"}}},\"Address\":{\"$ref\":\"address-types.json#/components/schemas/Address\"}}}}",
+      "contentType": "application/json",
+      "references": [
+        {
+          "name": "address-types.json#/components/schemas/Address",
+          "groupId": "default",
+          "artifactId": "address-types",
+          "version": "1"
+        }
+      ]
+    }
+  }
+}'
+```
+
+You can then fetch the dereferenced OpenAPI specification:
+```
+curl 'http://localhost:8080/apis/registry/v3/groups/default/artifacts/user-api/versions/1/content?references=DEREFERENCE'
+```
+
+Note that OpenAPI dereferencing works by inlining the referenced schemas into the `components/schemas` section of the specification.
+
+---
 Referencing options
 ===
 
@@ -207,7 +262,7 @@ Note that, even though referencing a whole schema definition is the most common 
 ```
 With definitions for both an identifier and the city objects. Then we might decide that we want to have a separate schema that points to an entire definition, like the one below:
 
-```
+```json
 {
   "$id": "https://example.com/citizen.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -242,7 +297,7 @@ With definitions for both an identifier and the city objects. Then we might deci
 
 Or we might decide to just reference a single property inside a schema definition, like the schema below does:
 
-```
+```json
 {
   "$id": "https://example.com/citizen.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -277,7 +332,7 @@ Or we might decide to just reference a single property inside a schema definitio
 
 The three options work exactly the same way when it comes to registering those schemas using the REST API as if we were registering a schema that references another. First we must register the schema that will be referenced, in this case, the one with the definitions:
 
-```json
+```
 curl -X POST 'http://localhost:8080/apis/registry/v3/groups/default/artifacts' \
 -H 'Content-Type: application/json' \
 -d '{
@@ -413,7 +468,7 @@ This is especially important for dereferencing content, since the final result w
 
 Whereas in the second scenario, the property one, just the city name will be inlined:
 
-```
+```json
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Citizen",
