@@ -301,6 +301,9 @@ Kubernetes:</p>
 <p><a href="#deploying-registry-postgresql_registry">Deploying Apicurio Registry with PostgreSQL storage</a></p>
 </li>
 <li>
+<p><a href="#deploying-registry-mysql_registry">Deploying Apicurio Registry with MySQL storage</a></p>
+</li>
+<li>
 <p><a href="#deploying-registry-kafkasql_registry">Deploying Apicurio Registry with KafkaSQL storage</a></p>
 </li>
 <li>
@@ -594,6 +597,110 @@ the database.</p>
 <li>
 <p>For information on PostgreSQL Operators available on OpenShift, see <a href="assembly-installing-registry-storage-openshift.html#installing-postgresql-operatorhub_registry" class="page">Installing a PostgreSQL database from the OpenShift OperatorHub</a>
 in <a href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-registry-mysql_registry"><a class="anchor" href="#deploying-registry-mysql_registry"></a>Deploying Apicurio Registry with MySQL storage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section explains how to deploy Apicurio Registry with MySQL database storage. This configuration is suitable
+for production environments.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have cluster administrator access to an Kubernetes cluster.</p>
+</li>
+<li>
+<p>You must have already installed the Apicurio Registry Operator. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
+</li>
+<li>
+<p>You must have a MySQL database available with a database created for Apicurio Registry.</p>
+</li>
+<li>
+<p>You must have created a Kubernetes Secret containing the MySQL database password.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create a Secret containing the database password:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-credentials
+type: Opaque
+stringData:
+  password: your-database-password</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In the Kubernetes web console, click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry3</strong> &gt;
+<strong>Create ApicurioRegistry3</strong>.</p>
+</li>
+<li>
+<p>Paste in the following custom resource definition, adjusting the values for your environment:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry-mysql
+spec:
+  app:
+    storage:
+      type: mysql
+      sql:
+        dataSource:
+          url: jdbc:mysql://mysql.my-project.svc:3306/registry
+          username: registry_user
+          password:
+            name: mysql-credentials
+            key: password
+    ingress:
+      host: registry.example.com
+  ui:
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Update the <code>url</code> to match your MySQL service name, namespace, port, and database name. Update the
+<code>username</code> to match your database user.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Click <strong>Create</strong> and wait for the Apicurio Registry deployment to be created.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Access the Apicurio Registry web console and create a test artifact to verify that data is being persisted to
+the database.</p>
+</li>
+<li>
+<p>Restart the Apicurio Registry pod and verify that the artifact still exists, confirming that data is persisted.</p>
 </li>
 </ul>
 </div>
