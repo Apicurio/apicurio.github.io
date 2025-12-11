@@ -74,18 +74,19 @@ Updating our Protobuf support no longer requires waiting for a third-party team 
 
 We ran an apples-to-apples benchmark comparing both implementations using the same operation: `FileDescriptorUtils.protoFileToFileDescriptor()` which parses a schema string and produces a fully resolved `FileDescriptor`.
 
-| Schema Type | Old (Wire v3.1.2) | New (protobuf4j) | Difference |
-|-------------|-------------------|------------------|------------|
-| Simple (UUID) | 3.417 ms/op | 3.156 ms/op | **protobuf4j 8% faster** |
-| Complex (Order) | 2.897 ms/op | 2.880 ms/op | **protobuf4j 0.6% faster** |
+| Schema Type | Old (Wire v3.1.2) | New (protobuf4j) | Improvement |
+|-------------|-------------------|------------------|-------------|
+| Simple (UUID) | 3.678 ms/op | 1.342 ms/op | **2.7x faster** |
+| Complex (Order) | 3.189 ms/op | 2.107 ms/op | **1.5x faster** |
 
-**Key Finding: protobuf4j matches or beats Wire performance while providing 100% spec compliance.**
+**Key Finding: protobuf4j is significantly faster than Wire while providing 100% spec compliance.**
 
-The results show that running the canonical C++ protoc via WebAssembly is competitive with a pure Java re-implementation. The WASM boundary crossing overhead is minimal thanks to:
+This performance improvement comes from several optimizations:
 
-1. **Chicory's AOT compilation** - WASM bytecode is compiled to JVM bytecode for near-native performance
-2. **Efficient memory management** - protobuf4j optimizes WASM memory operations
-3. **No serialization overhead** - strings are passed directly via WASM memory
+1. **Context pooling** - Reuse of virtual filesystems and WASM instances between compilations
+2. **Minimal compilation scope** - Only compile files that are actually needed
+3. **Chicory's AOT compilation** - WASM bytecode is compiled to JVM bytecode for near-native performance
+4. **Efficient memory management** - protobuf4j optimizes WASM memory operations
 
 ---
 
@@ -108,6 +109,6 @@ We built a dedicated compatibility module that shades the old wire-schema serial
 
 Moving to protobuf4j represents a maturity milestone for Apicurio Registry. We are moving away from "mimicking" standard behaviors to "embedding" them. This ensures that as we scale, our foundation is as reliable as the Protocol Buffers spec itself.
 
-The result: **100% spec compliance with equal or better performance, and zero operational headaches**.
+The result: **100% spec compliance, up to 2.7x faster performance, and zero operational headaches**.
 
 We encourage the community to explore these changes, provide feedback, and contribute. For more details, check out the [pull request on GitHub](https://github.com/Apicurio/apicurio-registry/pull/6926).
