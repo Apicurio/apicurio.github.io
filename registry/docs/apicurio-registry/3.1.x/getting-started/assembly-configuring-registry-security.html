@@ -299,6 +299,9 @@
 <li>
 <p><a href="#registry-security-settings_registry">Apicurio Registry authentication and authorization configuration options</a></p>
 </li>
+<li>
+<p><a href="#registry-cors-configuration_registry">Configuring Apicurio Registry Cross-Origin Resource Sharing (CORS)</a></p>
+</li>
 </ul>
 </div>
 <div class="admonitionblock note">
@@ -1366,6 +1369,141 @@ calls to the REST API, set the following options to <code>true</code>:</p>
 </li>
 <li>
 <p>For details on configuring custom authentication for Apicurio Registry, the see <a href="https://quarkus.io/guides/security-openid-connect-web-authentication">Quarkus Open ID Connect documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-cors-configuration_registry"><a class="anchor" href="#registry-cors-configuration_registry"></a>Configuring Apicurio Registry Cross-Origin Resource Sharing (CORS)</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Cross-Origin Resource Sharing (CORS) is a browser security feature that controls how web applications running at one origin can request resources from a different origin. Apicurio Registry includes built-in CORS support that you can configure to allow the Apicurio Registry web console or other client applications to access the Apicurio Registry REST API from different domains.</p>
+</div>
+<div class="paragraph">
+<p>CORS configuration in Apicurio Registry is based on the underlying Quarkus HTTP CORS filter. By default, Apicurio Registry enables CORS and allows requests from <code><a href="http://localhost:8888" class="bare">http://localhost:8888</a></code> and <code><a href="http://127.0.0.1:8888" class="bare">http://127.0.0.1:8888</a></code> for local development.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Procedure</div>
+<p>Configure the following environment variables to customize CORS behavior for your Apicurio Registry deployment:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 18. Configuration for Apicurio Registry CORS</caption>
+<colgroup>
+<col style="width: 30.7692%;">
+<col style="width: 46.1538%;">
+<col style="width: 23.077%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_CORS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables or disables the CORS filter. Set to <code>true</code> to enable CORS support.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_CORS_ORIGINS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A comma-separated list of allowed origins for CORS requests. Use <code>*</code> to allow all origins, or specify explicit origins such as <code>https://my-ui.example.com</code>. For multiple origins, use a comma-separated list, for example: <code>https://ui1.example.com,\https://ui2.example.com</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:8888,http://127.0.0.1:8888" class="bare">http://localhost:8888,http://127.0.0.1:8888</a></code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_CORS_METHODS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A comma-separated list of HTTP methods allowed for CORS requests.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET,PUT,POST,PATCH,DELETE,OPTIONS</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_CORS_HEADERS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A comma-separated list of HTTP headers allowed in CORS requests. This includes custom Apicurio Registry headers used for artifact metadata.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See note below</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The default allowed headers include: <code>x-registry-name</code>, <code>x-registry-name-encoded</code>, <code>x-registry-description</code>, <code>x-registry-description-encoded</code>, <code>x-registry-version</code>, <code>x-registry-artifactid</code>, <code>x-registry-artifacttype</code>, <code>x-registry-hash-algorithm</code>, <code>x-registry-content-hash</code>, <code>access-control-request-method</code>, <code>access-control-allow-credentials</code>, <code>access-control-allow-origin</code>, <code>access-control-allow-headers</code>, <code>authorization</code>, <code>content-type</code>, <code>content-encoding</code>, <code>user-agent</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Example: Allow all origins (development only)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
+  QUARKUS_HTTP_CORS_ORIGINS: "*"</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Using <code>*</code> to allow all origins is not recommended for production deployments. Always specify explicit allowed origins in production environments.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Example: Allow specific origins (production)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
+  QUARKUS_HTTP_CORS_ORIGINS: "https://registry-ui.example.com,https://admin.example.com"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Example: Kubernetes operator configuration</div>
+<p>If you are using the Apicurio Registry Operator, you can configure CORS in the <code>ApicurioRegistry3</code> custom resource:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: my-registry
+spec:
+  app:
+    env:
+      - name: QUARKUS_HTTP_CORS_ORIGINS
+        value: https://ui.example.com</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When using the Apicurio Registry Operator with an Ingress configured for the UI component, the operator automatically configures CORS allowed origins based on the Ingress host. If you explicitly set <code>QUARKUS_HTTP_CORS_ORIGINS</code> in the CR, your configuration takes precedence.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For detailed information about all available Quarkus CORS configuration options, see the <a href="https://quarkus.io/guides/http-reference#cors-filter">Quarkus HTTP Reference - CORS Filter</a> documentation.</p>
 </li>
 </ul>
 </div>
