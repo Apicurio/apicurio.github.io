@@ -358,6 +358,110 @@ see <a href="assembly-installing-registry-storage-openshift.html">Installing Api
 <p>Apicurio Registry 3.x has changed a number of configuration options and added some new ones.  Options you may be using when deploying
 2.x are likely still available, but may have been renamed.</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_serdes_id_encoding_has_changed"><a class="anchor" href="#_serdes_id_encoding_has_changed"></a>SerDes ID encoding has changed</h3>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This is a critical breaking change that affects Kafka message compatibility.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In Apicurio Registry 2.x, the SerDes libraries used <strong>8 bytes</strong> (long) to encode schema identifiers in Kafka messages, and used the <code>globalId</code> by default. In Apicurio Registry 3.x, the SerDes libraries now use <strong>4 bytes</strong> (int) to encode identifiers and use the <code>contentId</code> by default. This change aligns with the Confluent Schema Registry wire format.</p>
+</div>
+<div class="paragraph">
+<p>This means that:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Kafka messages produced with 2.x SerDes cannot be consumed by 3.x SerDes</strong> (and vice versa) without additional configuration.</p>
+</li>
+<li>
+<p>Existing Kafka topics with messages serialized using 2.x SerDes will fail to deserialize with 3.x SerDes unless you configure backward compatibility.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_configuring_backward_compatibility"><a class="anchor" href="#_configuring_backward_compatibility"></a>Configuring backward compatibility</h4>
+<div class="paragraph">
+<p>To consume messages that were produced using Apicurio Registry 2.x SerDes, you must configure your 3.x consumers to use the legacy 8-byte ID handler:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">props.put("apicurio.registry.id-handler", "io.apicurio.registry.serde.Legacy8ByteIdHandler");
+props.put("apicurio.registry.use-id", "globalId");</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_summary_of_id_handling_changes"><a class="anchor" href="#_summary_of_id_handling_changes"></a>Summary of ID handling changes</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Setting</th>
+<th class="tableblock halign-left valign-top">Apicurio Registry 2.x Default</th>
+<th class="tableblock halign-left valign-top">Apicurio Registry 3.x Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8 bytes (long)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4 bytes (int)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID handler class</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Legacy8ByteIdHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Default4ByteIdHandler</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>globalId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentId</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_migration_strategies"><a class="anchor" href="#_migration_strategies"></a>Migration strategies</h4>
+<div class="paragraph">
+<p>There are two approaches to handle this breaking change:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Configure 3.x SerDes for backward compatibility</strong> (recommended for existing topics): Use the <code>Legacy8ByteIdHandler</code> configuration shown above. This allows 3.x consumers to read messages produced by 2.x producers.</p>
+</li>
+<li>
+<p><strong>Migrate to new format</strong> (recommended for new deployments): Accept the new 4-byte format. This requires that all producers and consumers are upgraded to 3.x simultaneously, or that you create new Kafka topics for 3.x usage.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The 4-byte format is more efficient and aligns with the Confluent Schema Registry wire format, making interoperability easier.
+</td>
+</tr>
+</table>
+</div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
@@ -365,6 +469,7 @@ see <a href="assembly-installing-registry-storage-openshift.html">Installing Api
 <p>For more details on the v3 REST API, see the <a href="../assets-attachments/registry-rest-api.htm">Registry REST API documentation</a>.</p>
 </li>
 </ul>
+</div>
 </div>
 </div>
 </div>
@@ -503,6 +608,27 @@ see <a href="assembly-installing-registry-storage-openshift.html">Installing Api
 </div>
 <div class="paragraph">
 <p>In Apicurio Registry 3.x, the SerDes libraries have been significantly refactored to make them re-usable for other messaging platforms like Apache Pulsar, that&#8217;s why the Apache Kafka specific ones have been renamed.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The SerDes ID encoding format has changed from 8 bytes to 4 bytes. See <a href="#registry-migration_registry">SerDes ID encoding has changed</a> for details on configuring backward compatibility with existing Kafka topics.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>If you have existing Kafka topics with messages serialized using Apicurio Registry 2.x SerDes, configure the legacy ID handler:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">props.put("apicurio.registry.id-handler", "io.apicurio.registry.serde.Legacy8ByteIdHandler");
+props.put("apicurio.registry.use-id", "globalId");</code></pre>
+</div>
 </div>
 </li>
 <li>
