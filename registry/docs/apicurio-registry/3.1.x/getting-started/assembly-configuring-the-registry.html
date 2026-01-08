@@ -286,12 +286,15 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter explains how to set important configuration options for your Apicurio Registry deployment. This includes features such as the Apicurio Registry web console, logging, and health checks:</p>
+<p>This chapter explains how to set important configuration options for your Apicurio Registry deployment. This includes features such as the Apicurio Registry web console, logging, health checks, and observability:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p><a href="#configuring-registry-ui_registry">Configuring the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="#configuring-registry-observability_registry">Configuring Apicurio Registry observability with OpenTelemetry</a></p>
 </li>
 <li>
 <p><a href="#configuring-liveness-readiness-probes_registry">Configuring Apicurio Registry health checks on OpenShift</a></p>
@@ -385,6 +388,166 @@ For a list of all available configuration options, see <a href="assembly-config-
 <ul>
 <li>
 <p><code>REGISTRY_FEATURE_READ_ONLY</code>: Set to <code>true</code> to enable read-only mode. Defaults to <code>false</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-registry-observability_registry"><a class="anchor" href="#configuring-registry-observability_registry"></a>Configuring Apicurio Registry observability with OpenTelemetry</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure Apicurio Registry to export telemetry data using OpenTelemetry (OTel) for comprehensive observability. This includes distributed tracing, metrics export via OTLP protocol, and log correlation with trace context.</p>
+</div>
+<div class="paragraph">
+<p>OpenTelemetry support is disabled by default. When enabled, Apicurio Registry exports telemetry data to an OpenTelemetry-compatible collector such as Jaeger, Grafana Tempo, or the OpenTelemetry Collector.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have already installed Apicurio Registry.</p>
+</li>
+<li>
+<p>You have an OpenTelemetry-compatible backend available (for example, Jaeger, Grafana Tempo, or OpenTelemetry Collector).</p>
+</li>
+</ul>
+</div>
+<h3 id="_enabling_opentelemetry" class="discrete">Enabling OpenTelemetry</h3>
+<div class="paragraph">
+<p>To enable OpenTelemetry observability, configure the following environment variables:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 1. Required environment variables for OpenTelemetry</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OTEL_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to enable OpenTelemetry. Default is <code>false</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OTEL_EXPORTER_OTLP_ENDPOINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL of your OpenTelemetry collector. For example, <code><a href="http://jaeger:4317" class="bare">http://jaeger:4317</a></code> for gRPC or <code><a href="http://jaeger:4318" class="bare">http://jaeger:4318</a></code> for HTTP.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">Example: Enabling OpenTelemetry with Jaeger</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
+  QUARKUS_OTEL_ENABLED: "true"
+  QUARKUS_OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4317"</code></pre>
+</div>
+</div>
+<h3 id="_configuring_trace_sampling_for_production" class="discrete">Configuring trace sampling for production</h3>
+<div class="paragraph">
+<p>In production environments, you should configure trace sampling to reduce overhead and control the volume of trace data:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 2. Environment variables for trace sampling</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OTEL_TRACES_SAMPLER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The sampling strategy. Use <code>parentbased_traceidratio</code> for production.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OTEL_TRACES_SAMPLER_ARG</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The sampling ratio (0.0 to 1.0). A value of <code>0.1</code> samples 10% of traces.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">Example: Production sampling configuration (10% of traces)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
+  QUARKUS_OTEL_ENABLED: "true"
+  QUARKUS_OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"
+  QUARKUS_OTEL_TRACES_SAMPLER: "parentbased_traceidratio"
+  QUARKUS_OTEL_TRACES_SAMPLER_ARG: "0.1"</code></pre>
+</div>
+</div>
+<h3 id="_configuring_structured_logging_with_trace_context" class="discrete">Configuring structured logging with trace context</h3>
+<div class="paragraph">
+<p>When using JSON logging format, Apicurio Registry automatically includes trace context (trace ID and span ID) in log entries. This enables correlation between logs and traces.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example: Enabling structured logging with trace context</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
+  QUARKUS_OTEL_ENABLED: "true"
+  QUARKUS_LOG_CONSOLE_JSON: "true"</code></pre>
+</div>
+</div>
+<h3 id="_opentelemetry_features_in_apicurio_registry" class="discrete">OpenTelemetry features in Apicurio Registry</h3>
+<div class="paragraph">
+<p>When OpenTelemetry is enabled, Apicurio Registry provides the following observability features:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Distributed tracing</strong>: All REST API requests are automatically traced with spans containing request details, path parameters, and Apicurio-specific attributes such as <code>groupId</code>, <code>artifactId</code>, and <code>version</code>.</p>
+</li>
+<li>
+<p><strong>Storage layer tracing</strong>: All storage operations create child spans, enabling you to trace the complete request flow from REST API to database.</p>
+</li>
+<li>
+<p><strong>Kafka tracing</strong>: When using KafkaSQL storage, Kafka operations are automatically traced with context propagation.</p>
+</li>
+<li>
+<p><strong>Custom metrics</strong>: OpenTelemetry metrics for artifact operations, schema validations, and search requests are exported alongside existing Prometheus metrics.</p>
+</li>
+<li>
+<p><strong>Log correlation</strong>: When JSON logging is enabled, trace context is automatically injected into log entries for easy correlation.</p>
+</li>
+</ul>
+</div>
+<h3 id="_backwards_compatibility" class="discrete">Backwards compatibility</h3>
+<div class="paragraph">
+<p>OpenTelemetry support is fully backwards compatible:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The existing Prometheus metrics endpoint (<code>/q/metrics</code>) remains available and unchanged.</p>
+</li>
+<li>
+<p>Health check endpoints (<code>/q/health/*</code>) continue to work as before.</p>
+</li>
+<li>
+<p>All existing Micrometer-based metrics continue to function.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://opentelemetry.io/docs/">OpenTelemetry Documentation</a></p>
+</li>
+<li>
+<p><a href="https://quarkus.io/guides/opentelemetry">Quarkus OpenTelemetry Guide</a></p>
+</li>
+<li>
+<p><a href="https://www.jaegertracing.io/docs/">Jaeger Documentation</a></p>
 </li>
 </ul>
 </div>
@@ -502,7 +665,7 @@ The following environment variables are provided for reference only. The default
 </div>
 <h3 id="_liveness_environment_variables" class="discrete">Liveness environment variables</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 1. Environment variables for Apicurio Registry liveness probes</caption>
+<caption class="title">Table 3. Environment variables for Apicurio Registry liveness probes</caption>
 <colgroup>
 <col style="width: 29.4117%;">
 <col style="width: 29.4117%;">
@@ -558,7 +721,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 </div>
 <h3 id="_readiness_environment_variables" class="discrete">Readiness environment variables</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 2. Environment variables for Apicurio Registry readiness probes</caption>
+<caption class="title">Table 4. Environment variables for Apicurio Registry readiness probes</caption>
 <colgroup>
 <col style="width: 30.7692%;">
 <col style="width: 38.4615%;">
