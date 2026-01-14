@@ -305,6 +305,9 @@
 <li>
 <p><a href="#adding-artifact-references-automatically-using-maven-plugin_registry">Adding artifact references automatically using the Apicurio Registry Maven plug-in</a></p>
 </li>
+<li>
+<p><a href="#configuring-tls-maven-plugin_registry">Configuring TLS and authentication for the Maven plug-in</a></p>
+</li>
 </ul>
 </div>
 <div class="ulist">
@@ -991,6 +994,404 @@ These features provide early access to upcoming product features, enabling custo
 <p>For more examples of artifact references, see the section on configuring each artifact type in <a href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>.</p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-tls-maven-plugin_registry"><a class="anchor" href="#configuring-tls-maven-plugin_registry"></a>Configuring TLS and authentication for the Maven plug-in</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When connecting to a TLS-enabled Apicurio Registry instance, you can configure the Maven plug-in to use SSL/TLS for secure communication. The plug-in supports various trust store and key store formats, as well as multiple authentication methods.</p>
+</div>
+<div class="sect2">
+<h3 id="_tls_configuration_options"><a class="anchor" href="#_tls_configuration_options"></a>TLS configuration options</h3>
+<div class="paragraph">
+<p>The following table describes the TLS-related configuration options available in the Maven plug-in:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Trust store configuration</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustStorePath</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the trust store file containing the CA certificate(s) to trust. Supports JKS, PKCS12, and PEM formats. The format is auto-detected from the file extension (<code>.jks</code>, <code>.p12</code>/<code>.pfx</code>, <code>.pem</code>/<code>.crt</code>/<code>.cer</code>) unless explicitly specified.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustStorePassword</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password for the trust store. Required for JKS and PKCS12 formats.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustStoreType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explicit trust store type: <code>JKS</code>, <code>PKCS12</code>, or <code>PEM</code>. If not specified, the type is auto-detected from the file extension.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Key store configuration for mutual TLS (mTLS)</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keyStorePath</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the key store file containing the client certificate for mTLS authentication. Supports JKS, PKCS12, and PEM formats.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keyStorePassword</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password for the key store. Required for JKS and PKCS12 formats.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keyStoreType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explicit key store type: <code>JKS</code>, <code>PKCS12</code>, or <code>PEM</code>. If not specified, the type is auto-detected from the file extension.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keyStorePemKeyPath</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the PEM private key file. Required when using PEM format for mTLS, where <code>keyStorePath</code> points to the certificate file.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Additional SSL options</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustAll</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If set to <code>true</code>, trust all SSL/TLS certificates without validation. <strong>WARNING:</strong> This should only be used for development or testing purposes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>verifyHostname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If set to <code>false</code>, disable hostname verification in SSL/TLS connections. <strong>WARNING:</strong> Disabling this reduces security and should only be used for development or testing.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_example_tls_with_pkcs12_trust_store"><a class="anchor" href="#_example_tls_with_pkcs12_trust_store"></a>Example: TLS with PKCS12 trust store</h3>
+<div class="paragraph">
+<p>The following example shows how to configure the Maven plug-in to connect to a TLS-enabled Apicurio Registry using a PKCS12 trust store:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+  &lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;${apicurio.version}&lt;/version&gt;
+  &lt;executions&gt;
+    &lt;execution&gt;
+      &lt;phase&gt;generate-sources&lt;/phase&gt;
+      &lt;goals&gt;
+        &lt;goal&gt;register&lt;/goal&gt;
+      &lt;/goals&gt;
+      &lt;configuration&gt;
+          &lt;registryUrl&gt;https://registry.example.com:8443/apis/registry/v3&lt;/registryUrl&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+          &lt;trustStorePath&gt;${project.basedir}/certs/truststore.p12&lt;/trustStorePath&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+          &lt;trustStorePassword&gt;${env.TRUSTSTORE_PASSWORD}&lt;/trustStorePassword&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+          &lt;artifacts&gt;
+              &lt;artifact&gt;
+                  &lt;groupId&gt;default&lt;/groupId&gt;
+                  &lt;artifactId&gt;MySchema&lt;/artifactId&gt;
+                  &lt;file&gt;${project.basedir}/src/main/resources/schemas/schema.avsc&lt;/file&gt;
+              &lt;/artifact&gt;
+          &lt;/artifacts&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+  &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Use <code>https://</code> for the registry URL when connecting with TLS.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Specify the path to your PKCS12 trust store containing the CA certificate(s).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Use environment variables for passwords to avoid storing secrets in your <code>pom.xml</code>.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_tls_with_basic_authentication"><a class="anchor" href="#_example_tls_with_basic_authentication"></a>Example: TLS with basic authentication</h3>
+<div class="paragraph">
+<p>The following example shows how to combine TLS with basic authentication:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+  &lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;${apicurio.version}&lt;/version&gt;
+  &lt;executions&gt;
+    &lt;execution&gt;
+      &lt;phase&gt;generate-sources&lt;/phase&gt;
+      &lt;goals&gt;
+        &lt;goal&gt;register&lt;/goal&gt;
+      &lt;/goals&gt;
+      &lt;configuration&gt;
+          &lt;registryUrl&gt;https://registry.example.com:8443/apis/registry/v3&lt;/registryUrl&gt;
+          &lt;trustStorePath&gt;${project.basedir}/certs/truststore.p12&lt;/trustStorePath&gt;
+          &lt;trustStorePassword&gt;${env.TRUSTSTORE_PASSWORD}&lt;/trustStorePassword&gt;
+          &lt;username&gt;${env.REGISTRY_USERNAME}&lt;/username&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+          &lt;password&gt;${env.REGISTRY_PASSWORD}&lt;/password&gt;
+          &lt;artifacts&gt;
+              &lt;artifact&gt;
+                  &lt;groupId&gt;default&lt;/groupId&gt;
+                  &lt;artifactId&gt;MySchema&lt;/artifactId&gt;
+                  &lt;file&gt;${project.basedir}/src/main/resources/schemas/schema.avsc&lt;/file&gt;
+              &lt;/artifact&gt;
+          &lt;/artifacts&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+  &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Combine TLS configuration with basic authentication credentials.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_tls_with_oauth2_authentication"><a class="anchor" href="#_example_tls_with_oauth2_authentication"></a>Example: TLS with OAuth2 authentication</h3>
+<div class="paragraph">
+<p>The following example shows how to configure TLS with OAuth2/OIDC client credentials authentication:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+  &lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;${apicurio.version}&lt;/version&gt;
+  &lt;executions&gt;
+    &lt;execution&gt;
+      &lt;phase&gt;generate-sources&lt;/phase&gt;
+      &lt;goals&gt;
+        &lt;goal&gt;register&lt;/goal&gt;
+      &lt;/goals&gt;
+      &lt;configuration&gt;
+          &lt;registryUrl&gt;https://registry.example.com:8443/apis/registry/v3&lt;/registryUrl&gt;
+          &lt;trustStorePath&gt;${project.basedir}/certs/truststore.p12&lt;/trustStorePath&gt;
+          &lt;trustStorePassword&gt;${env.TRUSTSTORE_PASSWORD}&lt;/trustStorePassword&gt;
+          &lt;authServerUrl&gt;https://keycloak.example.com/realms/registry/protocol/openid-connect/token&lt;/authServerUrl&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+          &lt;clientId&gt;${env.CLIENT_ID}&lt;/clientId&gt;
+          &lt;clientSecret&gt;${env.CLIENT_SECRET}&lt;/clientSecret&gt;
+          &lt;clientScope&gt;openid&lt;/clientScope&gt;
+          &lt;artifacts&gt;
+              &lt;artifact&gt;
+                  &lt;groupId&gt;default&lt;/groupId&gt;
+                  &lt;artifactId&gt;MySchema&lt;/artifactId&gt;
+                  &lt;file&gt;${project.basedir}/src/main/resources/schemas/schema.avsc&lt;/file&gt;
+              &lt;/artifact&gt;
+          &lt;/artifacts&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+  &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify the OAuth2/OIDC token endpoint URL for authentication.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_mutual_tls_mtls"><a class="anchor" href="#_example_mutual_tls_mtls"></a>Example: Mutual TLS (mTLS)</h3>
+<div class="paragraph">
+<p>The following example shows how to configure mutual TLS where both the client and server authenticate each other using certificates:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+  &lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;${apicurio.version}&lt;/version&gt;
+  &lt;executions&gt;
+    &lt;execution&gt;
+      &lt;phase&gt;generate-sources&lt;/phase&gt;
+      &lt;goals&gt;
+        &lt;goal&gt;register&lt;/goal&gt;
+      &lt;/goals&gt;
+      &lt;configuration&gt;
+          &lt;registryUrl&gt;https://registry.example.com:8443/apis/registry/v3&lt;/registryUrl&gt;
+          &lt;trustStorePath&gt;${project.basedir}/certs/truststore.p12&lt;/trustStorePath&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+          &lt;trustStorePassword&gt;${env.TRUSTSTORE_PASSWORD}&lt;/trustStorePassword&gt;
+          &lt;keyStorePath&gt;${project.basedir}/certs/client-keystore.p12&lt;/keyStorePath&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+          &lt;keyStorePassword&gt;${env.KEYSTORE_PASSWORD}&lt;/keyStorePassword&gt;
+          &lt;artifacts&gt;
+              &lt;artifact&gt;
+                  &lt;groupId&gt;default&lt;/groupId&gt;
+                  &lt;artifactId&gt;MySchema&lt;/artifactId&gt;
+                  &lt;file&gt;${project.basedir}/src/main/resources/schemas/schema.avsc&lt;/file&gt;
+              &lt;/artifact&gt;
+          &lt;/artifacts&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+  &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Trust store to verify the server&#8217;s certificate.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Key store containing the client certificate for authentication.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_tls_with_pem_certificates"><a class="anchor" href="#_example_tls_with_pem_certificates"></a>Example: TLS with PEM certificates</h3>
+<div class="paragraph">
+<p>The following example shows how to use PEM-formatted certificates:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+  &lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;${apicurio.version}&lt;/version&gt;
+  &lt;executions&gt;
+    &lt;execution&gt;
+      &lt;phase&gt;generate-sources&lt;/phase&gt;
+      &lt;goals&gt;
+        &lt;goal&gt;register&lt;/goal&gt;
+      &lt;/goals&gt;
+      &lt;configuration&gt;
+          &lt;registryUrl&gt;https://registry.example.com:8443/apis/registry/v3&lt;/registryUrl&gt;
+          &lt;trustStorePath&gt;${project.basedir}/certs/ca-cert.pem&lt;/trustStorePath&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+          &lt;trustStoreType&gt;PEM&lt;/trustStoreType&gt;
+          &lt;artifacts&gt;
+              &lt;artifact&gt;
+                  &lt;groupId&gt;default&lt;/groupId&gt;
+                  &lt;artifactId&gt;MySchema&lt;/artifactId&gt;
+                  &lt;file&gt;${project.basedir}/src/main/resources/schemas/schema.avsc&lt;/file&gt;
+              &lt;/artifact&gt;
+          &lt;/artifacts&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+  &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>PEM certificate files do not require a password.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_mtls_with_pem_certificates"><a class="anchor" href="#_example_mtls_with_pem_certificates"></a>Example: mTLS with PEM certificates</h3>
+<div class="paragraph">
+<p>The following example shows mTLS configuration using PEM-formatted certificate and key files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+  &lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;${apicurio.version}&lt;/version&gt;
+  &lt;executions&gt;
+    &lt;execution&gt;
+      &lt;phase&gt;generate-sources&lt;/phase&gt;
+      &lt;goals&gt;
+        &lt;goal&gt;register&lt;/goal&gt;
+      &lt;/goals&gt;
+      &lt;configuration&gt;
+          &lt;registryUrl&gt;https://registry.example.com:8443/apis/registry/v3&lt;/registryUrl&gt;
+          &lt;trustStorePath&gt;${project.basedir}/certs/ca-cert.pem&lt;/trustStorePath&gt;
+          &lt;trustStoreType&gt;PEM&lt;/trustStoreType&gt;
+          &lt;keyStorePath&gt;${project.basedir}/certs/client-cert.pem&lt;/keyStorePath&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+          &lt;keyStorePemKeyPath&gt;${project.basedir}/certs/client-key.pem&lt;/keyStorePemKeyPath&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+          &lt;keyStoreType&gt;PEM&lt;/keyStoreType&gt;
+          &lt;artifacts&gt;
+              &lt;artifact&gt;
+                  &lt;groupId&gt;default&lt;/groupId&gt;
+                  &lt;artifactId&gt;MySchema&lt;/artifactId&gt;
+                  &lt;file&gt;${project.basedir}/src/main/resources/schemas/schema.avsc&lt;/file&gt;
+              &lt;/artifact&gt;
+          &lt;/artifacts&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+  &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Path to the client certificate PEM file.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Path to the client private key PEM file. Required when using PEM format for mTLS.</td>
+</tr>
+</table>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more details on using Apache Maven, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+</li>
+<li>
+<p>For a complete example with multiple TLS and authentication configurations, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/maven-plugin-tls-credentials">maven-plugin-tls-credentials demonstration example</a>.</p>
+</li>
+<li>
+<p>For a Kubernetes mTLS setup example, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/mtls-minikube">mTLS Minikube demonstration example</a>.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
