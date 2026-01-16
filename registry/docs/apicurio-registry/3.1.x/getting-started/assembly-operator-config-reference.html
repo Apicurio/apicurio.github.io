@@ -886,7 +886,7 @@ The default in-memory storage is not suitable for production environments.
 <div class="sect2">
 <h3 id="_kafkasqlauthspec"><a class="anchor" href="#_kafkasqlauthspec"></a>KafkaSqlAuthSpec</h3>
 <div class="paragraph">
-<p>Configure SASL authentication for KafkaSQL storage:</p>
+<p>Configure SASL OAuth authentication for KafkaSQL storage:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -905,45 +905,45 @@ The default in-memory storage is not suitable for production environments.
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables SASL OAuth authentication. Must be set to <code>true</code> for other auth fields to have effect.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mechanism</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SASL mechanism. Examples: <code>SCRAM-SHA-512</code>, <code>PLAIN</code>, <code>OAUTHBEARER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SASL mechanism. Use <code>OAUTHBEARER</code> for OAuth authentication.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>usernameSecretRef</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the username. Default key: <code>username</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>clientIdRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the OAuth client ID. Default key: <code>clientId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>passwordSecretRef</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the password. Default key: <code>password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>clientSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the OAuth client secret. Default key: <code>clientSecret</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>clientIdSecretRef</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the OAuth client ID (for OAUTHBEARER). Default key: <code>clientId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tokenEndpoint</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth token endpoint URI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>clientSecretSecretRef</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the OAuth client secret (for OAUTHBEARER). Default key: <code>clientSecret</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tokenEndpointUri</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth token endpoint URI (for OAUTHBEARER)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>loginHandlerClass</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The login callback handler class for OAuth authentication</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Example with SCRAM-SHA-512:</p>
+<p>Example with OAuth:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -954,14 +954,32 @@ The default in-memory storage is not suitable for production environments.
       kafkasql:
         bootstrapServers: my-cluster-kafka-bootstrap.my-project.svc:9093
         auth:
-          mechanism: SCRAM-SHA-512
-          usernameSecretRef:
-            name: kafka-credentials
-            key: username
-          passwordSecretRef:
-            name: kafka-credentials
-            key: password</code></pre>
+          enabled: true
+          mechanism: OAUTHBEARER
+          clientIdRef:
+            name: kafka-oauth-credentials
+            key: clientId
+          clientSecretRef:
+            name: kafka-oauth-credentials
+            key: clientSecret
+          tokenEndpoint: https://identity-server.example.com/token
+          loginHandlerClass: io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The operator provides first-class support for OAuth (OAUTHBEARER) authentication. For other SASL mechanisms
+such as SCRAM-SHA-512 or PLAIN, you can use custom environment variables via the <code>spec.app.env</code> field to configure
+the Kafka client properties directly. See the <a href="assembly-config-reference.html" class="page">Apicurio Registry configuration reference</a> for available
+<code>apicurio.kafkasql.*</code> configuration properties.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
