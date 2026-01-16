@@ -1169,7 +1169,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.otel.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.7</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enable or disable OpenTelemetry for distributed tracing, metrics export via OTLP, and log correlation. When enabled, Apicurio Registry exports telemetry data to an OpenTelemetry collector.</p></td>
 </tr>
@@ -1197,16 +1197,16 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.otel.logs.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.7</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable or disable exporting logs via OpenTelemetry. When enabled along with JSON logging, trace context is automatically included in log entries.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BUILD-TIME property to enable log export via OpenTelemetry. When enabled along with JSON logging, trace context is automatically included in log entries. Use <code>quarkus.otel.sdk.disabled</code> to control log export at runtime.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.otel.metrics.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.7</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable or disable exporting metrics via OpenTelemetry. This works alongside existing Prometheus metrics export.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BUILD-TIME property to enable metrics export via OpenTelemetry. This works alongside existing Prometheus metrics export. Use <code>quarkus.otel.sdk.disabled</code> to control metrics at runtime.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.otel.resource.attributes</code></p></td>
@@ -1214,6 +1214,13 @@
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.7</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Additional resource attributes to include in telemetry data, specified as comma-separated key=value pairs. Example: <code>service.version=3.0.0,deployment.environment=production</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.otel.sdk.disabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.7</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disable the OpenTelemetry SDK at runtime. Set to <code>false</code> to enable OpenTelemetry. This is the primary runtime control for enabling/disabling all telemetry signals.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.otel.service.name</code></p></td>
@@ -1227,7 +1234,7 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.7</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable or disable distributed tracing. When enabled, Apicurio Registry creates spans for REST API requests and storage operations.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BUILD-TIME property to enable distributed tracing instrumentation. When enabled, Apicurio Registry creates spans for REST API requests and storage operations. Use <code>quarkus.otel.sdk.disabled</code> to control tracing at runtime.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.otel.traces.sampler</code></p></td>
