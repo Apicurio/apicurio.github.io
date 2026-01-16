@@ -400,7 +400,7 @@ For a list of all available configuration options, see <a href="assembly-config-
 <p>You can configure Apicurio Registry to export telemetry data using OpenTelemetry (OTel) for comprehensive observability. This includes distributed tracing, metrics export via OTLP protocol, and log correlation with trace context.</p>
 </div>
 <div class="paragraph">
-<p>OpenTelemetry support is disabled by default. When enabled, Apicurio Registry exports telemetry data to an OpenTelemetry-compatible collector such as Jaeger, Grafana Tempo, or the OpenTelemetry Collector.</p>
+<p>Apicurio Registry is built with OpenTelemetry support, but individual telemetry signals (traces, metrics, logs) are disabled by default. When enabled, Apicurio Registry exports telemetry data to an OpenTelemetry-compatible collector such as Jaeger, Grafana Tempo, or the OpenTelemetry Collector.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -418,7 +418,7 @@ For a list of all available configuration options, see <a href="assembly-config-
 <p>To enable OpenTelemetry observability, configure the following environment variables:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 1. Required environment variables for OpenTelemetry</caption>
+<caption class="title">Table 1. Environment variables for enabling OpenTelemetry signals</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -431,8 +431,16 @@ For a list of all available configuration options, see <a href="assembly-config-
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OTEL_ENABLED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to enable OpenTelemetry. Default is <code>false</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OTEL_TRACES_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to enable distributed tracing. Default is <code>false</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OTEL_METRICS_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to enable metrics export via OTLP. Default is <code>false</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OTEL_LOGS_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to enable log export via OTLP. Default is <code>false</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OTEL_EXPORTER_OTLP_ENDPOINT</code></p></td>
@@ -441,11 +449,21 @@ For a list of all available configuration options, see <a href="assembly-config-
 </tbody>
 </table>
 <div class="listingblock">
-<div class="title">Example: Enabling OpenTelemetry with Jaeger</div>
+<div class="title">Example: Enabling tracing with Jaeger</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
-  QUARKUS_OTEL_ENABLED: "true"
+  QUARKUS_OTEL_TRACES_ENABLED: "true"
   QUARKUS_OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4317"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example: Enabling all telemetry signals</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
+  QUARKUS_OTEL_TRACES_ENABLED: "true"
+  QUARKUS_OTEL_METRICS_ENABLED: "true"
+  QUARKUS_OTEL_LOGS_ENABLED: "true"
+  QUARKUS_OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"</code></pre>
 </div>
 </div>
 <h3 id="_configuring_trace_sampling_for_production" class="discrete">Configuring trace sampling for production</h3>
@@ -479,7 +497,7 @@ For a list of all available configuration options, see <a href="assembly-config-
 <div class="title">Example: Production sampling configuration (10% of traces)</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
-  QUARKUS_OTEL_ENABLED: "true"
+  QUARKUS_OTEL_TRACES_ENABLED: "true"
   QUARKUS_OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"
   QUARKUS_OTEL_TRACES_SAMPLER: "parentbased_traceidratio"
   QUARKUS_OTEL_TRACES_SAMPLER_ARG: "0.1"</code></pre>
@@ -493,7 +511,7 @@ For a list of all available configuration options, see <a href="assembly-config-
 <div class="title">Example: Enabling structured logging with trace context</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
-  QUARKUS_OTEL_ENABLED: "true"
+  QUARKUS_OTEL_TRACES_ENABLED: "true"
   QUARKUS_LOG_CONSOLE_JSON: "true"</code></pre>
 </div>
 </div>
