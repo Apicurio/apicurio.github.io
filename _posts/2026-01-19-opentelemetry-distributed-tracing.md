@@ -143,6 +143,78 @@ Open http://localhost:16686 and:
 2. Click "Find Traces"
 3. Click on a trace to see the complete flow across all services
 
+# Understanding Trace Visualization and Performance Analysis
+
+When you open a trace in Jaeger, you get a powerful view into exactly how your distributed system behaves. The following screenshot shows a real trace from the batch greeting endpoint:
+
+![Jaeger Trace Visualization](/images/posts/otel/jaeger.png)
+
+## Reading the Trace
+
+The trace visualization displays a hierarchical timeline where:
+
+* **Each row represents a span** - a unit of work within a service
+* **Indentation shows parent-child relationships** - child spans are nested under their parents
+* **Bar length indicates duration** - longer bars mean more time spent
+* **Bar position shows timing** - when each operation started relative to the trace
+
+In this example trace, you can see the complete flow:
+
+1. **`greeting-producer POST /greetings/batch`** (112.6ms total) - The incoming HTTP request
+2. **`greeting-producer greetings publish`** (80.62ms) - Publishing messages to Kafka
+3. **`apicurio-registry POST /apis/registry/v3/groups/{groupId}/artifacts`** (59.27ms) - Schema registration call to Registry
+
+The Registry span expands to show internal storage operations:
+
+| Operation | Duration | Purpose |
+|-----------|----------|---------|
+| `storage.isGroupExists` | 2.57ms | Check if the artifact group exists |
+| `storage.getGlobalRules` | 538µs | Retrieve global validation rules |
+| `storage.isReadOnly` | 56µs | Check if registry is in read-only mode |
+| `storage.isReady` | 12µs | Health check |
+| `storage.createArtifact` | 15.95ms | Create the new artifact (most expensive) |
+| `storage.getArtifactVersionMetaDataByContent` | 4.25ms | Retrieve version metadata |
+| `storage.getArtifactMetaData` | 2.13ms | Get artifact metadata |
+
+## Using Traces for Performance Optimization
+
+This level of detail enables powerful performance analysis:
+
+### Identify Bottlenecks
+
+The trace immediately reveals where time is spent. In this example, `storage.createArtifact` takes 15.95ms - the largest portion of the Registry call. If you're experiencing slow schema registrations, this pinpoints exactly which operation to investigate.
+
+### Measure Latency Breakdown
+
+You can calculate the percentage of time each component contributes:
+
+* Producer processing: ~20% of total time
+* Network + Kafka: ~10%
+* Registry operations: ~53%
+* Consumer processing: ~17%
+
+### Detect Caching Effects
+
+Notice how subsequent consumer operations (`greetings process`) take only 480µs compared to the initial 7.69ms. This demonstrates schema caching in action - once a schema is fetched from Registry, it's cached locally, dramatically reducing latency for subsequent messages.
+
+### Compare Across Requests
+
+Jaeger allows you to compare traces side-by-side. You can:
+
+* Compare slow vs. fast requests to identify anomalies
+* Track performance trends over time
+* Validate that optimizations have the expected impact
+
+### Set Performance Baselines
+
+By collecting traces over time, you can establish baseline performance metrics:
+
+* **P50/P95/P99 latencies** for Registry operations
+* **Expected duration** for schema registration vs. lookup
+* **Acceptable overhead** for distributed tracing itself
+
+This data helps you set meaningful SLOs and alerts for your schema registry infrastructure.
+
 # Custom Span Creation
 
 The example demonstrates two approaches to creating custom spans for your own applications:
