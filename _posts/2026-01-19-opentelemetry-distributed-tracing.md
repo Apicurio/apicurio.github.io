@@ -147,7 +147,9 @@ Open http://localhost:16686 and:
 
 When you open a trace in Jaeger, you get a powerful view into exactly how your distributed system behaves. The following screenshot shows a real trace from the batch greeting endpoint:
 
-![Jaeger Trace Visualization](/images/posts/otel/jaeger.png)
+<p align="center">
+<img src="/images/posts/otel/jaeger.png" alt="Jaeger Trace Visualization" style="max-width: 100%; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+</p>
 
 ## Reading the Trace
 
