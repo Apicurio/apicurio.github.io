@@ -532,6 +532,92 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
 </li>
 </ul>
 </div>
+<h3 id="_performance_considerations" class="discrete">Performance considerations</h3>
+<div class="paragraph">
+<p>OpenTelemetry instrumentation adds a small performance overhead. The following table shows the measured impact when all telemetry signals are enabled with 100% sampling:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 3. Performance impact with OpenTelemetry enabled (100% sampling)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 22.2222%;">
+<col style="width: 22.2222%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Operation</th>
+<th class="tableblock halign-left valign-top">Latency Increase</th>
+<th class="tableblock halign-left valign-top">Throughput Decrease</th>
+<th class="tableblock halign-left valign-top">Impact Level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System Info</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+9% (+0.35ms)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-7%</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create Artifact</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+4% (+0.13ms)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-1%</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimal</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get Artifact</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+5% (+0.05ms)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-6%</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimal</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Search Artifacts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+1% (+0.04ms)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-1%</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimal</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List Groups</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+6% (+0.16ms)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-5%</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Key findings:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Average overhead is approximately 4-6% in throughput with 100% trace sampling.</p>
+</li>
+<li>
+<p>With the recommended 10% sampling ratio (<code>QUARKUS_OTEL_TRACES_SAMPLER_ARG=0.1</code>), the overhead is reduced to less than 1%.</p>
+</li>
+<li>
+<p>OpenTelemetry signals are disabled by default to avoid any overhead for users who do not require observability features.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To reproduce these benchmarks, run the following commands from the project root:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell"># Build the project
+./mvnw clean install -DskipTests
+
+# Run benchmark with OTEL disabled (baseline)
+./mvnw test -pl app -Dtest=OpenTelemetryPerformanceTest \
+    -DOpenTelemetryPerformanceTest=enabled
+
+# Run benchmark with OTEL enabled
+./mvnw test -pl app -Dtest=OpenTelemetryPerformanceEnabledTest \
+    -DOpenTelemetryPerformanceTest=enabled</code></pre>
+</div>
+</div>
 <h3 id="_backwards_compatibility" class="discrete">Backwards compatibility</h3>
 <div class="paragraph">
 <p>OpenTelemetry support is fully backwards compatible:</p>
@@ -677,7 +763,7 @@ The following environment variables are provided for reference only. The default
 </div>
 <h3 id="_liveness_environment_variables" class="discrete">Liveness environment variables</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 3. Environment variables for Apicurio Registry liveness probes</caption>
+<caption class="title">Table 4. Environment variables for Apicurio Registry liveness probes</caption>
 <colgroup>
 <col style="width: 29.4117%;">
 <col style="width: 29.4117%;">
@@ -733,7 +819,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 </div>
 <h3 id="_readiness_environment_variables" class="discrete">Readiness environment variables</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 4. Environment variables for Apicurio Registry readiness probes</caption>
+<caption class="title">Table 5. Environment variables for Apicurio Registry readiness probes</caption>
 <colgroup>
 <col style="width: 30.7692%;">
 <col style="width: 38.4615%;">
