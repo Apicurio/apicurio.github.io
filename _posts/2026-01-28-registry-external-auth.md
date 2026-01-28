@@ -42,7 +42,7 @@ externalized auth. Here's what's in the box:
 * **Apicurio UI** - Configured to authenticate via Keycloak OIDC
 
 The cool part is that Apicurio Registry doesn't do any authentication or authorization itself. It just
-trusts the identity headers that Envoy injects after validating the JWT and checking with OPA.  Of 
+trusts the identity headers that Envoy injects after validating the JWT and checking with OPA.  Of
 course, if you were to use this in production you would need to ensure trust between Envoy and Apicurio
 Registry (e.g. via network security or mTLS).
 
@@ -60,6 +60,35 @@ The request flow looks like this:
 6. OPA evaluates its policies based on the user's roles and the request details
 7. If authorized, Envoy forwards the request to Registry with the identity headers
 8. Registry processes the request, trusting the headers from Envoy
+
+```
+                    ┌──────────────────────────────────────────────────────────┐
+                    │                                                          │
+    ┌────────┐      │    ┌───────────┐      ┌───────────┐      ┌──────────┐    │
+    │        │ (1)  │    │           │ (3)  │           │ (4)  │          │    │
+    │ Client │──────┼───>│ Keycloak  │<────>│   Envoy   │<────>│   OPA    │    │
+    │        │<─────┼────│   (IdP)   │   ┌─>│   (PEP)   │      │  (PDP)   │    │
+    └────────┘  JWT │    └───────────┘   │  └─────┬─────┘      └──────────┘    │
+         └──────────┼────────────────────┘        │                            │
+                    │        (2)                  │ (5)                        │
+                    │      Request                │ Forward with               │
+                    │       + JWT                 │ identity headers           │
+                    │                             ▼                            │
+                    │                      ┌─────────────┐                     │
+                    │                      │  Apicurio   │                     │
+                    │                      │  Registry   │                     │
+                    │                      └─────────────┘                     │
+                    │                                                          │
+                    └──────────────────────────────────────────────────────────┘
+                                  Docker Compose Environment
+
+Flow:
+ (1) Client authenticates with Keycloak and receives JWT token
+ (2) Client sends request to Envoy with Authorization: Bearer <JWT>
+ (3) Envoy validates JWT against Keycloak's JWKS endpoint
+ (4) Envoy queries OPA for authorization decision
+ (5) Envoy forwards request to Registry with X-Forwarded-* headers
+```
 
 The OPA policies implement role-based access control (RBAC) with three roles:
 
