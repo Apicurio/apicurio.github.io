@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>LLM Artifact Types Implementation Guide :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.1.x/getting-started/assembly-llm-artifact-types-implementation.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.1.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating an existing Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A Protocol Features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM Artifact Types Implementation Guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.1.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.5.x/index.html">2.5.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.4.x/index.html">2.4.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.3.x/index.html">2.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>AI Agent Integration</li>
+    <li><a href="assembly-llm-artifact-types-implementation.html">LLM Artifact Types Implementation Guide</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.1.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-llm-artifact-types-implementation.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.5.x/index.html">2.5.x</a>
+    <a class="version is-missing" href="../../2.4.x/index.html">2.4.x</a>
+    <a class="version is-missing" href="../../2.3.x/index.html">2.3.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">LLM Artifact Types Implementation Guide</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This chapter provides detailed implementation documentation for the built-in AI/ML artifact types (MODEL_SCHEMA and PROMPT_TEMPLATE) in Apicurio Registry. It covers the internal architecture, TypeScript implementation details, and how to customize or extend these types.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#llm-artifact-types-architecture_registry">Architecture Overview</a></p>
+</li>
+<li>
+<p><a href="#llm-artifact-types-prompt-template-implementation_registry">PROMPT_TEMPLATE Implementation Details</a></p>
+</li>
+<li>
+<p><a href="#llm-artifact-types-model-schema-implementation_registry">MODEL_SCHEMA Implementation Details</a></p>
+</li>
+<li>
+<p><a href="#llm-artifact-types-prompt-rendering-service_registry">Prompt Rendering Service</a></p>
+</li>
+<li>
+<p><a href="#llm-artifact-types-customization_registry">Customizing LLM Artifact Types</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For usage documentation, see <a href="#registry-artifact-types_registry">[registry-artifact-types_registry]</a></p>
+</li>
+<li>
+<p>For creating custom artifact types, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/custom-artifact-type">Custom Artifact Type Example</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="llm-artifact-types-architecture_registry"><a class="anchor" href="#llm-artifact-types-architecture_registry"></a>Architecture Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apicurio Registry implements the LLM artifact types using a script-based architecture that allows artifact type logic to be written in TypeScript and executed within the Java runtime.</p>
+</div>
+<div class="sect2">
+<h3 id="_script_based_artifact_type_system"><a class="anchor" href="#_script_based_artifact_type_system"></a>Script-Based Artifact Type System</h3>
+<div class="paragraph">
+<p>The LLM artifact types are implemented using the following components:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Architecture Components</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TypeScript Implementation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Located in <code>app/llm-artifact-types-src/src/</code>. Contains the actual validation, compatibility checking, and content handling logic written in TypeScript.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bundled JavaScript</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The TypeScript is transpiled and bundled using esbuild into JavaScript files stored in <code>app/src/main/resources/llm-artifact-types/</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configuration File</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default-artifact-types-config.json</code> defines the artifact types and links them to their JavaScript implementations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java Bridge</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConfiguredArtifactTypeUtilProvider</code> and <code>ScriptingService</code> execute the JavaScript using QuickJS within the JVM.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prompt Rendering Service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java service (<code>PromptRenderingService</code>) provides server-side template rendering for PROMPT_TEMPLATE artifacts.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_configuration_file_structure"><a class="anchor" href="#_configuration_file_structure"></a>Configuration File Structure</h3>
+<div class="paragraph">
+<p>The LLM artifact types are configured in <code>app/src/main/resources/llm-artifact-types/default-artifact-types-config.json</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "includeStandardArtifactTypes": true,
+  "artifactTypes": [
+    {
+      "artifactType": "MODEL_SCHEMA",
+      "name": "Model Schema",
+      "description": "AI/ML model input/output schema definitions and metadata for LLM governance",
+      "contentTypes": ["application/json", "application/x-yaml"],
+      "scriptLocation": "llm-artifact-types/model-schema-artifact-type.js",
+      "contentAccepter": { "type": "script" },
+      "contentCanonicalizer": { "type": "script" },
+      "contentValidator": { "type": "script" },
+      "compatibilityChecker": { "type": "script" },
+      "contentDereferencer": { "type": "script" },
+      "referenceFinder": { "type": "script" }
+    },
+    {
+      "artifactType": "PROMPT_TEMPLATE",
+      "name": "Prompt Template",
+      "description": "Version-controlled prompt templates with variable schemas for LLMOps",
+      "contentTypes": ["application/x-yaml", "application/json", "text/x-prompt-template"],
+      "scriptLocation": "llm-artifact-types/prompt-template-artifact-type.js",
+      "contentAccepter": { "type": "script" },
+      "contentCanonicalizer": { "type": "script" },
+      "contentValidator": { "type": "script" },
+      "compatibilityChecker": { "type": "script" },
+      "contentDereferencer": { "type": "script" },
+      "referenceFinder": { "type": "script" }
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_handler_functions"><a class="anchor" href="#_handler_functions"></a>Handler Functions</h3>
+<div class="paragraph">
+<p>Each artifact type implements the following handler functions:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Artifact Type Handler Functions</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Function</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acceptsContent()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Determines if content matches this artifact type based on structure and content type.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>validate()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validates content structure, required fields, and constraint violations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>testCompatibility()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Checks backward compatibility between existing and proposed versions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>canonicalize()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Normalizes content for consistent hashing and comparison.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findExternalReferences()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Locates <code>$ref</code> references to external schemas.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dereference()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Resolves <code>$ref</code> references by substituting actual content.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rewriteReferences()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rewrites <code>$ref</code> paths to use registry URLs.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>validateReferences()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ensures all references are properly mapped.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="llm-artifact-types-prompt-template-implementation_registry"><a class="anchor" href="#llm-artifact-types-prompt-template-implementation_registry"></a>PROMPT_TEMPLATE Implementation Details</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The PROMPT_TEMPLATE artifact type is implemented in <code>app/llm-artifact-types-src/src/PromptTemplateArtifactType.ts</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_schema_structure"><a class="anchor" href="#_schema_structure"></a>Schema Structure</h3>
+<div class="listingblock">
+<div class="title">PROMPT_TEMPLATE Schema Interface</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">interface PromptTemplate {
+    $schema?: string;           // Schema URL for identification
+    templateId: string;         // Required: unique identifier
+    name?: string;              // Human-readable name
+    description?: string;       // Template description
+    version?: string;           // Semantic version
+    template: string;           // Required: template text with {{variable}} placeholders
+    variables?: Record&lt;string, VariableSchema&gt;;  // Variable definitions
+    outputSchema?: Record&lt;string, unknown&gt;;      // Expected output structure
+    metadata?: Record&lt;string, unknown&gt;;          // Custom metadata
+}
+
+interface VariableSchema {
+    type?: string;              // string, integer, number, boolean, array, object
+    required?: boolean;         // Whether variable is required
+    default?: unknown;          // Default value
+    description?: string;       // Variable description
+    enum?: unknown[];           // Allowed values
+    minimum?: number;           // Minimum value for numeric types
+    maximum?: number;           // Maximum value for numeric types
+    $ref?: string;              // Reference to external schema
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_content_detection"><a class="anchor" href="#_content_detection"></a>Content Detection</h3>
+<div class="paragraph">
+<p>The <code>acceptsContent()</code> function identifies PROMPT_TEMPLATE content by checking:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Content type</strong> is <code>application/json</code>, <code>application/x-yaml</code>, or <code>text/x-prompt-template</code></p>
+</li>
+<li>
+<p><strong>Schema identifier</strong>: <code>$schema</code> field contains <code>prompt-template</code></p>
+</li>
+<li>
+<p><strong>Required fields</strong>: presence of both <code>templateId</code> and <code>template</code> fields</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_validation_rules"><a class="anchor" href="#_validation_rules"></a>Validation Rules</h3>
+<div class="paragraph">
+<p>The <code>validate()</code> function enforces:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>templateId</code> must be a non-empty string</p>
+</li>
+<li>
+<p><code>template</code> must be a non-empty string</p>
+</li>
+<li>
+<p>All <code>{{variable}}</code> placeholders in template must have corresponding definitions in <code>variables</code></p>
+</li>
+<li>
+<p>Variable types must be valid: <code>string</code>, <code>integer</code>, <code>number</code>, <code>boolean</code>, <code>array</code>, <code>object</code></p>
+</li>
+<li>
+<p>Numeric constraints (<code>minimum</code>, <code>maximum</code>) must be numbers</p>
+</li>
+<li>
+<p>Enum values must be arrays</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compatibility_rules"><a class="anchor" href="#_compatibility_rules"></a>Compatibility Rules</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. PROMPT_TEMPLATE Backward Compatibility</caption>
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Change Type</th>
+<th class="tableblock halign-left valign-top">Allowed</th>
+<th class="tableblock halign-left valign-top">Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add new optional variable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing consumers can ignore new variables</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove unused variable (not in template)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No impact on template rendering</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove used variable (in template)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Breaks template rendering</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change variable type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing variable values may become invalid</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make optional variable required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing consumers may not provide value</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Narrow enum values (remove options)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing valid values may become invalid</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change template text (same variables)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Variable contract remains intact</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove output schema property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consumer expectations may be violated</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_template_variable_extraction"><a class="anchor" href="#_template_variable_extraction"></a>Template Variable Extraction</h3>
+<div class="paragraph">
+<p>Variables are extracted from template text using regex pattern <code>\{\{(\w+)\}\}</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">function extractTemplateVariables(template: string): string[] {
+    const regex = /\{\{(\w+)\}\}/g;
+    const variables: string[] = [];
+    let match;
+    while ((match = regex.exec(template)) !== null) {
+        if (!variables.includes(match[1])) {
+            variables.push(match[1]);
+        }
+    }
+    return variables;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_canonicalization"><a class="anchor" href="#_canonicalization"></a>Canonicalization</h3>
+<div class="paragraph">
+<p>PROMPT_TEMPLATE content is canonicalized to YAML format with:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Recursively sorted object keys</p>
+</li>
+<li>
+<p>Preserved multiline template strings</p>
+</li>
+<li>
+<p>Consistent quoting style</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="llm-artifact-types-model-schema-implementation_registry"><a class="anchor" href="#llm-artifact-types-model-schema-implementation_registry"></a>MODEL_SCHEMA Implementation Details</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The MODEL_SCHEMA artifact type is implemented in <code>app/llm-artifact-types-src/src/ModelSchemaArtifactType.ts</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_schema_structure_2"><a class="anchor" href="#_schema_structure_2"></a>Schema Structure</h3>
+<div class="listingblock">
+<div class="title">MODEL_SCHEMA Schema Interface</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">interface ModelSchema {
+    $schema?: string;                           // Schema URL for identification
+    modelId: string;                            // Required: unique model identifier
+    provider?: string;                          // Provider name (OpenAI, Anthropic, etc.)
+    version?: string;                           // Model version
+    input?: Record&lt;string, unknown&gt;;            // Input schema (JSON Schema format)
+    output?: Record&lt;string, unknown&gt;;           // Output schema (JSON Schema format)
+    metadata?: Record&lt;string, unknown&gt;;         // Custom metadata (capabilities, etc.)
+    definitions?: Record&lt;string, unknown&gt;;      // Reusable schema definitions
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_content_detection_2"><a class="anchor" href="#_content_detection_2"></a>Content Detection</h3>
+<div class="paragraph">
+<p>The <code>acceptsContent()</code> function identifies MODEL_SCHEMA content by checking:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Content type</strong> is <code>application/json</code> or <code>application/x-yaml</code></p>
+</li>
+<li>
+<p><strong>Schema identifier</strong>: <code>$schema</code> field contains <code>model-schema</code></p>
+</li>
+<li>
+<p><strong>Required fields</strong>: presence of <code>modelId</code> and at least one of <code>input</code> or <code>output</code></p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_validation_rules_2"><a class="anchor" href="#_validation_rules_2"></a>Validation Rules</h3>
+<div class="paragraph">
+<p>The <code>validate()</code> function enforces:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>modelId</code> must be a non-empty string</p>
+</li>
+<li>
+<p>At least one of <code>input</code> or <code>output</code> must be defined</p>
+</li>
+<li>
+<p><code>input</code> and <code>output</code> must be objects (JSON Schema format)</p>
+</li>
+<li>
+<p><code>metadata</code> must be an object if provided</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compatibility_rules_2"><a class="anchor" href="#_compatibility_rules_2"></a>Compatibility Rules</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. MODEL_SCHEMA Backward Compatibility</caption>
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Change Type</th>
+<th class="tableblock halign-left valign-top">Allowed</th>
+<th class="tableblock halign-left valign-top">Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add optional input property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing consumers can ignore new fields</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add required input property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing consumers won&#8217;t provide new required fields</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove input property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consumers may still send removed properties</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change input property type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing data may become invalid</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add output property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consumers can ignore new fields in response</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove output property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consumers may depend on removed properties</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change output property type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consumer parsing may break</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove input schema entirely</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contract changes fundamentally</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove output schema entirely</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contract changes fundamentally</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_canonicalization_2"><a class="anchor" href="#_canonicalization_2"></a>Canonicalization</h3>
+<div class="paragraph">
+<p>MODEL_SCHEMA content is canonicalized to JSON format with:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Recursively sorted object keys</p>
+</li>
+<li>
+<p>Consistent indentation (2 spaces)</p>
+</li>
+<li>
+<p>No trailing whitespace</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="llm-artifact-types-prompt-rendering-service_registry"><a class="anchor" href="#llm-artifact-types-prompt-rendering-service_registry"></a>Prompt Rendering Service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apicurio Registry provides a server-side prompt rendering service for PROMPT_TEMPLATE artifacts.</p>
+</div>
+<div class="sect2">
+<h3 id="_rest_api_endpoint"><a class="anchor" href="#_rest_api_endpoint"></a>REST API Endpoint</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">POST /apis/registry/v3/groups/{groupId}/artifacts/{artifactId}/versions/{versionExpression}/render</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Request Body</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "variables": {
+    "variableName": "value",
+    "anotherVariable": 123
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Response Body</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "rendered": "The fully rendered template with substituted values",
+  "groupId": "default",
+  "artifactId": "my-prompt",
+  "version": "1.0",
+  "validationErrors": []
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_java_implementation"><a class="anchor" href="#_java_implementation"></a>Java Implementation</h3>
+<div class="paragraph">
+<p>The <code>PromptRenderingService</code> class (<code>app/src/main/java/io/apicurio/registry/services/PromptRenderingService.java</code>) provides:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Rendering Service Features</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content Parsing</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Automatically parses YAML or JSON prompt templates</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Variable Substitution</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Replaces <code>{{variable}}</code> placeholders with provided values</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type Validation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validates variable values match their defined types</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required Field Checking</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reports missing required variables as validation errors</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enum Validation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ensures values are within allowed enum options</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Range Validation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validates numeric values against minimum/maximum constraints</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_validation_error_response"><a class="anchor" href="#_validation_error_response"></a>Validation Error Response</h3>
+<div class="paragraph">
+<p>When validation fails, the response includes validation errors:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "rendered": "Template with {{missing}} placeholder intact",
+  "groupId": "default",
+  "artifactId": "my-prompt",
+  "version": "1.0",
+  "validationErrors": [
+    {
+      "variableName": "missing",
+      "message": "Required variable is missing"
+    },
+    {
+      "variableName": "count",
+      "message": "Value 200 is greater than maximum 100"
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="llm-artifact-types-customization_registry"><a class="anchor" href="#llm-artifact-types-customization_registry"></a>Customizing LLM Artifact Types</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can modify the built-in LLM artifact types or use them as templates for custom types.</p>
+</div>
+<div class="sect2">
+<h3 id="_source_code_location"><a class="anchor" href="#_source_code_location"></a>Source Code Location</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Source Files</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">File</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>app/llm-artifact-types-src/src/PromptTemplateArtifactType.ts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PROMPT_TEMPLATE implementation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>app/llm-artifact-types-src/src/ModelSchemaArtifactType.ts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MODEL_SCHEMA implementation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>app/llm-artifact-types-src/src/shared-utils.ts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shared utility functions (parsing, reference handling)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>app/llm-artifact-types-src/package.json</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Build configuration and dependencies</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_building_modified_types"><a class="anchor" href="#_building_modified_types"></a>Building Modified Types</h3>
+<div class="paragraph">
+<p>To modify and rebuild the LLM artifact types:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Navigate to source directory
+cd app/llm-artifact-types-src
+
+# Install dependencies
+npm install
+
+# Build both artifact types
+npm run build
+
+# Or build individually
+npm run build-prompt-template
+npm run build-model-schema</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The build process:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Transpiles TypeScript to JavaScript using <code>tsc</code></p>
+</li>
+<li>
+<p>Bundles with dependencies using <code>esbuild</code></p>
+</li>
+<li>
+<p>Outputs to <code>app/src/main/resources/llm-artifact-types/</code></p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_the_artifact_type_builtins_package"><a class="anchor" href="#_using_the_artifact_type_builtins_package"></a>Using the artifact-type-builtins Package</h3>
+<div class="paragraph">
+<p>The <code>@apicurio/artifact-type-builtins</code> npm package provides:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>TypeScript type definitions for all request/response interfaces</p>
+</li>
+<li>
+<p>Utility functions (<code>info()</code>, <code>debug()</code>) for logging</p>
+</li>
+<li>
+<p>IDE autocomplete support</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">npm install @apicurio/artifact-type-builtins</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">import type {
+    ContentAccepterRequest,
+    ContentValidatorRequest,
+    ContentValidatorResponse,
+    CompatibilityCheckerRequest,
+    CompatibilityCheckerResponse
+} from '@apicurio/artifact-type-builtins';
+
+export function validate(request: ContentValidatorRequest): ContentValidatorResponse {
+    // Implementation
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_shared_utilities"><a class="anchor" href="#_shared_utilities"></a>Shared Utilities</h3>
+<div class="paragraph">
+<p>The <code>shared-utils.ts</code> file provides reusable functions:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Shared Utility Functions</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Function</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>parseContent&lt;T&gt;(content, contentType)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parse JSON or YAML content based on content type</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sortObjectKeys(obj)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Recursively sort object keys for canonicalization</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findRefs(obj, refs)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Find all external <code>$ref</code> references in an object</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resolveRefs(obj, indexedRefs, parser)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Replace <code>$ref</code> with resolved content</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rewriteRefsWithUrls(obj, indexedUrls)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rewrite <code>$ref</code> paths to registry URLs</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_external_configuration"><a class="anchor" href="#_external_configuration"></a>External Configuration</h3>
+<div class="paragraph">
+<p>To override the built-in LLM artifact types at deployment time:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a custom configuration file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "includeStandardArtifactTypes": true,
+  "artifactTypes": [
+    {
+      "artifactType": "PROMPT_TEMPLATE",
+      "scriptLocation": "/custom/my-prompt-template.js",
+      // ... other configuration
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Mount the configuration and JavaScript files</p>
+</li>
+<li>
+<p>Set the environment variable:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">APICURIO_ARTIFACT_TYPES_CONFIG_FILE=/path/to/config.json</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For a complete custom artifact type example, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/custom-artifact-type">TOML Custom Artifact Type Example</a></p>
+</li>
+<li>
+<p>For the npm package documentation, see <a href="https://www.npmjs.com/package/@apicurio/artifact-type-builtins">@apicurio/artifact-type-builtins on npm</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.1.x/getting-started/assembly-llm-artifact-types-implementation.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
