@@ -307,12 +307,18 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter provides detailed implementation documentation for the built-in AI/ML artifact types (MODEL_SCHEMA and PROMPT_TEMPLATE) in Apicurio Registry. It covers the internal architecture, TypeScript implementation details, and how to customize or extend these types.</p>
+<p>This chapter provides detailed implementation documentation for the built-in AI/ML artifact types (MODEL_SCHEMA and PROMPT_TEMPLATE) in Apicurio Registry. It covers the internal architecture, TypeScript implementation details, JSON Schema backing, MCP integration, and how to customize or extend these types.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p><a href="#llm-artifact-types-architecture_registry">Architecture Overview</a></p>
+</li>
+<li>
+<p><a href="#llm-artifact-types-json-schema-backing_registry">JSON Schema Backing and Industry Standards</a></p>
+</li>
+<li>
+<p><a href="#llm-artifact-types-mcp-integration_registry">MCP (Model Context Protocol) Integration</a></p>
 </li>
 <li>
 <p><a href="#llm-artifact-types-prompt-template-implementation_registry">PROMPT_TEMPLATE Implementation Details</a></p>
@@ -336,6 +342,15 @@
 </li>
 <li>
 <p>For creating custom artifact types, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/custom-artifact-type">Custom Artifact Type Example</a></p>
+</li>
+<li>
+<p><a href="https://prompty.ai/specification/page/">Microsoft Prompty Specification</a></p>
+</li>
+<li>
+<p><a href="https://github.com/tensorflow/model-card-toolkit">Google Model Card Toolkit</a></p>
+</li>
+<li>
+<p><a href="https://modelcontextprotocol.io/specification/2025-06-18/server/prompts">MCP Prompts Specification</a></p>
 </li>
 </ul>
 </div>
@@ -485,6 +500,422 @@
 </div>
 </div>
 <div class="sect1">
+<h2 id="llm-artifact-types-json-schema-backing_registry"><a class="anchor" href="#llm-artifact-types-json-schema-backing_registry"></a>JSON Schema Backing and Industry Standards</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apicurio Registry provides formal JSON Schemas for PROMPT_TEMPLATE and MODEL_SCHEMA artifact types, aligned with industry standards for interoperability.</p>
+</div>
+<div class="sect2">
+<h3 id="_schema_locations"><a class="anchor" href="#_schema_locations"></a>Schema Locations</h3>
+<div class="paragraph">
+<p>The JSON Schemas are located in <code>app/llm-artifact-types-src/schemas/</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. JSON Schema Files</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">File</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>prompt-template-v1.schema.json</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schema for PROMPT_TEMPLATE artifacts, aligned with Microsoft Prompty</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>model-schema-v1.schema.json</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schema for MODEL_SCHEMA artifacts, aligned with Google Model Card Toolkit</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_prompt_template_schema_prompty_alignment"><a class="anchor" href="#_prompt_template_schema_prompty_alignment"></a>PROMPT_TEMPLATE Schema - Prompty Alignment</h3>
+<div class="paragraph">
+<p>The PROMPT_TEMPLATE schema is aligned with the <a href="https://prompty.ai/specification/page/">Microsoft Prompty specification</a> for interoperability with the Azure AI ecosystem.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Prompty Field Mappings</caption>
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Apicurio Field</th>
+<th class="tableblock halign-left valign-top">Prompty Field</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>templateId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Primary identifier</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>variables</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inputs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Both names supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>outputSchema</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>outputs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Both names supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>template</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Body content</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">{{variable}} syntax</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>model</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>model</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Model configuration</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>authors</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>authors</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contributors list</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tags</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tags</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Categorization</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">PROMPT_TEMPLATE with Prompty-aligned Fields</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">templateId: sentiment-analysis
+name: Sentiment Analysis Prompt
+version: "1.0.0"
+description: Analyzes customer sentiment
+
+# Prompty-aligned fields
+authors:
+  - Apicurio Team
+tags:
+  - sentiment
+  - nlp
+
+templateFormat: mustache  # or jinja2, handlebars
+
+# Model configuration (Prompty-aligned)
+model:
+  api: chat
+  parameters:
+    temperature: 0.3
+    max_tokens: 500
+
+template: |
+  Analyze the sentiment of: {{customerMessage}}
+
+variables:
+  customerMessage:
+    type: string
+    required: true</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_model_schema_schema_model_card_toolkit_alignment"><a class="anchor" href="#_model_schema_schema_model_card_toolkit_alignment"></a>MODEL_SCHEMA Schema - Model Card Toolkit Alignment</h3>
+<div class="paragraph">
+<p>The MODEL_SCHEMA is aligned with the <a href="https://github.com/tensorflow/model-card-toolkit">Google Model Card Toolkit</a> for governance and compliance use cases.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Model Card Field Mappings</caption>
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Apicurio Field</th>
+<th class="tableblock halign-left valign-top">Model Card Field</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>modelId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>model_details.name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Model identifier</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>provider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>model_details.owners</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Model provider</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>model_details.version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version info</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>input</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>model_parameters.input_format</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">I/O schema</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>output</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>model_parameters.output_format</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">I/O schema</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>modelDetails</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>model_details</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full metadata</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quantitativeAnalysis</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quantitative_analysis</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Metrics</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>considerations</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>considerations</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ethics, limitations</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">MODEL_SCHEMA with Model Card-aligned Sections</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "modelId": "claude-3-opus",
+  "provider": "anthropic",
+  "version": "2024-02",
+  "input": { "type": "object" },
+  "output": { "type": "object" },
+  "modelDetails": {
+    "name": "Claude 3 Opus",
+    "overview": "Advanced multimodal AI assistant",
+    "owners": [{"name": "Anthropic"}],
+    "licenses": [{"identifier": "Proprietary"}]
+  },
+  "considerations": {
+    "users": ["Developers", "Enterprises"],
+    "limitations": ["May produce inaccurate information"],
+    "ethicalConsiderations": [
+      {"name": "Bias", "mitigationStrategy": "Regular auditing"}
+    ]
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="llm-artifact-types-mcp-integration_registry"><a class="anchor" href="#llm-artifact-types-mcp-integration_registry"></a>MCP (Model Context Protocol) Integration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apicurio Registry integrates with the <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a> to expose PROMPT_TEMPLATE artifacts as MCP prompts, enabling AI agents to discover and use prompt templates.</p>
+</div>
+<div class="sect2">
+<h3 id="_mcp_extension_in_prompt_template"><a class="anchor" href="#_mcp_extension_in_prompt_template"></a>MCP Extension in PROMPT_TEMPLATE</h3>
+<div class="paragraph">
+<p>Prompt templates can include an <code>mcp</code> section to enable MCP protocol integration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">templateId: support-chat
+name: Support Chat Prompt
+template: |
+  Answer the question: {{question}}
+
+variables:
+  question:
+    type: string
+    required: true
+
+# MCP integration
+mcp:
+  enabled: true
+  name: support-chat
+  description: Answer customer support questions
+  arguments:
+    - name: question
+      description: The customer question
+      required: true</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. MCP Configuration Fields</caption>
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to expose this prompt via MCP (default: false)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP prompt name (defaults to <code>templateId</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP prompt description (defaults to template description)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>arguments</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP arguments (auto-derived from <code>variables</code> if not specified)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_mcp_server_module"><a class="anchor" href="#_mcp_server_module"></a>MCP Server Module</h3>
+<div class="paragraph">
+<p>The <code>mcp/</code> module provides an MCP Server that exposes registry prompts:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. MCP Server Components</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PromptTemplateMCPServer.java</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP Server exposing prompt templates as MCP prompts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PromptTemplateConverter.java</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parses and renders prompt templates</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_mcp_tools_and_prompts"><a class="anchor" href="#_mcp_tools_and_prompts"></a>MCP Tools and Prompts</h3>
+<div class="paragraph">
+<p>The MCP Server exposes these tools and prompts:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. MCP Tools</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tool</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list_mcp_prompts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List all MCP-enabled prompt templates in the registry</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_mcp_prompt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get and render an MCP-enabled prompt with arguments</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>render_prompt_template</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Render any prompt template (MCP-enabled or not)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. MCP Prompts</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Prompt</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>render_registry_prompt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interactive prompt for rendering templates from the registry</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_using_the_mcp_server"><a class="anchor" href="#_using_the_mcp_server"></a>Using the MCP Server</h3>
+<div class="paragraph">
+<p>To run the MCP Server:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd mcp
+../mvnw quarkus:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The MCP Server connects to the registry and exposes prompts via the MCP protocol, enabling AI agents (Claude, ChatGPT, etc.) to discover and use registry-stored prompts.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mcp_architecture"><a class="anchor" href="#_mcp_architecture"></a>MCP Architecture</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">┌─────────────────────────────────────────────────────────────┐
+│                     Apicurio Registry                        │
+├─────────────────────────────────────────────────────────────┤
+│  PROMPT_TEMPLATE Artifacts (with mcp.enabled: true)         │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    MCP Server Module                         │
+│  - list_mcp_prompts(): List MCP-enabled templates           │
+│  - get_mcp_prompt(): Render template with arguments         │
+│  - render_prompt_template(): Render any template            │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     AI Agent / LLM                           │
+│  (Claude, ChatGPT, etc.)                                    │
+│                                                              │
+│  MCP Protocol:                                               │
+│  - prompts/list → Discover available prompts                 │
+│  - prompts/get  → Get prompt content with arguments          │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="llm-artifact-types-prompt-template-implementation_registry"><a class="anchor" href="#llm-artifact-types-prompt-template-implementation_registry"></a>PROMPT_TEMPLATE Implementation Details</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -493,7 +924,7 @@
 <div class="sect2">
 <h3 id="_schema_structure"><a class="anchor" href="#_schema_structure"></a>Schema Structure</h3>
 <div class="listingblock">
-<div class="title">PROMPT_TEMPLATE Schema Interface</div>
+<div class="title">PROMPT_TEMPLATE Schema Interface (Prompty-aligned)</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">interface PromptTemplate {
     $schema?: string;           // Schema URL for identification
@@ -502,9 +933,22 @@
     description?: string;       // Template description
     version?: string;           // Semantic version
     template: string;           // Required: template text with {{variable}} placeholders
+
+    // Prompty-aligned fields
+    authors?: string[];         // Contributors list
+    tags?: string[];            // Categorization tags
+    templateFormat?: string;    // 'mustache' | 'jinja2' | 'handlebars'
+    model?: ModelConfiguration; // Model configuration
+
+    // Input/output definitions (Prompty: inputs/outputs)
     variables?: Record&lt;string, VariableSchema&gt;;  // Variable definitions
+    inputs?: Record&lt;string, VariableSchema&gt;;     // Alias for variables (Prompty)
     outputSchema?: Record&lt;string, unknown&gt;;      // Expected output structure
+    outputs?: Record&lt;string, unknown&gt;;           // Alias for outputSchema (Prompty)
+
+    // Extensions
     metadata?: Record&lt;string, unknown&gt;;          // Custom metadata
+    mcp?: MCPConfiguration;                      // MCP integration
 }
 
 interface VariableSchema {
@@ -516,6 +960,28 @@ interface VariableSchema {
     minimum?: number;           // Minimum value for numeric types
     maximum?: number;           // Maximum value for numeric types
     $ref?: string;              // Reference to external schema
+}
+
+interface ModelConfiguration {
+    api?: string;               // 'chat' | 'completion'
+    configuration?: {
+        type?: string;          // Provider type
+        azure_deployment?: string;
+        azure_endpoint?: string;
+    };
+    parameters?: {
+        temperature?: number;
+        max_tokens?: number;
+        top_p?: number;
+    };
+    response?: string;          // 'first' | 'all'
+}
+
+interface MCPConfiguration {
+    enabled?: boolean;          // Expose via MCP protocol
+    name?: string;              // MCP prompt name
+    description?: string;       // MCP prompt description
+    arguments?: MCPArgument[];  // MCP arguments
 }</code></pre>
 </div>
 </div>
@@ -570,7 +1036,7 @@ interface VariableSchema {
 <div class="sect2">
 <h3 id="_compatibility_rules"><a class="anchor" href="#_compatibility_rules"></a>Compatibility Rules</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. PROMPT_TEMPLATE Backward Compatibility</caption>
+<caption class="title">Table 10. PROMPT_TEMPLATE Backward Compatibility</caption>
 <colgroup>
 <col style="width: 42.8571%;">
 <col style="width: 14.2857%;">
@@ -678,7 +1144,7 @@ interface VariableSchema {
 <div class="sect2">
 <h3 id="_schema_structure_2"><a class="anchor" href="#_schema_structure_2"></a>Schema Structure</h3>
 <div class="listingblock">
-<div class="title">MODEL_SCHEMA Schema Interface</div>
+<div class="title">MODEL_SCHEMA Schema Interface (Model Card Toolkit-aligned)</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">interface ModelSchema {
     $schema?: string;                           // Schema URL for identification
@@ -689,6 +1155,35 @@ interface VariableSchema {
     output?: Record&lt;string, unknown&gt;;           // Output schema (JSON Schema format)
     metadata?: Record&lt;string, unknown&gt;;         // Custom metadata (capabilities, etc.)
     definitions?: Record&lt;string, unknown&gt;;      // Reusable schema definitions
+
+    // Model Card Toolkit-aligned sections
+    modelDetails?: ModelDetails;                // Comprehensive model metadata
+    modelParameters?: ModelParameters;          // Architecture and data info
+    quantitativeAnalysis?: QuantitativeAnalysis; // Performance metrics
+    considerations?: Considerations;            // Ethics, limitations, users
+
+    // MLflow compatibility
+    signature?: MLflowSignature;                // MLflow model signature
+}
+
+interface ModelDetails {
+    name?: string;
+    overview?: string;
+    owners?: Array&lt;{name: string; contact?: string}&gt;;
+    version?: {name: string; date?: string};
+    licenses?: Array&lt;{identifier?: string; custom_text?: string}&gt;;
+    references?: Array&lt;{reference: string}&gt;;
+    citations?: Array&lt;{style?: string; citation: string}&gt;;
+    regulatoryRequirements?: string[];
+}
+
+interface Considerations {
+    users?: string[];
+    useCases?: string[];
+    limitations?: string[];
+    tradeoffs?: string[];
+    ethicalConsiderations?: Array&lt;{name: string; mitigationStrategy?: string}&gt;;
+    fairnessConsiderations?: Array&lt;{name: string; mitigationStrategy?: string}&gt;;
 }</code></pre>
 </div>
 </div>
@@ -737,7 +1232,7 @@ interface VariableSchema {
 <div class="sect2">
 <h3 id="_compatibility_rules_2"><a class="anchor" href="#_compatibility_rules_2"></a>Compatibility Rules</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. MODEL_SCHEMA Backward Compatibility</caption>
+<caption class="title">Table 11. MODEL_SCHEMA Backward Compatibility</caption>
 <colgroup>
 <col style="width: 42.8571%;">
 <col style="width: 14.2857%;">
@@ -863,7 +1358,7 @@ interface VariableSchema {
 <p>The <code>PromptRenderingService</code> class (<code>app/src/main/java/io/apicurio/registry/services/PromptRenderingService.java</code>) provides:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Rendering Service Features</caption>
+<caption class="title">Table 12. Rendering Service Features</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -939,7 +1434,7 @@ interface VariableSchema {
 <div class="sect2">
 <h3 id="_source_code_location"><a class="anchor" href="#_source_code_location"></a>Source Code Location</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Source Files</caption>
+<caption class="title">Table 13. Source Files</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -1053,7 +1548,7 @@ export function validate(request: ContentValidatorRequest): ContentValidatorResp
 <p>The <code>shared-utils.ts</code> file provides reusable functions:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Shared Utility Functions</caption>
+<caption class="title">Table 14. Shared Utility Functions</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
