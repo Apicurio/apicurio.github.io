@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Apicurio Registry Goes AI-Native: Introducing Agent Registry, MCP Server, and LLM Artifact Support"
+title: "Apicurio Registry goes AI-Native: Introducing Agent Registry, MCP Server, and LLM artifact support"
 date: 2026-02-05 12:00:00
 author: carlesarnal
 categories: apicurio registry ai agents mcp a2a llm
@@ -10,27 +10,29 @@ The world of software is undergoing a fundamental shift. AI agents are no longer
 
 Today, we're excited to announce that **Apicurio Registry is evolving into an AI-native platform**, becoming the first open-source registry to offer comprehensive support for the AI agent ecosystem.
 
-## Why Apicurio Registry for AI?
+---
+
+# Why Apicurio Registry for AI?
 
 For years, Apicurio Registry has been the trusted solution for managing API schemas—OpenAPI, AsyncAPI, Avro, Protobuf, JSON Schema, and more. Organizations rely on it for schema validation, versioning, compatibility enforcement, and governance.
 
 It turns out these same principles apply directly to AI agents:
 
-| Traditional Schema Registry | AI Agent Registry |
-|---------------------------|-------------------|
-| API contracts | Agent capabilities |
-| Schema validation | Prompt/response validation |
-| Version compatibility | Agent evolution |
-| Service discovery | Agent discovery |
-| Governance & audit | Compliance & traceability |
+| Traditional Schema Registry | AI Agent Registry          |
+|-----------------------------|----------------------------|
+| API contracts               | Agent capabilities         |
+| Schema validation           | Prompt/response validation |
+| Version compatibility       | Agent evolution            |
+| Service discovery           | Agent discovery            |
+| Governance & audit          | Compliance & traceability  |
 
 Rather than building something new, we extended what we already do best. Apicurio Registry now treats AI artifacts—Agent Cards, prompts, and model schemas—as first-class citizens alongside traditional schemas.
 
-## What's New: Phase 1 Complete
+# What's new: Phase 1 complete
 
 We're launching with three major capabilities that are fully implemented and production-ready:
 
-### 1. Agent Card Registry (A2A Protocol Support)
+### 1. Agent card Registry (A2A protocol support)
 
 The [A2A (Agent-to-Agent) protocol](https://a2a-protocol.org/) defines a standard way for AI agents to describe themselves and discover each other. Apicurio Registry now supports `AGENT_CARD` as a native artifact type.
 
@@ -52,7 +54,7 @@ curl -X POST http://registry:8080/apis/registry/v3/groups/my-agents/artifacts \
 curl http://registry:8080/.well-known/agent.json
 ```
 
-### 2. MCP Server Integration
+### 2. MCP server integration
 
 The [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) is becoming the standard for LLMs to interact with external tools and data. Apicurio Registry now includes a built-in MCP Server that lets AI models directly access the registry.
 
@@ -79,7 +81,7 @@ The [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) is becoming
 }
 ```
 
-### 3. LLM Artifact Types
+### 3. LLM artifact types
 
 Managing prompts and model schemas is one of the biggest operational challenges in production AI systems. Apicurio Registry introduces two new artifact types designed specifically for LLM workflows:
 
@@ -114,7 +116,7 @@ Managing prompts and model schemas is one of the biggest operational challenges 
 
 **SDKs are ready** for both Python (LangChain, LlamaIndex) and Java (LangChain4j, Quarkus), making integration straightforward.
 
-## See It In Action: Multi-Agent Context Chaining
+# See it in Action: Multi-Agent context chaining
 
 To demonstrate these capabilities working together, we've created a comprehensive example: [A2A Real-World Integration Demo](https://github.com/Apicurio/apicurio-registry/tree/main/examples/a2a-real-world-integration).
 
@@ -169,7 +171,7 @@ open http://localhost:9000  # Web UI
 
 You'll see agents discover each other through the registry, validate their communications against registered schemas, and pass accumulated context through the pipeline.
 
-## What's Coming Next
+# What's coming next
 
 This is just the beginning. Our roadmap includes:
 
@@ -185,7 +187,7 @@ This is just the beginning. Our roadmap includes:
 - Semantic search for natural language agent discovery
 - Agent deployment pipeline integration
 
-## Get Started Today
+# Get started today
 
 Apicurio Registry with AI support is available now:
 
@@ -197,7 +199,7 @@ Apicurio Registry with AI support is available now:
 
 4. **Join the discussion**: Follow [the epic](https://github.com/Apicurio/apicurio-registry/issues/6991) to track progress and contribute ideas
 
-## A Natural Evolution
+# A natural evolution
 
 What makes this evolution "natural" is that we didn't bolt on AI support as an afterthought. The same principles that make Apicurio Registry valuable for API governance—versioning, validation, compatibility, discovery, audit—apply directly to managing AI agents at scale.
 
