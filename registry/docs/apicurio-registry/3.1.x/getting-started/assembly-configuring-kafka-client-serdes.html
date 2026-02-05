@@ -696,6 +696,34 @@ For some advanced use cases, you might use a custom implementation of <code>Sche
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FAULT_TOLERANT_REFRESH</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.fault-tolerant-refresh</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. If <code>true</code>, will log exceptions instead of throwing them when an error occurs trying to refresh a schema in the cache. This is useful for production situations where a stale schema is better than completely failing schema resolution. Note that this will not impact retry attempts, as retries are attempted before this flag is considered.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKGROUND_REFRESH_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.background-refresh-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. If <code>true</code>, enables background refresh of expired cache entries following the "stale-while-revalidate" pattern. When an entry expires and a stale value exists, the cache will return the stale value immediately (non-blocking) and trigger an asynchronous refresh in the background. This prevents latency spikes in high-concurrency scenarios where multiple threads would otherwise block waiting for cache refresh. If no stale value exists (first fetch), falls back to synchronous refresh behavior. When a background refresh fails, errors are logged and stale values continue to be served (similar to <code>FAULT_TOLERANT_REFRESH</code> behavior). This option complements <code>FAULT_TOLERANT_REFRESH</code>, which handles refresh failures rather than refresh latency.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKGROUND_REFRESH_EXECUTOR_THREADS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.background-refresh.executor-threads</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers when <code>BACKGROUND_REFRESH_ENABLED</code> is enabled. Specifies the number of threads in the background refresh executor pool. The executor uses a fixed thread pool with daemon threads to prevent blocking application shutdown. A value of 2-4 threads is typically sufficient for most workloads.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>non-negative Number, or integer String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKGROUND_REFRESH_TIMEOUT_MS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.background-refresh.timeout-ms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers when <code>BACKGROUND_REFRESH_ENABLED</code> is enabled. Specifies the maximum time (milliseconds) to wait for a background refresh operation to complete before timing out. If a background refresh exceeds this timeout, it will be interrupted and the stale value will continue to be served until the next refresh attempt.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Duration, non-negative Number, or integer String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30000</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>USE_ID</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.use-id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Configures to use the specified <code>IdOption</code> as the identifier for artifacts. Options are <code>globalId</code> and <code>contentId</code>. Instructs the serializer to write the specified ID to Kafka, and instructs the deserializer to use this ID to find the schema.</p></td>
