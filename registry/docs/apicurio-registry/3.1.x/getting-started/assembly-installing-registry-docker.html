@@ -557,6 +557,255 @@ apicurio/apicurio-registry:VERSION</code></pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="installing-registry-sql-storage-secrets_registry"><a class="anchor" href="#installing-registry-sql-storage-secrets_registry"></a>Using file-based secrets for database credentials</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This section explains how to use file-based secrets for database credentials with Apicurio Registry when using Docker Compose.
+This approach follows Docker&#8217;s recommended secret management practices and is more secure than passing credentials as
+environment variables.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have Docker and Docker Compose installed.</p>
+</li>
+<li>
+<p>You must already have a database server installed and running (PostgreSQL, MySQL, or Microsoft SQL Server).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Overview</div>
+<p>Instead of passing credentials and secrets as environment variables (which can be exposed in process lists and container
+inspection), you can use file-based secrets. Apicurio Registry supports a generic <code>_FILE</code> suffix pattern that works with
+<strong>any</strong> configuration property.</p>
+</div>
+<div class="paragraph">
+<p>Environment variables are automatically converted to configuration properties by Quarkus. For example,
+<code>APICURIO_DATASOURCE_PASSWORD_FILE</code> becomes the property <code>apicurio.datasource.password.file</code>. The
+FileBasedSecretsConfigSource reads the file path from these properties and loads the actual values from the files.</p>
+</div>
+<div class="paragraph">
+<div class="title">How it works</div>
+<p>To use file-based secrets for any configuration property:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Take any environment variable name (e.g., <code>APICURIO_DATASOURCE_PASSWORD</code>)</p>
+</li>
+<li>
+<p>Add <code>_FILE</code> suffix (e.g., <code>APICURIO_DATASOURCE_PASSWORD_FILE</code>)</p>
+</li>
+<li>
+<p>Set the value to a file path containing the secret</p>
+</li>
+<li>
+<p>Apicurio Registry reads the file contents and uses them as the actual property value</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This works for <strong>any</strong> configuration property, not just the examples listed below.</p>
+</div>
+<div class="paragraph">
+<div class="title">Common file-based credential variables</div>
+<p>Some commonly used file-based credential environment variables (and their corresponding properties):</p>
+</div>
+<div class="paragraph">
+<p><strong>Database credentials:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>APICURIO_DATASOURCE_USERNAME_FILE</code> (property: <code>apicurio.datasource.username.file</code>)</p>
+</li>
+<li>
+<p><code>APICURIO_DATASOURCE_PASSWORD_FILE</code> (property: <code>apicurio.datasource.password.file</code>)</p>
+</li>
+<li>
+<p><code>APICURIO_DATASOURCE_BLUE_USERNAME_FILE</code> (property: <code>apicurio.datasource.blue.username.file</code>)</p>
+</li>
+<li>
+<p><code>APICURIO_DATASOURCE_BLUE_PASSWORD_FILE</code> (property: <code>apicurio.datasource.blue.password.file</code>)</p>
+</li>
+<li>
+<p><code>APICURIO_DATASOURCE_GREEN_USERNAME_FILE</code> (property: <code>apicurio.datasource.green.username.file</code>)</p>
+</li>
+<li>
+<p><code>APICURIO_DATASOURCE_GREEN_PASSWORD_FILE</code> (property: <code>apicurio.datasource.green.password.file</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>OAuth/OIDC credentials:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>QUARKUS_OIDC_CLIENT_SECRET_FILE</code> (property: <code>quarkus.oidc.client-secret.file</code>)</p>
+</li>
+<li>
+<p><code>APICURIO_UI_AUTH_OIDC_CLIENT_SECRET_FILE</code> (property: <code>apicurio.ui.auth.oidc.client-secret.file</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Kafka SASL credentials:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>APICURIO_KAFKASQL_SECURITY_SASL_CLIENT_ID_FILE</code> (property: <code>apicurio.kafkasql.security.sasl.client-id.file</code>)</p>
+</li>
+<li>
+<p><code>APICURIO_KAFKASQL_SECURITY_SASL_CLIENT_SECRET_FILE</code> (property: <code>apicurio.kafkasql.security.sasl.client-secret.file</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Kafka SSL/TLS passwords:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>APICURIO_KAFKASQL_SECURITY_SSL_TRUSTSTORE_PASSWORD_FILE</code> (property:
+<code>apicurio.kafkasql.security.ssl.truststore.password.file</code>)</p>
+</li>
+<li>
+<p><code>APICURIO_KAFKASQL_SECURITY_SSL_KEYSTORE_PASSWORD_FILE</code> (property:
+<code>apicurio.kafkasql.security.ssl.keystore.password.file</code>)</p>
+</li>
+<li>
+<p><code>APICURIO_KAFKASQL_SECURITY_SSL_KEY_PASSWORD_FILE</code> (property: <code>apicurio.kafkasql.security.ssl.key.password.file</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Any other property:</strong></p>
+</div>
+<div class="paragraph">
+<p>The <code>_FILE</code> suffix works with any configuration property. Simply add <code>_FILE</code> to any environment variable name and set
+the value to a file path.</p>
+</div>
+<div class="paragraph">
+<p>When a <code>_FILE</code> variant is set, Apicurio Registry reads the value from the specified file instead of using the direct
+environment variable. Configuration precedence: System properties (400) &gt; File-based secrets (350) &gt; Environment
+variables (300) &gt; application.properties (250).</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create a directory for your secret files:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ mkdir -p secrets</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create files containing your database credentials:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ echo "pguser" &gt; secrets/db_user.txt
+$ echo "pgpass" &gt; secrets/db_password.txt</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Set restrictive permissions on the secret files:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ chmod 600 secrets/*.txt</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a <code>docker-compose.yml</code> file that uses Docker Compose secrets:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">version: '3.8'
+
+secrets:
+  registry_db_user:
+    file: ./secrets/db_user.txt
+  registry_db_password:
+    file: ./secrets/db_password.txt
+
+services:
+  apicurio-registry:
+    image: apicurio/apicurio-registry:VERSION
+    environment:
+      APICURIO_STORAGE_KIND: "sql"
+      APICURIO_STORAGE_SQL_KIND: "postgresql"
+      APICURIO_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/registrydb"
+      APICURIO_DATASOURCE_USERNAME_FILE: /run/secrets/registry_db_user
+      APICURIO_DATASOURCE_PASSWORD_FILE: /run/secrets/registry_db_password
+    secrets:
+      - registry_db_user
+      - registry_db_password
+    ports:
+      - "8080:8080"</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Start the services:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker compose up -d</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<div class="title">File format</div>
+<p>Secret files should contain only the credential value in plain text (UTF-8 encoding). Leading and trailing whitespace
+is automatically trimmed. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">mypassword</code></pre>
+</div>
+</div>
+<div class="ulist">
+<div class="title">Security considerations</div>
+<ul>
+<li>
+<p>Ensure secret files have restrictive permissions (e.g., <code>chmod 600</code>)</p>
+</li>
+<li>
+<p>Never commit secret files to version control (add them to <code>.gitignore</code>)</p>
+</li>
+<li>
+<p>Apicurio Registry will log a warning if secret files are world-readable</p>
+</li>
+<li>
+<p>If a <code>_FILE</code> variable is set but the file doesn&#8217;t exist or isn&#8217;t readable, Apicurio Registry will fail to start with a
+clear error message</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For a complete Docker Compose example with secrets, see
+<a href="https://github.com/Apicurio/apicurio-registry/tree/main/distro/docker-compose/pg-secrets">PostgreSQL with
+file-based secrets example</a>.</p>
+</li>
+<li>
+<p>For more details on Docker Compose secrets, see
+<a href="https://docs.docker.com/compose/how-tos/use-secrets/">Docker Compose secrets documentation</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="installing-registry-kafka-storage_registry"><a class="anchor" href="#installing-registry-kafka-storage_registry"></a>Installing Apicurio Registry with Apache Kafka storage</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
