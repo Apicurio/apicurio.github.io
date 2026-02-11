@@ -6,7 +6,7 @@ author: jakub
 categories: ai
 ---
 
-In this blog post, we're introducing a new way you can interact with Apicurio Registry 3. We've created a brand-new **Model Context Protocol (MCP) server specifically designed for Apicurio Registry 3**, enabling Large Language Models (LLMs) to communicate directly with your Registry instance. You can use it to explore and analyze your content by asking natural language questions, make changes in seconds, and even generate entirely new schemas with the power of AI.
+In this blog post, we're introducing a new way you can interact with Apicurio Registry 3. We've created a **Model Context Protocol (MCP) server for Apicurio Registry 3**, enabling Large Language Models (LLMs) to communicate directly with your Registry instance. You can use it to explore and analyze your content by asking natural language questions, make changes, and generate new schemas.
 
 ---
 
@@ -785,7 +785,7 @@ We see that we can iterate this way until the schema is ready, editing both the 
 
 ## How to get started
 
-1. We need a running Apicurio Registry instance. The easiest way is to use Docker to run Apicurio Registry 3 locally:
+1. We need a running Apicurio Registry instance. The easiest way is to use Docker or Podman to run Apicurio Registry 3 locally:
 
    ```shell
    # API server
@@ -794,18 +794,20 @@ We see that we can iterate this way until the schema is ready, editing both the 
    docker run --rm -it -p 8888:8080 quay.io/apicurio/apicurio-registry-ui:latest-snapshot
    ```
 
+   > *NOTE: You can replace `docker` with `podman` in all commands throughout this guide.*
+
 2. Multiple LLM providers support the MCP protocol, but to follow this blog post and use Claude, register for [Claude AI](https://claude.ai) if you don't have an account yet.
 
 3. Install the [Claude Desktop](https://claude.ai/download) application. If you are using a system that is not officially supported, like Fedora, [unofficial installation options](https://github.com/bsneed/claude-desktop-fedora) are available. Alternatively, [some IDEs such as VS Code](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) support integration with an MCP server.
 
 4. Run Claude Desktop, and go to *File* > *Settings...* > *Developer* > *Edit Config*, to open the configuration file (e.g. `~/.config/Claude/claude_desktop_config.json`).
 
-5. Update the configuration file as follows:
+5. Update the configuration file as follows (using Docker or Podman):
 
    ```json
    {
      "mcpServers": {
-       "Apicurio Registry (docker)": {
+       "Apicurio Registry": {
          "command": "docker",
          "args": [
            "run",
@@ -818,6 +820,8 @@ We see that we can iterate this way until the schema is ready, editing both the 
      }
    }
    ```
+
+   > *NOTE: Replace `"command": "docker"` with `"command": "podman"` if you prefer to use Podman.*
 
 > *NOTE: The Apicurio Registry MCP Server source code lives in the [Apicurio Registry GitHub repository](https://github.com/Apicurio/apicurio-registry/tree/main/mcp), where you can also find the most recent README file with additional information, such as configuration options and how to build the MCP server from source.* 
 
