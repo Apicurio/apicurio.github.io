@@ -757,11 +757,60 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">Registry cache enabled</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.http-caching.highly-cacheable.max-age-seconds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.http-caching.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable or disable HTTP caching entirely. When disabled, no server-side cache headers (ETag, Surrogate-Control, etc.) are sent, and cache strategies are not evaluated. At least one of the max-age configurations must be set to &gt; 0, otherwise caching is automatically disabled and this property has no effect.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.http-caching.extra-headers-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Send additional informational headers to help understand caching behavior. Extra headers include X-Cache-Cacheability which indicates the evaluated cacheability level. These headers are useful for development, troubleshooting, and making additional decisions in the cache configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.http-caching.high-cacheability.max-age-seconds</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>31536000</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.1.8</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP cache expiration for highly cacheable REST API endpoints, in seconds. If set to 0, caching is disabled.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>864000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Expiration for high cacheability operations, in seconds. If set to &#8656; 0, caching is disabled for these operations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.http-caching.higher-quality-etags-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provide higher quality ETags if possible, but they might be more expensive to compute. This feature trades more computation for potentially higher cacheability of some operations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.http-caching.low-cacheability.max-age-seconds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Expiration for low cacheability operations, in seconds. If set to &#8656; 0, caching is disabled for these operations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.http-caching.moderate-cacheability.max-age-seconds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Expiration for moderate cacheability operations, in seconds. If set to &#8656; 0, caching is disabled for these operations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.http-caching.opaque-etags-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;boolean&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hash raw ETag values before adding them to the header. Enabling this feature might marginally increase security, while disabling is useful for testing and debugging. If no value is provided, the feature is enabled when the <code>prod</code> profile is active.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.http-caching.vary-headers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list&lt;string&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Accept,Accept-Encoding,Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma-separated list of request header names to include in the Vary response header. The Vary header tells caches that the response varies based on the values of the listed request headers.</p></td>
 </tr>
 </tbody>
 </table>
