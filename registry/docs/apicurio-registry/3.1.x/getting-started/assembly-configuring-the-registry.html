@@ -667,10 +667,10 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
 <div class="ulist">
 <ul>
 <li>
-<p>The existing Prometheus metrics endpoint (<code>/q/metrics</code>) remains available and unchanged.</p>
+<p>The Prometheus metrics endpoint is available at <code>/metrics</code> on the management port (default 9000).</p>
 </li>
 <li>
-<p>Health check endpoints (<code>/q/health/*</code>) continue to work as before.</p>
+<p>Health check endpoints (<code>/health/ready</code>, <code>/health/live</code>) are served on the management port (default 9000).</p>
 </li>
 <li>
 <p>All existing Micrometer-based metrics continue to function.</p>
@@ -694,6 +694,9 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
 <div class="sect2">
 <h3 id="configuring-liveness-readiness-probes_registry"><a class="anchor" href="#configuring-liveness-readiness-probes_registry"></a>Configuring Apicurio Registry health checks on OpenShift</h3>
 <div class="paragraph _abstract">
+<p>Health check endpoints are served on the management interface (port 9000 by default), separate from the main application port (8080). Configure liveness and readiness probes to target port 9000.</p>
+</div>
+<div class="paragraph">
 <p>You can configure optional environment variables for liveness and readiness probes to monitor the health of the Apicurio Registry server on OpenShift:</p>
 </div>
 <div class="ulist">
