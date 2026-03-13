@@ -897,8 +897,9 @@ The Secret containing the Kafka cluster CA certificate must be in PKCS12 format.
 <div class="sect2">
 <h3 id="_configuring_kafkasql_with_sasl_authentication"><a class="anchor" href="#_configuring_kafkasql_with_sasl_authentication"></a>Configuring KafkaSQL with SASL authentication</h3>
 <div class="paragraph">
-<p>When your Kafka cluster requires SASL authentication (such as SCRAM-SHA-512), you can configure Apicurio Registry
-accordingly:</p>
+<p>When your Kafka cluster requires SASL authentication (such as SCRAM-SHA-512), the recommended approach is to use
+the Strimzi Kafka Access Operator (available starting with Apicurio Registry version 3.2.0), which automatically provides
+all connection details in a single Kubernetes Secret:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -911,15 +912,42 @@ spec:
     storage:
       type: kafkasql
       kafkasql:
+        kafkaAccessSecretName: my-kafka-access
+    ingress:
+      host: registry.example.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For OAuth (OAUTHBEARER) authentication, use the <code>auth</code> section instead:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry-kafkasql-oauth
+spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
         bootstrapServers: my-cluster-kafka-bootstrap.my-project.svc:9093
+        tls:
+          truststoreSecretRef:
+            name: kafka-cluster-ca-cert
+          truststorePasswordSecretRef:
+            name: kafka-cluster-ca-cert
         auth:
-          mechanism: SCRAM-SHA-512
-          usernameSecretRef:
-            name: kafka-credentials
-            key: username
-          passwordSecretRef:
-            name: kafka-credentials
-            key: password
+          enabled: true
+          mechanism: OAUTHBEARER
+          clientIdRef:
+            name: kafka-oauth-credentials
+            key: clientId
+          clientSecretRef:
+            name: kafka-oauth-credentials
+            key: clientSecret
+          tokenEndpoint: https://identity-server.example.com/token
+          loginHandlerClass: io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler
     ingress:
       host: registry.example.com</code></pre>
 </div>

@@ -523,21 +523,27 @@ The default example creates a cluster with 3 Zookeeper nodes and 3 Kafka nodes w
 </div>
 </li>
 <li>
-<p>Click <strong>Installed Operators</strong> &gt; <strong>Service Registry</strong> &gt; <strong>ApicurioRegistry</strong> &gt; <strong>Create ApicurioRegistry</strong>.</p>
+<p>Click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry3</strong> &gt; <strong>Create ApicurioRegistry3</strong>.</p>
 </li>
 <li>
 <p>Paste in the following custom resource definition, but use your <code>bootstrapServers</code> value that you copied earlier:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
-kind: ApicurioRegistry
+kind: ApicurioRegistry3
 metadata:
   name: example-apicurioregistry-kafkasql
 spec:
-  configuration:
-    persistence: 'kafkasql'
-    kafkasql:
-      bootstrapServers: 'my-cluster-kafka-bootstrap.my-project.svc:9092'</code></pre>
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        bootstrapServers: "my-cluster-kafka-bootstrap.my-project.svc:9092"
+    ingress:
+      host: example-apicurioregistry-kafkasql.my-project.my-domain-name.com
+  ui:
+    ingress:
+      host: example-apicurioregistry-kafkasql-ui.my-project.my-domain-name.com</code></pre>
 </div>
 </div>
 </li>
@@ -632,10 +638,13 @@ You must configure the Kafka topic used by Apicurio Registry (named <code>kafkas
 <h2 id="configuring-kafka-oauth_registry"><a class="anchor" href="#configuring-kafka-oauth_registry"></a>Configuring OAuth authentication for Kafka storage</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>When using Kafka-based storage in Strimzi, Apicurio Registry supports accessing a Kafka cluster that requires OAuth authentication. To enable this support, you must to set some environment variables in your Apicurio Registry deployment.</p>
+<p>When using Kafka-based storage in Strimzi, Apicurio Registry supports accessing a Kafka cluster that requires OAuth authentication.</p>
 </div>
 <div class="paragraph">
-<p>When you set these environment variables, the Kafka producer and consumer applications in Apicurio Registry will use this configuration to authenticate to the Kafka cluster over OAuth.</p>
+<p>If you are using the Apicurio Registry Operator, you can configure OAuth directly in the <code>ApicurioRegistry3</code> CR using the <code>spec.app.storage.kafkasql.auth</code> section. See the operator documentation for details on configuring KafkaSQL with OAuth authentication.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can configure OAuth by setting environment variables in your Apicurio Registry deployment. When you set these environment variables, the Kafka producer and consumer applications in Apicurio Registry will use this configuration to authenticate to the Kafka cluster over OAuth.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -649,7 +658,7 @@ You must configure the Kafka topic used by Apicurio Registry (named <code>kafkas
 <div class="title">Procedure</div>
 <ul>
 <li>
-<p>Set the following environment variables in your Apicurio Registry deployment:</p>
+<p>Set the following environment variables in your Apicurio Registry deployment (or in the <code>spec.app.env</code> section of the <code>ApicurioRegistry3</code> CR):</p>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -853,25 +862,33 @@ spec:
 <p>Click <strong>Create</strong>, and wait until the database is created.</p>
 </li>
 <li>
-<p>Click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry</strong> &gt; <strong>Create ApicurioRegistry</strong>.</p>
+<p>Click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry3</strong> &gt; <strong>Create ApicurioRegistry3</strong>.</p>
 </li>
 <li>
 <p>Paste in the following custom resource definition, and edit the values for the database <code>url</code> and credentials to match your environment:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
-kind: ApicurioRegistry
+kind: ApicurioRegistry3
 metadata:
   name: example-apicurioregistry-sql
 spec:
-  configuration:
-    persistence: 'sql'
-    sql:
-      dataSource:
-        url: 'jdbc:postgresql://&lt;service name&gt;.&lt;namespace&gt;.svc:5432/&lt;database name&gt;'
-        # e.g. url: 'jdbc:postgresql://acid-minimal-cluster.my-project.svc:5432/registry'
-        userName: 'postgres'
-        password: '&lt;password&gt;' # Optional</code></pre>
+  app:
+    storage:
+      type: postgresql
+      sql:
+        dataSource:
+          url: "jdbc:postgresql://&lt;service name&gt;.&lt;namespace&gt;.svc:5432/&lt;database name&gt;"
+          # e.g. url: "jdbc:postgresql://acid-minimal-cluster.my-project.svc:5432/registry"
+          username: "postgres"
+          password:
+            name: postgresql-credentials
+            key: password
+    ingress:
+      host: example-apicurioregistry-sql.my-project.my-domain-name.com
+  ui:
+    ingress:
+      host: example-apicurioregistry-sql-ui.my-project.my-domain-name.com</code></pre>
 </div>
 </div>
 </li>

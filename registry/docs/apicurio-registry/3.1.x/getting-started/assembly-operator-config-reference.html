@@ -836,8 +836,14 @@ The default in-memory storage is not suitable for production environments.
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafkaAccessSecretName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of a Kubernetes Secret produced by the Strimzi Kafka Access Operator (type <code>servicebinding.io/kafka</code>). When set, the operator reads connection details (bootstrap servers, TLS certificates, SASL credentials) from this secret instead of requiring manual configuration. Available starting with Apicurio Registry version 3.2.0.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>bootstrapServers</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka bootstrap servers address. Required for KafkaSQL storage.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kafka bootstrap servers address. Required if <code>kafkaAccessSecretName</code> is not set.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
@@ -868,6 +874,19 @@ The default in-memory storage is not suitable for production environments.
         bootstrapServers: my-cluster-kafka-bootstrap.my-project.svc:9092</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Example using the Kafka Access Operator (available starting with version 3.2.0):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        kafkaAccessSecretName: my-kafka-access</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_kafkasqltlsspec"><a class="anchor" href="#_kafkasqltlsspec"></a>KafkaSqlTLSSpec</h3>
@@ -891,6 +910,18 @@ The default in-memory storage is not suitable for production environments.
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keystoreSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the TLS keystore (PKCS12 format). Default key: <code>user.p12</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keystorePasswordSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the TLS keystore password. Default key: <code>user.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>truststoreSecretRef</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the TLS truststore (PKCS12 format). Default key: <code>ca.p12</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_secretkeyref">SecretKeyRef</a></p></td>
@@ -905,7 +936,7 @@ The default in-memory storage is not suitable for production environments.
 </tbody>
 </table>
 <div class="paragraph">
-<p>Example:</p>
+<p>Example with mutual TLS (client certificate authentication):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -916,13 +947,27 @@ The default in-memory storage is not suitable for production environments.
       kafkasql:
         bootstrapServers: my-cluster-kafka-bootstrap.my-project.svc:9093
         tls:
+          keystoreSecretRef:
+            name: my-user
+          keystorePasswordSecretRef:
+            name: my-user
           truststoreSecretRef:
             name: kafka-cluster-ca-cert
-            key: ca.p12
           truststorePasswordSecretRef:
-            name: kafka-cluster-ca-cert
-            key: ca.password</code></pre>
+            name: kafka-cluster-ca-cert</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Default keys match the secret structure produced by the Strimzi Operator, so you typically only need to specify the secret <code>name</code>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -1015,10 +1060,7 @@ The default in-memory storage is not suitable for production environments.
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The operator provides first-class support for OAuth (OAUTHBEARER) authentication. For other SASL mechanisms
-such as SCRAM-SHA-512 or PLAIN, you can use custom environment variables via the <code>spec.app.env</code> field to configure
-the Kafka client properties directly. See the <a href="assembly-config-reference.html" class="page">Apicurio Registry configuration reference</a> for available
-<code>apicurio.kafkasql.*</code> configuration properties.
+The operator provides first-class support for OAuth (OAUTHBEARER) authentication via the <code>auth</code> field. For other SASL mechanisms such as SCRAM-SHA-512, the recommended approach is to use the Strimzi Kafka Access Operator via the <code>kafkaAccessSecretName</code> field (available starting with Apicurio Registry version 3.2.0). Alternatively, you can use custom environment variables via the <code>spec.app.env</code> field to configure the Kafka client properties directly. See the <a href="assembly-config-reference.html" class="page">Apicurio Registry configuration reference</a> for available <code>apicurio.kafkasql.*</code> configuration properties.
 </td>
 </tr>
 </table>
