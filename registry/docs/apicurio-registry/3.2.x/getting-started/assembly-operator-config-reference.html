@@ -99,6 +99,9 @@
     <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -127,9 +130,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
   </li>
 </ul>
   </li>
@@ -691,13 +691,13 @@ immutable.</p></td>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Storage type: <code>&lt;empty&gt;</code> (in-memory), <code>postgresql</code>, or <code>kafkasql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage type: <code>&lt;empty&gt;</code> (in-memory), <code>postgresql</code>, <code>mysql</code>, <code>kafkasql</code>, or <code>kubernetesops</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>""</code> (in-memory)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>sql</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SQL database configuration. Required when <code>type</code> is <code>postgresql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL database configuration. Required when <code>type</code> is <code>postgresql</code> or <code>mysql</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_sqlspec">SqlSpec</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
@@ -705,6 +705,12 @@ immutable.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafkasql</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">KafkaSQL storage configuration. Required when <code>type</code> is <code>kafkasql</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_kafkasqlspec">KafkaSqlSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetesops</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">KubernetesOps storage configuration (read-only, experimental). Required when <code>type</code> is <code>kubernetesops</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_kubernetesopsspec">KubernetesOpsSpec</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
 </tbody>
@@ -1071,6 +1077,121 @@ Default keys match the secret structure produced by the Strimzi Operator, so you
 </td>
 <td class="content">
 The operator provides first-class support for OAuth (OAUTHBEARER) authentication via the <code>auth</code> field. For other SASL mechanisms such as SCRAM-SHA-512, the recommended approach is to use the Strimzi Kafka Access Operator via the <code>kafkaAccessSecretName</code> field (available starting with Apicurio Registry version 3.2.0). Alternatively, you can use custom environment variables via the <code>spec.app.env</code> field to configure the Kafka client properties directly. See the <a href="assembly-config-reference.html" class="page">Apicurio Registry configuration reference</a> for available <code>apicurio.kafkasql.*</code> configuration properties.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kubernetesopsspec"><a class="anchor" href="#_kubernetesopsspec"></a>KubernetesOpsSpec</h3>
+<div class="paragraph">
+<p>Configure KubernetesOps storage (read-only, experimental). Loads registry data from Kubernetes ConfigMaps:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unique identifier for this registry instance. Only ConfigMaps with a matching label will be loaded. Required.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>namespace</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes namespace to watch for ConfigMaps.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Current namespace</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>refreshEvery</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Polling interval for ConfigMap changes. Supports duration format (e.g., <code>10s</code>, <code>1m</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30s</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>labelRegistryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Label key used to identify ConfigMaps belonging to this registry.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.io/registry-id</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>watchEnabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable Watch API for real-time ConfigMap change detection. Set to <code>false</code> to use polling only.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>watchReconnectDelay</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Base delay before reconnecting after watch failure. Uses exponential backoff up to 5 minutes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10s</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+KubernetesOps storage is an experimental feature. The operator automatically enables the experimental features gate when this storage type is configured.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: kubernetesops
+      kubernetesops:
+        registryId: my-registry
+        namespace: apicurio</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example with custom polling and watch settings:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: kubernetesops
+      kubernetesops:
+        registryId: my-registry
+        namespace: apicurio
+        refreshEvery: 10s
+        watchEnabled: true
+        watchReconnectDelay: 5s</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+KubernetesOps storage is read-only. All changes must be made by creating or updating ConfigMaps. For more details on ConfigMap format and RBAC requirements, see <a href="assembly-configuring-kubernetesops-storage.html" class="page">Configuring Apicurio Registry with KubernetesOps storage</a>.
 </td>
 </tr>
 </table>

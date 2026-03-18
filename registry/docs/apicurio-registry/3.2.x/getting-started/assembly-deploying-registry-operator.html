@@ -98,6 +98,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
   <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
   </li>
@@ -127,9 +130,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
   </li>
 </ul>
   </li>
@@ -359,6 +359,9 @@ Kubernetes:</p>
 <p><a href="#deploying-registry-kafkasql_registry">Deploying Apicurio Registry with KafkaSQL storage</a></p>
 </li>
 <li>
+<p><a href="#deploying-registry-kubernetesops_registry">Deploying Apicurio Registry with KubernetesOps storage</a></p>
+</li>
+<li>
 <p><a href="#configuring-registry-authentication_registry">Configuring authentication and authorization</a></p>
 </li>
 <li>
@@ -427,7 +430,7 @@ and pod specifications.</p>
 <div class="sect2">
 <h3 id="_storage_options"><a class="anchor" href="#_storage_options"></a>Storage options</h3>
 <div class="paragraph">
-<p>Apicurio Registry supports three storage options:</p>
+<p>Apicurio Registry supports the following storage options:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -444,6 +447,10 @@ the pod restarts.</p>
 <li>
 <p><strong>KafkaSQL</strong> - Stores data in Apache Kafka topics with an in-memory cache. Suitable for production deployments
 when configured with persistent Kafka storage.</p>
+</li>
+<li>
+<p><strong>KubernetesOps</strong> - Read-only storage that loads registry data from Kubernetes ConfigMaps. Suitable for
+Kubernetes-native and GitOps workflows. This is an experimental feature.</p>
 </li>
 </ul>
 </div>
@@ -971,6 +978,119 @@ in <a href="assembly-installing-registry-storage-openshift.html">Installing Apic
 </li>
 </ul>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-registry-kubernetesops_registry"><a class="anchor" href="#deploying-registry-kubernetesops_registry"></a>Deploying Apicurio Registry with KubernetesOps storage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section explains how to deploy Apicurio Registry with KubernetesOps storage. KubernetesOps is a read-only storage
+variant that loads registry data from Kubernetes ConfigMaps, enabling Kubernetes-native and GitOps workflows for
+managing schemas and APIs.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+KubernetesOps storage is an <strong>experimental</strong> feature. You must enable the experimental features gate to use it.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have cluster administrator access to an Kubernetes cluster.</p>
+</li>
+<li>
+<p>You must have already installed the Apicurio Registry Operator. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
+</li>
+<li>
+<p>You must have access to create ConfigMaps and RBAC resources in your cluster.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the Kubernetes web console, click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry3</strong> &gt;
+<strong>Create ApicurioRegistry3</strong>.</p>
+</li>
+<li>
+<p>Paste in the following custom resource definition, adjusting the values for your environment:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry-kubernetesops
+spec:
+  app:
+    storage:
+      type: kubernetesops
+      kubernetesops:
+        registryId: my-registry
+        namespace: apicurio
+    ingress:
+      host: registry.example.com
+  ui:
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Replace <code>registryId</code> with a unique identifier for your registry instance, and
+<code>namespace</code> with the namespace containing your ConfigMaps. The operator automatically enables
+the experimental features gate required by KubernetesOps storage.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Create the required RBAC resources (ServiceAccount, Role, RoleBinding) to grant the registry read access
+to ConfigMaps. See <a href="assembly-configuring-kubernetesops-storage.html#kubernetesops-rbac-requirements_registry" class="page">RBAC requirements</a> for details.</p>
+</li>
+<li>
+<p>Create ConfigMaps containing your registry data. See
+<a href="assembly-configuring-kubernetesops-storage.html#kubernetesops-configmap-format_registry" class="page">ConfigMap data format</a> for the required format.</p>
+</li>
+<li>
+<p>Click <strong>Create</strong> and wait for the Apicurio Registry deployment to be created.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Access the Apicurio Registry web console and verify that artifacts from your ConfigMaps are visible.</p>
+</li>
+<li>
+<p>Note that KubernetesOps storage is read-only. You cannot create, update, or delete artifacts through the
+REST API or web console.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For detailed configuration options, see <a href="assembly-configuring-kubernetesops-storage.html" class="page">Configuring Apicurio Registry with KubernetesOps storage</a>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
