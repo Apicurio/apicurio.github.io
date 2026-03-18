@@ -546,9 +546,9 @@ KubernetesOps storage is an <strong>experimental</strong> feature. You must enab
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>kubernetesops</code> to enable KubernetesOps storage.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_KUBERNETESOPS_ID</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Unique identifier for this registry instance. Only ConfigMaps with matching label will be loaded.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_POLLING_STORAGE_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unique identifier for this registry instance. Only ConfigMaps with matching label will be loaded.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_KUBERNETESOPS_NAMESPACE</code></p></td>
@@ -556,9 +556,9 @@ KubernetesOps storage is an <strong>experimental</strong> feature. You must enab
 <td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes namespace to watch for ConfigMaps.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_KUBERNETESOPS_REFRESH_EVERY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30s</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">How often to poll for ConfigMap changes. Supports duration format (e.g., <code>10s</code>, <code>1m</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_POLLING_STORAGE_POLL_PERIOD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PT10S</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum period between polls for ConfigMap changes. Uses ISO 8601 duration format (e.g., <code>PT10S</code>, <code>PT1M</code>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_KUBERNETESOPS_LABEL_REGISTRY_ID</code></p></td>
@@ -588,12 +588,12 @@ spec:
               value: "true"
             - name: APICURIO_STORAGE_KIND
               value: "kubernetesops"
-            - name: APICURIO_KUBERNETESOPS_ID
+            - name: APICURIO_POLLING_STORAGE_ID
               value: "my-registry"
             - name: APICURIO_KUBERNETESOPS_NAMESPACE
               value: "apicurio"
-            - name: APICURIO_KUBERNETESOPS_REFRESH_EVERY
-              value: "30s"</code></pre>
+            - name: APICURIO_POLLING_STORAGE_POLL_PERIOD
+              value: "PT10S"</code></pre>
 </div>
 </div>
 </li>
@@ -873,7 +873,7 @@ ConfigMaps are designed for configuration data, not large data payloads. Artifac
 <p>With Watch disabled, expect up to one polling interval delay</p>
 </li>
 <li>
-<p>Decrease <code>APICURIO_KUBERNETESOPS_REFRESH_EVERY</code> for faster fallback polling (increases API load)</p>
+<p>Decrease <code>APICURIO_POLLING_STORAGE_POLL_PERIOD</code> for faster fallback polling (increases API load)</p>
 </li>
 <li>
 <p>Increase the interval for larger deployments to reduce Kubernetes API load</p>

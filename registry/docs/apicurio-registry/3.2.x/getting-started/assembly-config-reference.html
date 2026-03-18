@@ -949,32 +949,25 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Identifier of this Registry instance. Only data that references this identifier will be loaded.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.repo.origin.branch</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.repo.branch</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>main</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the branch in the remote git repository containing data to be loaded.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Branch to read from. <em>(experimental)</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.repo.origin.uri</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.repo.dir</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URI of the remote git repository containing data to be loaded.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Directory name of the Git repository, relative to the workspace. <em>(experimental)</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.workdir</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.workspace</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/tmp/apicurio-registry-gitops</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Path to GitOps working directory, which is used to store the local git repository.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Base directory where Git repositories are mounted. Repository directories are resolved relative to this path. <em>(experimental)</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -1255,39 +1248,32 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kubernetesops.id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Identifier of this Registry instance. Only ConfigMaps with a label matching this identifier will be loaded.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kubernetesops.label.registry-id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.io/registry-id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Label key used to identify ConfigMaps belonging to this registry instance.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Label key used to identify ConfigMaps belonging to this registry instance. The label value must match <code>apicurio.polling-storage.id</code>. <em>(experimental)</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kubernetesops.namespace</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes namespace to watch for ConfigMaps. If not specified, auto-detects the pod&#8217;s namespace or falls back to "default".</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes namespace to watch for ConfigMaps. If not specified, auto-detects the pod&#8217;s namespace or falls back to "default". <em>(experimental)</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kubernetesops.watch.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable Kubernetes Watch API for real-time ConfigMap change detection.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable Kubernetes Watch API for real-time ConfigMap change detection. When enabled, changes are detected immediately via watch events in addition to periodic polling. <em>(experimental)</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kubernetesops.watch.reconnect-delay</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>duration</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>PT10S</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Base delay before reconnecting after watch failure. Uses exponential backoff.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Base delay before reconnecting after watch failure. Uses exponential backoff with a maximum of 5 minutes. <em>(experimental)</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -1868,7 +1854,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.datasource.blue.jdbc.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jdbc:h2:mem:registry_db</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jdbc:h2:mem:registry_blue</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Gitops blue datasource jdbc url</p></td>
 </tr>
@@ -1917,7 +1903,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.datasource.green.jdbc.url</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jdbc:h2:mem:registry_db</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jdbc:h2:mem:registry_green</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Gitops green datasource jdbc url</p></td>
 </tr>
@@ -2158,6 +2144,55 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Kafka sql storage topic auto create</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.debounce.max-wait-period</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>duration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PT90S</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum time to wait for changes to settle before forcing a load. Prevents indefinite delay when changes keep arriving. Set to PT0S for no maximum. <em>(experimental)</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.debounce.quiet-period</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>duration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PT30S</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">After detecting a change, wait until no new changes are seen for this duration before loading data. Absorbs rapid successive pushes. Set to PT0S to disable debouncing. <em>(experimental)</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.deterministic-ids-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, contentId and globalId are deterministically generated from content hashes and artifact coordinates if not explicitly specified. When disabled, missing IDs cause an error. Generated IDs use the upper half of positive longs (above Long.MAX_VALUE/2), leaving the lower half for user-specified IDs. <em>(experimental)</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.file-suffixes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list&lt;string&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry,ar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma-separated list of file suffixes that identify registry metadata files. Each suffix is combined with supported extensions (.yaml, .yml, .json) to form the full pattern. For example, suffix "registry" matches *.registry.yaml, *.registry.yml, and *.registry.json. <em>(experimental)</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifier of this Registry instance. Only data that references this identifier will be loaded. <em>(experimental)</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.poll-period</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>duration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PT10S</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum period between data source polls. The actual poll (reading from Git or Kubernetes) only happens when at least this much time has passed since the last poll. <em>(experimental)</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.require-registry-config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, a load is rejected if the data source does not contain a registry configuration file matching the configured registry ID. This prevents accidental data loss from force-pushes or empty branches. To intentionally clear all data, first push a commit with only the registry configuration file (no artifacts), then remove it. <em>(experimental)</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.sql.db-schema</code></p></td>
@@ -2630,13 +2665,6 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.downloads.reaper.every</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>unknown</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>60s</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.refresh.every</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unknown</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30s</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
