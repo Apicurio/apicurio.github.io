@@ -626,6 +626,30 @@ For some advanced use cases, you might use a custom implementation of <code>Sche
 </tr>
 </tbody>
 </table>
+<h5 id="_opentelemetry_distributed_tracing" class="discrete">OpenTelemetry distributed tracing</h5>
+<div class="paragraph">
+<p>The SerDes libraries support optional OpenTelemetry trace context propagation. When enabled,
+W3C trace context headers (<code>traceparent</code> and <code>tracestate</code>) are injected into all HTTP requests
+to Apicurio Registry, allowing schema resolution and registration calls to appear as spans in your
+distributed traces alongside your Kafka producer and consumer operations.</p>
+</div>
+<div class="paragraph">
+<p>To enable this feature, set the following configuration property:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.registry.otel.enabled=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>opentelemetry-api</code> library must be on the classpath. When an OpenTelemetry SDK is initialized
+in your application (for example, via the OpenTelemetry Java agent or the Quarkus OpenTelemetry
+extension), the SerDes HTTP calls will participate in the active trace. If no OpenTelemetry SDK is
+configured, the behavior is a no-op and no trace headers are added.</p>
+</div>
+<div class="paragraph">
+<p>For more details on SDK-level configuration, see <a href="#registry-sdk-config_registry">[registry-sdk-config_registry]</a>.</p>
+</div>
 <h4 id="_configuration_for_registry_lookup_options" class="discrete">Configuration for registry lookup options</h4>
 <div class="paragraph">
 <p>The <code>DefaultSchemaResolver</code> uses the following properties to configure how to look up artifacts in Apicurio Registry.</p>
