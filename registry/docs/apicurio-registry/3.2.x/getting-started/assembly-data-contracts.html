@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Apicurio Registry data contracts :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.2.x/getting-started/assembly-data-contracts.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.2.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">getting-started/assembly-registry-concepts-glossary.adoc</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A Protocol Features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM Artifact Types Implementation Guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.2.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.5.x/index.html">2.5.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.4.x/index.html">2.4.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.3.x/index.html">2.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Introduction</li>
+    <li><a href="assembly-data-contracts.html">Apicurio Registry data contracts</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.2.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-data-contracts.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.5.x/index.html">2.5.x</a>
+    <a class="version is-missing" href="../../2.4.x/index.html">2.4.x</a>
+    <a class="version is-missing" href="../../2.3.x/index.html">2.3.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Apicurio Registry data contracts</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This chapter introduces the Data Contracts framework in Apicurio Registry, which provides comprehensive support for managing schema contracts between data producers and consumers.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#data-contracts-overview_registry">Overview</a></p>
+</li>
+<li>
+<p><a href="#data-contracts-metadata_registry">Contract metadata</a></p>
+</li>
+<li>
+<p><a href="#data-contracts-lifecycle_registry">Contract lifecycle</a></p>
+</li>
+<li>
+<p><a href="#data-contracts-field-tags_registry">Field-level tags (planned)</a></p>
+</li>
+<li>
+<p><a href="#data-contracts-rules_registry">Contract rules (planned)</a></p>
+</li>
+<li>
+<p><a href="#data-contracts-migration_registry">Schema migration rules (planned)</a></p>
+</li>
+<li>
+<p><a href="#data-contracts-api_registry">REST API (planned)</a></p>
+</li>
+<li>
+<p><a href="#data-contracts-configuration_registry">Configuration</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-contracts-overview_registry"><a class="anchor" href="#data-contracts-overview_registry"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The Data Contracts framework enables teams to define, enforce, and track formal agreements about schema structure, ownership, and quality. Data contracts help ensure data producers and consumers adhere to clearly defined standards throughout the schema lifecycle.</p>
+</div>
+<div class="paragraph">
+<p>A data contract in Apicurio Registry combines:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Metadata</strong> - Standardized ownership, classification, and support information</p>
+</li>
+<li>
+<p><strong>Lifecycle</strong> - Status tracking (DRAFT, STABLE, DEPRECATED) and promotion workflows</p>
+</li>
+<li>
+<p><strong>Field Tags</strong> - Semantic annotation of schema fields (for example, PII, SENSITIVE, EMAIL)</p>
+</li>
+<li>
+<p><strong>Rules</strong> - Governance rules (registry-side) and validation/transformation rules (runtime)</p>
+</li>
+<li>
+<p><strong>Migration</strong> - Schema evolution with data transformation between versions</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-contracts-metadata_registry"><a class="anchor" href="#data-contracts-metadata_registry"></a>Contract metadata</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Contract metadata provides standardized information about schema ownership, classification, and support. Metadata is stored using the reserved <code>contract.*</code> label namespace.</p>
+</div>
+<div class="sect2">
+<h3 id="_metadata_fields"><a class="anchor" href="#_metadata_fields"></a>Metadata fields</h3>
+<div class="paragraph">
+<p>The following metadata fields are available for data contracts:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Contract metadata fields</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contract.status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contract lifecycle status: <code>DRAFT</code>, <code>STABLE</code>, or <code>DEPRECATED</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contract.owner.team</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the team responsible for the contract</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contract.owner.domain</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Business domain (for example, payments, orders, users)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contract.support.contact</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Support email address</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contract.classification</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data classification: <code>PUBLIC</code>, <code>INTERNAL</code>, <code>CONFIDENTIAL</code>, or <code>RESTRICTED</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contract.stage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Promotion stage: <code>DEV</code>, <code>STAGE</code>, or <code>PROD</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contract.lifecycle.stable-date</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ISO-8601 date</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Date when the contract status became STABLE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contract.lifecycle.deprecated-date</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ISO-8601 date</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Date when the contract status became DEPRECATED</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contract.lifecycle.deprecation-reason</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reason for deprecating the contract</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_data_classification_levels"><a class="anchor" href="#_data_classification_levels"></a>Data classification levels</h3>
+<div class="paragraph">
+<p>Data classification helps teams understand the sensitivity of data in a contract:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>PUBLIC</strong> - No restrictions, data can be freely shared</p>
+</li>
+<li>
+<p><strong>INTERNAL</strong> - For internal use only, not for external parties</p>
+</li>
+<li>
+<p><strong>CONFIDENTIAL</strong> - Need-to-know basis, limited access</p>
+</li>
+<li>
+<p><strong>RESTRICTED</strong> - Highly sensitive data requiring strict access controls</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-contracts-lifecycle_registry"><a class="anchor" href="#data-contracts-lifecycle_registry"></a>Contract lifecycle</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The contract lifecycle tracks the maturity and availability of a schema through defined status transitions.</p>
+</div>
+<div class="sect2">
+<h3 id="_lifecycle_statuses"><a class="anchor" href="#_lifecycle_statuses"></a>Lifecycle statuses</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>DRAFT</strong> - Initial state. The schema is being developed and is not ready for production use.</p>
+</li>
+<li>
+<p><strong>STABLE</strong> - The schema is production-ready and consumers can rely on it.</p>
+</li>
+<li>
+<p><strong>DEPRECATED</strong> - The schema is being phased out. Consumers should migrate to a newer version.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_status_transitions"><a class="anchor" href="#_status_transitions"></a>Status transitions</h3>
+<div class="paragraph">
+<p>The following status transitions are allowed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>DRAFT ──────► STABLE ──────► DEPRECATED
+   │                              ▲
+   └──────────────────────────────┘
+         (skip stable)</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DRAFT</code> → <code>STABLE</code> - Use when the schema is ready for production</p>
+</li>
+<li>
+<p><code>STABLE</code> → <code>DEPRECATED</code> - Use when phasing out the schema</p>
+</li>
+<li>
+<p><code>DRAFT</code> → <code>DEPRECATED</code> - Use to deprecate without ever reaching stable</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Reverse transitions (for example, <code>STABLE</code> → <code>DRAFT</code> or <code>DEPRECATED</code> → <code>STABLE</code>) are not allowed.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_promotion_workflow_planned"><a class="anchor" href="#_promotion_workflow_planned"></a>Promotion workflow (planned)</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Automated promotion workflow enforcement is planned for a future release. The promotion stage label can be set manually.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The promotion workflow tracks which environment a contract is deployed to:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>DEV ──────► STAGE ──────► PROD</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>DEV</strong> - Development environment</p>
+</li>
+<li>
+<p><strong>STAGE</strong> - Staging or QA environment</p>
+</li>
+<li>
+<p><strong>PROD</strong> - Production environment</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Promotion rules:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You can only promote to the next stage (DEV → STAGE → PROD)</p>
+</li>
+<li>
+<p>You cannot skip stages (DEV → PROD is not allowed)</p>
+</li>
+<li>
+<p>You cannot demote (PROD → STAGE is not allowed)</p>
+</li>
+<li>
+<p>PROD promotion might require STABLE status (configurable)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-contracts-field-tags_registry"><a class="anchor" href="#data-contracts-field-tags_registry"></a>Field-level tags (planned)</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Field-level tags are planned for a future release and are not yet implemented.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph _abstract">
+<p>Field tags provide semantic annotation of schema fields, enabling you to identify sensitive data, apply tag-based rules, and search for artifacts by tag.</p>
+</div>
+<div class="sect2">
+<h3 id="_supported_tag_formats"><a class="anchor" href="#_supported_tag_formats"></a>Supported tag formats</h3>
+<div class="paragraph">
+<p>Tags can be embedded directly in schema definitions:</p>
+</div>
+<div class="listingblock">
+<div class="title">Avro schema with tags</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "type": "record",
+  "name": "User",
+  "fields": [{
+    "name": "email",
+    "type": "string",
+    "tags": ["PII", "EMAIL"]
+  }, {
+    "name": "ssn",
+    "type": "string",
+    "tags": ["PII", "SENSITIVE"]
+  }]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">JSON Schema with tags</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "x-tags": ["PII", "EMAIL"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Protobuf schema with tags</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-protobuf hljs" data-lang="protobuf">message User {
+  string email = 1 [(apicurio.field_meta).tags = "PII,EMAIL"];
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tag_sources"><a class="anchor" href="#_tag_sources"></a>Tag sources</h3>
+<div class="paragraph">
+<p>Tags can come from two sources:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Inline tags</strong> - Extracted automatically from schema content during registration</p>
+</li>
+<li>
+<p><strong>External tags</strong> - Added manually through the REST API</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>External tags are merged with inline tags and can be used to add additional context without modifying the schema.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_common_tag_examples"><a class="anchor" href="#_common_tag_examples"></a>Common tag examples</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>PII</code> - Personally Identifiable Information</p>
+</li>
+<li>
+<p><code>SENSITIVE</code> - Sensitive data requiring special handling</p>
+</li>
+<li>
+<p><code>EMAIL</code> - Email address fields</p>
+</li>
+<li>
+<p><code>PHONE</code> - Phone number fields</p>
+</li>
+<li>
+<p><code>FINANCIAL</code> - Financial data</p>
+</li>
+<li>
+<p><code>HEALTH</code> - Health-related data (PHI)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-contracts-rules_registry"><a class="anchor" href="#data-contracts-rules_registry"></a>Contract rules (planned)</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Contract rules are planned for a future release and are not yet implemented.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph _abstract">
+<p>Contract rules enable you to enforce governance policies and validate or transform data. Rules are organized into three categories based on when they execute.</p>
+</div>
+<div class="sect2">
+<h3 id="_governance_rules_registry_side"><a class="anchor" href="#_governance_rules_registry_side"></a>Governance rules (registry-side)</h3>
+<div class="paragraph">
+<p>Governance rules execute when artifacts are created or updated. They enforce policies at the registry level.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Governance rule examples</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Rule</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requireOwner</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Require the owner team to be set before registration</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requireClassification</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Require data classification to be specified</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>preventDeprecatedUpdates</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Block updates to contracts with DEPRECATED status</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requireStableForProd</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Require STABLE status before promoting to PROD</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_validation_rules_client_side"><a class="anchor" href="#_validation_rules_client_side"></a>Validation rules (client-side)</h3>
+<div class="paragraph">
+<p>Validation rules execute during serialization (WRITE) or deserialization (READ). They validate data against business rules using CEL (Common Expression Language).</p>
+</div>
+<div class="listingblock">
+<div class="title">Example CEL validation rule</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "name": "validateAge",
+  "kind": "CONDITION",
+  "type": "CEL",
+  "mode": "WRITE",
+  "expr": "message.age &gt;= 0 &amp;&amp; message.age &lt;= 150",
+  "onFailure": "ERROR"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_transform_rules_client_side"><a class="anchor" href="#_transform_rules_client_side"></a>Transform rules (client-side)</h3>
+<div class="paragraph">
+<p>Transform rules modify data during serialization or deserialization.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example encryption rule</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "name": "encryptPII",
+  "kind": "TRANSFORM",
+  "type": "ENCRYPT",
+  "mode": "WRITE",
+  "tags": ["PII"],
+  "params": {
+    "encrypt.kek.name": "pii-key"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_rule_modes"><a class="anchor" href="#_rule_modes"></a>Rule modes</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>REGISTRY</strong> - Execute on artifact create/update (governance)</p>
+</li>
+<li>
+<p><strong>WRITE</strong> - Execute on serialize</p>
+</li>
+<li>
+<p><strong>READ</strong> - Execute on deserialize</p>
+</li>
+<li>
+<p><strong>WRITEREAD</strong> - Execute on both serialize and deserialize</p>
+</li>
+<li>
+<p><strong>UPGRADE</strong> - Execute during schema upgrade migration</p>
+</li>
+<li>
+<p><strong>DOWNGRADE</strong> - Execute during schema downgrade migration</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_rule_actions"><a class="anchor" href="#_rule_actions"></a>Rule actions</h3>
+<div class="paragraph">
+<p>When a rule fails, you can configure the action:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>NONE</strong> - Continue processing (log only)</p>
+</li>
+<li>
+<p><strong>ERROR</strong> - Throw an exception and reject the operation</p>
+</li>
+<li>
+<p><strong>DLQ</strong> - Route the message to a dead letter queue</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-contracts-migration_registry"><a class="anchor" href="#data-contracts-migration_registry"></a>Schema migration rules (planned)</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Schema migration rules are planned for a future release and are not yet implemented.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph _abstract">
+<p>Migration rules enable schema evolution with data transformation between versions. When a consumer reads data written with an older schema version, migration rules transform the data to match the expected format.</p>
+</div>
+<div class="sect2">
+<h3 id="_migration_directions"><a class="anchor" href="#_migration_directions"></a>Migration directions</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>UPGRADE</strong> - Transform data from an older schema version to a newer one</p>
+</li>
+<li>
+<p><strong>DOWNGRADE</strong> - Transform data from a newer schema version to an older one</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jsonata_transforms"><a class="anchor" href="#_jsonata_transforms"></a>JSONata transforms</h3>
+<div class="paragraph">
+<p>Migration rules use JSONata expressions for data transformation:</p>
+</div>
+<div class="listingblock">
+<div class="title">Example upgrade rule (v1 to v2)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "name": "upgradeToV2",
+  "kind": "TRANSFORM",
+  "type": "JSONATA",
+  "mode": "UPGRADE",
+  "expr": "{ 'fullName': firstName &amp; ' ' &amp; lastName }"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This rule transforms:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">// Input (v1)
+{ "firstName": "John", "lastName": "Doe" }
+
+// Output (v2)
+{ "fullName": "John Doe" }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compatibility_groups"><a class="anchor" href="#_compatibility_groups"></a>Compatibility groups</h3>
+<div class="paragraph">
+<p>When schemas evolve with breaking changes, you can use compatibility groups to partition the version history. Versions within the same compatibility group must be compatible. Migration rules are required when crossing group boundaries.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-contracts-api_registry"><a class="anchor" href="#data-contracts-api_registry"></a>REST API (planned)</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The Data Contracts REST API endpoints are planned for a future release and are not yet implemented. Contract metadata can currently be managed through the standard artifact/version labels API.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph _abstract">
+<p>The Data Contracts REST API provides endpoints for managing all aspects of contracts.</p>
+</div>
+<div class="sect2">
+<h3 id="_contract_endpoints"><a class="anchor" href="#_contract_endpoints"></a>Contract endpoints</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Data contract REST API endpoints</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Endpoint</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get contract metadata, rules, and tags</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create or update contract</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove contract</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change lifecycle status</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/promote</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Promote to next stage</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/tags</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get field-level tags</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/tags</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set external tags</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/rules</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get contract rules</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/rules</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update contract rules</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/rules/execute</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Execute rules (for testing)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/quality</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get quality score</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_example_setting_contract_metadata"><a class="anchor" href="#_example_setting_contract_metadata"></a>Example: Setting contract metadata</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X PUT \
+  http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/contract \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "status": "DRAFT",
+    "ownerTeam": "Platform Team",
+    "ownerDomain": "payments",
+    "supportContact": "platform@example.com",
+    "classification": "CONFIDENTIAL",
+    "stage": "DEV"
+  }'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_changing_lifecycle_status"><a class="anchor" href="#_example_changing_lifecycle_status"></a>Example: Changing lifecycle status</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST \
+  http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/contract/status \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "status": "STABLE",
+    "comment": "Approved for production use"
+  }'</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-contracts-configuration_registry"><a class="anchor" href="#data-contracts-configuration_registry"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Configure the Data Contracts framework using Apicurio Registry application properties.</p>
+</div>
+<div class="sect2">
+<h3 id="_configuration_properties"><a class="anchor" href="#_configuration_properties"></a>Configuration properties</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Data contracts configuration properties</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.contracts.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable or disable the data contracts feature (experimental)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The following configuration properties are planned for future releases and are not yet available.
+</td>
+</tr>
+</table>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Planned data contracts configuration properties</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.contracts.governance.require-owner</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Require owner team to be set</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.contracts.governance.require-classification</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Require data classification to be set</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.contracts.governance.prevent-deprecated-updates</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Block updates to deprecated contracts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.contracts.governance.require-stable-for-prod</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Require STABLE status for PROD promotion</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.contracts.quality.cache-ttl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>300</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quality score cache TTL in seconds</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.contracts.rules.fail-fast</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stop on first rule failure</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.contracts.rules.cache-ttl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>300</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rule cache TTL in seconds</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_serdes_configuration_planned"><a class="anchor" href="#_serdes_configuration_planned"></a>SerDes configuration (planned)</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+SerDes rule execution configuration is planned for a future release.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Configure rule execution in Kafka serializers/deserializers:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. SerDes configuration properties</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.rules.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable rule execution in SerDes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.rules.on-failure</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ERROR</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Action on rule failure: <code>ERROR</code> or <code>DLQ</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.rules.dlq.topic</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dead letter queue topic name</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-intro-to-registry-rules.html">Introduction to Apicurio Registry rules</a></p>
+</li>
+<li>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.2.x/getting-started/assembly-data-contracts.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
