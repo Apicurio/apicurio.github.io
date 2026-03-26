@@ -56,7 +56,7 @@ With Dex in the middle, here's what changes:
 | **Owner-based authorization** | **No** | **Yes** |
 | Multi-provider federation | No | Yes |
 | Standard OIDC compliance | No | Yes |
-| **Client credentials grant (M2M)** | **N/A** | **Partial** (no groups) |
+| **Client credentials grant (M2M)** | **N/A** | **Partial** — works in `master`, no groups in tokens (see below) |
 
 Every user-facing feature that was broken now works. And as a bonus, you get multi-provider federation — Dex can authenticate against multiple upstream providers simultaneously.
 
@@ -340,7 +340,7 @@ There are a few important details in this CR worth calling out:
 
 **Two-client architecture** — Both `appClientId` and `uiClientId` are set to `apicurio-registry-ui` (the public Dex client). The browser-based UI uses `oidc-client-ts`, which cannot securely hold a client secret. If you use a confidential client for the UI, the token exchange will fail with `Invalid client credentials`. The backend validates JWT signatures via the JWKS endpoint and doesn't need a client secret. The separate confidential client (`apicurio-registry`) is kept for CLI/API token exchange via curl or scripts.
 
-**UI scope with `groups`** — The `APICURIO_UI_AUTH_OIDC_SCOPE` env var adds `groups` to the scope the UI requests from Dex. Without this, the default scope (`openid profile email`) doesn't include groups, and Dex won't put group membership in the token. RBAC then denies all write operations because it can't determine the user's role.
+**UI scope with `groups`** — The `APICURIO_UI_AUTH_OIDC_SCOPE` env var adds `groups` to the scope the UI requests from Dex. Without this, the default scope (`openid profile email`) doesn't include groups, and Dex won't put group membership in the token. RBAC then denies all write operations because it can't determine the user's role. We verified this on a live cluster with Dex v2.45.1 and the OpenShift connector: tokens include the `groups` claim with the user's OpenShift group memberships, and Apicurio successfully resolves roles (e.g. `registry-admins`) for RBAC authorization.
 
 **Explicit `redirectUri`** — Without this, `oidc-client-ts` uses `window.location.href` as the redirect URI for silent token refresh. After the initial login, the URL may still contain `?code=...&state=...` query parameters, which don't match any registered redirect URI in Dex, causing a 400 error.
 
@@ -372,12 +372,21 @@ So far we've focused on the browser-based UI flow, but what about CI/CD pipeline
 
 This is a critical question because **the Apicurio SerDes libraries only support `client_credentials` grant** — they hardcode `grant_type=client_credentials` with no alternative. Every Kafka producer or consumer using Apicurio SerDes to fetch or register schemas needs this grant type to work.
 
-## Dex Now Supports `client_credentials` (Opt-In)
+## Dex `client_credentials` Support (Unreleased as of v2.45.1)
 
-As of March 2026 ([PR #4583](https://github.com/dexidp/dex/pull/4583)), Dex supports `client_credentials` behind a feature flag. Enable it by setting an environment variable on the Dex deployment:
+Dex added `client_credentials` support via [PR #4583](https://github.com/dexidp/dex/pull/4583) (merged March 3, 2026), but this feature is **not included in Dex v2.45.1** — the latest stable release at time of writing. It will ship in v2.46.0 or later.
+
+We tested both versions on a live OpenShift cluster:
+
+- **Dex v2.45.1**: `client_credentials` returns `{"error":"unsupported_grant_type"}` regardless of the `DEX_CLIENT_CREDENTIAL_GRANT_ENABLED_BY_DEFAULT` env var. The feature flag code doesn't exist in this version.
+- **Dex `master` snapshot** (`docker.io/dexidp/dex:master`): `client_credentials` **works**. Tokens are issued, and the grant type appears in the OIDC discovery endpoint. However, tokens **do not include `groups` claims** — writes to the Registry API return 403 because RBAC can't determine the user's role.
+
+To test before a stable release, use the `dexidp/dex:master` image from Docker Hub (rebuilt daily by Dex CI). For production, wait for v2.46.0+.
+
+Enable it by setting an environment variable on the Dex deployment:
 
 ```yaml
-# In the Dex Deployment spec
+# In the Dex Deployment spec (requires Dex master or >= v2.46.0)
 env:
   - name: DEX_CLIENT_CREDENTIAL_GRANT_ENABLED_BY_DEFAULT
     value: "true"
@@ -397,7 +406,9 @@ ACCESS_TOKEN=$(echo $TOKEN_RESPONSE | jq -r .access_token)
 
 ## The Catch: No Groups in Client Credentials Tokens
 
-Here's the problem: Dex's `client_credentials` tokens **do not include `groups` claims**. Since Apicurio Registry uses `groups` for RBAC (determining admin/developer/reader roles), M2M clients authenticating via `client_credentials` will have **no assigned role**.
+Even with `client_credentials` working, the tokens **do not include `groups` claims** — even when the `groups` scope is explicitly requested. The PR description says it "supports `groups` scope", but the scope is merely *accepted* (not rejected) — no groups are populated because there's no upstream connector or user in the `client_credentials` flow. The token is built solely from the static client definition, which has no group membership.
+
+Since Apicurio Registry uses `groups` for RBAC (determining admin/developer/reader roles), M2M clients authenticating via `client_credentials` will have **no assigned role** (principal is `null`, roles are empty).
 
 What this means in practice:
 
@@ -426,6 +437,19 @@ TOKEN_RESPONSE=$(curl -s -X POST "https://dex.<cluster-domain>/token" \
 # This token WILL have groups because it went through the full user auth flow
 ACCESS_TOKEN=$(echo $TOKEN_RESPONSE | jq -r .access_token)
 ```
+
+## Upcoming Fix: Groups on Static Clients
+
+We opened [dexidp/dex#4690](https://github.com/dexidp/dex/issues/4690) to report this gap and submitted [dexidp/dex#4691](https://github.com/dexidp/dex/pull/4691) with a fix. It adds a `groups` field to static client definitions:
+
+```yaml
+staticClients:
+  - id: apicurio-registry
+    secret: "..."
+    groups: ["registry-admins"]   # included in client_credentials tokens
+```
+
+We deployed a patched build and verified it on a live cluster: tokens now include `"groups": ["registry-admins"]` and Registry writes succeed (200 instead of 403). Track the PR for when this lands in a stable release.
 
 ## When to Use Keycloak Instead
 
@@ -487,6 +511,7 @@ config:
 - **`invalid_client` when exchanging authorization code** — If the client secret contains special characters (`+`, `/`, `=`), use `--data-urlencode` instead of `-d` in curl.
 - **Owner field is still empty** — Check that `QUARKUS_OIDC_TOKEN_PRINCIPAL_CLAIM` is set to a claim Dex actually populates (`email`, `name`, or `sub`).
 - **UI redirects to Dex but gets an error** — Check Dex logs (`kubectl logs -n dex deploy/dex`). Usually a redirect URI mismatch or connector misconfiguration.
+- **`client_credentials` returns `unsupported_grant_type`** — This grant type was added in Dex PR #4583 (merged March 3, 2026) but is **not included in v2.45.1** or earlier. You need Dex >= v2.46.0 or a build from `master`.
 - **"OIDC Server is not available"** — The Registry pod can't reach Dex. Check DNS resolution, network policies, and TLS trust.
 
 # The Bigger Picture
