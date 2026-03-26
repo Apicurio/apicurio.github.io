@@ -56,8 +56,9 @@ With Dex in the middle, here's what changes:
 | **Owner-based authorization** | **No** | **Yes** |
 | Multi-provider federation | No | Yes |
 | Standard OIDC compliance | No | Yes |
+| **Client credentials grant (M2M)** | **N/A** | **Partial** (no groups) |
 
-Every feature that was broken now works. And as a bonus, you get multi-provider federation — Dex can authenticate against multiple upstream providers simultaneously.
+Every user-facing feature that was broken now works. And as a bonus, you get multi-provider federation — Dex can authenticate against multiple upstream providers simultaneously.
 
 # How to Set It Up
 
@@ -365,56 +366,75 @@ curl -sk https://<registry-app-route>/apis/registry/v3/groups/my-group \
 # Expected: the user's email — NOT empty
 ```
 
-# Machine-to-Machine (M2M) Access
+# Machine-to-Machine (M2M) Access and Kafka SerDes
 
-So far we've focused on the browser-based UI flow, but what about CI/CD pipelines, scripts, and service accounts that need to interact with the Registry API without a browser?
+So far we've focused on the browser-based UI flow, but what about CI/CD pipelines, Kafka SerDes, and services that need to interact with the Registry API without a browser?
 
-This is where the **confidential client** (`apicurio-registry`) comes in. While the UI uses the public client, programmatic access uses the confidential client with the authorization code flow:
+This is a critical question because **the Apicurio SerDes libraries only support `client_credentials` grant** — they hardcode `grant_type=client_credentials` with no alternative. Every Kafka producer or consumer using Apicurio SerDes to fetch or register schemas needs this grant type to work.
+
+## Dex Now Supports `client_credentials` (Opt-In)
+
+As of March 2026 ([PR #4583](https://github.com/dexidp/dex/pull/4583)), Dex supports `client_credentials` behind a feature flag. Enable it by setting an environment variable on the Dex deployment:
+
+```yaml
+# In the Dex Deployment spec
+env:
+  - name: DEX_CLIENT_CREDENTIAL_GRANT_ENABLED_BY_DEFAULT
+    value: "true"
+```
+
+Then use the confidential client:
 
 ```bash
-# Step 1: Open this URL in a browser and authenticate
-# https://dex.<cluster-domain>/auth?client_id=apicurio-registry&response_type=code&redirect_uri=https://<registry-app-route>/&scope=openid+email+profile+groups
-
-# Step 2: Copy the ?code=... parameter from the redirect URL
-
-# Step 3: Exchange the code for tokens
-TOKEN_RESPONSE=$(curl -sk -X POST https://dex.<cluster-domain>/token \
-  --data-urlencode "grant_type=authorization_code" \
-  --data-urlencode "code=<AUTH_CODE>" \
+TOKEN_RESPONSE=$(curl -s -X POST "https://dex.<cluster-domain>/token" \
+  --data-urlencode "grant_type=client_credentials" \
   --data-urlencode "client_id=apicurio-registry" \
   --data-urlencode "client_secret=<CLIENT_SECRET>" \
-  --data-urlencode "redirect_uri=https://<registry-app-route>/")
+  --data-urlencode "scope=openid profile")
 
-# Step 4: Extract the token
-ACCESS_TOKEN=$(echo $TOKEN_RESPONSE | jq -r .id_token)
-
-# Step 5: Use it
-curl -sk -X POST \
-  https://<registry-app-route>/apis/registry/v3/groups \
-  -H "Authorization: Bearer $ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"groupId": "created-by-script"}'
+ACCESS_TOKEN=$(echo $TOKEN_RESPONSE | jq -r .access_token)
 ```
 
-**A note on `client_credentials` grant:** Dex does not support the OAuth2 `client_credentials` grant type. This means you cannot get a token without user interaction through Dex alone. If you need fully headless M2M access (no browser step at all), you have a few options:
+## The Catch: No Groups in Client Credentials Tokens
 
-- **Use the `password` grant** — Dex supports the Resource Owner Password Credentials grant if enabled via `enablePasswordDB: true`. This allows scripted login with a username and password, but it requires storing user credentials in your pipeline, which is less secure.
-- **Use long-lived refresh tokens** — Authenticate once via the browser, save the refresh token, and use it in your scripts to silently obtain new access tokens without re-authenticating:
+Here's the problem: Dex's `client_credentials` tokens **do not include `groups` claims**. Since Apicurio Registry uses `groups` for RBAC (determining admin/developer/reader roles), M2M clients authenticating via `client_credentials` will have **no assigned role**.
+
+What this means in practice:
+
+| Scenario | Works? | Why |
+|----------|:---:|-----|
+| SerDes **reading** schemas (with `anonymousReadsEnabled: true`) | Yes | Anonymous reads bypass auth entirely |
+| SerDes **registering** schemas | **No** | No role in token = write denied |
+| CI/CD creating artifacts | **No** | No role in token = write denied |
+
+## What Actually Works for Kafka SerDes
+
+For the most common Kafka use case — **consumers fetching schemas** — you don't need `client_credentials` at all. Set `anonymousReadsEnabled: true` in the Apicurio CR and the SerDes can read schemas without any token. This is the recommended approach for read-heavy workloads.
+
+For **schema registration** (typically done by developers or CI/CD, not by Kafka producers at runtime), use the authorization code flow with the confidential client and a service user that has the right groups:
 
 ```bash
-# Refresh an expired token without user interaction
-TOKEN_RESPONSE=$(curl -sk -X POST https://dex.<cluster-domain>/token \
-  --data-urlencode "grant_type=refresh_token" \
-  --data-urlencode "refresh_token=<SAVED_REFRESH_TOKEN>" \
+# Non-interactive token acquisition using OpenShift challenge-based auth
+# (See the full guide for the complete 6-step script)
+TOKEN_RESPONSE=$(curl -s -X POST "https://dex.<cluster-domain>/token" \
+  --data-urlencode "grant_type=authorization_code" \
+  --data-urlencode "code=${DEX_CODE}" \
   --data-urlencode "client_id=apicurio-registry" \
-  --data-urlencode "client_secret=<CLIENT_SECRET>")
+  --data-urlencode "client_secret=<CLIENT_SECRET>" \
+  --data-urlencode "redirect_uri=https://<registry-ui-route>/")
 
-ACCESS_TOKEN=$(echo $TOKEN_RESPONSE | jq -r .id_token)
+# This token WILL have groups because it went through the full user auth flow
+ACCESS_TOKEN=$(echo $TOKEN_RESPONSE | jq -r .access_token)
 ```
 
-- **Bypass Dex for M2M** — If your upstream provider supports `client_credentials` natively (e.g., Azure AD, Keycloak), you can configure Apicurio Registry to accept tokens from both Dex (for users) and the upstream provider directly (for services). This requires configuring the backend to trust multiple JWKS issuers.
+## When to Use Keycloak Instead
 
-For most teams, the **refresh token approach** is the sweet spot: authenticate once, then use the refresh token in pipelines for weeks or months depending on your configured token lifetimes.
+If your deployment requires M2M **write access** with proper RBAC — for example, if Kafka producers register schemas at runtime, or if you have many CI/CD pipelines that need different permission levels — **use Keycloak (or Auth0, Azure AD) instead of Dex**. These providers support service account roles natively, so `client_credentials` tokens include all the claims Apicurio needs.
+
+Dex is the right choice when:
+- Your upstream IdP is non-OIDC-compliant (OpenShift OAuth, LDAP, SAML)
+- You primarily need user-facing auth (UI login, principal identity, owner-based authz)
+- M2M workloads are read-only (SerDes consumers with anonymous reads)
 
 # Group-to-Role Mapping
 
