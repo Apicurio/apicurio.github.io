@@ -365,6 +365,57 @@ curl -sk https://<registry-app-route>/apis/registry/v3/groups/my-group \
 # Expected: the user's email — NOT empty
 ```
 
+# Machine-to-Machine (M2M) Access
+
+So far we've focused on the browser-based UI flow, but what about CI/CD pipelines, scripts, and service accounts that need to interact with the Registry API without a browser?
+
+This is where the **confidential client** (`apicurio-registry`) comes in. While the UI uses the public client, programmatic access uses the confidential client with the authorization code flow:
+
+```bash
+# Step 1: Open this URL in a browser and authenticate
+# https://dex.<cluster-domain>/auth?client_id=apicurio-registry&response_type=code&redirect_uri=https://<registry-app-route>/&scope=openid+email+profile+groups
+
+# Step 2: Copy the ?code=... parameter from the redirect URL
+
+# Step 3: Exchange the code for tokens
+TOKEN_RESPONSE=$(curl -sk -X POST https://dex.<cluster-domain>/token \
+  --data-urlencode "grant_type=authorization_code" \
+  --data-urlencode "code=<AUTH_CODE>" \
+  --data-urlencode "client_id=apicurio-registry" \
+  --data-urlencode "client_secret=<CLIENT_SECRET>" \
+  --data-urlencode "redirect_uri=https://<registry-app-route>/")
+
+# Step 4: Extract the token
+ACCESS_TOKEN=$(echo $TOKEN_RESPONSE | jq -r .id_token)
+
+# Step 5: Use it
+curl -sk -X POST \
+  https://<registry-app-route>/apis/registry/v3/groups \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"groupId": "created-by-script"}'
+```
+
+**A note on `client_credentials` grant:** Dex does not support the OAuth2 `client_credentials` grant type. This means you cannot get a token without user interaction through Dex alone. If you need fully headless M2M access (no browser step at all), you have a few options:
+
+- **Use the `password` grant** — Dex supports the Resource Owner Password Credentials grant if enabled via `enablePasswordDB: true`. This allows scripted login with a username and password, but it requires storing user credentials in your pipeline, which is less secure.
+- **Use long-lived refresh tokens** — Authenticate once via the browser, save the refresh token, and use it in your scripts to silently obtain new access tokens without re-authenticating:
+
+```bash
+# Refresh an expired token without user interaction
+TOKEN_RESPONSE=$(curl -sk -X POST https://dex.<cluster-domain>/token \
+  --data-urlencode "grant_type=refresh_token" \
+  --data-urlencode "refresh_token=<SAVED_REFRESH_TOKEN>" \
+  --data-urlencode "client_id=apicurio-registry" \
+  --data-urlencode "client_secret=<CLIENT_SECRET>")
+
+ACCESS_TOKEN=$(echo $TOKEN_RESPONSE | jq -r .id_token)
+```
+
+- **Bypass Dex for M2M** — If your upstream provider supports `client_credentials` natively (e.g., Azure AD, Keycloak), you can configure Apicurio Registry to accept tokens from both Dex (for users) and the upstream provider directly (for services). This requires configuring the backend to trust multiple JWKS issuers.
+
+For most teams, the **refresh token approach** is the sweet spot: authenticate once, then use the refresh token in pipelines for weeks or months depending on your configured token lifetimes.
+
 # Group-to-Role Mapping
 
 The mapping between upstream provider groups and Apicurio Registry roles flows through two layers:
