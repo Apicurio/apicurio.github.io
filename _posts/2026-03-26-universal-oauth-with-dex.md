@@ -440,13 +440,14 @@ ACCESS_TOKEN=$(echo $TOKEN_RESPONSE | jq -r .access_token)
 
 ## Upcoming Fix: Groups on Static Clients
 
-We opened [dexidp/dex#4690](https://github.com/dexidp/dex/issues/4690) to report this gap and submitted [dexidp/dex#4691](https://github.com/dexidp/dex/pull/4691) with a fix. It adds a `groups` field to static client definitions:
+We opened [dexidp/dex#4690](https://github.com/dexidp/dex/issues/4690) to report this gap and submitted [dexidp/dex#4691](https://github.com/dexidp/dex/pull/4691) with a fix. It adds a `clientCredentialsClaims` sub-struct to static client definitions, keeping identity attributes separate from core client fields:
 
 ```yaml
 staticClients:
   - id: apicurio-registry
     secret: "..."
-    groups: ["registry-admins"]   # included in client_credentials tokens
+    clientCredentialsClaims:
+      groups: ["registry-admins"]   # included in client_credentials tokens
 ```
 
 We deployed a patched build and verified it on a live cluster: tokens now include `"groups": ["registry-admins"]` and Registry writes succeed (200 instead of 403). Track the PR for when this lands in a stable release.
