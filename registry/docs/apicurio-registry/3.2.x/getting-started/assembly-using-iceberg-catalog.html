@@ -1424,6 +1424,41 @@ SELECT * FROM apicurio_db.users;</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/iceberg/v1/{prefix}/tables/rename</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Rename a table</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/iceberg/v1/{prefix}/namespaces/{namespace}/views</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List views in a namespace</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/iceberg/v1/{prefix}/namespaces/{namespace}/views</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create a view</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/iceberg/v1/{prefix}/namespaces/{namespace}/views/{view}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Load a view</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/iceberg/v1/{prefix}/namespaces/{namespace}/views/{view}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Replace/commit a view</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HEAD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/iceberg/v1/{prefix}/namespaces/{namespace}/views/{view}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check if a view exists</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/iceberg/v1/{prefix}/namespaces/{namespace}/views/{view}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Drop a view</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/iceberg/v1/{prefix}/views/rename</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rename a view</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1437,16 +1472,13 @@ SELECT * FROM apicurio_db.users;</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Views are not supported.</strong> Only Iceberg tables are currently supported. The <code>ICEBERG_VIEW</code> artifact type is reserved for future use.</p>
-</li>
-<li>
 <p><strong>Multi-table transactions are not supported.</strong> Each CommitTable operation is scoped to a single table. Cross-table atomic commits are not available.</p>
 </li>
 <li>
 <p><strong>Server-side content management.</strong> Apicurio Registry stores table metadata but does not manage data files. Clients are responsible for writing data files to the configured warehouse location.</p>
 </li>
 <li>
-<p><strong>Rename is not atomic.</strong> Renaming a table creates the destination and then deletes the source as two separate operations. If the delete fails, both the source and destination may temporarily exist.</p>
+<p><strong>Rename is not atomic.</strong> Renaming a table or view creates the destination and then deletes the source as two separate operations. If the delete fails, the source may need manual cleanup.</p>
 </li>
 <li>
 <p><strong>Experimental feature.</strong> The Iceberg REST Catalog API requires <code>apicurio.features.experimental.enabled=true</code> and may change in future releases.</p>
