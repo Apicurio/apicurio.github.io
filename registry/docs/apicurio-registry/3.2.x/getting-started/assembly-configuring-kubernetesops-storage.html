@@ -253,22 +253,10 @@
           <a href="../index.html">3.2.x</a>
         </li>
         <li class="version">
-          <a href="../../3.1.x/index.html">3.1.x</a>
-        </li>
-        <li class="version">
           <a href="../../3.0.x/index.html">3.0.x</a>
         </li>
         <li class="version">
           <a href="../../2.6.x/index.html">2.6.x</a>
-        </li>
-        <li class="version">
-          <a href="../../2.5.x/index.html">2.5.x</a>
-        </li>
-        <li class="version">
-          <a href="../../2.4.x/index.html">2.4.x</a>
-        </li>
-        <li class="version">
-          <a href="../../2.3.x/index.html">2.3.x</a>
         </li>
         <li class="version">
           <a href="../../2.2.x/index.html">2.2.x</a>
@@ -324,12 +312,8 @@
   <button class="version-menu-toggle" title="Show other versions of page">3.2.x</button>
   <div class="version-menu">
     <a class="version is-current" href="assembly-configuring-kubernetesops-storage.html">3.2.x</a>
-    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
     <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
     <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
-    <a class="version is-missing" href="../../2.5.x/index.html">2.5.x</a>
-    <a class="version is-missing" href="../../2.4.x/index.html">2.4.x</a>
-    <a class="version is-missing" href="../../2.3.x/index.html">2.3.x</a>
     <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
     <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
     <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
@@ -571,6 +555,31 @@ KubernetesOps storage is an <strong>experimental</strong> feature. You must enab
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.io/registry-id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Label key used to identify ConfigMaps belonging to this registry.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_POLLING_STORAGE_DEBOUNCE_QUIET_PERIOD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PT3S</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">After detecting a change, wait until no new changes are seen for this duration before loading data. Absorbs rapid successive changes. Set to <code>PT0S</code> to disable debouncing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_POLLING_STORAGE_DEBOUNCE_MAX_WAIT_PERIOD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PT90S</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum time to wait for changes to settle before forcing a load. Prevents indefinite delay when changes keep arriving. Set to <code>PT0S</code> for no maximum.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_POLLING_STORAGE_DETERMINISTIC_IDS_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, <code>contentId</code> and <code>globalId</code> are deterministically generated from content hashes and artifact coordinates if not explicitly specified. When disabled, missing IDs cause an error.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_POLLING_STORAGE_REQUIRE_REGISTRY_CONFIG</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, a load is rejected if the data source does not contain a registry configuration file matching the configured registry ID. Prevents accidental data loss from empty ConfigMaps.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_POLLING_STORAGE_FILE_SUFFIXES</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry,ar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma-separated list of file suffixes that identify registry metadata files. Each suffix is combined with extensions (<code>.yaml</code>, <code>.yml</code>, <code>.json</code>) to form the full pattern. For example, suffix <code>registry</code> matches <code><strong>.registry.yaml</code>, <code></strong>.registry.yml</code>, and <code>*.registry.json</code>. Data keys that do not match a recognized suffix are treated as raw content files.</p></td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -626,10 +635,13 @@ spec:
 <p>ConfigMaps must have the registry ID label (e.g., <code>apicurio.io/registry-id: my-registry</code>)</p>
 </li>
 <li>
-<p>Each data entry key should be a relative path (e.g., <code>test/artifact.yaml</code>)</p>
+<p>Each data entry key is treated as a relative path (e.g., <code>test/artifact.registry.yaml</code>)</p>
 </li>
 <li>
-<p>YAML files must contain a <code>$type</code> field identifying the entity type</p>
+<p>Metadata files (registry, group, artifact, content definitions) should use a recognized file suffix in their data key name. By default, the suffixes <code>registry</code> and <code>ar</code> are recognized, matching patterns like <code><strong>.registry.yaml</code>, <code></strong>.registry.yml</code>, <code><strong>.registry.json</code>, <code></strong>.ar.yaml</code>, etc. Using recognized suffixes enables better error reporting when files fail to parse. Data keys that do not match a recognized suffix are treated as raw content files (e.g., schema data).</p>
+</li>
+<li>
+<p>Metadata YAML files must contain a <code>$type</code> field identifying the entity type</p>
 </li>
 </ul>
 </div>
@@ -679,13 +691,13 @@ metadata:
   labels:
     apicurio.io/registry-id: my-registry
 data:
-  registry.yaml: |
+  registry.registry.yaml: |
     $type: registry-v0
-    id: my-registry
+    registryId: my-registry
     globalRules:
-      - type: VALIDITY
+      - ruleType: VALIDITY
         config: FULL
-    settings: []</code></pre>
+    properties: []</code></pre>
 </div>
 </div>
 <h3 id="_example_group_definition" class="discrete">Example: Group definition</h3>
@@ -699,14 +711,17 @@ metadata:
   labels:
     apicurio.io/registry-id: my-registry
 data:
-  test/group-events.yaml: |
+  group-events.registry.yaml: |
     $type: group-v0
-    registryId: my-registry
-    id: com.example.events
+    registryIds: [my-registry]
+    groupId: com.example.events
     description: "Event schemas for the platform"</code></pre>
 </div>
 </div>
-<h3 id="_example_artifact_with_content" class="discrete">Example: Artifact with content</h3>
+<h3 id="_example_artifact_with_inline_content" class="discrete">Example: Artifact with inline content</h3>
+<div class="paragraph">
+<p>This example shows the simplest approach, where artifact content is stored directly in the same ConfigMap. The <code>content</code> field in each version references another data key by name.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
@@ -717,27 +732,21 @@ metadata:
   labels:
     apicurio.io/registry-id: my-registry
 data:
-  test/artifact-user-event.yaml: |
+  artifact-user-event.registry.yaml: |
     $type: artifact-v0
-    registryId: my-registry
+    registryIds: [my-registry]
     groupId: com.example.events
-    id: user-event
+    artifactId: user-event
+    artifactType: AVRO
     versions:
-      - id: "1"
-        globalId: 1
-        contentFile: content-1.yaml
+      - version: "1"
+        state: ENABLED
+        content: user-event.avsc
     rules:
-      - type: COMPATIBILITY
+      - ruleType: COMPATIBILITY
         config: BACKWARD
 
-  test/content-1.yaml: |
-    $type: content-v0
-    registryId: my-registry
-    id: 1
-    contentHash: "sha256:abc123..."
-    dataFile: ../content/user-event.avsc
-
-  content/user-event.avsc: |
+  user-event.avsc: |
     {
       "type": "record",
       "name": "UserEvent",
@@ -757,11 +766,426 @@ data:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The <code>contentFile</code> and <code>dataFile</code> fields use relative paths. The path resolution works the same as in GitOps storage.
+The <code>content</code> field in a version uses a relative path that references another data key in the ConfigMap (or across ConfigMaps). Content data keys should <strong>not</strong> use a metadata suffix (e.g., <code>.registry.yaml</code>) since they contain raw schema/API data, not registry metadata.
 </td>
 </tr>
 </table>
 </div>
+<h3 id="_example_artifact_with_content_metadata" class="discrete">Example: Artifact with content metadata</h3>
+<div class="paragraph">
+<p>For advanced use cases, you can use <code>content-v0</code> metadata to set an explicit <code>contentId</code> or define content references. The version&#8217;s <code>contentMetadata</code> field points to a <code>content-v0</code> entry, which in turn points to the actual content via its own <code>content</code> field.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-event-with-metadata
+  namespace: apicurio
+  labels:
+    apicurio.io/registry-id: my-registry
+data:
+  artifact-user-event.registry.yaml: |
+    $type: artifact-v0
+    registryIds: [my-registry]
+    groupId: com.example.events
+    artifactId: user-event
+    artifactType: AVRO
+    versions:
+      - version: "1"
+        state: ENABLED
+        content: user-event.avsc
+        contentMetadata: content-user-event.registry.yaml
+
+  content-user-event.registry.yaml: |
+    $type: content-v0
+    contentId: 1
+    content: user-event.avsc
+    references: []
+
+  user-event.avsc: |
+    {
+      "type": "record",
+      "name": "UserEvent",
+      "namespace": "com.example.events",
+      "fields": [
+        {"name": "userId", "type": "string"},
+        {"name": "action", "type": "string"},
+        {"name": "timestamp", "type": "long"}
+      ]
+    }</code></pre>
+</div>
+</div>
+<h3 id="_example_content_references" class="discrete">Example: Content references</h3>
+<div class="paragraph">
+<p>Content references allow one artifact to reference another (e.g., an Avro schema that imports another record type). Use the <code>references</code> field in a <code>content-v0</code> entry to declare these relationships.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: schemas-with-references
+  namespace: apicurio
+  labels:
+    apicurio.io/registry-id: my-registry
+data:
+  group-refs.registry.yaml: |
+    $type: group-v0
+    registryIds: [my-registry]
+    groupId: com.example.refs
+
+  artifact-address.registry.yaml: |
+    $type: artifact-v0
+    registryIds: [my-registry]
+    groupId: com.example.refs
+    artifactId: address
+    artifactType: AVRO
+    versions:
+      - version: "1"
+        state: ENABLED
+        content: content/address.avsc
+
+  artifact-customer.registry.yaml: |
+    $type: artifact-v0
+    registryIds: [my-registry]
+    groupId: com.example.refs
+    artifactId: customer
+    artifactType: AVRO
+    versions:
+      - version: "1"
+        state: ENABLED
+        content: content/customer.avsc
+        contentMetadata: content-customer.registry.yaml
+
+  content-customer.registry.yaml: |
+    $type: content-v0
+    content: content/customer.avsc
+    references:
+      - groupId: com.example.refs
+        artifactId: address
+        version: "1"
+        name: com.example.refs.Address
+
+  content/address.avsc: |
+    {
+      "type": "record",
+      "name": "Address",
+      "namespace": "com.example.refs",
+      "fields": [
+        {"name": "street", "type": "string"},
+        {"name": "city", "type": "string"}
+      ]
+    }
+
+  content/customer.avsc: |
+    {
+      "type": "record",
+      "name": "Customer",
+      "namespace": "com.example.refs",
+      "fields": [
+        {"name": "name", "type": "string"},
+        {"name": "address", "type": "com.example.refs.Address"}
+      ]
+    }</code></pre>
+</div>
+</div>
+<h3 id="_field_reference" class="discrete">Field reference</h3>
+<div class="paragraph">
+<p>The following tables list all supported fields for each entity type. Fields marked with <code>$type</code> are required for type identification. Unknown fields will cause parse errors.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 4. registry-v0 fields</caption>
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must be <code>registry-v0</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must match the registry instance ID (<code>APICURIO_POLLING_STORAGE_ID</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>globalRules</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">list of rules</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global validation/compatibility rules. Each rule has <code>ruleType</code> (e.g., <code>VALIDITY</code>, <code>COMPATIBILITY</code>) and <code>config</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>properties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">list of properties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configuration properties. Each property has <code>name</code> and <code>value</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 5. group-v0 fields</caption>
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must be <code>group-v0</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registryIds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">list of strings</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Registry instance IDs this group belongs to. If empty or omitted, the group is loaded by all registry instances.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groupId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Unique group identifier.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Group description.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>labels</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">map (string &#8594; string)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Key-value labels for the group.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>owner</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of the group (e.g., username or team name).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifactsType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Constrains all artifacts in this group to a specific type (e.g., <code>AVRO</code>, <code>PROTOBUF</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rules</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">list of rules</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Group-level rules. Each rule has <code>ruleType</code> and <code>config</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 6. artifact-v0 fields</caption>
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must be <code>artifact-v0</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registryIds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">list of strings</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Registry instance IDs this artifact belongs to. If empty or omitted, the artifact is loaded by all registry instances.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groupId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Parent group ID.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifactId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Unique artifact identifier within the group.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifactType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Artifact type: <code>AVRO</code>, <code>PROTOBUF</code>, <code>JSON</code>, <code>OPENAPI</code>, <code>ASYNCAPI</code>, <code>GRAPHQL</code>, <code>KCONNECT</code>, <code>WSDL</code>, <code>XSD</code>, <code>XML</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Display name for the artifact.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact description.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>labels</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">map (string &#8594; string)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Key-value labels for the artifact.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>owner</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of the artifact (e.g., username or team name).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>versions</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">list of versions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. At least one version. See version fields below.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rules</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">list of rules</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact-level rules. Each rule has <code>ruleType</code> and <code>config</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 7. Version fields (nested in artifact-v0)</caption>
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Version identifier (e.g., <code>"1"</code>, <code>"2.0.0"</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>state</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version state: <code>ENABLED</code> (default), <code>DISABLED</code>, or <code>DEPRECATED</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version display name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version description.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>labels</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">map (string &#8594; string)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Key-value labels for this version.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Relative path to the content data key (e.g., <code>my-schema.avsc</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentMetadata</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Relative path to a <code>content-v0</code> metadata entry for advanced content configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>globalId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">long</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explicit global ID. Auto-generated if deterministic IDs are enabled (the default).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>owner</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of this version (e.g., username or team name).</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 8. content-v0 fields</caption>
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must be <code>content-v0</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">long</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explicit content ID. Auto-generated if deterministic IDs are enabled (the default).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Relative path to the actual content data key.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>references</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">list of references</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content references to other artifacts. Each reference has <code>groupId</code>, <code>artifactId</code>, <code>version</code>, and <code>name</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 9. Rule fields (nested in registry-v0, group-v0, and artifact-v0)</caption>
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ruleType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rule type: <code>VALIDITY</code>, <code>COMPATIBILITY</code>, or <code>INTEGRITY</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rule configuration value (e.g., <code>FULL</code>, <code>BACKWARD</code>, <code>FORWARD</code>).</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
@@ -868,15 +1292,15 @@ ConfigMaps are designed for configuration data, not large data payloads. Artifac
 </div>
 <h3 id="_update_latency" class="discrete">Update latency</h3>
 <div class="paragraph">
-<p>With Watch API enabled (the default), ConfigMap changes are detected in near real-time. When Watch is disabled, changes are detected via polling with a default interval of 30 seconds.</p>
+<p>With Watch API enabled (the default), ConfigMap changes are detected in near real-time. When Watch is disabled, changes are detected via polling with a default interval of 10 seconds.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>With Watch enabled, updates typically propagate within 1-2 seconds</p>
+<p>With Watch enabled, updates typically propagate within a few seconds (debounce quiet period + processing time)</p>
 </li>
 <li>
-<p>With Watch disabled, expect up to one polling interval delay</p>
+<p>With Watch disabled, expect up to one polling interval delay (default 10 seconds)</p>
 </li>
 <li>
 <p>Decrease <code>APICURIO_POLLING_STORAGE_POLL_PERIOD</code> for faster fallback polling (increases API load)</p>
@@ -888,7 +1312,7 @@ ConfigMaps are designed for configuration data, not large data payloads. Artifac
 </div>
 <h3 id="_scalability_estimates" class="discrete">Scalability estimates</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 4. Expected performance by deployment size</caption>
+<caption class="title">Table 10. Expected performance by deployment size</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -988,7 +1412,7 @@ ConfigMaps are designed for configuration data, not large data payloads. Artifac
 <p>If the watch connection is lost (for example, due to API server restarts or network issues), the registry automatically reconnects with exponential backoff. Scheduled polling continues as a safety net to ensure no changes are missed.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 5. Environment variables for Watch configuration</caption>
+<caption class="title">Table 11. Environment variables for Watch configuration</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 20%;">
