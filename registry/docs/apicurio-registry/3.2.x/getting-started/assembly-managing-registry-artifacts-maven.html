@@ -454,6 +454,23 @@
 </li>
 </ol>
 </div>
+<div class="paragraph">
+<p>You can also run the <code>register</code> goal directly from the command line without a Maven project by passing the artifact configuration as system properties. Use the same field names that you would use in the Maven plug-in configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">mvn io.apicurio:apicurio-registry-maven-plugin:${apicurio.version}:register \
+  -Dapicurio.url=MY-REGISTRY-URL/apis/registry/v3 \
+  -Dartifacts.groupId=TestGroup \
+  -Dartifacts.artifactId=FullNameRecord \
+  -Dartifacts.artifactType=AVRO \
+  -Dartifacts.file=./src/main/resources/schemas/record.avsc \
+  -Dartifacts.ifExists=FAIL</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use <code>artifacts.&lt;field&gt;</code> when registering a single artifact, or <code>artifacts.&lt;index&gt;.&lt;field&gt;</code> such as <code>artifacts.0.groupId</code> and <code>artifacts.1.groupId</code> when registering multiple artifacts.</p>
+</div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
