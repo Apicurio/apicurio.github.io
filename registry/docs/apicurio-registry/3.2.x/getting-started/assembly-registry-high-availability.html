@@ -1078,7 +1078,14 @@ livenessProbe:
 livenessProbe:
   httpGet:
     path: /health/live
-    port: 9000</code></pre>
+    port: 9000
+
+# After (with TLS enabled)
+livenessProbe:
+  httpGet:
+    path: /health/live
+    port: 9000
+    scheme: HTTPS</code></pre>
 </div>
 </div>
 </li>
@@ -1089,7 +1096,7 @@ livenessProbe:
 <p><strong>Network policies</strong> - If you use Kubernetes <code>NetworkPolicy</code> resources, ensure that ingress traffic on port <code>9000</code> is allowed from your monitoring infrastructure and the kubelet (for health probes).</p>
 </li>
 <li>
-<p><strong>TLS considerations</strong> - The management interface runs as a separate HTTP server and is <strong>not affected</strong> by TLS configuration on the application port. Health probes should always use <code>scheme: HTTP</code> with port <code>9000</code>, even if TLS is enabled on the main application port (8443).</p>
+<p><strong>TLS considerations</strong> - The management interface inherits the default TLS configuration from the Quarkus TLS registry. When TLS is enabled, the management interface on port <code>9000</code> also serves HTTPS, and health probes must use <code>scheme: HTTPS</code>. The Apicurio Registry Operator handles this automatically.</p>
 </li>
 <li>
 <p><strong>Apicurio Registry Operator managed deployments</strong> - If you are using the Apicurio Registry Operator, it will automatically configure the correct probe ports. No manual changes are required for operator-managed deployments.</p>
