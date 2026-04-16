@@ -533,8 +533,8 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Data Contracts - Rules Enforcement</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>metadata</code> and <code>ruleSet</code> fields are accepted in requests but NOT enforced or stored. Schema rules are not executed.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Use Apicurio Registry native content rules (validity, compatibility, integrity) instead.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>metadata</code> and <code>ruleSet</code> fields are accepted in requests but NOT enforced or stored via the ccompat API. Schema rules are not executed.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use Apicurio Registry native Data Contracts feature (<code>apicurio.contracts.enabled=true</code>) for contract metadata and rulesets. See <a href="assembly-data-contracts.html" class="page">Data Contracts</a>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -573,12 +573,15 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 </ul>
 </div>
 <div class="paragraph">
-<p>In Apicurio Registry, these fields are accepted in API requests for client compatibility but are not processed or stored. Instead, use Apicurio Registry native features:</p>
+<p>In Apicurio Registry, these fields are accepted in ccompat API requests for client compatibility but are not processed or stored through the ccompat layer. Instead, Apicurio Registry provides its own native Data Contracts feature with richer functionality:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Labels</strong>: Use artifact labels for metadata</p>
+<p><strong>Contract Metadata</strong>: Standardized metadata (status, owner, domain, classification, stage) managed through the <code>contract/metadata</code> REST API</p>
+</li>
+<li>
+<p><strong>Contract Rulesets</strong>: Domain and migration rules at both artifact and version level, managed through the <code>contract/ruleset</code> REST API</p>
 </li>
 <li>
 <p><strong>Content Rules</strong>: Configure validity, compatibility, and integrity rules</p>
@@ -587,6 +590,9 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 <p><strong>Groups</strong>: Organize artifacts by group for governance</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>See <a href="assembly-data-contracts.html" class="page">Data Contracts</a> for full documentation on the native data contracts feature.</p>
 </div>
 </div>
 </div>
@@ -631,7 +637,7 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Data Contracts</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Metadata and rules are not enforced. Migrate governance to Apicurio Registry native rules.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Metadata and rules from the ccompat API are not enforced. Use Apicurio Registry native Data Contracts feature for contract metadata and rulesets.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Encryption (KEK/DEK)</strong></p></td>
