@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>MCP Tool Definition Features in Apicurio Registry :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.2.x/getting-started/assembly-mcp-tool-features.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.2.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">getting-started/assembly-registry-concepts-glossary.adoc</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A Protocol Features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP Tool Definition Features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM Artifact Types Implementation Guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.2.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>AI Agent Integration</li>
+    <li><a href="assembly-mcp-tool-features.html">MCP Tool Definition Features in Apicurio Registry</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.2.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-mcp-tool-features.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">MCP Tool Definition Features in Apicurio Registry</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apicurio Registry supports storing and managing MCP (Model Context Protocol) tool definitions as first-class artifacts. This enables central governance, version management, and discovery of MCP tools across an organization.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a> allows servers to expose tools that can be invoked by language models. Tools enable models to interact with external systems, such as querying databases, calling APIs, or performing computations.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry acts as a <strong>Tool Registry</strong>, storing MCP tool definitions with:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Version management</strong> — Track tool evolution with full version history</p>
+</li>
+<li>
+<p><strong>Validation</strong> — Ensure tool definitions conform to the MCP specification</p>
+</li>
+<li>
+<p><strong>Compatibility checking</strong> — Detect breaking changes in tool input schemas</p>
+</li>
+<li>
+<p><strong>Discovery</strong> — Search for tools by name or input parameter</p>
+</li>
+<li>
+<p><strong>Well-known endpoints</strong> — Serve tool definitions at standard URLs</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">┌─────────────────────────────────────────────────────────────────────────────┐
+│                           Apicurio Registry                                  │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                    MCP Tool Registry                                   │   │
+│  │                                                                        │   │
+│  │  /.well-known/mcp-tools                (search tools)                  │   │
+│  │  /.well-known/mcp-tools/{group}/{id}   (retrieve tool)                 │   │
+│  │                                                                        │   │
+│  │  - Store tool definitions                                              │   │
+│  │  - Search by name or parameter                                         │   │
+│  │  - Version management                                                  │   │
+│  │  - Validation and compatibility checking                               │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────────┘</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>MCP tool features are controlled via configuration properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp-tools.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable MCP tool definition support (experimental)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.features.experimental.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Must be enabled to use experimental features like MCP tools</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>To enable MCP tool support, set both properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.features.experimental.enabled=true
+apicurio.mcp-tools.enabled=true</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mcp_tool_definition_schema"><a class="anchor" href="#_mcp_tool_definition_schema"></a>MCP Tool Definition Schema</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Tool definitions follow the <a href="https://modelcontextprotocol.io/specification/2025-11-25/server/tools">MCP specification (2025-11-25)</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The MCP specification has two authoritative sources: the formal <a href="https://github.com/modelcontextprotocol/specification/blob/main/schema/2025-11-25/schema.json">JSON schema</a> and the <a href="https://modelcontextprotocol.io/specification/2025-11-25/server/tools">specification docs</a>. In some cases these sources diverge. The table below notes where Apicurio Registry&#8217;s validation follows the spec docs guidance rather than the formal JSON schema.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_tool_fields"><a class="anchor" href="#_tool_fields"></a>Tool Fields</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0002%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unique identifier for the tool (1-128 characters, alphanumeric + underscore/hyphen/dot)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>title</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Human-readable name for display purposes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Human-readable description of tool functionality</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inputSchema</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON Schema defining expected input parameters</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>outputSchema</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON Schema defining expected output structure. <em>Described in the spec docs but not yet present in the formal MCP JSON schema.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>annotations</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional metadata annotations (audience, priority)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>icons</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">array</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional icons for display in user interfaces. <em>Described in the spec docs but not yet present in the formal MCP Tool JSON schema.</em> Passed through without validation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>execution</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional execution-related properties such as task support. <em>Described in the spec docs but not yet present in the formal MCP Tool JSON schema.</em> Passed through without validation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_input_schema"><a class="anchor" href="#_input_schema"></a>Input Schema</h3>
+<div class="paragraph">
+<p>The <code>inputSchema</code> field is a JSON Schema object with these properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0002%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Must be <code>"object"</code>. The formal MCP JSON schema does not enforce this constraint, but the spec docs and all examples require it. Apicurio Registry enforces <code>type</code> = <code>"object"</code> during full validation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>properties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parameter definitions (each value is a JSON Schema object)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>required</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">array</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of required parameter names</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_annotations_toolannotations"><a class="anchor" href="#_annotations_toolannotations"></a>Annotations (ToolAnnotations)</h3>
+<div class="paragraph">
+<p>Annotations provide metadata about the tool using the MCP <code>ToolAnnotations</code> type:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>title</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional fallback display name. Per the spec docs, display precedence is: top-level <code>title</code> &#8594; <code>annotations.title</code> &#8594; <code>name</code>. <em>Note: this field is referenced in the spec docs as a display name fallback but is not formally defined in the <code>ToolAnnotations</code> JSON schema.</em> Apicurio Registry validates and displays it for interoperability.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>audience</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">array of strings</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Intended audience. The MCP spec defines a <code>Role</code> enum with values <code>"user"</code> and <code>"assistant"</code>. Apicurio Registry accepts any string values for forward compatibility with future spec revisions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>priority</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number (0-1)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Priority hint; higher values indicate higher priority</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_example_tool_definition"><a class="anchor" href="#_example_tool_definition"></a>Example Tool Definition</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "name": "get_weather",
+  "title": "Weather Information Provider",
+  "description": "Get current weather information for a location",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "location": {
+        "type": "string",
+        "description": "City name or zip code"
+      }
+    },
+    "required": ["location"]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "temperature": {
+        "type": "number",
+        "description": "Temperature in celsius"
+      },
+      "conditions": {
+        "type": "string",
+        "description": "Weather conditions"
+      }
+    },
+    "required": ["temperature", "conditions"]
+  },
+  "annotations": {
+    "title": "Weather Lookup",
+    "audience": ["user", "assistant"],
+    "priority": 0.8
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_well_known_endpoints"><a class="anchor" href="#_well_known_endpoints"></a>Well-Known Endpoints</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_get_well_knownmcp_tools"><a class="anchor" href="#_get_well_knownmcp_tools"></a>GET /.well-known/mcp-tools</h3>
+<div class="paragraph">
+<p>Search for registered MCP tool definitions with filtering support.</p>
+</div>
+<div class="paragraph">
+<p><strong>Query Parameters:</strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by tool name (partial match)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>parameter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string (repeatable)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by input parameter name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>offset</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pagination offset (default: 0)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>limit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pagination limit (default: 20)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Example Request:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/.well-known/mcp-tools?parameter=location"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Response:</strong> <code>McpToolSearchResults</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "count": 1,
+  "tools": [
+    {
+      "groupId": "mcp-tools",
+      "artifactId": "weather-tool",
+      "name": "get_weather",
+      "title": "Weather Information Provider",
+      "description": "Get current weather information",
+      "owner": "admin",
+      "createdOn": 1700000000000,
+      "parameters": ["location"]
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_get_well_knownmcp_toolsgroupidartifactid"><a class="anchor" href="#_get_well_knownmcp_toolsgroupidartifactid"></a>GET /.well-known/mcp-tools/{groupId}/{artifactId}</h3>
+<div class="paragraph">
+<p>Retrieve a specific registered MCP tool definition.</p>
+</div>
+<div class="paragraph">
+<p><strong>Path Parameters:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>groupId</code> - The group containing the tool definition</p>
+</li>
+<li>
+<p><code>artifactId</code> - The artifact ID of the tool definition</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Query Parameters:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>version</code> (optional) - Specific version (defaults to latest)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Response:</strong> MCP tool definition JSON document</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_get_well_knownschemasmcp_toolv1"><a class="anchor" href="#_get_well_knownschemasmcp_toolv1"></a>GET /.well-known/schemas/mcp-tool/v1</h3>
+<div class="paragraph">
+<p>Returns the JSON Schema for MCP tool definitions. This enables IDE autocompletion and validation.</p>
+</div>
+<div class="paragraph">
+<p><strong>Example:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/.well-known/schemas/mcp-tool/v1"</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creating_an_mcp_tool_artifact"><a class="anchor" href="#_creating_an_mcp_tool_artifact"></a>Creating an MCP Tool Artifact</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST "http://localhost:8080/apis/registry/v3/groups/mcp-tools/artifacts" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "artifactId": "weather-tool",
+    "artifactType": "MCP_TOOL",
+    "firstVersion": {
+      "version": "1.0.0",
+      "content": {
+        "contentType": "application/json",
+        "content": "{\"name\": \"get_weather\", \"title\": \"Weather Tool\", \"description\": \"Get weather data\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"location\": {\"type\": \"string\"}}, \"required\": [\"location\"]}}"
+      }
+    }
+  }'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_validation_rules"><a class="anchor" href="#_validation_rules"></a>Validation Rules</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>MCP tool definitions support three validation levels:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Level</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NONE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No validation performed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SYNTAX_ONLY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validates JSON syntax and that the document is a JSON object</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Complete validation including:
+- Required <code>name</code> field (non-empty string)
+- Required <code>inputSchema</code> field (object with <code>type</code> = <code>"object"</code> per spec docs guidance)
+- Optional <code>title</code> and <code>description</code> must be strings if present
+- Optional <code>outputSchema</code> must be an object if present
+- Optional <code>annotations</code> validated as ToolAnnotations: <code>title</code> (string), <code>audience</code> (array of strings), <code>priority</code> (number 0-1). Note: <code>annotations.title</code> validation follows spec docs guidance; <code>audience</code> values are not restricted to the <code>Role</code> enum for forward compatibility.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility_checking"><a class="anchor" href="#_compatibility_checking"></a>Compatibility Checking</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When versioning MCP tool definitions, compatibility rules detect breaking changes:</p>
+</div>
+<div class="paragraph">
+<p><strong>Compatible Changes (allowed):</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Adding optional input parameters</p>
+</li>
+<li>
+<p>Changing name, title, description</p>
+</li>
+<li>
+<p>Changing annotations</p>
+</li>
+<li>
+<p>Adding or modifying outputSchema</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Incompatible Changes (may break clients):</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Removing input parameters from inputSchema.properties</p>
+</li>
+<li>
+<p>Adding new required parameters</p>
+</li>
+<li>
+<p>Removing required parameters</p>
+</li>
+<li>
+<p>Changing the inputSchema type</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_automatic_label_extraction"><a class="anchor" href="#_automatic_label_extraction"></a>Automatic Label Extraction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When MCP tool definitions are stored, structured elements are automatically extracted for search:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Element Pattern</th>
+<th class="tableblock halign-left valign-top">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mcp_tool:parameter:&lt;name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Each parameter name from inputSchema.properties</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>This enables efficient parameter-based discovery using the Registry&#8217;s search.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_see_also"><a class="anchor" href="#_see_also"></a>See Also</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="assembly-a2a-features.html" class="page">A2A Protocol Features</a></p>
+</li>
+<li>
+<p><a href="assembly-llm-artifact-types-implementation.html" class="page">LLM Artifact Types</a></p>
+</li>
+<li>
+<p><a href="https://modelcontextprotocol.io/specification/2025-11-25/server/tools">MCP Tools Specification</a></p>
+</li>
+<li>
+<p><a href="assembly-configuring-the-registry.html" class="page">Registry Configuration</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.2.x/getting-started/assembly-mcp-tool-features.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
