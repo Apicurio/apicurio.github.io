@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Managing Apicurio Registry deployment :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.2.0-dev-v2.6.x/assembly-registry-maintenance.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry-operator" data-version="0.0.4">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Apicurio Registry Operator</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-operator-quickstart.html">Apicurio Registry Operator quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-operator-installation.html">Installing Apicurio Registry Operator using the OperatorHub</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-registry-storage.html">Configuring Apicurio Registry storage</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="assembly-registry-maintenance.html">Managing Apicurio Registry deployment</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-operator-configuration.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="assembly-operator-dev-quickstart-minikube.html">Apicurio Registry Operator development quickstart on Minikube</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry Operator</span>
+    <span class="version">0.0.4</span>
+  </div>
+  <ul class="components">
+    <li class="component">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../apicurio-registry/3.3.x/index.html">3.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../apicurio-registry/3.2.x/index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../apicurio-registry/3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../apicurio-registry/3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../apicurio-registry/2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../apicurio-registry/2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../apicurio-registry/2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../apicurio-registry/2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../apicurio-registry/1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component is-current">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version is-current">
+          <a href="index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../apicurio-registry/3.3.x/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Apicurio Registry Operator</a></li>
+    <li><a href="assembly-registry-maintenance.html">Managing Apicurio Registry deployment</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.0.4</button>
+  <div class="version-menu">
+    <a class="version" href="../1.2.0-dev-v2.6.x/assembly-registry-maintenance.html">1.2.0-dev-v2.6.x</a>
+    <a class="version" href="../1.1.1-v2.5.9.final/assembly-registry-maintenance.html">1.1.1-v2.5.9.final</a>
+    <a class="version" href="../1.1.0-v2.4.12.final/assembly-registry-maintenance.html">1.1.0-v2.4.12.final</a>
+    <a class="version" href="../1.0.0/assembly-registry-maintenance.html">1.0.0</a>
+    <a class="version is-current" href="assembly-registry-maintenance.html">0.0.4</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry-operator/blob/0.0.4/docs/modules/ROOT/pages/assembly-registry-maintenance.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Managing Apicurio Registry deployment</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter explains how to manage your Apicurio Registry deployment:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#manage-registry-environment-variables">Managing Apicurio Registry environment variables</a></p>
+</li>
+<li>
+<p><a href="#registry-liveness-and-readiness">Apicurio Registry liveness and readiness environment variables</a></p>
+</li>
+<li>
+<p><a href="#registry-sql-backup">Backing up Apicurio Registry PostgreSQL storage</a></p>
+</li>
+<li>
+<p><a href="#registry-sql-restore">Restoring Apicurio Registry PostgreSQL storage</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="manage-registry-environment-variables"><a class="anchor" href="#manage-registry-environment-variables"></a>Managing Apicurio Registry environment variables</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apicurio Registry Operator manages most common Apicurio Registry configuration, but there are some options that you can adjust manually. You can update these by setting an environment variable on the Apicurio Registry <code>DeploymentConfig</code> resource. If the specific configuration option is not available in the <code>ApicurioRegistry</code> CR, you can use an environment variable to adjust it.</p>
+</div>
+<div class="dlist">
+<div class="title">Procedure</div>
+<dl>
+<dt class="hdlist1">OpenShift web console</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Select the <strong>Installed Operators</strong> tab, and then the <strong>Red Hat Integration - Apicurio Registry Operator</strong>.</p>
+</li>
+<li>
+<p>On the <strong>ApicurioRegistry</strong> tab, click the <code>ApicurioRegistry</code> CR for your Apicurio Registry deployment.</p>
+</li>
+<li>
+<p>On the main overview page, view the <strong>Deployment Name</strong> section, which contains the name of the <code>DeploymentConfig</code> managed by the Operator to deploy your Apicurio Registry instance.</p>
+</li>
+<li>
+<p>Find that <code>DeploymentConfig</code> in the <strong>Workloads</strong> &gt; <strong>Deployment Configs</strong> in the left menu.</p>
+</li>
+<li>
+<p>Select the <code>DeploymentConfig</code> with the correct name, and select the <strong>Environment</strong> tab.</p>
+</li>
+<li>
+<p>You can add or modify your environment variable to the <strong>Single values (env)</strong> section.</p>
+</li>
+<li>
+<p>Click <strong>Save</strong> at the bottom.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">OpenShift CLI</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Select the project where Apicurio Registry is installed.</p>
+</li>
+<li>
+<p>Run <code>oc get apicurioregistry</code> to get the list of <code>ApicurioRegistry</code> CRs</p>
+</li>
+<li>
+<p>Run <code>oc describe</code> on the CR representing the Apicurio Registry instance that you want to configure.</p>
+</li>
+<li>
+<p>View <strong>Deployment Name</strong> in the <strong>status</strong> section.</p>
+</li>
+<li>
+<p>Find that <code>DeploymentConfig</code> and enter <code>oc edit</code>.</p>
+</li>
+<li>
+<p>Add or modify the environment variable in the <code>spec.template.spec.containers[0].env</code> section.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-liveness-and-readiness"><a class="anchor" href="#registry-liveness-and-readiness"></a>Apicurio Registry liveness and readiness environment variables</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apicurio Registry provides readiness and liveness probes for OpenShift to ensure application health. These settings are configured to use reasonable defaults, but if you want to adjust them, this section provides details on the environment variables that you can configure.</p>
+</div>
+<div class="paragraph">
+<p>OpenShift liveness and readiness errors are explained as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Liveness error</strong> - the application cannot make progress, OpenShift restarts the failing pod.</p>
+</li>
+<li>
+<p><strong>Readiness error</strong> - the application is not ready, for example, it is overwhelmed by requests. OpenShift stops sending requests to the pod for the time the probe fails. If other pods are OK, they still receive requests.</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Apicurio Registry liveness environment variables</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Value type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LIVENESS_ERROR_THRESHOLD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Positive integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of liveness errors that  can occur before the liveness probe fails.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LIVENESS_COUNTER_RESET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Positive integer, seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Period in which the <em>threshold</em> number of errors  must occur. For example, if this value is <code>60</code> and the threshold is <code>1</code>, the check fails after two errors occur in 1 minute.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LIVENESS_STATUS_RESET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Positive integer, seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of seconds that must elapse without any more errors for the liveness probe to reset to <em>OK</em> status. Because OpenShift restarts the pod that fails the liveness check, this value, unlike readiness, does not actually affect what happens.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LIVENESS_ERRORS_IGNORED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma-separated list of fully qualified exception class names.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of errors that are ignored for liveness checking purposes.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Apicurio Registry readiness environment variables</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Value type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>READINESS_ERROR_THRESHOLD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Positive integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of readiness errors that  can occur before the readiness probe fails.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>READINESS_COUNTER_RESET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Positive integer, seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Period in which the threshold number of errors must occur. For example, if this value is 60 and the threshold is 1, the check fails  after two errors occur in 1 minute.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>READINESS_STATUS_RESET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Positive integer, seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of seconds that must elapse without any more errors for the readiness probe to reset to OK status. In practice, this value means how long the pod remains in an unready state until it returns to normal operation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>READINESS_TIMEOUT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">positive integer, seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The readiness system tracks the timeout of two operations: how long it takes for a storage request to complete, and how long it takes for an HTTP REST API request to return a response. If the operation takes more time, it is counted as a readiness error. This value controls those timeouts.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-sql-backup"><a class="anchor" href="#registry-sql-backup"></a>Backing up Apicurio Registry PostgreSQL storage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When using Java Peristence API storage in a PostgreSQL database, you must ensure that the data stored by Apicurio Registry is backed up regularly.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://www.postgresql.org/docs/12/backup-dump.html">SQL Dump</a> is a simple procedure that works with any PostgreSQL installation. This uses the <a href="https://www.postgresql.org/docs/12/app-pgdump.html">pg_dump</a> utility to generate a file with SQL commands that you can use to recreate the database in the same state that it was in at the time of the dump.</p>
+</div>
+<div class="paragraph">
+<p><code>pg_dump</code> is a regular PostgreSQL client application, which you can execute from any remote host that has access to the database. Like any other client, the operations that can perform are limited to the user permissions.</p>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Use the <code>pg_dump</code> command to redirect the output to a file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"> $ pg_dump dbname &gt; dumpfile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can specify the database server that <code>pg_dump</code> connects to using the <code>-h host</code> and <code>-p port</code> options.</p>
+</div>
+</li>
+<li>
+<p>You can reduce large dump files using a compression tool, such as gzip, for example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"> $ pg_dump dbname | gzip &gt; filename.gz</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Additional resources</div>
+<p>For details on client authentication, see the <a href="https://www.postgresql.org/docs/12/client-authentication.html">PostgreSQL documentation</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-sql-restore"><a class="anchor" href="#registry-sql-restore"></a>Restoring Apicurio Registry PostgreSQL storage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can restore SQL Dump files created by <code>pg_dump</code> using the <code>psql</code> utility.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have already backed up your PostgreSQL datbase using <code>pg_dump</code>. See <a href="#registry-sql-backup">Backing up Apicurio Registry PostgreSQL storage</a>.</p>
+</li>
+<li>
+<p>All users who own objects or have permissions on objects in the dumped database must already exist.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Enter the following command to create the database:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"> $ createdb -T template0 dbname</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Enter the following command to restore the SQL dump</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"> $ psql dbname &lt; dumpfile</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run <a href="https://www.postgresql.org/docs/12/sql-analyze.html">ANALYZE</a> on each database so the query optimizer has useful statistics.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../assets/js/site.js"></script>
+<script src="../../assets/js/vendor/lunr.js"></script>
+<script src="../../assets/js/vendor/search.js" id="search-script" data-base-path="../.." data-page-path="/apicurio-registry-operator/0.0.4/assembly-registry-maintenance.html"></script>
+<script async src="../../assets/../search-index.js"></script>
+<script async src="../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>

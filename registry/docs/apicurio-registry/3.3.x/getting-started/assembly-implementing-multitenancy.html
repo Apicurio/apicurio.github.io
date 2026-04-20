@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Implementing multitenancy with Apicurio Registry :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-implementing-multitenancy.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.3.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">getting-started/assembly-registry-concepts-glossary.adoc</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A Protocol Features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP Tool Definition Features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM Artifact Types Implementation Guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.3.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.2.x/index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Installation</li>
+    <li><a href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.3.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-implementing-multitenancy.html">3.3.x</a>
+    <a class="version" href="../../3.2.x/getting-started/assembly-implementing-multitenancy.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Implementing multitenancy with Apicurio Registry</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This chapter explains how to implement multitenancy with Apicurio Registry on Kubernetes using the Apicurio Registry Operator.
+Apicurio Registry achieves multitenancy through a multi-instance operator pattern: each tenant receives a dedicated
+<code>ApicurioRegistry3</code> custom resource (CR), which the operator reconciles into an independent set of Kubernetes
+resources. This approach provides strong isolation between tenants at the infrastructure level, leveraging
+Kubernetes-native mechanisms for security, resource management, and network segmentation.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#multitenancy-overview_registry">Overview</a></p>
+</li>
+<li>
+<p><a href="#multitenancy-deployment-patterns_registry">Deployment patterns</a></p>
+</li>
+<li>
+<p><a href="#multitenancy-namespace-per-tenant_registry">Deploying with namespace-per-tenant isolation</a></p>
+</li>
+<li>
+<p><a href="#multitenancy-storage-isolation_registry">Configuring storage isolation</a></p>
+</li>
+<li>
+<p><a href="#multitenancy-authentication-per-tenant_registry">Configuring authentication per tenant</a></p>
+</li>
+<li>
+<p><a href="#multitenancy-resource-management_registry">Managing resources per tenant</a></p>
+</li>
+<li>
+<p><a href="#multitenancy-network-isolation_registry">Configuring network isolation</a></p>
+</li>
+<li>
+<p><a href="#multitenancy-lightweight-group-isolation_registry">Alternative: Lightweight isolation with groups</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p><a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a></p>
+</li>
+<li>
+<p>You must have already installed the Apicurio Registry Operator. See <a href="#deploying-registry-operator_registry">[deploying-registry-operator_registry]</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="multitenancy-overview_registry"><a class="anchor" href="#multitenancy-overview_registry"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Apicurio Registry Operator watches for <code>ApicurioRegistry3</code> custom resources and creates the following Kubernetes resources
+for each CR:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Resources created</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Apicurio Registry backend (REST API) component</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deployment, Service, Ingress, NetworkPolicy, PodDisruptionBudget</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Apicurio Registry web console component</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deployment, Service, Ingress, NetworkPolicy, PodDisruptionBudget</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Each CR instance is completely independent. Resources are named using the pattern
+<code>{cr-name}-{component}-{resource-type}</code> and labeled with instance-specific selectors to prevent any
+cross-tenant interference.</p>
+</div>
+<div class="sect2">
+<h3 id="_isolation_boundaries"><a class="anchor" href="#_isolation_boundaries"></a>Isolation boundaries</h3>
+<div class="paragraph">
+<p>The multi-instance approach provides the following isolation boundaries:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Compute isolation</strong>: Separate Deployments and Pods per tenant.</p>
+</li>
+<li>
+<p><strong>Network isolation</strong>: Separate Services, Ingresses, and optional NetworkPolicies per tenant.</p>
+</li>
+<li>
+<p><strong>Storage isolation</strong>: Each tenant can use a separate database or Kafka cluster.</p>
+</li>
+<li>
+<p><strong>Authentication isolation</strong>: Each tenant can have its own OIDC provider or realm.</p>
+</li>
+<li>
+<p><strong>Configuration isolation</strong>: Environment variables and settings are per-CR.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="multitenancy-deployment-patterns_registry"><a class="anchor" href="#multitenancy-deployment-patterns_registry"></a>Deployment patterns</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can deploy multiple Apicurio Registry instances using three primary patterns.</p>
+</div>
+<div class="sect2">
+<h3 id="_pattern_a_single_namespace_multiple_tenants"><a class="anchor" href="#_pattern_a_single_namespace_multiple_tenants"></a>Pattern A: Single namespace, multiple tenants</h3>
+<div class="paragraph">
+<p>All tenant registry instances reside in the same namespace. The operator creates uniquely named
+resources for each CR.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Namespace: apicurio-registries
+├── Operator Pod
+├── ApicurioRegistry3: tenant-alpha
+│   ├── tenant-alpha-app-deployment
+│   ├── tenant-alpha-ui-deployment
+│   └── ...
+└── ApicurioRegistry3: tenant-beta
+    ├── tenant-beta-app-deployment
+    ├── tenant-beta-ui-deployment
+    └── ...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This pattern is best for a small number of tenants managed by a single platform team.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pattern_b_namespace_per_tenant_recommended"><a class="anchor" href="#_pattern_b_namespace_per_tenant_recommended"></a>Pattern B: Namespace per tenant (recommended)</h3>
+<div class="paragraph">
+<p>Each tenant gets its own namespace. A single operator instance watches all namespaces.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Cluster
+├── apicurio-system namespace
+│   └── Operator Pod (watches all namespaces)
+├── tenant-alpha namespace
+│   └── ApicurioRegistry3: registry
+└── tenant-beta namespace
+    └── ApicurioRegistry3: registry</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This pattern provides stronger isolation using Kubernetes RBAC, ResourceQuotas, and NetworkPolicies at the
+namespace level. It is the recommended approach for most production environments.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pattern_c_operator_per_namespace"><a class="anchor" href="#_pattern_c_operator_per_namespace"></a>Pattern C: Operator per namespace</h3>
+<div class="paragraph">
+<p>Each namespace has its own operator instance, restricted to watching only that namespace
+via the <code>APICURIO_OPERATOR_WATCHED_NAMESPACES</code> environment variable.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Cluster
+├── tenant-alpha namespace
+│   ├── Operator Pod (APICURIO_OPERATOR_WATCHED_NAMESPACES="tenant-alpha")
+│   └── ApicurioRegistry3: registry
+└── tenant-beta namespace
+    ├── Operator Pod (APICURIO_OPERATOR_WATCHED_NAMESPACES="tenant-beta")
+    └── ApicurioRegistry3: registry</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This pattern provides maximum isolation and is suitable when tenants manage their own operator lifecycle.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="multitenancy-namespace-per-tenant_registry"><a class="anchor" href="#multitenancy-namespace-per-tenant_registry"></a>Deploying with namespace-per-tenant isolation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section walks through deploying Apicurio Registry using the namespace-per-tenant pattern (Pattern B).</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have cluster administrator access to a Kubernetes cluster.</p>
+</li>
+<li>
+<p>You must have already installed the Apicurio Registry Operator. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
+</li>
+<li>
+<p>You must have storage infrastructure (PostgreSQL or Kafka) available for each tenant.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Install the operator in a dedicated namespace. By default, it watches all namespaces:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl create namespace apicurio-system
+kubectl apply -f operator/install/install.yaml -n apicurio-system</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify the operator is running:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get pods -n apicurio-system</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create tenant namespaces:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl create namespace tenant-alpha
+kubectl create namespace tenant-beta</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a database credentials Secret for each tenant:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: db-credentials
+  namespace: tenant-alpha
+type: Opaque
+stringData:
+  password: tenant-alpha-db-password</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Deploy an <code>ApicurioRegistry3</code> CR for each tenant. For example, Tenant Alpha with PostgreSQL storage:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: registry
+  namespace: tenant-alpha
+spec:
+  app:
+    storage:
+      type: postgresql
+      sql:
+        dataSource:
+          url: jdbc:postgresql://postgres-alpha.tenant-alpha.svc:5432/apicurio
+          username: apicurio
+          password:
+            name: db-credentials
+            key: password
+    ingress:
+      host: tenant-alpha-registry.apps.cluster.example
+  ui:
+    ingress:
+      host: tenant-alpha-ui.apps.cluster.example</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And Tenant Beta with KafkaSQL storage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: registry
+  namespace: tenant-beta
+spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        bootstrapServers: "kafka-beta.tenant-beta.svc:9092"
+    ingress:
+      host: tenant-beta-registry.apps.cluster.example
+  ui:
+    ingress:
+      host: tenant-beta-ui.apps.cluster.example</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Apply the custom resources:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl apply -f tenant-alpha-registry.yaml
+kubectl apply -f tenant-beta-registry.yaml</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Check the status of all registry instances across the cluster:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get apicurioregistries3 --all-namespaces</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that pods are running in each tenant namespace:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get pods -n tenant-alpha
+kubectl get pods -n tenant-beta</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Access each tenant&#8217;s Apicurio Registry web console using the configured hostnames and verify that the UI loads
+successfully.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="multitenancy-storage-isolation_registry"><a class="anchor" href="#multitenancy-storage-isolation_registry"></a>Configuring storage isolation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each tenant&#8217;s CR must point to a separate storage backend. The operator does not automatically provision
+databases or Kafka topics; these must be pre-provisioned.</p>
+</div>
+<div class="sect2">
+<h3 id="_separate_databases_on_a_shared_postgresql_instance"><a class="anchor" href="#_separate_databases_on_a_shared_postgresql_instance"></a>Separate databases on a shared PostgreSQL instance</h3>
+<div class="paragraph">
+<p>The recommended approach is to use one database per tenant on a shared PostgreSQL instance.
+Apicurio Registry manages its own schema within each database.
+Use separate PostgreSQL users with permissions limited to their respective database for additional security.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Tenant Alpha
+spec:
+  app:
+    storage:
+      type: postgresql
+      sql:
+        dataSource:
+          url: jdbc:postgresql://shared-postgres.infra.svc:5432/tenant_alpha
+          username: tenant_alpha
+          password:
+            name: tenant-alpha-db-credentials
+            key: password
+
+# Tenant Beta
+spec:
+  app:
+    storage:
+      type: postgresql
+      sql:
+        dataSource:
+          url: jdbc:postgresql://shared-postgres.infra.svc:5432/tenant_beta
+          username: tenant_beta
+          password:
+            name: tenant-beta-db-credentials
+            key: password</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_separate_postgresql_instances"><a class="anchor" href="#_separate_postgresql_instances"></a>Separate PostgreSQL instances</h3>
+<div class="paragraph">
+<p>For maximum storage isolation, each tenant can have its own PostgreSQL instance:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: postgresql
+      sql:
+        dataSource:
+          url: jdbc:postgresql://postgres-alpha.tenant-alpha.svc:5432/apicurio
+          username: apicurio
+          password:
+            name: db-credentials
+            key: password</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kafkasql_storage"><a class="anchor" href="#_kafkasql_storage"></a>KafkaSQL storage</h3>
+<div class="paragraph">
+<p>When using KafkaSQL storage, each tenant should use separate Kafka bootstrap servers or, at minimum, separate
+topics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        bootstrapServers: "kafka-alpha.tenant-alpha.svc:9092"</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+When using KafkaSQL, ensure each tenant uses separate Kafka topics. The default topic name
+<code>kafkasql-journal</code> is the same for all instances. Configure separate topic names using the
+<code>APICURIO_KAFKASQL_TOPIC</code> environment variable if tenants share a Kafka cluster.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="multitenancy-authentication-per-tenant_registry"><a class="anchor" href="#multitenancy-authentication-per-tenant_registry"></a>Configuring authentication per tenant</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each tenant instance can be configured with its own authentication settings. This allows different tenants to
+use different identity providers or OIDC realms.</p>
+</div>
+<div class="sect2">
+<h3 id="_using_shared_keycloak_with_separate_realms"><a class="anchor" href="#_using_shared_keycloak_with_separate_realms"></a>Using shared Keycloak with separate realms</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: registry
+  namespace: tenant-alpha
+spec:
+  app:
+    auth:
+      enabled: true
+      appClientId: registry-api
+      uiClientId: apicurio-registry
+      authServerUrl: https://keycloak.example.com/realms/alpha
+      redirectUri: https://tenant-alpha-ui.apps.cluster.example
+      logoutUrl: https://tenant-alpha-ui.apps.cluster.example
+      authz:
+        enabled: true
+        ownerOnlyEnabled: true
+        groupAccessEnabled: true
+        readAccessEnabled: true
+        roles:
+          source: token
+          admin: sr-admin
+          developer: sr-developer
+          readOnly: sr-readonly
+    ingress:
+      host: tenant-alpha-registry.apps.cluster.example
+  ui:
+    ingress:
+      host: tenant-alpha-ui.apps.cluster.example</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_separate_identity_providers"><a class="anchor" href="#_using_separate_identity_providers"></a>Using separate identity providers</h3>
+<div class="paragraph">
+<p>Each tenant CR can reference a completely different OIDC provider by specifying different <code>authServerUrl</code> values:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Tenant Alpha uses Keycloak
+spec:
+  app:
+    auth:
+      enabled: true
+      authServerUrl: https://keycloak.example.com/realms/alpha
+
+# Tenant Beta uses Microsoft Entra ID
+spec:
+  app:
+    auth:
+      enabled: true
+      authServerUrl: https://login.microsoftonline.com/{tenant-id}/v2.0</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="multitenancy-resource-management_registry"><a class="anchor" href="#multitenancy-resource-management_registry"></a>Managing resources per tenant</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_default_resource_allocation"><a class="anchor" href="#_default_resource_allocation"></a>Default resource allocation</h3>
+<div class="paragraph">
+<p>Each Apicurio Registry instance receives the following default resource requests and limits:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">CPU request</th>
+<th class="tableblock halign-left valign-top">CPU limit</th>
+<th class="tableblock halign-left valign-top">Memory request</th>
+<th class="tableblock halign-left valign-top">Memory limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">App</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">500m</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1Gi</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100m</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">200m</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">256Mi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512Mi</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The total minimum per tenant is approximately 600m CPU and 768Mi memory.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_customizing_resources_per_tenant"><a class="anchor" href="#_customizing_resources_per_tenant"></a>Customizing resources per tenant</h3>
+<div class="paragraph">
+<p>Use <code>podTemplateSpec</code> to adjust resources for high-traffic or resource-constrained tenants:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    podTemplateSpec:
+      spec:
+        containers:
+          - name: apicurio-registry-app
+            resources:
+              requests:
+                cpu: "1"
+                memory: 2Gi
+              limits:
+                cpu: "2"
+                memory: 4Gi</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_scaling_per_tenant"><a class="anchor" href="#_scaling_per_tenant"></a>Scaling per tenant</h3>
+<div class="paragraph">
+<p>Each tenant instance can be independently scaled:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    replicas: 3
+  ui:
+    replicas: 2</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_kubernetes_resourcequotas"><a class="anchor" href="#_using_kubernetes_resourcequotas"></a>Using Kubernetes ResourceQuotas</h3>
+<div class="paragraph">
+<p>Use Kubernetes <code>ResourceQuota</code> objects to enforce per-namespace resource limits when using the
+namespace-per-tenant pattern:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: tenant-quota
+  namespace: tenant-alpha
+spec:
+  hard:
+    requests.cpu: "2"
+    requests.memory: 4Gi
+    limits.cpu: "4"
+    limits.memory: 8Gi
+    pods: "10"</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="multitenancy-network-isolation_registry"><a class="anchor" href="#multitenancy-network-isolation_registry"></a>Configuring network isolation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_default_networkpolicy"><a class="anchor" href="#_default_networkpolicy"></a>Default NetworkPolicy</h3>
+<div class="paragraph">
+<p>The operator creates NetworkPolicy resources for each instance by default.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_namespace_level_network_isolation"><a class="anchor" href="#_namespace_level_network_isolation"></a>Namespace-level network isolation</h3>
+<div class="paragraph">
+<p>For additional security when using the namespace-per-tenant pattern, apply a default-deny policy in each
+tenant namespace:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: tenant-alpha
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then selectively allow traffic for the registry pods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-registry-ingress
+  namespace: tenant-alpha
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: apicurio-registry
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_restricting_the_operator_to_specific_namespaces"><a class="anchor" href="#_restricting_the_operator_to_specific_namespaces"></a>Restricting the operator to specific namespaces</h3>
+<div class="paragraph">
+<p>To limit the operator to watching only certain namespaces, set the <code>APICURIO_OPERATOR_WATCHED_NAMESPACES</code>
+environment variable on the operator Deployment:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">env:
+  - name: APICURIO_OPERATOR_WATCHED_NAMESPACES
+    value: "tenant-alpha,tenant-beta"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When this variable is empty or unset, the operator watches all namespaces. When installed via OLM, this is
+automatically derived from the <code>olm.targetNamespaces</code> annotation.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="multitenancy-lightweight-group-isolation_registry"><a class="anchor" href="#multitenancy-lightweight-group-isolation_registry"></a>Alternative: Lightweight isolation with groups</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For scenarios where full instance-per-tenant isolation is excessive, Apicurio Registry supports logical isolation
+within a single instance using <strong>groups</strong> and <strong>owner-based access control</strong>.</p>
+</div>
+<div class="sect2">
+<h3 id="_how_it_works"><a class="anchor" href="#_how_it_works"></a>How it works</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Each logical tenant uses one or more groups as their namespace within the registry.</p>
+</li>
+<li>
+<p>Users can only modify artifacts and groups they own.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h3>
+<div class="paragraph">
+<p>Enable owner-based access control in the <code>ApicurioRegistry3</code> CR:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    auth:
+      enabled: true
+      appClientId: registry-api
+      uiClientId: apicurio-registry
+      authServerUrl: https://keycloak.example.com/realms/registry
+      redirectUri: https://registry-ui.apps.cluster.example
+      logoutUrl: https://registry-ui.apps.cluster.example
+      authz:
+        enabled: true
+        ownerOnlyEnabled: true
+        groupAccessEnabled: true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With this configuration:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ownerOnlyEnabled</code> restricts artifact modifications to the artifact&#8217;s creator.</p>
+</li>
+<li>
+<p><code>groupAccessEnabled</code> restricts group modifications to the group&#8217;s creator.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_trade_offs"><a class="anchor" href="#_trade_offs"></a>Trade-offs</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Advantage</th>
+<th class="tableblock halign-left valign-top">Limitation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shared compute and storage reduces overhead</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Weaker isolation than separate instances</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Faster tenant provisioning (create a group, not a deployment)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No separate storage per tenant</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Single deployment to monitor and upgrade</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A bug or outage affects all tenants</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lower per-tenant cost</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No independent scaling per tenant</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>This approach is suitable for development environments, internal teams, or scenarios where tenants do not
+require strict data or infrastructure isolation.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p>For more information on deploying Apicurio Registry using the operator, see
+<a href="assembly-deploying-registry-operator.html" class="page">Deploying Apicurio Registry using the Operator</a>.</p>
+</li>
+<li>
+<p>For more information on configuring Apicurio Registry security, see
+<a href="assembly-configuring-registry-security.html" class="page">Configuring Apicurio Registry security options</a>.</p>
+</li>
+<li>
+<p>For the complete operator configuration reference, see
+<a href="assembly-operator-config-reference.html" class="page">Apicurio Registry Operator configuration reference</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.3.x/getting-started/assembly-implementing-multitenancy.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
