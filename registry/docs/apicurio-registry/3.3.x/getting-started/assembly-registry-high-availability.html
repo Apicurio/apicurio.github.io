@@ -848,6 +848,24 @@ APICURIO_KAFKASQL_SNAPSHOTS_TOPIC_MIN_INSYNC_REPLICAS=2</code></pre>
 </li>
 </ul>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Do not configure a fixed Kafka consumer group ID (for example, by setting
+<code>APICURIO_KAFKASQL_CONSUMER_GROUP_ID</code>). KafkaSQL uses an in-memory database that is empty on every
+restart, so the full journal topic must be replayed from the beginning each time. A fixed consumer
+group ID causes Kafka to resume from previously committed offsets, skipping the journal replay and
+resulting in the registry appearing empty after a restart. If you need a recognizable consumer group
+name for monitoring, use the <code>APICURIO_KAFKASQL_CONSUMER_GROUP_PREFIX</code> environment variable instead,
+which sets a prefix while still generating a unique group ID on each startup.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 </div>
