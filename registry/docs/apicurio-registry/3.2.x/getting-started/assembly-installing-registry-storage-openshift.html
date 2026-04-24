@@ -581,7 +581,9 @@ spec:
   partitions: 3
   replicas: 3
   config:
-    cleanup.policy: compact</code></pre>
+    cleanup.policy: delete
+    retention.ms: -1
+    retention.bytes: -1</code></pre>
 </div>
 </div>
 <div class="admonitionblock warning">
@@ -591,7 +593,7 @@ spec:
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-You must configure the Kafka topic used by Apicurio Registry (named <code>kafkasql-journal</code> by default) with a compaction cleanup policy, otherwise a data loss might occur.
+The journal topic must use <code>cleanup.policy: delete</code> with infinite retention (<code>retention.ms: -1</code> and <code>retention.bytes: -1</code>) to prevent data loss. Apicurio Registry will check these settings on startup and refuse to start if they are not configured correctly.
 </td>
 </tr>
 </table>
