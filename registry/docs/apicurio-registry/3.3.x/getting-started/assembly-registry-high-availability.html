@@ -451,7 +451,7 @@ spec:
 </td>
 <td class="content">
 Running multiple replicas requires a production-ready storage backend (PostgreSQL, MySQL, or KafkaSQL
-with persistent Kafka). Do not use in-memory storage with multiple replicas.
+with persistent Kafka). Do not use the default embedded H2 configuration with multiple replicas.
 </td>
 </tr>
 </table>
@@ -828,7 +828,7 @@ APICURIO_KAFKASQL_SNAPSHOTS_TOPIC_MIN_INSYNC_REPLICAS=2</code></pre>
 <p>There is no consumer group rebalancing between replicas</p>
 </li>
 <li>
-<p>All replicas build the same in-memory state from the Kafka topic</p>
+<p>All replicas build the same local state from the Kafka topic (replayed into an embedded H2 database)</p>
 </li>
 </ul>
 </div>
@@ -856,7 +856,7 @@ APICURIO_KAFKASQL_SNAPSHOTS_TOPIC_MIN_INSYNC_REPLICAS=2</code></pre>
 </td>
 <td class="content">
 Do not configure a fixed Kafka consumer group ID (for example, by setting
-<code>APICURIO_KAFKASQL_CONSUMER_GROUP_ID</code>). KafkaSQL uses an in-memory database that is empty on every
+<code>APICURIO_KAFKASQL_CONSUMER_GROUP_ID</code>). KafkaSQL uses an embedded H2 database that is empty on every
 restart, so the full journal topic must be replayed from the beginning each time. A fixed consumer
 group ID causes Kafka to resume from previously committed offsets, skipping the journal replay and
 resulting in the registry appearing empty after a restart. If you need a recognizable consumer group

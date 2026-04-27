@@ -344,7 +344,7 @@
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#installing-registry-in-memory-storage_registry">Installing Apicurio Registry with in-memory storage</a></p>
+<p><a href="#installing-registry-h2-storage_registry">Installing Apicurio Registry with default configuration (embedded H2 database)</a></p>
 </li>
 <li>
 <p><a href="#installing-registry-sql-storage_registry">Installing Apicurio Registry with SQL database storage</a></p>
@@ -385,10 +385,10 @@ You can install more than one replica of Apicurio Registry depending on your env
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-registry-in-memory-storage_registry"><a class="anchor" href="#installing-registry-in-memory-storage_registry"></a>Installing Apicurio Registry with in-memory storage</h2>
+<h2 id="installing-registry-h2-storage_registry"><a class="anchor" href="#installing-registry-h2-storage_registry"></a>Installing Apicurio Registry with default configuration (embedded H2 database)</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section explains how to install and run Apicurio Registry with simple in-memory storage from a container image.</p>
+<p>This section explains how to install and run Apicurio Registry with the default storage configuration from a container image. When no storage is explicitly configured, Apicurio Registry uses SQL storage with an embedded H2 database.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -397,7 +397,7 @@ You can install more than one replica of Apicurio Registry depending on your env
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The in-memory storage option is suitable for development only. All data is lost when the container image is restarted.
+The default embedded H2 configuration is suitable for development and testing only. All data is stored in memory and lost when the container is restarted. For production, configure PostgreSQL or Kafka storage.
 </td>
 </tr>
 </table>
@@ -841,7 +841,7 @@ file-based secrets example</a>.</p>
 <h2 id="installing-registry-kafka-storage_registry"><a class="anchor" href="#installing-registry-kafka-storage_registry"></a>Installing Apicurio Registry with Apache Kafka storage</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This topic explains how to install and run Apicurio Registry with Kafka storage from a container image. The <code>kafkasql</code> storage option uses a Kafka topic for storage, along with an in-memory H2 database. This storage option is suitable for production environments.</p>
+<p>This topic explains how to install and run Apicurio Registry with Kafka storage from a container image. The <code>kafkasql</code> storage option uses Kafka as the primary data store, with an embedded H2 database as a local SQL store that is rebuilt from the Kafka journal on each startup. This storage option is suitable for production environments.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>

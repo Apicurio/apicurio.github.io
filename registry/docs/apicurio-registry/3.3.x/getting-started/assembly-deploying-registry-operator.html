@@ -348,7 +348,7 @@ Kubernetes:</p>
 <p><a href="#operator-overview_registry">Understanding Apicurio Registry Operator deployment</a></p>
 </li>
 <li>
-<p><a href="#deploying-registry-inmemory_registry">Deploying Apicurio Registry with in-memory storage</a></p>
+<p><a href="#deploying-registry-inmemory_registry">Deploying Apicurio Registry with default configuration (embedded H2 database)</a></p>
 </li>
 <li>
 <p><a href="#deploying-registry-postgresql_registry">Deploying Apicurio Registry with PostgreSQL storage</a></p>
@@ -436,8 +436,7 @@ and pod specifications.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>In-memory</strong> (default) - Stores data in memory. Suitable for development and testing only. Data is lost when
-the pod restarts.</p>
+<p><strong>Embedded H2 database</strong> (default) - When no storage type is specified, Apicurio Registry uses SQL storage with an embedded H2 database. Suitable for development and testing only. All data is stored in memory and lost when the pod restarts.</p>
 </li>
 <li>
 <p><strong>PostgreSQL</strong> - Stores data in a PostgreSQL database. Suitable for production deployments.</p>
@@ -446,8 +445,7 @@ the pod restarts.</p>
 <p><strong>MySQL</strong> - Stores data in a MySQL database. Suitable for production deployments.</p>
 </li>
 <li>
-<p><strong>KafkaSQL</strong> - Stores data in Apache Kafka topics with an in-memory cache. Suitable for production deployments
-when configured with persistent Kafka storage.</p>
+<p><strong>KafkaSQL</strong> - Stores data in Apache Kafka topics, with an embedded H2 database as a local SQL store that is rebuilt from the Kafka journal on each startup. Suitable for production deployments when configured with persistent Kafka storage.</p>
 </li>
 <li>
 <p><strong>KubernetesOps</strong> - Read-only storage that loads registry data from Kubernetes ConfigMaps. Suitable for
@@ -462,7 +460,7 @@ Kubernetes-native and GitOps workflows. This is an experimental feature.</p>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-The default in-memory storage is not suitable for production environments.
+The default embedded H2 configuration is not suitable for production environments. Configure a storage type (<code>postgresql</code>, <code>mysql</code>, <code>kafkasql</code>, or <code>kubernetesops</code>) for production use.
 </td>
 </tr>
 </table>
@@ -471,11 +469,10 @@ The default in-memory storage is not suitable for production environments.
 </div>
 </div>
 <div class="sect1">
-<h2 id="deploying-registry-inmemory_registry"><a class="anchor" href="#deploying-registry-inmemory_registry"></a>Deploying Apicurio Registry with in-memory storage</h2>
+<h2 id="deploying-registry-inmemory_registry"><a class="anchor" href="#deploying-registry-inmemory_registry"></a>Deploying Apicurio Registry with default configuration (embedded H2 database)</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section shows how to deploy a basic Apicurio Registry instance using in-memory storage. This configuration is
-suitable for development and testing environments only.</p>
+<p>This section shows how to deploy a basic Apicurio Registry instance using the default storage configuration (SQL with an embedded H2 database). No storage type needs to be specified in the CR&#8201;&#8212;&#8201;when omitted, Apicurio Registry defaults to an embedded H2 database. This configuration is suitable for development and testing environments only.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -771,7 +768,7 @@ the database.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section explains how to deploy Apicurio Registry with KafkaSQL storage. KafkaSQL uses Apache Kafka as the primary
-data store with an in-memory H2 database for caching. This configuration is suitable for production environments
+data store, with an embedded H2 database as a local SQL store that is rebuilt from the Kafka journal on each startup. This configuration is suitable for production environments
 when using persistent Kafka storage.</p>
 </div>
 <div class="ulist">
@@ -1109,7 +1106,7 @@ an identity provider such as Keycloak.</p>
 <p>You must have cluster administrator access to an Kubernetes cluster.</p>
 </li>
 <li>
-<p>You must have already deployed Apicurio Registry. See <a href="#deploying-registry-inmemory_registry">Deploying Apicurio Registry with in-memory storage</a>.</p>
+<p>You must have already deployed Apicurio Registry. See <a href="#deploying-registry-inmemory_registry">Deploying Apicurio Registry with default configuration (embedded H2 database)</a>.</p>
 </li>
 <li>
 <p>You must have an OIDC identity provider configured with appropriate clients for Apicurio Registry.</p>
