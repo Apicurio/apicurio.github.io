@@ -339,7 +339,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter provides detailed implementation documentation for the built-in AI/ML artifact types (MODEL_SCHEMA and PROMPT_TEMPLATE) in Apicurio Registry. It covers the internal architecture, TypeScript implementation details, JSON Schema backing, MCP integration, and how to customize or extend these types.</p>
+<p>This chapter provides implementation documentation for the built-in AI/ML artifact types (MODEL_SCHEMA and PROMPT_TEMPLATE) in Apicurio Registry. It covers the architecture, JSON Schema backing, MCP integration, and implementation details.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -361,9 +361,6 @@
 <li>
 <p><a href="#llm-artifact-types-prompt-rendering-service_registry">Prompt Rendering Service</a></p>
 </li>
-<li>
-<p><a href="#llm-artifact-types-customization_registry">Customizing LLM Artifact Types</a></p>
-</li>
 </ul>
 </div>
 <div class="ulist _additional-resources">
@@ -371,9 +368,6 @@
 <ul>
 <li>
 <p>For usage documentation, see <a href="#registry-artifact-types_registry">[registry-artifact-types_registry]</a></p>
-</li>
-<li>
-<p>For creating custom artifact types, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/custom-artifact-type">Custom Artifact Type Example</a></p>
 </li>
 <li>
 <p><a href="https://prompty.ai/specification/page/">Microsoft Prompty Specification</a></p>
@@ -392,10 +386,10 @@
 <h2 id="llm-artifact-types-architecture_registry"><a class="anchor" href="#llm-artifact-types-architecture_registry"></a>Architecture Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Apicurio Registry implements the LLM artifact types using a script-based architecture that allows artifact type logic to be written in TypeScript and executed within the Java runtime.</p>
+<p>Apicurio Registry implements the LLM artifact types as first-class Java artifact types, following the same pattern as other built-in types such as Avro, JSON Schema, and Agent Card.</p>
 </div>
 <div class="sect2">
-<h3 id="_script_based_artifact_type_system"><a class="anchor" href="#_script_based_artifact_type_system"></a>Script-Based Artifact Type System</h3>
+<h3 id="_native_java_artifact_type_system"><a class="anchor" href="#_native_java_artifact_type_system"></a>Native Java Artifact Type System</h3>
 <div class="paragraph">
 <p>The LLM artifact types are implemented using the following components:</p>
 </div>
@@ -413,20 +407,12 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TypeScript Implementation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Located in <code>app/llm-artifact-types-src/src/</code>. Contains the actual validation, compatibility checking, and content handling logic written in TypeScript.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java Implementation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Located in <code>schema-util/common/src/main/java/io/apicurio/registry/</code>. Contains accepters, validators, compatibility checkers, reference finders, dereferencers, content extractors, and canonicalizers for each type.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Bundled JavaScript</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The TypeScript is transpiled and bundled using esbuild into JavaScript files stored in <code>app/src/main/resources/llm-artifact-types/</code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Configuration File</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default-artifact-types-config.json</code> defines the artifact types and links them to their JavaScript implementations.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Java Bridge</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConfiguredArtifactTypeUtilProvider</code> and <code>ScriptingService</code> execute the JavaScript using QuickJS within the JVM.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provider Wiring</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ModelSchemaArtifactTypeUtilProvider</code> and <code>PromptTemplateArtifactTypeUtilProvider</code> in <code>schema-util/util-provider/</code> wire each type&#8217;s implementations together and register them as standard artifact types.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Prompt Rendering Service</p></td>
@@ -436,50 +422,9 @@
 </table>
 </div>
 <div class="sect2">
-<h3 id="_configuration_file_structure"><a class="anchor" href="#_configuration_file_structure"></a>Configuration File Structure</h3>
-<div class="paragraph">
-<p>The LLM artifact types are configured in <code>app/src/main/resources/llm-artifact-types/default-artifact-types-config.json</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "includeStandardArtifactTypes": true,
-  "artifactTypes": [
-    {
-      "artifactType": "MODEL_SCHEMA",
-      "name": "Model Schema",
-      "description": "AI/ML model input/output schema definitions and metadata for LLM governance",
-      "contentTypes": ["application/json", "application/x-yaml"],
-      "scriptLocation": "llm-artifact-types/model-schema-artifact-type.js",
-      "contentAccepter": { "type": "script" },
-      "contentCanonicalizer": { "type": "script" },
-      "contentValidator": { "type": "script" },
-      "compatibilityChecker": { "type": "script" },
-      "contentDereferencer": { "type": "script" },
-      "referenceFinder": { "type": "script" }
-    },
-    {
-      "artifactType": "PROMPT_TEMPLATE",
-      "name": "Prompt Template",
-      "description": "Version-controlled prompt templates with variable schemas for LLMOps",
-      "contentTypes": ["application/x-yaml", "application/json", "text/x-prompt-template"],
-      "scriptLocation": "llm-artifact-types/prompt-template-artifact-type.js",
-      "contentAccepter": { "type": "script" },
-      "contentCanonicalizer": { "type": "script" },
-      "contentValidator": { "type": "script" },
-      "compatibilityChecker": { "type": "script" },
-      "contentDereferencer": { "type": "script" },
-      "referenceFinder": { "type": "script" }
-    }
-  ]
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
 <h3 id="_handler_functions"><a class="anchor" href="#_handler_functions"></a>Handler Functions</h3>
 <div class="paragraph">
-<p>Each artifact type implements the following handler functions:</p>
+<p>Each artifact type implements the following handler functions (as Java classes in <code>schema-util/common/</code>):</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Artifact Type Handler Functions</caption>
@@ -540,7 +485,7 @@
 <div class="sect2">
 <h3 id="_schema_locations"><a class="anchor" href="#_schema_locations"></a>Schema Locations</h3>
 <div class="paragraph">
-<p>The JSON Schemas are located in <code>app/llm-artifact-types-src/schemas/</code>:</p>
+<p>The JSON Schemas are located in <code>app/src/main/resources/schemas/</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 3. JSON Schema Files</caption>
@@ -1479,190 +1424,39 @@ interface Considerations {
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>app/llm-artifact-types-src/src/PromptTemplateArtifactType.ts</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">PROMPT_TEMPLATE implementation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>schema-util/common/&#8230;&#8203;/content/ModelSchemaContentAccepter.java</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MODEL_SCHEMA content type detection</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>app/llm-artifact-types-src/src/ModelSchemaArtifactType.ts</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">MODEL_SCHEMA implementation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>schema-util/common/&#8230;&#8203;/rules/validity/ModelSchemaContentValidator.java</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MODEL_SCHEMA validation</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>app/llm-artifact-types-src/src/shared-utils.ts</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Shared utility functions (parsing, reference handling)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>schema-util/common/&#8230;&#8203;/rules/compatibility/ModelSchemaCompatibilityChecker.java</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MODEL_SCHEMA backward compatibility checking</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>app/llm-artifact-types-src/package.json</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Build configuration and dependencies</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>schema-util/common/&#8230;&#8203;/content/PromptTemplateContentAccepter.java</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PROMPT_TEMPLATE content type detection</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>schema-util/common/&#8230;&#8203;/rules/validity/PromptTemplateContentValidator.java</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PROMPT_TEMPLATE validation (including template variable cross-checking)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>schema-util/common/&#8230;&#8203;/rules/compatibility/PromptTemplateCompatibilityChecker.java</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PROMPT_TEMPLATE backward compatibility checking</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>schema-util/util-provider/&#8230;&#8203;/ModelSchemaArtifactTypeUtilProvider.java</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MODEL_SCHEMA provider wiring</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>schema-util/util-provider/&#8230;&#8203;/PromptTemplateArtifactTypeUtilProvider.java</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PROMPT_TEMPLATE provider wiring</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_building_modified_types"><a class="anchor" href="#_building_modified_types"></a>Building Modified Types</h3>
-<div class="paragraph">
-<p>To modify and rebuild the LLM artifact types:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Navigate to source directory
-cd app/llm-artifact-types-src
-
-# Install dependencies
-npm install
-
-# Build both artifact types
-npm run build
-
-# Or build individually
-npm run build-prompt-template
-npm run build-model-schema</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The build process:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Transpiles TypeScript to JavaScript using <code>tsc</code></p>
-</li>
-<li>
-<p>Bundles with dependencies using <code>esbuild</code></p>
-</li>
-<li>
-<p>Outputs to <code>app/src/main/resources/llm-artifact-types/</code></p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_using_the_artifact_type_builtins_package"><a class="anchor" href="#_using_the_artifact_type_builtins_package"></a>Using the artifact-type-builtins Package</h3>
-<div class="paragraph">
-<p>The <code>@apicurio/artifact-type-builtins</code> npm package provides:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>TypeScript type definitions for all request/response interfaces</p>
-</li>
-<li>
-<p>Utility functions (<code>info()</code>, <code>debug()</code>) for logging</p>
-</li>
-<li>
-<p>IDE autocomplete support</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">npm install @apicurio/artifact-type-builtins</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">import type {
-    ContentAccepterRequest,
-    ContentValidatorRequest,
-    ContentValidatorResponse,
-    CompatibilityCheckerRequest,
-    CompatibilityCheckerResponse
-} from '@apicurio/artifact-type-builtins';
-
-export function validate(request: ContentValidatorRequest): ContentValidatorResponse {
-    // Implementation
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_shared_utilities"><a class="anchor" href="#_shared_utilities"></a>Shared Utilities</h3>
-<div class="paragraph">
-<p>The <code>shared-utils.ts</code> file provides reusable functions:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 14. Shared Utility Functions</caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Function</th>
-<th class="tableblock halign-left valign-top">Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>parseContent&lt;T&gt;(content, contentType)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Parse JSON or YAML content based on content type</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sortObjectKeys(obj)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Recursively sort object keys for canonicalization</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findRefs(obj, refs)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Find all external <code>$ref</code> references in an object</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resolveRefs(obj, indexedRefs, parser)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Replace <code>$ref</code> with resolved content</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rewriteRefsWithUrls(obj, indexedUrls)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Rewrite <code>$ref</code> paths to registry URLs</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_external_configuration"><a class="anchor" href="#_external_configuration"></a>External Configuration</h3>
-<div class="paragraph">
-<p>To override the built-in LLM artifact types at deployment time:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Create a custom configuration file:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "includeStandardArtifactTypes": true,
-  "artifactTypes": [
-    {
-      "artifactType": "PROMPT_TEMPLATE",
-      "scriptLocation": "/custom/my-prompt-template.js",
-      // ... other configuration
-    }
-  ]
-}</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Mount the configuration and JavaScript files</p>
-</li>
-<li>
-<p>Set the environment variable:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">APICURIO_ARTIFACT_TYPES_CONFIG_FILE=/path/to/config.json</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p>For a complete custom artifact type example, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/custom-artifact-type">TOML Custom Artifact Type Example</a></p>
-</li>
-<li>
-<p>For the npm package documentation, see <a href="https://www.npmjs.com/package/@apicurio/artifact-type-builtins">@apicurio/artifact-type-builtins on npm</a></p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 </div>
