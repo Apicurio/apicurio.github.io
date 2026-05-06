@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Apicurio Registry schema compatibility modes :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-registry-compatibility-modes.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.3.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">getting-started/assembly-registry-concepts-glossary.adoc</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-registry-compatibility-modes.html">Apicurio Registry schema compatibility modes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A Protocol Features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP Tool Definition Features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM Artifact Types Implementation Guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.3.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.2.x/index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Introduction</li>
+    <li><a href="assembly-registry-compatibility-modes.html">Apicurio Registry schema compatibility modes</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.3.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-registry-compatibility-modes.html">3.3.x</a>
+    <a class="version is-missing" href="../../3.2.x/index.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Apicurio Registry schema compatibility modes</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>In Apicurio Registry, compatibility modes determine which changes are permitted when you upload a new version of an artifact. Because these rules vary depending on the data format (such as Avro, JSON Schema, Protobuf, OpenAPI, or XSD), each artifact type has its own specific criteria for what constitutes a compatible or incompatible change.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#registry-compatibility-overview_registry">Overview of compatibility rules</a></p>
+</li>
+<li>
+<p><a href="#registry-compatibility-mode-descriptions_registry">Compatibility mode descriptions</a></p>
+</li>
+<li>
+<p><a href="#registry-compatibility-avro_registry">Avro schema compatibility</a></p>
+</li>
+<li>
+<p><a href="#registry-compatibility-json-schema_registry">JSON Schema compatibility</a></p>
+</li>
+<li>
+<p><a href="#registry-compatibility-protobuf_registry">Protobuf schema compatibility</a></p>
+</li>
+<li>
+<p><a href="#registry-compatibility-openapi_registry">OpenAPI compatibility</a></p>
+</li>
+<li>
+<p><a href="#registry-compatibility-xsd_registry">XSD compatibility</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-rule-reference.html">Apicurio Registry rule reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-compatibility-overview_registry"><a class="anchor" href="#registry-compatibility-overview_registry"></a>Overview of compatibility rules</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When you add a new version of an artifact to Apicurio Registry, you can configure the <code>COMPATIBILITY</code> rule to check whether the new content is compatible with existing versions.
+Compatibility checking helps you ensure that producers and consumers can continue to work together without disruption when schemas evolve.</p>
+</div>
+<div class="paragraph">
+<p>You can configure the <code>COMPATIBILITY</code> rule at three levels. Apicurio Registry applies these rules in order of precedence, where the most specific level always overrides the broader levels:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Artifact-specific rules</strong>: Apply to a single artifact and have the highest priority.</p>
+</li>
+<li>
+<p><strong>Group-specific rules</strong>: Apply to all artifacts in a specific group.</p>
+</li>
+<li>
+<p><strong>Global rules</strong>: Apply to all artifacts across the registry unless a group or artifact rule is set.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+To disable a rule inherited from a higher level, you must explicitly set the rule at the lower level to <code>NONE</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Not all artifact types support compatibility checking. The following sections cover the supported types: Avro, JSON Schema, Protobuf, OpenAPI, and XSD.
+For the full list of supported artifact types and rule maturity levels, see the content rule maturity matrix in <a href="assembly-rule-reference.html">Apicurio Registry rule reference</a>.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-intro-to-registry-rules.html">Introduction to Apicurio Registry rules</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-compatibility-mode-descriptions_registry"><a class="anchor" href="#registry-compatibility-mode-descriptions_registry"></a>Compatibility mode descriptions</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Compatibility modes act as a set of rules that determine whether a new schema version is allowed based on its ability to work with existing data and applications.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Apicurio Registry compatibility modes</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Mode</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NONE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All compatibility checks are disabled.
+Apicurio Registry accepts any changes to the schema, regardless of whether they are backward or forward compatible.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKWARD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clients using the new artifact can read data that the most recently added artifact wrote.
+Use <code>BACKWARD</code> when you want to ensure that updated consumers can process existing data.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKWARD_TRANSITIVE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clients using the new artifact can read data that all previously added artifacts wrote.
+Unlike <code>BACKWARD</code>, which checks only against the latest version, <code>BACKWARD_TRANSITIVE</code> checks against every prior version.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FORWARD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clients using the most recently added artifact can read data that the new artifact writes.
+Use <code>FORWARD</code> when you want to ensure that existing consumers can process data that the updated schema produces.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FORWARD_TRANSITIVE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clients using all previously added artifacts can read data that the new artifact writes.
+Unlike <code>FORWARD</code>, which checks only against the latest version, <code>FORWARD_TRANSITIVE</code> checks against every prior version.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new artifact is both forward and backward compatible with the most recently added artifact.
+Both old and new consumers can read data that either the old or new version of the schema produces.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FULL_TRANSITIVE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new artifact is both forward and backward compatible with all previously added artifacts.
+<code>FULL_TRANSITIVE</code> is the strictest compatibility mode and enforces complete interoperability across all schema versions.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>BACKWARD</code> and <code>FORWARD</code> modes compare the proposed schema only with the most recently added version.
+The transitive modes (<code>BACKWARD_TRANSITIVE</code>, <code>FORWARD_TRANSITIVE</code>, and <code>FULL_TRANSITIVE</code>) compare the proposed schema against all existing versions, which provides stricter validation but restricts the changes you can make.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-compatibility-avro_registry"><a class="anchor" href="#registry-compatibility-avro_registry"></a>Avro schema compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry uses the Apache Avro library to check compatibility for Avro schemas.
+The following table describes common Avro schema changes and whether they maintain or break backward and forward compatibility.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Avro schema compatibility changes</caption>
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Change type</th>
+<th class="tableblock halign-left valign-top">Backward compatible?</th>
+<th class="tableblock halign-left valign-top">Forward compatible?</th>
+<th class="tableblock halign-left valign-top">Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a field with a default value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">New consumers use the default for old data; old consumers ignore the new field.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a field without a default value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">New consumers have no value for old data; old consumers ignore the new field.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove a field that has a default value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">New consumers ignore the field; old consumers use their own default for new data.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove a field without a default value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">New consumers ignore the field; old consumers have no value to fill the gap.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a type to a union</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">New consumers can handle the new type; old consumers fail if they encounter it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove a type from a union</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">New consumers cannot parse the old type; old consumers only expect types they already know.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rename a field without an alias</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The field name mapping is broken for both parties.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change a field type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data types are fundamentally incompatible (for example, <code>string</code> to <code>int</code>).</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<div class="title">Transitive compatibility example for Avro</div>
+<p>The following example demonstrates how transitive compatibility differs from non-transitive compatibility:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Version 1</strong>: <code>{fields: [name: string]}</code></p>
+</li>
+<li>
+<p><strong>Version 2</strong>: <code>{fields: [name: string, email: string (default: "")]}</code></p>
+</li>
+<li>
+<p><strong>Version 3</strong>: <code>{fields: [name: string, email: string]}</code> (default removed from <code>email</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In the example, Version 3 is backward compatible with Version 2 because the <code>email</code> field exists in Version 2 data.
+However, Version 3 is <em>not</em> backward compatible with Version 1 because the <code>email</code> field is missing and there is no default value.
+As a result, Version 3 passes the <code>BACKWARD</code> check but fails the <code>BACKWARD_TRANSITIVE</code> check.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-compatibility-json-schema_registry"><a class="anchor" href="#registry-compatibility-json-schema_registry"></a>JSON Schema compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry uses a custom library to analyze differences between JSON Schema versions.
+Because JSON Schema uses a constraint-based validation model, the following table describes common changes and whether they maintain or break backward compatibility. For JSON Schema, forward compatibility is the inverse of backward compatibility: a change that makes the schema more permissive is backward compatible but forward incompatible, and a change that makes the schema more restrictive is forward compatible but backward incompatible.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. JSON Schema compatibility changes</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 11.1111%;">
+<col style="width: 55.5556%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Change type</th>
+<th class="tableblock halign-left valign-top">Backward compatible?</th>
+<th class="tableblock halign-left valign-top">Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a new optional property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data without the property remains valid under the new schema.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove a property from <code>required</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new schema relaxes the constraint, so old data with or without the property remains valid.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Decrease <code>minProperties</code>, <code>minLength</code>, or <code>minItems</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new schema relaxes the minimum constraint. Old data that met the stricter minimum still passes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Increase <code>maxProperties</code>, <code>maxLength</code>, or <code>maxItems</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new schema relaxes the maximum constraint. Old data that met the stricter maximum still passes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a value to <code>enum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new schema expands the set of accepted values. Existing valid values remain valid.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change <code>additionalProperties</code> from <code>false</code> to <code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new schema becomes more permissive by accepting additional properties.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Extend the <code>additionalProperties</code> schema</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Making the additional properties schema more permissive accepts more data.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Increase the size of <code>oneOf</code> or <code>anyOf</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adding alternatives to combined schemas accepts more data patterns.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Decrease <code>minimum</code> or <code>exclusiveMinimum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new schema relaxes the lower bound. Old data above the previous bound still passes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Increase <code>maximum</code> or <code>exclusiveMaximum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new schema relaxes the upper bound. Old data below the previous bound still passes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove a <code>format</code> constraint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new schema removes a validation check, making it more permissive.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change <code>uniqueItems</code> from <code>true</code> to <code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new schema relaxes the array constraint. Old data with unique items remains valid.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a property to <code>required</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data without the newly required property fails validation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Increase <code>minProperties</code>, <code>minLength</code>, or <code>minItems</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new schema tightens the minimum constraint. Old data that met the previous minimum might fail.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Decrease <code>maxProperties</code>, <code>maxLength</code>, or <code>maxItems</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new schema tightens the maximum constraint. Old data that met the previous maximum might fail.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove a value from <code>enum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data that contains the removed value fails validation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change <code>additionalProperties</code> from <code>true</code> to <code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data with additional properties fails validation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change the <code>type</code> keyword</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data of the previous type fails validation. For example, changing <code>string</code> to <code>integer</code> breaks compatibility.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a <code>pattern</code> or <code>format</code> constraint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data that does not match the new pattern or format fails validation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Increase <code>minimum</code> or <code>exclusiveMinimum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new schema tightens the lower bound. Old data below the new bound fails validation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Decrease <code>maximum</code> or <code>exclusiveMaximum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new schema tightens the upper bound. Old data above the new bound fails validation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Decrease the size of <code>oneOf</code> or <code>anyOf</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Removing alternatives from combined schemas causes some previously valid data to fail validation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change <code>uniqueItems</code> from <code>false</code> to <code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data with duplicate items fails validation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change a <code>const</code> value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data with the previous constant value fails validation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-compatibility-protobuf_registry"><a class="anchor" href="#registry-compatibility-protobuf_registry"></a>Protobuf schema compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry checks Protobuf schema compatibility based on the wire format contract.
+Because Protobuf uses numeric field tags to identify fields on the wire, the following table describes common changes and whether they maintain or break backward compatibility.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Protobuf schema compatibility changes</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 11.1111%;">
+<col style="width: 55.5556%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Change type</th>
+<th class="tableblock halign-left valign-top">Backward compatible?</th>
+<th class="tableblock halign-left valign-top">Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a new field with a new tag number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data does not contain the new tag, and the new consumer ignores the missing optional field.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a new message type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data is unaffected by the addition of new message definitions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a new RPC method to a service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data and existing RPC calls are unaffected by the new method.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change a field tag number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data uses the original tag number on the wire. The new consumer cannot match the field to its new tag.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change a field type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The wire encoding differs between types. For example, changing <code>string</code> to <code>int64</code> causes parsing failures.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rename a field</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">On the binary wire format, renaming a field without changing its tag number is compatible. However, Apicurio Registry flags this as incompatible because it breaks JSON serialization and generated code. If you use only binary encoding, this change is safe in practice.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove a field without reserving its tag</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Another field might reuse the tag number with a different type, which causes data corruption.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change a field label (proto2)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">In proto2, changing between <code>optional</code>, <code>required</code>, or <code>repeated</code> alters the wire format and parsing behavior. In proto3, <code>required</code> is not used, and changing between <code>optional</code> and <code>repeated</code> can still break compatibility.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove an RPC method from a service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clients that use the removed RPC method can no longer communicate with the service.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change an RPC method signature</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Changing the input or output message type breaks the RPC contract.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<div class="title">Reserving fields in Protobuf</div>
+<p>When you remove a field from a Protobuf schema, reserve both the tag number and the field name to prevent reuse:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>message Person {
+  reserved 2, 3;
+  reserved "email", "phone";
+  int32 id = 1;
+  string name = 4;
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Reserving fields is critical for maintaining forward and backward compatibility because it prevents accidental reuse of tag numbers or field names.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-compatibility-openapi_registry"><a class="anchor" href="#registry-compatibility-openapi_registry"></a>OpenAPI compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry checks OpenAPI specification compatibility by comparing operations and schemas between versions.
+The following table describes common changes and whether they maintain or break backward compatibility.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. OpenAPI compatibility changes</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 11.1111%;">
+<col style="width: 55.5556%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Change type</th>
+<th class="tableblock halign-left valign-top">Backward compatible?</th>
+<th class="tableblock halign-left valign-top">Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a new path or endpoint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing clients are not affected by new endpoints that they do not call.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a new optional query parameter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing clients can continue making requests without the new parameter.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a new optional response header</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing clients can ignore the new header in responses.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Relax request body schema constraints</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing requests that the old schema validated remain valid when you relax the constraints.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a new response status code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing clients that follow HTTP conventions ignore unknown status codes. However, some clients might not handle unexpected codes correctly. Test client behavior before relying on this change.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove a path or endpoint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing clients that depend on the removed endpoint receive errors.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove an operation from a path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing clients that use the removed HTTP method (for example, <code>GET</code> or <code>POST</code>) receive errors.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a new required request parameter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing client requests that do not include the new parameter are rejected.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tighten request body schema constraints</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing client requests that the old schema validated might be rejected under the new schema.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change a response body schema incompatibly</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing clients that parse the response according to the old schema might fail.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove a response status code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing clients that handle the removed status code might not handle the replacement correctly.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-compatibility-xsd_registry"><a class="anchor" href="#registry-compatibility-xsd_registry"></a>XSD compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry checks XML Schema Definition (XSD) compatibility by comparing elements, attributes, types, and constraints between versions.
+The following table describes common changes and whether they maintain or break backward and forward compatibility. Actual compatibility can depend on content model details, default values, namespace usage, element ordering, and extension or restriction semantics. Use this table as a general guide and test your specific schema changes.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. XSD schema compatibility changes</caption>
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Change type</th>
+<th class="tableblock halign-left valign-top">Backward compatible?</th>
+<th class="tableblock halign-left valign-top">Forward compatible?</th>
+<th class="tableblock halign-left valign-top">Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add an optional element (<code>minOccurs=0</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data remains valid because the element is optional; old schema does not accept the new element.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a required element (<code>minOccurs &gt; 0</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data does not contain the required element; new data always provides what the old schema expects.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove an element</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data contains the element, which the new schema does not expect; new data omits the element, which the old schema might require.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add an optional attribute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data remains valid because the attribute is optional; old schema does not recognize the new attribute.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a required attribute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data does not contain the required attribute; new data always provides what the old schema expects.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove an attribute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data contains the attribute, which the new schema does not expect; new data omits it, which the old schema might require.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Decrease <code>minOccurs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data that met the stricter requirement still passes; old schema rejects data that uses the relaxed requirement.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Increase <code>minOccurs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data might not meet the new minimum; new data always meets the old minimum.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Increase <code>maxOccurs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data within the previous limit still passes; old schema rejects data that uses the higher limit.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Decrease <code>maxOccurs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data might exceed the new limit; new data stays within the old limit.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Loosen a numeric range (<code>minInclusive</code> or <code>maxInclusive</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old values still fall within the expanded range; new values might fall outside the old range.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tighten a numeric range (<code>minInclusive</code> or <code>maxInclusive</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old values might fall outside the tightened range; new values stay within the old range.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Loosen string constraints (<code>minLength</code> or <code>maxLength</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old strings still meet the relaxed constraints; new strings might violate the old constraints.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tighten string constraints (<code>minLength</code> or <code>maxLength</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old strings might violate the tightened constraints; new strings meet the old constraints.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add an enumeration value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data uses existing values that remain valid; new data might use the new value, which the old schema rejects.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove an enumeration value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data might use the removed value; new data avoids it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change an element type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data types are fundamentally incompatible between versions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove <code>nillable</code> from an element</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data with null values becomes invalid under the new schema.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.3.x/getting-started/assembly-registry-compatibility-modes.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
