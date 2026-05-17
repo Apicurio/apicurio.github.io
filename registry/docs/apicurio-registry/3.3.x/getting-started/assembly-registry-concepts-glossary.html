@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Apicurio Registry</title>
+    <title>Apicurio Registry concepts and glossary :: Apicurio Registry</title>
     <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-registry-concepts-glossary.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
@@ -78,7 +78,7 @@
     <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="assembly-registry-concepts-glossary.html">getting-started/assembly-registry-concepts-glossary.adoc</a>
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
@@ -317,7 +317,7 @@
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
     <li>Introduction</li>
-    <li><a href="assembly-registry-concepts-glossary.html">getting-started/assembly-registry-concepts-glossary.adoc</a></li>
+    <li><a href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -338,108 +338,129 @@
   </div>
   <div class="content">
 <article class="doc">
-<div class="paragraph">
-<p>Unresolved include directive in modules/ROOT/pages/getting-started/assembly-registry-concepts-glossary.adoc - include::./attributes.adoc[]</p>
+<h1 class="page">Apicurio Registry concepts and glossary</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use these definitions to understand the core concepts of Apicurio Registry.</p>
 </div>
-<h1 id="registry-concepts-glossary" class="sect0"><a class="anchor" href="#registry-concepts-glossary"></a>Registry Concepts and Glossary</h1>
-<div class="paragraph">
-<p>This section provides definitions for the core concepts used throughout {registry}.</p>
+</div>
 </div>
 <div class="sect1">
-<h2 id="concept-group"><a class="anchor" href="#concept-group"></a>Group</h2>
+<h2 id="concept-group_registry"><a class="anchor" href="#concept-group_registry"></a>Group</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>A <strong>group</strong> is a named namespace for organizing related artifacts.</p>
+</div>
 <div class="paragraph">
-<p>A <strong>group</strong> is a named namespace for organizing related artifacts.
-Every artifact belongs to a group.
-If no group is specified when creating an artifact, it is placed in the <code>default</code> group.
+<p>Every artifact belongs to a group.
+If you do not specify a group when creating an artifact, Apicurio Registry places it in the <code>default</code> group.
 Groups can carry their own metadata (description, labels) and can have group-level rules that apply to all artifacts within the group.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="concept-artifact"><a class="anchor" href="#concept-artifact"></a>Artifact</h2>
+<h2 id="concept-artifact_registry"><a class="anchor" href="#concept-artifact_registry"></a>Artifact</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>An <strong>artifact</strong> is a named schema or API definition within a group, uniquely identified by the combination of <code>groupId</code> and <code>artifactId</code>.</p>
+</div>
 <div class="paragraph">
-<p>An <strong>artifact</strong> is a named schema or API definition within a group, uniquely identified by the combination of <code>groupId</code> and <code>artifactId</code>.
-An artifact acts as a container for zero or more artifact versions.
+<p>An artifact acts as a container for zero or more artifact versions.
 Examples of artifacts include an Avro schema, a Protobuf definition, an OpenAPI specification, or an AsyncAPI definition.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="concept-artifact-version"><a class="anchor" href="#concept-artifact-version"></a>Artifact Version</h2>
+<h2 id="concept-artifact-version_registry"><a class="anchor" href="#concept-artifact-version_registry"></a>Artifact version</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>An <strong>artifact version</strong> is an immutable snapshot of an artifact&#8217;s content.</p>
+</div>
 <div class="paragraph">
-<p>An <strong>artifact version</strong> is an immutable snapshot of an artifact&#8217;s content.
-Each version is identified within its artifact by a <code>version</code> string and is also assigned a globally unique numeric <code>globalId</code>.
-Once created, the content of a version cannot be changed.
-Versions have a lifecycle state (see <a href="#concept-version-state">Version State</a>) and can carry user-defined metadata and labels.</p>
+<p>Each version is identified within its artifact by a <code>version</code> string and is also assigned a globally unique numeric <code>globalId</code>.
+After you create a version, you cannot change its content.
+Versions have a lifecycle state (see <a href="#concept-version-state_registry">Version state</a>) and can carry user-defined metadata and labels.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="concept-content"><a class="anchor" href="#concept-content"></a>Content</h2>
+<h2 id="concept-content_registry"><a class="anchor" href="#concept-content_registry"></a>Content</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p><strong>Content</strong> is the actual schema or API payload stored in the registry (for example, an Avro JSON schema, a Protobuf <code>.proto</code> definition, or an OpenAPI YAML specification).</p>
+</div>
 <div class="paragraph">
-<p><strong>Content</strong> is the actual schema or API payload stored in the registry (for example, an Avro JSON schema, a Protobuf <code>.proto</code> definition, or an OpenAPI YAML specification).
-Content is deduplicated: if two artifact versions have identical content, they share the same <code>contentId</code>.</p>
+<p>Content is deduplicated: if two artifact versions have identical content, they share the same <code>contentId</code>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="concept-global-id"><a class="anchor" href="#concept-global-id"></a>GlobalId</h2>
+<h2 id="concept-global-id_registry"><a class="anchor" href="#concept-global-id_registry"></a>Global ID</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>A <strong>global ID</strong> is a globally unique numeric identifier for each artifact version in the registry.</p>
+</div>
 <div class="paragraph">
-<p>A <strong>globalId</strong> is a globally unique numeric identifier assigned to each artifact version in the registry.
-It is auto-generated when a version is created and can be used to retrieve a specific version directly, regardless of group or artifact.</p>
+<p>Apicurio Registry auto-generates the global ID when you create a version. You can use the global ID to retrieve a specific version directly, regardless of group or artifact.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="concept-content-id"><a class="anchor" href="#concept-content-id"></a>ContentId</h2>
+<h2 id="concept-content-id_registry"><a class="anchor" href="#concept-content-id_registry"></a>Content ID</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>A <strong>content ID</strong> is a unique numeric identifier for a piece of content.</p>
+</div>
 <div class="paragraph">
-<p>A <strong>contentId</strong> is a unique numeric identifier for a piece of content.
-Because content is deduplicated, multiple artifact versions with identical content share the same <code>contentId</code>.
+<p>Because content is deduplicated, multiple artifact versions with identical content share the same <code>contentId</code>.
 This is useful when different artifacts or versions reference the same schema payload.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="concept-branch"><a class="anchor" href="#concept-branch"></a>Branch</h2>
+<h2 id="concept-branch_registry"><a class="anchor" href="#concept-branch_registry"></a>Branch</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>A <strong>branch</strong> is a named, ordered sequence of artifact versions within an artifact.</p>
+</div>
 <div class="paragraph">
-<p>A <strong>branch</strong> is a named, ordered sequence of artifact versions within an artifact.
-Branches are used to track parallel evolution paths for an artifact.
+<p>Branches track parallel evolution paths for an artifact.
 For example, an artifact might have a <code>latest</code> branch (the default) and a <code>1.x</code> branch for maintenance releases.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="concept-artifact-reference"><a class="anchor" href="#concept-artifact-reference"></a>Artifact Reference</h2>
+<h2 id="concept-artifact-reference_registry"><a class="anchor" href="#concept-artifact-reference_registry"></a>Artifact reference</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>An <strong>artifact reference</strong> is a reference from one artifact to another.</p>
+</div>
 <div class="paragraph">
-<p>An <strong>artifact reference</strong> is a reference from one artifact to another.
-References model relationships such as <code>$ref</code> in JSON Schema, <code>import</code> in Protobuf, or type references in Avro.
-When an artifact version contains references, the registry tracks them to support referential integrity validation.</p>
+<p>References model relationships such as <code>$ref</code> in JSON Schema, <code>import</code> in Protobuf, or type references in Avro.
+When an artifact version contains references, Apicurio Registry stores them to support referential integrity validation.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="concept-labels"><a class="anchor" href="#concept-labels"></a>Labels</h2>
+<h2 id="concept-labels_registry"><a class="anchor" href="#concept-labels_registry"></a>Labels</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p><strong>Labels</strong> are user-defined key-value string pairs that you can attach to groups, artifacts, or artifact versions.</p>
+</div>
 <div class="paragraph">
-<p><strong>Labels</strong> are user-defined key-value string pairs that can be attached to groups, artifacts, or artifact versions.
-Labels are used for organization, categorization, and filtering when searching.</p>
+<p>You can use labels for organization, categorization, and filtering when searching.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="concept-rule"><a class="anchor" href="#concept-rule"></a>Rule</h2>
+<h2 id="concept-rule_registry"><a class="anchor" href="#concept-rule_registry"></a>Rule</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>A <strong>rule</strong> is a validation constraint that Apicurio Registry applies when you add new content.</p>
+</div>
 <div class="paragraph">
-<p>A <strong>rule</strong> is a validation constraint that is applied when new content is added to the registry.
-Rules operate at three levels:</p>
+<p>Rules operate at three levels:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -455,7 +476,7 @@ Rules operate at three levels:</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>When a rule is configured at multiple levels, the most specific level takes precedence (artifact &gt; group &gt; global).</p>
+<p>When you configure a rule at multiple levels, the most specific level takes precedence (artifact &gt; group &gt; global).</p>
 </div>
 <div class="paragraph">
 <p>The available rule types are:</p>
@@ -463,99 +484,113 @@ Rules operate at three levels:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Validity rule</strong>&#8201;&#8212;&#8201;validates that the content is syntactically and/or semantically correct for its artifact type.</p>
+<p><strong>Validity rule</strong>: validates that the content is syntactically and semantically correct for its artifact type.</p>
 </li>
 <li>
-<p><strong>Compatibility rule</strong>&#8201;&#8212;&#8201;validates that new content is compatible with previous versions according to a specified compatibility level.</p>
+<p><strong>Compatibility rule</strong>: validates that new content is compatible with previous versions according to a specified compatibility level.</p>
 </li>
 <li>
-<p><strong>Integrity rule</strong>&#8201;&#8212;&#8201;validates referential integrity of artifact references.</p>
+<p><strong>Integrity rule</strong>: validates referential integrity of artifact references.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>For more information, see <a href="assembly-rule-reference.html" class="page">Apicurio Registry content rule reference</a>.</p>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-rule-reference.html" class="page">Apicurio Registry content rule reference</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="concept-version-state"><a class="anchor" href="#concept-version-state"></a>Version State</h2>
+<h2 id="concept-version-state_registry"><a class="anchor" href="#concept-version-state_registry"></a>Version state</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The <strong>version state</strong> represents the lifecycle state of an artifact version.</p>
+</div>
 <div class="paragraph">
-<p>The <strong>version state</strong> represents the lifecycle state of an artifact version.
-The possible states are:</p>
+<p>The possible states are:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>ENABLED</code>&#8201;&#8212;&#8201;the version is fully available. Content and metadata can be retrieved normally.</p>
+<p><code>ENABLED</code>: the version is fully available. You can retrieve content and metadata normally.</p>
 </li>
 <li>
-<p><code>DEPRECATED</code>&#8201;&#8212;&#8201;the version is still available, but the registry returns a warning header to signal that consumers should migrate to a newer version.</p>
+<p><code>DEPRECATED</code>: the version is still available, but Apicurio Registry returns a warning header to signal that consumers must migrate to a newer version.</p>
 </li>
 <li>
-<p><code>DISABLED</code>&#8201;&#8212;&#8201;the version metadata is visible, but the version content cannot be fetched.</p>
+<p><code>DISABLED</code>: the version metadata is visible, but you cannot fetch the version content.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>State transitions are allowed between any of these three states.</p>
+<p>You can transition between any of these three states.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="concept-artifact-type"><a class="anchor" href="#concept-artifact-type"></a>Artifact Type</h2>
+<h2 id="concept-artifact-type_registry"><a class="anchor" href="#concept-artifact-type_registry"></a>Artifact type</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The <strong>artifact type</strong> identifies the format or schema language of an artifact&#8217;s content.</p>
+</div>
 <div class="paragraph">
-<p>The <strong>artifact type</strong> identifies the format or schema language of an artifact&#8217;s content.
-The registry uses the artifact type to determine how to parse, validate, and check compatibility of the content.
+<p>Apicurio Registry uses the artifact type to parse, validate, and check compatibility of the content.
 Supported artifact types include:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>AVRO</code>&#8201;&#8212;&#8201;Apache Avro schema</p>
+<p><code>AVRO</code>: Apache Avro schema</p>
 </li>
 <li>
-<p><code>PROTOBUF</code>&#8201;&#8212;&#8201;Google Protocol Buffers definition</p>
+<p><code>PROTOBUF</code>: Google Protocol Buffers definition</p>
 </li>
 <li>
-<p><code>JSON</code>&#8201;&#8212;&#8201;JSON Schema</p>
+<p><code>JSON</code>: JSON Schema</p>
 </li>
 <li>
-<p><code>OPENAPI</code>&#8201;&#8212;&#8201;OpenAPI specification</p>
+<p><code>OPENAPI</code>: OpenAPI specification</p>
 </li>
 <li>
-<p><code>ASYNCAPI</code>&#8201;&#8212;&#8201;AsyncAPI specification</p>
+<p><code>ASYNCAPI</code>: AsyncAPI specification</p>
 </li>
 <li>
-<p><code>GRAPHQL</code>&#8201;&#8212;&#8201;GraphQL schema definition</p>
+<p><code>GRAPHQL</code>: GraphQL schema definition</p>
 </li>
 <li>
-<p><code>KCONNECT</code>&#8201;&#8212;&#8201;Apache Kafka Connect schema</p>
+<p><code>KCONNECT</code>: Apache Kafka Connect schema</p>
 </li>
 <li>
-<p><code>WSDL</code>&#8201;&#8212;&#8201;Web Services Description Language definition</p>
+<p><code>WSDL</code>: Web Services Description Language definition</p>
 </li>
 <li>
-<p><code>XSD</code>&#8201;&#8212;&#8201;XML Schema Definition</p>
+<p><code>XSD</code>: XML Schema Definition</p>
 </li>
 <li>
-<p><code>XML</code>&#8201;&#8212;&#8201;XML document</p>
+<p><code>XML</code>: XML document</p>
 </li>
 <li>
-<p><code>AGENT_CARD</code>&#8201;&#8212;&#8201;AI Agent Card (A2A protocol)</p>
+<p><code>AGENT_CARD</code>: AI Agent Card (A2A protocol)</p>
 </li>
 <li>
-<p><code>ICEBERG_TABLE</code>&#8201;&#8212;&#8201;Apache Iceberg table metadata</p>
+<p><code>ICEBERG_TABLE</code>: Apache Iceberg table metadata</p>
 </li>
 <li>
-<p><code>ICEBERG_VIEW</code>&#8201;&#8212;&#8201;Apache Iceberg view metadata</p>
+<p><code>ICEBERG_VIEW</code>: Apache Iceberg view metadata</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>For more information, see <a href="assembly-artifact-reference.html" class="page">Apicurio Registry artifact reference</a>.</p>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-artifact-reference.html" class="page">Apicurio Registry artifact reference</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
