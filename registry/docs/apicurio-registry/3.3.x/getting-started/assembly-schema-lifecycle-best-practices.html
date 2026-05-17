@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Schema lifecycle best practices :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-schema-lifecycle-best-practices.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.3.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-compatibility-modes.html">Apicurio Registry schema compatibility modes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A Protocol Features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP Tool Definition Features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM Artifact Types Implementation Guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Best Practices Guide</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-schema-lifecycle-best-practices.html">Schema lifecycle best practices</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.3.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.2.x/index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Best Practices Guide</li>
+    <li><a href="assembly-schema-lifecycle-best-practices.html">Schema lifecycle best practices</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.3.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-schema-lifecycle-best-practices.html">3.3.x</a>
+    <a class="version is-missing" href="../../3.2.x/index.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Schema lifecycle best practices</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Teams that build event-driven architectures with Apicurio Registry face recurring questions about how to manage schemas over time. Poor answers lead to production incidents, schema sprawl, and compatibility failures. Apicurio Registry provides compatibility rules, artifact references, version states, and serializer/deserializer (SerDes) validation to help you manage every phase of the schema lifecycle.</p>
+</div>
+<div class="paragraph">
+<p>Sections in this guide cover the schema lifecycle from initial design to retirement, including shared type references, safe evolution patterns, data structure recommendations, state management, runtime validation, and event-driven integration.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#schema-lifecycle-overview_registry">Schema lifecycle overview</a></p>
+</li>
+<li>
+<p><a href="#schema-references-shared-types_registry">Schema references for shared types</a></p>
+</li>
+<li>
+<p><a href="#schema-evolution-strategies_registry">Schema evolution strategies</a></p>
+</li>
+<li>
+<p><a href="#schema-data-structure-recommendations_registry">Data structure recommendations for evolvability</a></p>
+</li>
+<li>
+<p><a href="#managing-schema-lifecycle-states_registry">Managing schema lifecycle states</a></p>
+</li>
+<li>
+<p><a href="#validating-data-avro-generated-classes_registry">Validating data with Avro generated classes</a></p>
+</li>
+<li>
+<p><a href="#schema-event-driven-integration_registry">Schema management in event-driven architectures</a></p>
+</li>
+<li>
+<p><a href="#schema-lifecycle-checklist_registry">Schema lifecycle best practices checklist</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="schema-lifecycle-overview_registry"><a class="anchor" href="#schema-lifecycle-overview_registry"></a>Schema lifecycle overview</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Managing schemas through a structured lifecycle prevents breaking changes from reaching consumers, reduces schema sprawl, and eliminates unplanned production incidents.</p>
+</div>
+<div class="paragraph">
+<p>Without lifecycle management, teams encounter common problems:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Producers deploy incompatible schema changes that break downstream consumers.</p>
+</li>
+<li>
+<p>Deprecated schemas accumulate without cleanup.</p>
+</li>
+<li>
+<p>No one knows which schema versions are safe to remove.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A structured lifecycle addresses each of these risks.</p>
+</div>
+<div class="paragraph">
+<p>Every schema moves through four phases. The following table summarizes each phase, the actions you take, and the Apicurio Registry features that support each action.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Schema lifecycle phases</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Phase</th>
+<th class="tableblock halign-left valign-top">What you do</th>
+<th class="tableblock halign-left valign-top">Apicurio Registry feature</th>
+<th class="tableblock halign-left valign-top">Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Define the schema, register it as an artifact, and configure rules.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact types, groups, compatibility and validity rules, artifact references</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You establish a validated baseline and catch structural errors before any consumer reads the schema.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Evolution</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add, modify, or remove fields as requirements change.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compatibility modes (BACKWARD, FORWARD, FULL, and transitive variants)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry validates each new version against previous versions and rejects breaking changes automatically.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Signal consumers to migrate away from an outdated version.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version states (<code>DEPRECATED</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consumers receive a deprecation warning header but continue to operate without interruption during the migration window.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Retirement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disable or delete the schema version after all consumers have migrated.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version states (<code>DISABLED</code>), artifact deletion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You remove unused schemas and prevent new consumers from depending on outdated versions.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>After you understand these four phases, decide how to structure shared types so that you do not duplicate definitions across schemas.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="schema-references-shared-types_registry"><a class="anchor" href="#schema-references-shared-types_registry"></a>Schema references for shared types</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Shared schema references reduce duplication and improve consistency in event-driven architectures. When multiple schemas use the same data structure, you define that structure once as a stand-alone artifact in Apicurio Registry and reference it from every schema that needs it.</p>
+</div>
+<div class="sect2">
+<h3 id="_intra_schema_and_cross_schema_references"><a class="anchor" href="#_intra_schema_and_cross_schema_references"></a>Intra-schema and cross-schema references</h3>
+<div class="paragraph">
+<p>An <em>intra-schema reference</em> points to a type defined within the same artifact file. Avro schemas support intra-schema references natively through nested record definitions.</p>
+</div>
+<div class="paragraph">
+<p>A <em>cross-schema reference</em> points to a type registered as a separate artifact in Apicurio Registry. Cross-schema references maintain a single source of truth for shared types and enable reuse across multiple schemas.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry supports cross-schema references for the following artifact types:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Avro</strong>: references by using namespace-qualified type names</p>
+</li>
+<li>
+<p><strong>JSON Schema</strong>: references by using <code>$ref</code> statements</p>
+</li>
+<li>
+<p><strong>Protobuf</strong>: references by using <code>import</code> statements</p>
+</li>
+<li>
+<p><strong>OpenAPI and AsyncAPI</strong>: references by using <code>$ref</code> statements</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_shared_type_example_with_avro"><a class="anchor" href="#_shared_type_example_with_avro"></a>Shared type example with Avro</h3>
+<div class="paragraph">
+<p>Consider a <code>MonetaryAmount</code> record that represents a monetary value with currency. Trade events, order events, and invoice events all use this type. Rather than duplicating the definition in each schema, you register <code>MonetaryAmount</code> as a stand-alone artifact and reference the artifact from every schema that needs it.</p>
+</div>
+<div class="paragraph">
+<p>Define the shared <code>MonetaryAmount</code> artifact:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "namespace": "com.example.common",
+  "type": "record",
+  "name": "MonetaryAmount",
+  "fields": [
+    {
+      "name": "amount",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 18,
+        "scale": 2
+      }
+    },
+    {
+      "name": "currency",
+      "type": "string"
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Reference <code>MonetaryAmount</code> from a <code>TradeKey</code> schema:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "namespace": "com.example.trade",
+  "type": "record",
+  "name": "TradeKey",
+  "fields": [
+    {
+      "name": "tradeId",
+      "type": "string"
+    },
+    {
+      "name": "price",
+      "type": "com.example.common.MonetaryAmount"
+    },
+    {
+      "name": "exchange",
+      "type": "string"
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Reference <code>MonetaryAmount</code> from an <code>Order</code> schema:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "namespace": "com.example.order",
+  "type": "record",
+  "name": "Order",
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "total",
+      "type": "com.example.common.MonetaryAmount"
+    },
+    {
+      "name": "items",
+      "type": {
+        "type": "array",
+        "items": "string"
+      }
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you register <code>TradeKey</code> or <code>Order</code> in Apicurio Registry, you specify the artifact reference. The reference maps the <code>com.example.common.MonetaryAmount</code> type name to the group ID, artifact ID, and version of the <code>MonetaryAmount</code> artifact. Apicurio Registry stores each reference alongside the artifact content. You can register artifacts with references by using the Apicurio Registry REST API or the Maven plug-in. For details, see <a href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a> and <a href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>.</p>
+</div>
+<div class="paragraph">
+<p>After you establish shared types, choose strategies for evolving schemas safely as requirements change.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a></p>
+</li>
+<li>
+<p><a href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a></p>
+</li>
+<li>
+<p><a href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/serdes-with-references">SerDes with references demonstration</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="schema-evolution-strategies_registry"><a class="anchor" href="#schema-evolution-strategies_registry"></a>Schema evolution strategies</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Evolving a schema means adding, modifying, or removing fields as requirements change. Not every change is safe. Use the following table to identify which change patterns maintain compatibility and which patterns break consumers.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Schema evolution patterns</caption>
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Pattern</th>
+<th class="tableblock halign-left valign-top">Compatible?</th>
+<th class="tableblock halign-left valign-top">Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a field with a default value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Backward-compatible and forward-compatible. Old consumers ignore the new field. New consumers use the default value when reading old data.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a field without a default value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Breaks backward compatibility. New consumers cannot read old data that lacks the field.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use unions for optional data</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flexible evolution. You can add new types to a union without breaking existing consumers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove enum symbols</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Breaks backward compatibility. Old data that contains the removed symbol causes deserialization failures in new consumers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rename a field with an alias</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compatible per the Avro specification. Consumers compiled against the old field name resolve the alias during deserialization. Test alias support with your specific Apicurio Registry version before you rely on this pattern in production.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change a field type directly</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Breaks both backward and forward compatibility in most cases. Avro supports specific type promotions (<code>int</code> to <code>long</code>, <code>float</code> to <code>double</code>, <code>string</code> to <code>bytes</code>) that maintain compatibility. All other type changes cause deserialization failures.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove a Protobuf field without reserving the tag</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Breaks compatibility. A future field might reuse the tag number with a different type, which causes data corruption. Always add <code>reserved</code> declarations when you remove Protobuf fields.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For production environments where consumers might lag behind producers by more than one schema version, use <code>BACKWARD_TRANSITIVE</code> compatibility. Transitive compatibility modes validate each new version against <em>all</em> previous versions, not just the most recent version. Avoid <code>NONE</code> compatibility in production because <code>NONE</code> disables all compatibility checks and allows breaking changes to reach consumers.</p>
+</div>
+<div class="sect2">
+<h3 id="_field_addition_with_a_default_value"><a class="anchor" href="#_field_addition_with_a_default_value"></a>Field addition with a default value</h3>
+<div class="paragraph">
+<p>You add new fields with default values to extend a schema without breaking consumers. Old consumers ignore the new field. New consumers use the default value when reading old data.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows the original schema:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "namespace": "com.example.events",
+  "type": "record",
+  "name": "UserEvent",
+  "fields": [
+    {"name": "userId", "type": "string"},
+    {"name": "action", "type": "string"}
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example shows the updated schema with a new field and default value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "namespace": "com.example.events",
+  "type": "record",
+  "name": "UserEvent",
+  "fields": [
+    {"name": "userId", "type": "string"},
+    {"name": "action", "type": "string"},
+    {"name": "source", "type": "string", "default": "unknown"}
+  ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_union_types_for_optional_data"><a class="anchor" href="#_union_types_for_optional_data"></a>Union types for optional data</h3>
+<div class="paragraph">
+<p>You use Avro unions to represent optional fields. With a union of <code>["null", "type"]</code> and a <code>null</code> default, you can add the field without breaking existing consumers.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows the original schema:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "namespace": "com.example.events",
+  "type": "record",
+  "name": "OrderEvent",
+  "fields": [
+    {"name": "orderId", "type": "string"},
+    {"name": "total", "type": "double"}
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example shows the updated schema with an optional field that uses a union:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "namespace": "com.example.events",
+  "type": "record",
+  "name": "OrderEvent",
+  "fields": [
+    {"name": "orderId", "type": "string"},
+    {"name": "total", "type": "double"},
+    {"name": "discountCode", "type": ["null", "string"], "default": null}
+  ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_field_rename_with_an_alias"><a class="anchor" href="#_field_rename_with_an_alias"></a>Field rename with an alias</h3>
+<div class="paragraph">
+<p>You use the <code>aliases</code> property to rename a field while maintaining compatibility. Consumers compiled against the old schema resolve the alias to the new field name during deserialization.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows the original schema with the field named <code>dest</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "namespace": "com.example.events",
+  "type": "record",
+  "name": "ShipmentEvent",
+  "fields": [
+    {"name": "shipmentId", "type": "string"},
+    {"name": "dest", "type": "string"}
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example shows the updated schema with the renamed field <code>destination</code> and an alias that maps back to <code>dest</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "namespace": "com.example.events",
+  "type": "record",
+  "name": "ShipmentEvent",
+  "fields": [
+    {"name": "shipmentId", "type": "string"},
+    {"name": "destination", "type": "string", "aliases": ["dest"]}
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With these evolution strategies, you can identify which changes are safe. To encounter fewer breaking changes later, choose the right data structures from the start.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#registry-rule-reference_registry">[registry-rule-reference_registry]</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="schema-data-structure-recommendations_registry"><a class="anchor" href="#schema-data-structure-recommendations_registry"></a>Data structure recommendations for evolvability</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Use the following recommendations to design Avro schemas that are easier to evolve over time. Choosing the right data structures at the start reduces the number of breaking changes you encounter later.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Data structure recommendations</caption>
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Recommendation</th>
+<th class="tableblock halign-left valign-top">When to use</th>
+<th class="tableblock halign-left valign-top">Avro example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use enums for fixed, closed sets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You have a small, well-defined set of values that rarely changes, such as HTTP methods or order statuses.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "name": "status",
+  "type": {
+    "type": "enum",
+    "name": "OrderStatus",
+    "symbols": ["PENDING", "SHIPPED", "DELIVERED"]
+  }
+}</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use strings for open-ended values</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You have values that change frequently or that external systems control, such as region codes or product categories.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "name": "region",
+  "type": "string"
+}</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use <code>["null", "type"]</code> with <code>default: null</code> for optional fields</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You want to add a field that might not be present in older messages. All new optional fields must follow this pattern.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "name": "metadata",
+  "type": ["null", "string"],
+  "default": null
+}</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wrap related fields in nested records</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You have a group of fields that belong together logically, such as an address or a set of timestamps. When you group them in a nested record, you can evolve that group independently.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "name": "address",
+  "type": {
+    "type": "record",
+    "name": "Address",
+    "fields": [
+      {"name": "street", "type": "string"},
+      {"name": "city", "type": "string"},
+      {"name": "zip", "type": "string"}
+    ]
+  }
+}</code></pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_enum_versus_string_tradeoffs"><a class="anchor" href="#_enum_versus_string_tradeoffs"></a>Enum versus string tradeoffs</h3>
+<div class="paragraph">
+<p>Enums enforce a closed set of values at the schema level. Producers that send an unrecognized symbol fail during serialization, which catches errors early. However, removing or reordering enum symbols breaks backward compatibility.</p>
+</div>
+<div class="paragraph">
+<p>Strings accept any value and impose no schema-level constraints. With strings, you avoid breaking changes when new values appear, but you lose compile-time validation. Use strings when the set of valid values changes frequently or when external systems control the values.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_record_wrapping_for_compartmentalized_evolution"><a class="anchor" href="#_record_wrapping_for_compartmentalized_evolution"></a>Record wrapping for compartmentalized evolution</h3>
+<div class="paragraph">
+<p>When you wrap related fields in a nested record, you can evolve the nested record independently of the parent schema. For example, if your <code>Order</code> schema contains shipping address fields (<code>street</code>, <code>city</code>, <code>zip</code>, <code>country</code>), you wrap those fields in an <code>Address</code> record. You can then add a <code>state</code> field to <code>Address</code> without modifying any other part of the <code>Order</code> schema. Consumers that deserialize the parent schema delegate the address portion to the <code>Address</code> reader schema. This delegation keeps compatibility evaluation scoped to the nested record.</p>
+</div>
+<div class="paragraph">
+<p>With shared types, evolution strategies, and data structures in place, you can control which schema versions consumers can access by using Apicurio Registry version states to deprecate and retire schema versions.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#registry-rule-reference_registry">[registry-rule-reference_registry]</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="managing-schema-lifecycle-states_registry"><a class="anchor" href="#managing-schema-lifecycle-states_registry"></a>Managing schema lifecycle states</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use Apicurio Registry version states to control whether consumers can retrieve a schema version. Moving a schema through the ENABLED, DEPRECATED, and DISABLED states gives your team a structured way to retire schemas without breaking active consumers.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry supports three version states:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>ENABLED</strong>: consumers can retrieve the schema version normally. All new versions start in this state.</p>
+</li>
+<li>
+<p><strong>DEPRECATED</strong>: consumers can still retrieve the schema version, but Apicurio Registry adds an <code>X-Registry-Deprecated</code> header to the response. Use this state to signal that consumers must migrate to a newer version.</p>
+</li>
+<li>
+<p><strong>DISABLED</strong>: consumers receive a <code>404 Not Found</code> response when they request the schema version. Use this state after you confirm that all consumers have migrated away.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following table summarizes when to use each state transition.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Schema state decision guide</caption>
+<colgroup>
+<col style="width: 60%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Scenario</th>
+<th class="tableblock halign-left valign-top">Recommended action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Producers and consumers actively use the schema</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keep ENABLED</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A newer version is available and consumers are migrating</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set DEPRECATED</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Events have stopped and all consumers have confirmed migration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set DISABLED</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No audit or compliance requirements mandate retaining the schema</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete the artifact</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have a running Apicurio Registry instance.</p>
+</li>
+<li>
+<p>You have registered a schema artifact with at least one version.</p>
+</li>
+<li>
+<p>You have the group ID, artifact ID, and version identifier for the version you want to update.</p>
+</li>
+<li>
+<p>If your Apicurio Registry instance requires authentication, you have a valid access token. Changing version states requires the <code>developer</code> or <code>admin</code> role when role-based access control is enabled. For details, see <a href="#configuring-registry-security_registry">[configuring-registry-security_registry]</a>.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The examples in this procedure omit authentication headers for brevity. If your Apicurio Registry instance requires authentication, include an <code>Authorization</code> header with a valid bearer token in each request.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Deprecate the schema version by sending a <code>PUT</code> request to the version state endpoint:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X PUT \
+  http://MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts/my-schema/versions/1.0/state \
+  -H "Content-Type: application/json" \
+  -d '{"state": "DEPRECATED"}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you set the state to <code>DEPRECATED</code>, consumers that fetch the schema receive an <code>X-Registry-Deprecated</code> header in the response. The schema content remains accessible, and existing consumers continue to work without interruption.</p>
+</div>
+</li>
+<li>
+<p>Notify your consumer teams that the schema version is deprecated and provide a reasonable grace period for migration, commonly two to four weeks depending on your organization and consumer count.</p>
+</li>
+<li>
+<p>After the grace period expires, verify that no active consumers depend on the deprecated version. Check application logs or monitoring dashboards to confirm that no clients fetch the deprecated version.</p>
+</li>
+<li>
+<p>Disable the schema version by sending a <code>PUT</code> request:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X PUT \
+  http://MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts/my-schema/versions/1.0/state \
+  -H "Content-Type: application/json" \
+  -d '{"state": "DISABLED"}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you set the state to <code>DISABLED</code>, any consumer that requests the schema version receives a <code>404 Not Found</code> response. SerDes clients that cache schemas locally continue to work until the cache expires. When a client requests the latest version (for example, <code>branch=latest</code>), Apicurio Registry skips disabled versions and returns the most recent enabled or deprecated version.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+All state transitions between ENABLED, DEPRECATED, and DISABLED are reversible. You can re-enable a disabled version by setting the state back to <code>ENABLED</code>, revert a deprecated version to <code>ENABLED</code>, or move a disabled version directly to <code>DEPRECATED</code>. Use reverse transitions when you discover that consumers still depend on a version.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Optionally, delete the artifact version after you confirm that no audit or compliance requirements mandate retaining the schema:</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Artifact version deletion is disabled by default. To enable deletion, set the <code>apicurio.rest.deletion.artifact-version.enabled</code> property to <code>true</code> in your Apicurio Registry configuration. Without this property, the DELETE request returns a <code>405 Method Not Allowed</code> response.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X DELETE \
+  http://MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts/my-schema/versions/1.0</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Send a <code>GET</code> request to retrieve the version state and verify that it matches the expected value:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts/my-schema/versions/1.0/state</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The response body contains the current state, for example <code>{"state": "DEPRECATED"}</code>.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>State management controls access to schema versions. To catch invalid data before the data reaches consumers, add runtime validation at multiple points in the pipeline.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="validating-data-avro-generated-classes_registry"><a class="anchor" href="#validating-data-avro-generated-classes_registry"></a>Validating data with Avro generated classes</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can validate data at multiple points in the pipeline when you use Avro generated classes with Apicurio Registry. Avro provides two record types, each with different validation behavior:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>SpecificRecord</code></strong> (Avro-generated classes): generated constructors and builders enforce field types and required fields at construction time.</p>
+</li>
+<li>
+<p><strong><code>GenericRecord</code></strong>: Avro validates structural compliance when the <code>DatumWriter</code> serializes the record.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Neither approach validates business rules or semantic constraints. To catch invalid data before it reaches consumers, you combine three validation layers:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>SerDes validation</strong>: the Apicurio Registry Kafka SerDes validates schema compatibility at serialization and deserialization time. The serializer resolves the schema from Apicurio Registry, and the deserializer verifies that the data matches the reader schema. If the schema versions are incompatible, the SerDes throws an exception.</p>
+</li>
+<li>
+<p><strong>Maven plug-in pre-registration</strong>: you register schemas before deployment by using the Apicurio Registry Maven plug-in. When you configure compatibility rules on the artifact, Apicurio Registry rejects any new version that violates the rules. Pre-registration catches breaking changes during the build rather than at runtime.</p>
+</li>
+<li>
+<p><strong>Application-level validation</strong>: you implement custom validators in your application code to enforce business rules that schema-level validation cannot express. For example, you validate that a <code>price</code> field is positive or that a <code>country</code> field contains a valid ISO 3166 code.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have a running Apicurio Registry instance.</p>
+</li>
+<li>
+<p>You have a Maven project that uses Avro generated classes.</p>
+</li>
+<li>
+<p>You have configured compatibility rules on your schema artifact in Apicurio Registry.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Configure your Maven <code>pom.xml</code> to register the Avro schema during the build. The Maven plug-in validates the schema against existing compatibility rules before it registers a new version:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+  &lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;${apicurio.version}&lt;/version&gt;
+  &lt;executions&gt;
+    &lt;execution&gt;
+      &lt;phase&gt;generate-sources&lt;/phase&gt;
+      &lt;goals&gt;
+        &lt;goal&gt;register&lt;/goal&gt;
+      &lt;/goals&gt;
+      &lt;configuration&gt;
+        &lt;registryUrl&gt;http://MY-REGISTRY-URL/apis/registry/v3&lt;/registryUrl&gt;
+        &lt;artifacts&gt;
+          &lt;artifact&gt;
+            &lt;groupId&gt;my-group&lt;/groupId&gt;
+            &lt;artifactId&gt;UserEvent&lt;/artifactId&gt;
+            &lt;artifactType&gt;AVRO&lt;/artifactType&gt;
+            &lt;file&gt;${project.basedir}/src/main/resources/schemas/user-event.avsc&lt;/file&gt;
+            &lt;ifExists&gt;FIND_OR_CREATE_VERSION&lt;/ifExists&gt;
+          &lt;/artifact&gt;
+        &lt;/artifacts&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+  &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you run <code>mvn package</code>, the plug-in attempts to register the schema. If the schema violates the compatibility rules configured on the artifact, the build fails with a compatibility error.</p>
+</div>
+</li>
+<li>
+<p>Configure the Apicurio Registry Kafka SerDes in your producer application to validate schema compatibility at runtime:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.registry.serde.avro.AvroKafkaSerializer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+
+Properties props = new Properties();
+props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+props.put(ProducerConfig.CLIENT_ID_CONFIG, "my-producer");
+props.put(ProducerConfig.ACKS_CONFIG, "all");
+props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+    org.apache.kafka.common.serialization.StringSerializer.class.getName());
+props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+    AvroKafkaSerializer.class.getName());
+props.put("apicurio.registry.url", "http://MY-REGISTRY-URL/apis/registry/v3");
+props.put("apicurio.registry.auto-register", "true");
+props.put("apicurio.registry.artifact-resolver-strategy",
+    "io.apicurio.registry.serde.strategy.TopicIdStrategy");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>AvroKafkaSerializer</code> resolves the writer schema from Apicurio Registry and serializes the record. The key properties in this configuration are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>artifact-resolver-strategy</code>: determines how the serializer maps each Kafka message to an artifact in Apicurio Registry. The default <code>TopicIdStrategy</code> uses the topic name as the artifact ID.</p>
+</li>
+<li>
+<p><code>auto-register</code>: when enabled, the serializer registers new schemas automatically, and Apicurio Registry applies the configured compatibility rules.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+When you set <code>apicurio.registry.auto-register</code> to <code>true</code>, any producer can register new schemas in Apicurio Registry. In production, pre-register schemas during your CI/CD pipeline and set <code>apicurio.registry.auto-register</code> to <code>false</code>. If you must use auto-registration, configure authentication and role-based access control (RBAC) to restrict write access. For details, see <a href="#configuring-registry-security_registry">[configuring-registry-security_registry]</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The <code>apicurio.registry.url</code> property is required. The serializer throws an <code>IllegalArgumentException</code> at startup if you omit the property. The serializer caches schemas and retries failed registry requests with a backoff interval. For default values and tuning options, see <a href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>. To handle registry unavailability, set <code>apicurio.registry.fault-tolerant-refresh</code> to <code>true</code>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Add application-level validation in your producer code to enforce business rules before serialization:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.example.events.UserEvent;
+
+public UserEvent createValidatedEvent(String userId, String action) {
+    // Validate business rules before serialization
+    if (userId == null || userId.isBlank()) {
+        throw new IllegalArgumentException("userId must not be blank");
+    }
+    // VALID_ACTIONS is a Set&lt;String&gt; defined elsewhere, for example: Set.of("LOGIN", "LOGOUT", "PURCHASE")
+    if (action == null || !VALID_ACTIONS.contains(action)) {
+        throw new IllegalArgumentException("action must be one of: " + VALID_ACTIONS);
+    }
+
+    return UserEvent.newBuilder()
+        .setUserId(userId)
+        .setAction(action)
+        .build();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Avro generated classes enforce structural constraints (field types, required fields) at construction time. You add explicit checks for business-level constraints that the schema cannot express.</p>
+</div>
+</li>
+<li>
+<p>Build and test your project to verify that all three validation layers work together:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn clean package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A successful build confirms that the schema is compatible with the version registered in Apicurio Registry. At runtime, the SerDes validates structural compatibility, and your application code enforces business rules.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>These validation layers apply to any Kafka producer. If your architecture includes CDC or the outbox pattern, you can extend schema lifecycle management to cover those integration points.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="schema-event-driven-integration_registry"><a class="anchor" href="#schema-event-driven-integration_registry"></a>Schema management in event-driven architectures</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Event-driven architectures that use change data capture (CDC) and messaging platforms require coordination between schema producers, consumers, and Apicurio Registry. You integrate Apicurio Registry with tools such as Debezium to automate schema registration and enforce compatibility throughout the data pipeline.</p>
+</div>
+<div class="sect2">
+<h3 id="_debezium_integration_with_apicurio_registry"><a class="anchor" href="#_debezium_integration_with_apicurio_registry"></a>Debezium integration with Apicurio Registry</h3>
+<div class="paragraph">
+<p>Debezium captures row-level changes from databases and publishes the changes as events to Kafka topics. When you configure the Debezium connector to use the Apicurio Registry Avro converter, Debezium registers Avro schemas for each captured table. The converter maps Kafka Connect schemas to Avro schemas and stores the Avro schemas in Apicurio Registry.</p>
+</div>
+<div class="paragraph">
+<p>The following Debezium connector configuration uses the Apicurio Registry Avro converter for both keys and values:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+  "database.hostname": "my-database",
+  "database.port": "5432",
+  "database.user": "debezium",
+  "database.password": "&lt;your-database-password&gt;",
+  "database.dbname": "mydb",
+  "database.server.name": "my-app-db",
+  "topic.prefix": "my-app",
+  "schema.include.list": "public",
+  "plugin.name": "pgoutput",
+  "slot.name": "debezium_slot",
+  "schema.name.adjustment.mode": "avro",
+  "field.name.adjustment.mode": "avro",
+  "key.converter": "io.apicurio.registry.utils.converter.AvroConverter",
+  "key.converter.apicurio.registry.url": "http://MY-REGISTRY-URL/apis/registry/v3",
+  "key.converter.apicurio.registry.auto-register": "true",
+  "value.converter": "io.apicurio.registry.utils.converter.AvroConverter",
+  "value.converter.apicurio.registry.url": "http://MY-REGISTRY-URL/apis/registry/v3",
+  "value.converter.apicurio.registry.auto-register": "true"
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The Apicurio Registry Avro converter supports both the v2 and v3 APIs. The converter uses the v3 API by default. If you use a Debezium version that requires v2, change the converter URL to <code>/apis/registry/v2</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Do not store database credentials in connector configurations in production. Use environment variables, Kubernetes secrets, or a secrets management tool such as HashiCorp Vault to inject credentials at deployment time.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following properties are key in this configuration:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>slot.name</code>: required for PostgreSQL replication state tracking.</p>
+</li>
+<li>
+<p><code>schema.name.adjustment.mode</code> and <code>field.name.adjustment.mode</code>: convert column names with special characters to valid Avro field names.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>With this configuration, Debezium registers a schema for each table that Debezium captures. When a table schema changes (for example, when you add a column), Debezium registers a new schema version. If you configure compatibility rules on the artifact in Apicurio Registry, Apicurio Registry validates the new version against the previous version and rejects incompatible changes.</p>
+</div>
+<div class="paragraph">
+<p>If the new schema violates compatibility rules, the connector task fails and stops processing events until you resolve the schema conflict.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_outbox_pattern_with_schema_registration"><a class="anchor" href="#_outbox_pattern_with_schema_registration"></a>Outbox pattern with schema registration</h3>
+<div class="paragraph">
+<p>The outbox pattern supports reliable event publishing by writing events to an outbox table in the same database transaction as the business data. Debezium captures changes from the outbox table and publishes the changes to Kafka.</p>
+</div>
+<div class="paragraph">
+<p>The schema lifecycle in this pattern follows four stages:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Database write</strong>: your application writes a business record and a corresponding event record to the outbox table in a single transaction.</p>
+</li>
+<li>
+<p><strong>CDC capture</strong>: Debezium detects the new outbox record and creates a Kafka event.</p>
+</li>
+<li>
+<p><strong>Schema registration</strong>: the Avro converter registers or resolves the event schema in Apicurio Registry.</p>
+</li>
+<li>
+<p><strong>Event delivery</strong>: Debezium publishes the serialized event to the target Kafka topic.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Because the outbox table has a stable schema, the Avro schema that Debezium registers rarely changes. When you add fields to the outbox event payload, follow the evolution patterns described in <a href="#schema-evolution-strategies_registry">Schema evolution strategies</a> to maintain compatibility.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_schema_lifecycle_in_event_driven_context"><a class="anchor" href="#_schema_lifecycle_in_event_driven_context"></a>Schema lifecycle in event-driven context</h3>
+<div class="paragraph">
+<p>The four lifecycle phases described in <a href="#schema-lifecycle-overview_registry">Schema lifecycle overview</a> apply directly to event-driven architectures. The following list describes how each phase maps to CDC and messaging workflows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Creation</strong>: Debezium or your application auto-registers schemas when you produce the first event. You configure compatibility rules (such as <code>BACKWARD</code> or <code>FULL</code>) on the artifact at this point.</p>
+</li>
+<li>
+<p><strong>Evolution</strong>: as your data model changes, producers register new schema versions. Apicurio Registry compatibility rules prevent breaking changes from reaching consumers.</p>
+</li>
+<li>
+<p><strong>Deprecation</strong>: when you replace an event type or retire a service, you set the schema version state to <code>DEPRECATED</code>. Consumers that fetch the schema receive a deprecation warning header.</p>
+</li>
+<li>
+<p><strong>Retirement</strong>: after all consumers have migrated, you set the schema version state to <code>DISABLED</code> and eventually delete the artifact.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For a working example that demonstrates Debezium, Kafka, and Apicurio Registry working together, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/event-driven-architecture">event-driven architecture example</a> in the Apicurio Registry repository.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a></p>
+</li>
+<li>
+<p><a href="#registry-rule-reference_registry">[registry-rule-reference_registry]</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="schema-lifecycle-checklist_registry"><a class="anchor" href="#schema-lifecycle-checklist_registry"></a>Schema lifecycle best practices checklist</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Use the following checklist as a quick reference for schema lifecycle best practices. The phase-specific lists after the summary table provide additional detail.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Schema lifecycle best practices</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Do</th>
+<th class="tableblock halign-left valign-top">Avoid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Always add fields with default values</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adding required fields without defaults</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use <code>["null", "type"]</code> for optional fields</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Removing enum symbols from existing schemas</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Define shared types as separate artifacts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Duplicating type definitions across schemas</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecate before disabling</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disabling schemas without warning consumers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use <code>BACKWARD_TRANSITIVE</code> for production</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Using <code>NONE</code> compatibility in production</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test schema changes against compatibility rules</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deploying schema changes without testing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use aliases when renaming fields</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Renaming fields without aliases</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reserve removed Protobuf field tags</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Removing fields without reserving tags</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_design_phase"><a class="anchor" href="#_design_phase"></a>Design phase</h3>
+<div class="paragraph">
+<p>Follow these recommendations when you design schemas. For detailed guidance and examples, see <a href="#schema-references-shared-types_registry">Schema references for shared types</a> and <a href="#schema-data-structure-recommendations_registry">Data structure recommendations for evolvability</a>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Choose the right artifact type (Avro, JSON Schema, Protobuf, or OpenAPI) based on your serialization format and language ecosystem.</p>
+</li>
+<li>
+<p>Define shared types as separate artifacts in Apicurio Registry and reference them from dependent schemas.</p>
+</li>
+<li>
+<p>Use <code>["null", "type"]</code> unions with <code>null</code> defaults for all optional fields. New fields that you add later must follow this pattern.</p>
+</li>
+<li>
+<p>Wrap related fields in nested records to support independent evolution.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_registration_phase"><a class="anchor" href="#_registration_phase"></a>Registration phase</h3>
+<div class="paragraph">
+<p>Follow these recommendations when you register schemas. For a working Maven plug-in example, see <a href="#validating-data-avro-generated-classes_registry">Validating data with Avro generated classes</a>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Register schemas before deployment by using the Apicurio Registry Maven plug-in or REST API.</p>
+</li>
+<li>
+<p>Configure compatibility rules (<code>BACKWARD</code>, <code>FORWARD</code>, <code>FULL</code>, or their transitive variants) on each artifact immediately after creation.</p>
+</li>
+<li>
+<p>Use <code>BACKWARD_TRANSITIVE</code> for production environments where consumers might lag behind producers by more than one version.</p>
+</li>
+<li>
+<p>Set <code>ifExists</code> to <code>FIND_OR_CREATE_VERSION</code> in the Maven plug-in to avoid duplicate registrations.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_evolution_phase"><a class="anchor" href="#_evolution_phase"></a>Evolution phase</h3>
+<div class="paragraph">
+<p>Follow these recommendations when you evolve schemas. For compatible and incompatible change patterns with examples, see <a href="#schema-evolution-strategies_registry">Schema evolution strategies</a>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Always add new fields with default values to maintain backward compatibility.</p>
+</li>
+<li>
+<p>Use Avro aliases when renaming fields to preserve compatibility with existing consumers.</p>
+</li>
+<li>
+<p>Reserve removed Protobuf field tags by adding <code>reserved</code> declarations to prevent tag reuse.</p>
+</li>
+<li>
+<p>Test every schema change against the configured compatibility rules before merging your code.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deprecation_and_retirement_phase"><a class="anchor" href="#_deprecation_and_retirement_phase"></a>Deprecation and retirement phase</h3>
+<div class="paragraph">
+<p>Follow these recommendations when you deprecate and retire schemas. For the step-by-step procedure, see <a href="#managing-schema-lifecycle-states_registry">Managing schema lifecycle states</a>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set the version state to <code>DEPRECATED</code> before disabling a schema. Give consumers a reasonable grace period, commonly two to four weeks depending on your organization and consumer count.</p>
+</li>
+<li>
+<p>Set the version state to <code>DISABLED</code> only after you confirm that all consumers have migrated.</p>
+</li>
+<li>
+<p>Delete artifact versions only after you confirm that no audit or compliance requirements mandate retention.</p>
+</li>
+<li>
+<p>Monitor consumer access patterns to verify that no consumers fetch deprecated versions.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.3.x/getting-started/assembly-schema-lifecycle-best-practices.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
