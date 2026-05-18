@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Deploying Apicurio Registry with a secured Kafka instance :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-deploying-registry-secured-kafka.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.3.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-compatibility-modes.html">Apicurio Registry schema compatibility modes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-secured-kafka.html">Deploying Apicurio Registry with a secured Kafka instance</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A Protocol Features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP Tool Definition Features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM Artifact Types Implementation Guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Best Practices Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-schema-lifecycle-best-practices.html">Schema lifecycle best practices</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.3.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.2.x/index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Installation</li>
+    <li><a href="assembly-deploying-registry-secured-kafka.html">Deploying Apicurio Registry with a secured Kafka instance</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.3.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-deploying-registry-secured-kafka.html">3.3.x</a>
+    <a class="version is-missing" href="../../3.2.x/index.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Deploying Apicurio Registry with a secured Kafka instance</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can deploy Apicurio Registry with KafkaSQL storage connected to a Kafka instance that requires TLS encryption, SASL authentication, or both.
+Apicurio Registry supports multiple security configurations for Kafka connections, including TLS-only encryption, OAUTHBEARER authentication, and SCRAM-SHA-512 authentication.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#secured-kafka-overview_registry">Secured Kafka overview</a></p>
+</li>
+<li>
+<p><a href="#secured-kafka-prerequisites_registry">Prerequisites for secured Kafka deployment</a></p>
+</li>
+<li>
+<p><a href="#secured-kafka-tls_registry">Configuring KafkaSQL with TLS encryption</a></p>
+</li>
+<li>
+<p><a href="#secured-kafka-scram_registry">Configuring KafkaSQL with SCRAM-SHA-512 authentication</a></p>
+</li>
+<li>
+<p><a href="#secured-kafka-oauth_registry">Configuring KafkaSQL with OAUTHBEARER authentication</a></p>
+</li>
+<li>
+<p><a href="#secured-kafka-access-operator_registry">Configuring KafkaSQL with the Strimzi Kafka Access Operator</a></p>
+</li>
+<li>
+<p><a href="#secured-kafka-security-protocols_registry">Kafka security protocol reference</a></p>
+</li>
+<li>
+<p><a href="#secured-kafka-topic-config_registry">Configuring Kafka topics for Apicurio Registry</a></p>
+</li>
+<li>
+<p><a href="#secured-kafka-troubleshooting_registry">Troubleshooting secured Kafka connections</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="secured-kafka-overview_registry"><a class="anchor" href="#secured-kafka-overview_registry"></a>Secured Kafka overview</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When you use KafkaSQL storage, Apicurio Registry connects to a Kafka cluster as both a producer and a consumer.
+If your Kafka cluster enforces TLS encryption or SASL authentication, you must configure Apicurio Registry with the appropriate security settings.</p>
+</div>
+<div class="paragraph">
+<p>You can configure secured Kafka connections by using these methods:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>ApicurioRegistry3</code> custom resource <code>tls</code> and <code>auth</code> sections for TLS and OAUTHBEARER authentication</p>
+</li>
+<li>
+<p>Environment variables in the <code>spec.app.env</code> section of the custom resource for SCRAM-SHA-512 authentication</p>
+</li>
+<li>
+<p>The Strimzi Kafka Access Operator (available starting with Apicurio Registry version 3.2.0) for automatic configuration</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The security protocol that Apicurio Registry uses depends on which combination of TLS and authentication you configure:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Security protocol matrix</caption>
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">TLS configured</th>
+<th class="tableblock halign-left valign-top">Authentication configured</th>
+<th class="tableblock halign-left valign-top">Security protocol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PLAINTEXT</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SSL</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SASL_PLAINTEXT</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SASL_SSL</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="secured-kafka-prerequisites_registry"><a class="anchor" href="#secured-kafka-prerequisites_registry"></a>Prerequisites for secured Kafka deployment</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Before you deploy Apicurio Registry with a secured Kafka instance, verify that you have the required resources.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You have cluster administrator access to an Kubernetes cluster.</p>
+</li>
+<li>
+<p>You have installed the Apicurio Registry Operator.</p>
+</li>
+<li>
+<p>You have a Kafka cluster with security enabled (TLS, SASL, or both).</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For Strimzi, see the <a href="https://strimzi.io/docs/overview/latest/">Strimzi documentation</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>If your Kafka cluster uses TLS, you have access to the cluster CA certificate in PKCS12 format.</p>
+</li>
+<li>
+<p>If your Kafka cluster uses SASL authentication, you have the required credentials (SCRAM-SHA-512 username and password, or OAUTHBEARER client ID, client secret, and token endpoint URL).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="secured-kafka-tls_registry"><a class="anchor" href="#secured-kafka-tls_registry"></a>Configuring KafkaSQL with TLS encryption</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When your Kafka cluster requires TLS encryption, you configure Apicurio Registry with the Kafka cluster CA certificate so that Apicurio Registry can verify the broker identity.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The Kafka cluster CA certificate is available as a Kubernetes Secret in PKCS12 format.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Strimzi creates a Secret named <code>&lt;cluster-name&gt;-cluster-ca-cert</code> that contains the CA certificate.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create or update your <code>ApicurioRegistry3</code> custom resource with the <code>tls</code> configuration:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry-kafkasql-tls
+spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        bootstrapServers: "my-cluster-kafka-bootstrap.my-project.svc:9093"
+        tls:
+          truststoreSecretRef:
+            name: my-cluster-cluster-ca-cert
+            key: ca.p12
+          truststorePasswordSecretRef:
+            name: my-cluster-cluster-ca-cert
+            key: ca.password
+    ingress:
+      host: registry.example.com
+  ui:
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Apply the custom resource:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{kubernetes-client} apply -f my-registry.yaml</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The operator sets the security protocol to <code>SSL</code> when you configure TLS without authentication.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Optional: For mutual TLS (mTLS), where the Kafka cluster also verifies the Apicurio Registry client certificate, add the keystore configuration to the <code>tls</code> section:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">tls:
+  keystoreSecretRef:
+    name: apicurio-client-auth
+    key: user.p12
+  keystorePasswordSecretRef:
+    name: apicurio-client-auth
+    key: user.password
+  truststoreSecretRef:
+    name: my-cluster-cluster-ca-cert
+    key: ca.p12
+  truststorePasswordSecretRef:
+    name: my-cluster-cluster-ca-cert
+    key: ca.password</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="secured-kafka-scram_registry"><a class="anchor" href="#secured-kafka-scram_registry"></a>Configuring KafkaSQL with SCRAM-SHA-512 authentication</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When your Kafka cluster uses SCRAM-SHA-512 authentication, you configure the SASL credentials by using environment variables in the <code>spec.app.env</code> section of the <code>ApicurioRegistry3</code> custom resource.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The structured <code>auth</code> section of the custom resource supports only OAUTHBEARER authentication. For SCRAM-SHA-512, you must use environment variables as described in this procedure.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Your Kafka cluster is configured with a SASL listener that uses SCRAM-SHA-512.</p>
+</li>
+<li>
+<p>You have created a Kubernetes Secret that contains the JAAS configuration for your Kafka user.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Strimzi automatically creates this Secret when you create a <code>KafkaUser</code> resource with <code>authentication.type: scram-sha-512</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Verify that your Kubernetes Secret contains the <code>sasl.jaas.config</code> key with the JAAS login module definition:</p>
+<div class="listingblock">
+<div class="content">
+<pre>org.apache.kafka.common.security.scram.ScramLoginModule required username="my-user" password="&lt;password&gt;";</pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The <code>sasl.jaas.config</code> value must be a one-line login module definition. Do not include the <code>KafkaClient { &#8230;&#8203; }</code> wrapper.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Create or update your <code>ApicurioRegistry3</code> custom resource with the SCRAM-SHA-512 configuration:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-apicurioregistry-kafkasql-scram
+spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        bootstrapServers: "my-cluster-kafka-bootstrap.my-project.svc:9093"
+        tls:
+          truststoreSecretRef:
+            name: my-cluster-cluster-ca-cert
+            key: ca.p12
+          truststorePasswordSecretRef:
+            name: my-cluster-cluster-ca-cert
+            key: ca.password
+    env:
+      - name: APICURIO_KAFKA_COMMON_SECURITY_PROTOCOL
+        value: "SASL_SSL"
+      - name: APICURIO_KAFKA_COMMON_SASL_MECHANISM
+        value: "SCRAM-SHA-512"
+      - name: APICURIO_KAFKA_COMMON_SASL_JAAS_CONFIG
+        valueFrom:
+          secretKeyRef:
+            name: my-user
+            key: sasl.jaas.config
+    ingress:
+      host: registry.example.com
+  ui:
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Apply the custom resource:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{kubernetes-client} apply -f my-registry.yaml</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that the Apicurio Registry pod starts successfully:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{kubernetes-client} get pods -l app=example-apicurioregistry-kafkasql-scram</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This example uses <code>SASL_SSL</code> because TLS is also configured via the <code>tls</code> section. If you use SCRAM-SHA-512 without TLS, set <code>APICURIO_KAFKA_COMMON_SECURITY_PROTOCOL</code> to <code>SASL_PLAINTEXT</code> instead.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="secured-kafka-oauth_registry"><a class="anchor" href="#secured-kafka-oauth_registry"></a>Configuring KafkaSQL with OAUTHBEARER authentication</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When your Kafka cluster uses OAUTHBEARER authentication, you configure the OAuth credentials by using the structured <code>auth</code> section of the <code>ApicurioRegistry3</code> custom resource.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Your Kafka cluster is configured with an OAuth-enabled listener.</p>
+</li>
+<li>
+<p>You have the OAuth client ID, client secret, and token endpoint URL.</p>
+</li>
+<li>
+<p>You have stored the client ID and client secret in a Kubernetes Secret.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create a Kubernetes Secret that contains the OAuth client credentials:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{kubernetes-client} create secret generic kafka-oauth-credentials \
+  --from-literal=clientId=my-client-id \
+  --from-literal=clientSecret=my-client-secret</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create or update your <code>ApicurioRegistry3</code> custom resource with the OAUTHBEARER configuration:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry-kafkasql-oauth
+spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        bootstrapServers: "my-cluster-kafka-bootstrap.my-project.svc:9093"
+        tls:
+          truststoreSecretRef:
+            name: my-cluster-cluster-ca-cert
+            key: ca.p12
+          truststorePasswordSecretRef:
+            name: my-cluster-cluster-ca-cert
+            key: ca.password
+        auth:
+          enabled: true
+          mechanism: OAUTHBEARER
+          clientIdRef:
+            name: kafka-oauth-credentials
+            key: clientId
+          clientSecretRef:
+            name: kafka-oauth-credentials
+            key: clientSecret
+          tokenEndpoint: https://identity-server.example.com/token
+          loginHandlerClass: io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler
+    ingress:
+      host: registry.example.com
+  ui:
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Apply the custom resource:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{kubernetes-client} apply -f my-registry.yaml</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>loginHandlerClass</code> value is from the Strimzi OAuth library. If you use a different OAuth provider, replace this value with the login handler class for your provider.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When you configure both TLS and OAUTHBEARER authentication, the operator sets the security protocol to <code>SASL_SSL</code>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="secured-kafka-access-operator_registry"><a class="anchor" href="#secured-kafka-access-operator_registry"></a>Configuring KafkaSQL with the Strimzi Kafka Access Operator</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Starting with Apicurio Registry version 3.2.0, you can use the Strimzi Kafka Access Operator to automatically provide all Kafka connection details, including security credentials, in a single Kubernetes Secret.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The Strimzi Kafka Access Operator is installed on your Kubernetes cluster.</p>
+</li>
+<li>
+<p>You have a Strimzi Kafka cluster with a configured listener and a <code>KafkaUser</code> resource.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create a <code>KafkaUser</code> resource that grants Apicurio Registry access to the required Kafka topics:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: apicurio-registry
+  labels:
+    strimzi.io/cluster: example-cluster
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: topic
+          name: kafkasql-journal
+        operations:
+          - All
+      - resource:
+          type: topic
+          name: kafkasql-snapshots
+        operations:
+          - All
+      - resource:
+          type: topic
+          name: registry-events
+        operations:
+          - All
+      - resource:
+          type: group
+          name: apicurio-registry
+          patternType: prefix
+        operations:
+          - Read</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This example scopes consumer group access to groups that start with <code>apicurio-registry</code>. In production deployments, avoid granting <code>All</code> operations on all consumer groups (<code>name: '*'</code>). Adjust the group name prefix to match your Apicurio Registry consumer group configuration.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Create a <code>KafkaAccess</code> resource that references your Kafka cluster and user:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: access.strimzi.io/v1alpha1
+kind: KafkaAccess
+metadata:
+  name: my-kafka-access
+spec:
+  kafka:
+    name: example-cluster
+    listener: tls
+  user:
+    kind: KafkaUser
+    apiGroup: kafka.strimzi.io
+    name: apicurio-registry</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>KafkaAccess</code> resource uses the <code>access.strimzi.io/v1alpha1</code> API version, which is an alpha API that might change in future Strimzi releases. Check the Strimzi Kafka Access Operator documentation for the current API version.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Create the <code>ApicurioRegistry3</code> custom resource that references the <code>KafkaAccess</code> Secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-kafkasql-access
+spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        kafkaAccessSecretName: my-kafka-access
+    ingress:
+      host: registry.example.com
+  ui:
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Apply all resources:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{kubernetes-client} apply -f kafkauser.yaml -f kafkaaccess.yaml -f my-registry.yaml</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When you specify <code>kafkaAccessSecretName</code>, it takes precedence over <code>bootstrapServers</code>. The Kafka Access Operator provides all connection details automatically, including bootstrap servers, security protocol, TLS certificates, and SASL credentials.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="secured-kafka-security-protocols_registry"><a class="anchor" href="#secured-kafka-security-protocols_registry"></a>Kafka security protocol reference</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry uses the <code>apicurio.kafka.common.security.protocol</code> property (environment variable <code>APICURIO_KAFKA_COMMON_SECURITY_PROTOCOL</code>) to determine how to connect to the Kafka cluster.</p>
+</div>
+<div class="paragraph">
+<p>When you use the operator, the operator sets the security protocol automatically based on your TLS and authentication configuration.
+When you configure security manually by using environment variables, you must set the security protocol explicitly.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Kafka security protocol values</caption>
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Protocol</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PLAINTEXT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No encryption and no authentication. Use for unsecured Kafka clusters only.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SSL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLS encryption without SASL authentication. The operator sets this protocol when you configure TLS only.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SASL_PLAINTEXT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SASL authentication without TLS encryption. The operator sets this protocol when you configure OAUTHBEARER authentication without TLS.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SASL_SSL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLS encryption with SASL authentication. The operator sets this protocol when you configure both TLS and OAUTHBEARER authentication. You must set this protocol manually when you use SCRAM-SHA-512 authentication.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="secured-kafka-topic-config_registry"><a class="anchor" href="#secured-kafka-topic-config_registry"></a>Configuring Kafka topics for Apicurio Registry</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry uses Kafka topics to store artifact data. You must configure these topics with the correct retention settings to prevent data loss.</p>
+</div>
+<div class="paragraph">
+<p>By default, Apicurio Registry auto-creates the required topics. If your Kafka cluster does not allow auto-creation, or if you want to control topic settings, create the topics manually.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create the Kafka topics by using the <code>KafkaTopic</code> custom resource:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: kafkasql-journal
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  partitions: 3
+  replicas: 3
+  config:
+    cleanup.policy: delete
+    retention.ms: "-1"
+    retention.bytes: "-1"
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: kafkasql-snapshots
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  partitions: 3
+  replicas: 3
+  config:
+    cleanup.policy: delete
+    retention.ms: "-1"
+    retention.bytes: "-1"</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This example uses <code>partitions: 3</code> and <code>replicas: 3</code>, which requires at least 3 Kafka brokers. The replica count must not exceed the number of brokers in your cluster. Adjust partition and replica counts based on your deployment size.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+You must configure the Kafka topics used by Apicurio Registry with <code>cleanup.policy: delete</code> and infinite retention (<code>retention.ms: -1</code> and <code>retention.bytes: -1</code>). Do not use <code>cleanup.policy: compact</code> or <code>cleanup.policy: compact,delete</code>, because both policies can result in data loss.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Apply the topic resources:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{kubernetes-client} apply -f kafkatopics.yaml</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="secured-kafka-troubleshooting_registry"><a class="anchor" href="#secured-kafka-troubleshooting_registry"></a>Troubleshooting secured Kafka connections</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You might encounter errors when you configure Apicurio Registry to connect to a secured Kafka instance.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Common secured Kafka connection errors and fixes</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 25%;">
+<col style="width: 41.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Error</th>
+<th class="tableblock halign-left valign-top">Cause</th>
+<th class="tableblock halign-left valign-top">Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.IllegalArgumentException: Could not find a 'KafkaClient' entry in the JAAS configuration. System property 'java.security.auth.login.config' is not set</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SASL authentication requires a valid login context, but the <code>sasl.jaas.config</code> property is not set correctly.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the <code>APICURIO_KAFKA_COMMON_SASL_JAAS_CONFIG</code> environment variable by using a <code>secretKeyRef</code> that points to a Secret containing the one-line JAAS login module definition.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.io.IOException: /etc/kafka/secrets/jaas.conf (No such file or directory)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A previous configuration attempted to mount a physical <code>jaas.conf</code> file that no longer exists. Cached <code>JAVA_TOOL_OPTIONS</code> or invalid volume mounts can persist after changes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove any <code>JAVA_TOOL_OPTIONS</code> environment variable or volume mount that references <code>jaas.conf</code> from the custom resource. Use the <code>APICURIO_KAFKA_COMMON_SASL_JAAS_CONFIG</code> environment variable instead of file mounts.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Admission Webhook Warning: unknown field "spec.app.storage.kafkasql.auth.usernameSecretRef"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The structured <code>auth</code> section of the custom resource does not support SCRAM-SHA-512 fields like <code>usernameSecretRef</code>. These fields are not part of the <code>ApicurioRegistry3</code> CRD.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use environment variables (<code>APICURIO_KAFKA_COMMON_SASL_MECHANISM</code> and <code>APICURIO_KAFKA_COMMON_SASL_JAAS_CONFIG</code>) in the <code>spec.app.env</code> section instead of the structured <code>auth</code> section for SCRAM-SHA-512 authentication.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#deploying-registry-kafkasql_registry">[deploying-registry-kafkasql_registry]</a></p>
+</li>
+<li>
+<p><a href="https://strimzi.io/docs/overview/latest/">Strimzi documentation</a></p>
+</li>
+<li>
+<p><a href="assembly-config-reference.html">Apicurio Registry configuration reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.3.x/getting-started/assembly-deploying-registry-secured-kafka.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
