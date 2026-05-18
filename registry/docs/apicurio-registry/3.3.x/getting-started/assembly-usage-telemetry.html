@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Usage Telemetry and API Lifecycle Governance :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-usage-telemetry.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.3.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-compatibility-modes.html">Apicurio Registry schema compatibility modes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-secured-kafka.html">Deploying Apicurio Registry with a secured Kafka instance</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Usage Telemetry and Lifecycle Governance</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-usage-telemetry.html">Usage Telemetry and API Lifecycle Governance</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A Protocol Features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP Tool Definition Features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM Artifact Types Implementation Guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Best Practices Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-schema-lifecycle-best-practices.html">Schema lifecycle best practices</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.3.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.2.x/index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Usage Telemetry and Lifecycle Governance</li>
+    <li><a href="assembly-usage-telemetry.html">Usage Telemetry and API Lifecycle Governance</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.3.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-usage-telemetry.html">3.3.x</a>
+    <a class="version is-missing" href="../../3.2.x/index.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Usage Telemetry and API Lifecycle Governance</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apicurio Registry provides usage telemetry capabilities that track which client applications fetch which schema versions. This enables API lifecycle governance features including dead schema detection, consumer version drift alerts, and deprecation readiness analysis.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Usage telemetry answers key governance questions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Is anyone actually using this schema?</strong> Active/Stale/Dead classification based on actual fetch patterns.</p>
+</li>
+<li>
+<p><strong>Who uses which version?</strong> Consumer version heatmap showing adoption across client applications.</p>
+</li>
+<li>
+<p><strong>Is it safe to deprecate this version?</strong> Deprecation readiness reports listing affected consumers.</p>
+</li>
+<li>
+<p><strong>Are consumers falling behind?</strong> Version drift alerts when clients use outdated versions.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Usage tracking is <strong>server-side</strong> and <strong>zero-configuration for the client</strong>. The registry records usage events automatically when it serves schema content. Clients opt in by setting an HTTP header that identifies the application:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>X-Registry-Client-Id</code> — identifies the client application (e.g., <code>payments-svc</code>). Must contain only letters, digits, dots, hyphens, and underscores. Maximum 256 characters.</p>
+</li>
+<li>
+<p><code>X-Registry-Operation</code> — optional, the operation type: <code>SERIALIZE</code> or <code>DESERIALIZE</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If no <code>X-Registry-Client-Id</code> header is present, the request is not tracked.</p>
+</div>
+<div class="paragraph">
+<p>Both <code>globalId</code> and <code>contentId</code> based schema fetches are tracked. Clients configured with <code>IdOption.contentId</code> are fully supported.</p>
+</div>
+<div class="paragraph">
+<p>Referenced schemas (shared types, base schemas) automatically inherit liveness from the schemas that reference them. If <code>UserEvent v3</code> is Active and references <code>SharedTypes v1</code>, then <code>SharedTypes v1</code> is also considered Active.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Usage telemetry is an <strong>experimental</strong> feature. It requires <code>apicurio.features.experimental.enabled=true</code> in addition to the telemetry-specific configuration below.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_server_configuration"><a class="anchor" href="#_server_configuration"></a>Server Configuration</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 11.1111%;">
+<col style="width: 11.1111%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.telemetry.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Master switch for usage telemetry. Must be <code>true</code> for the server to record usage events.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.active-threshold-days</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>7</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A schema version fetched within this many days is classified as <strong>Active</strong>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.stale-threshold-days</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A schema version not fetched for this many days is classified as <strong>Stale</strong>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.dead-threshold-days</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>90</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A schema version not fetched for this many days (or never fetched) is classified as <strong>Dead</strong>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.drift-alert-threshold</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of versions behind latest before a consumer is flagged with a drift alert.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.retention-days</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>180</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of days to retain raw usage events. Older events are cleaned up automatically.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.aggregation.every</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How often the usage metrics are refreshed and old events are cleaned up. Uses Quarkus scheduler expression syntax (e.g., <code>1h</code>, <code>30m</code>, <code>10s</code>).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_client_configuration"><a class="anchor" href="#_client_configuration"></a>Client Configuration</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 11.1111%;">
+<col style="width: 11.1111%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.usage-telemetry.client-id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>(empty)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifier for this client application. When set, the SerDes SDK sends <code>X-Registry-Client-Id</code> and <code>X-Registry-Operation</code> headers on schema fetch requests. When empty (default), no headers are sent and the client is not tracked. Must contain only letters, digits, dots, hyphens, and underscores.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_example_enabling_telemetry"><a class="anchor" href="#_example_enabling_telemetry"></a>Example: Enabling Telemetry</h3>
+<div class="paragraph">
+<p><strong>Server (application.properties):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.features.experimental.enabled=true
+apicurio.usage.telemetry.enabled=true</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Usage telemetry is an experimental feature. You must enable experimental features first with <code>apicurio.features.experimental.enabled=true</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Kafka SerDes Client:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.registry.url=http://registry:8080/apis/registry/v3
+apicurio.registry.usage-telemetry.client-id=payments-svc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That&#8217;s it. No additional endpoints to call, no buffers to configure.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rest_api_endpoints"><a class="anchor" href="#_rest_api_endpoints"></a>REST API Endpoints</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All usage endpoints are under <code>/admin/usage/</code> and require <code>apicurio.usage.telemetry.enabled=true</code>. Endpoints return HTTP 409 (Conflict) when telemetry is not enabled.</p>
+</div>
+<div class="sect2">
+<h3 id="_get_usage_summary"><a class="anchor" href="#_get_usage_summary"></a>Get Usage Summary</h3>
+<div class="paragraph">
+<p><code>GET /admin/usage/summary</code></p>
+</div>
+<div class="paragraph">
+<p>Returns global Active/Stale/Dead counts across all tracked schema versions.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "active": 12,
+  "stale": 3,
+  "dead": 5
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_get_artifact_usage_metrics"><a class="anchor" href="#_get_artifact_usage_metrics"></a>Get Artifact Usage Metrics</h3>
+<div class="paragraph">
+<p><code>GET /admin/usage/artifacts/{groupId}/{artifactId}</code></p>
+</div>
+<div class="paragraph">
+<p>Returns per-version usage metrics for a specific artifact, including fetch counts, client lists, and classification.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "groupId": "default",
+  "artifactId": "UserEvent",
+  "versions": [
+    {
+      "version": "3.0.0",
+      "globalId": 42,
+      "totalFetches": 1523,
+      "uniqueClients": 3,
+      "firstFetchedOn": 1710000000000,
+      "lastFetchedOn": 1714400000000,
+      "clients": ["payments-svc", "analytics", "fraud-detector"],
+      "classification": "ACTIVE"
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_get_consumer_version_heatmap"><a class="anchor" href="#_get_consumer_version_heatmap"></a>Get Consumer Version Heatmap</h3>
+<div class="paragraph">
+<p><code>GET /admin/usage/artifacts/{groupId}/{artifactId}/heatmap</code></p>
+</div>
+<div class="paragraph">
+<p>Returns a consumer version adoption grid showing which clients use which versions, with version drift detection.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "groupId": "default",
+  "artifactId": "UserEvent",
+  "versions": ["1.0.0", "2.0.0", "3.0.0"],
+  "consumers": [
+    {
+      "clientId": "payments-svc",
+      "versions": {"3.0.0": 523},
+      "versionsBehind": 0,
+      "driftAlert": false
+    },
+    {
+      "clientId": "analytics",
+      "versions": {"1.0.0": 102},
+      "versionsBehind": 2,
+      "driftAlert": true
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_get_deprecation_readiness"><a class="anchor" href="#_get_deprecation_readiness"></a>Get Deprecation Readiness</h3>
+<div class="paragraph">
+<p><code>GET /admin/usage/artifacts/{groupId}/{artifactId}/versions/{version}/deprecation-readiness</code></p>
+</div>
+<div class="paragraph">
+<p>Returns which consumers are actively using a specific version and whether it is safe to deprecate.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "groupId": "default",
+  "artifactId": "UserEvent",
+  "version": "1.0.0",
+  "activeConsumers": [
+    {
+      "clientId": "analytics",
+      "lastFetched": 1714400000000,
+      "fetchCount": 102
+    }
+  ],
+  "safeToDeprecate": false
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deprecation_workflow"><a class="anchor" href="#_deprecation_workflow"></a>Deprecation Workflow</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apicurio Registry supports a version lifecycle state machine for controlled deprecation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">  ENABLED ──────▶ DEPRECATED ──────▶ SUNSET ──────▶ (delete)
+     ▲                │                  │
+     │                ▼                  │
+     └──────── DISABLED                  │
+     ◀───────────────────────────────────┘</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>ENABLED</strong> — Version is active and available for use.</p>
+</li>
+<li>
+<p><strong>DEPRECATED</strong> — Version still works but consumers should migrate. A warning is logged on access.</p>
+</li>
+<li>
+<p><strong>SUNSET</strong> — Migration deadline has passed. The version will be removed soon. Requires transitioning through DEPRECATED first.</p>
+</li>
+<li>
+<p><strong>DISABLED</strong> — Version is blocked from use.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Transition a version to SUNSET via the API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># First deprecate
+curl -X PUT http://localhost:8080/apis/registry/v3/groups/default/artifacts/UserEvent/versions/1.0.0/state \
+  -H "Content-Type: application/json" \
+  -d '{"state":"DEPRECATED"}'
+
+# Then sunset
+curl -X PUT http://localhost:8080/apis/registry/v3/groups/default/artifacts/UserEvent/versions/1.0.0/state \
+  -H "Content-Type: application/json" \
+  -d '{"state":"SUNSET"}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the deprecation readiness endpoint before transitioning to ensure no active consumers are affected.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ui_features"><a class="anchor" href="#_ui_features"></a>UI Features</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When usage telemetry is enabled, the registry UI displays:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Dashboard widget</strong> — Shows Active/Stale/Dead counts with colored labels (green/orange/red).</p>
+</li>
+<li>
+<p><strong>Version badges</strong> — Each version in the artifact versions table shows its usage classification badge.</p>
+</li>
+<li>
+<p><strong>Usage tab</strong> — The artifact detail page has a "Usage" tab with:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Consumer version heatmap table with color-coded fetch counts.</p>
+</li>
+<li>
+<p>Version drift alerts for consumers using outdated versions.</p>
+</li>
+<li>
+<p>Deprecation readiness panel (click a version column header to check).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>SUNSET badge</strong> — Versions in the SUNSET state display a purple badge.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_opentelemetry_metrics_export"><a class="anchor" href="#_opentelemetry_metrics_export"></a>OpenTelemetry Metrics Export</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When OpenTelemetry is enabled (<code>quarkus.otel.sdk.disabled=false</code>), usage classification counts are exported as metrics:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Metric</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.schemas.active</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of schema versions classified as Active.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.schemas.stale</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of schema versions classified as Stale.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.schemas.dead</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of schema versions classified as Dead.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>These gauges are updated periodically (configured via <code>apicurio.usage.aggregation.every</code>). When OTel is disabled (the default), no overhead.</p>
+</div>
+<div class="sect2">
+<h3 id="_enabling_otel_export"><a class="anchor" href="#_enabling_otel_export"></a>Enabling OTel Export</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.otel.sdk.disabled=false
+quarkus.otel.exporter.otlp.endpoint=http://otel-collector:4317
+quarkus.otel.metrics.enabled=true</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_grafana_query"><a class="anchor" href="#_example_grafana_query"></a>Example Grafana Query</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-promql hljs" data-lang="promql">apicurio_usage_schemas_active or apicurio_usage_schemas_stale or apicurio_usage_schemas_dead</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_privacy_and_data_collection"><a class="anchor" href="#_privacy_and_data_collection"></a>Privacy and Data Collection</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Opt-in only</strong> — Disabled by default on both server and client.</p>
+</li>
+<li>
+<p><strong>No message content</strong> — Only schema coordinates and client identifier are recorded.</p>
+</li>
+<li>
+<p><strong>No user identity</strong> — The <code>clientId</code> is a configured application name, not a user or personal identifier.</p>
+</li>
+<li>
+<p><strong>Client-controlled</strong> — Each client application decides whether to set the <code>X-Registry-Client-Id</code> header.</p>
+</li>
+<li>
+<p><strong>Zero overhead when disabled</strong> — No headers sent, no events recorded, no database writes.</p>
+</li>
+<li>
+<p><strong>Automatic cleanup</strong> — Events older than the retention period are deleted automatically.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_demo_script"><a class="anchor" href="#_demo_script"></a>Demo Script</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A demo script is provided to populate realistic usage data for testing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Start the registry with telemetry enabled
+./mvnw quarkus:dev -pl :apicurio-registry-app \
+  -Dapicurio.usage.telemetry.enabled=true
+
+# In another terminal, run the demo
+./examples/usage-telemetry-demo/populate-usage-data.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The script creates three artifacts (UserEvent, OrderEvent, PaymentEvent) with multiple versions and simulates usage from five different client applications by fetching schemas with <code>X-Registry-Client-Id</code> headers.</p>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.3.x/getting-started/assembly-usage-telemetry.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
