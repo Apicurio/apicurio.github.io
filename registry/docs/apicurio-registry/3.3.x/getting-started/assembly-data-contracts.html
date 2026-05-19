@@ -383,6 +383,21 @@
 <p><a href="#data-contracts-lifecycle_registry">Contract lifecycle</a></p>
 </li>
 <li>
+<p><a href="#data-contracts-migration_registry">Schema migration</a></p>
+</li>
+<li>
+<p><a href="#data-contracts-serdes_registry">Kafka SerDes integration</a></p>
+</li>
+<li>
+<p><a href="#data-contracts-audit_registry">Audit log</a></p>
+</li>
+<li>
+<p><a href="#data-contracts-search_registry">Contract search</a></p>
+</li>
+<li>
+<p><a href="#data-contracts-global-rules_registry">Global contract rules</a></p>
+</li>
+<li>
 <p><a href="#data-contracts-api_registry">REST API</a></p>
 </li>
 <li>
@@ -781,17 +796,8 @@ serviceLevel:
 <div class="paragraph">
 <p>When you submit an ODCS contract, its <code>quality.accuracy</code> rules are automatically projected as CEL domain rules on the referenced schema artifact.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Contract rules are currently stored and managed through the REST API. Runtime execution in SerDes (serializers/deserializers) is planned for a future release.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>Contract rules are enforced both server-side (via the rule execution REST endpoint) and client-side (via Java Kafka SerDes integration). See <a href="#data-contracts-serdes_registry">Kafka SerDes integration</a> for SerDes configuration.</p>
 </div>
 <div class="sect2">
 <h3 id="_rule_kinds"><a class="anchor" href="#_rule_kinds"></a>Rule kinds</h3>
@@ -821,6 +827,19 @@ Contract rules are currently stored and managed through the REST API. Runtime ex
 </li>
 <li>
 <p><strong>UPGRADE</strong> / <strong>DOWNGRADE</strong> - Execute during schema migration</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_rule_types"><a class="anchor" href="#_rule_types"></a>Rule types</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>CEL</strong> - Common Expression Language for validation conditions and simple transforms. Supports full CEL spec including <code>has()</code>, <code>size()</code>, <code>contains()</code>, <code>startsWith()</code>, parenthesized grouping, and ternary expressions.</p>
+</li>
+<li>
+<p><strong>JSONATA</strong> - JSONata expressions for data transformation. Supports both CONDITION (truthy check) and TRANSFORM (returns transformed data) kinds. Useful for schema migration transforms.</p>
 </li>
 </ul>
 </div>
@@ -895,17 +914,329 @@ Reverse transitions are not allowed.
 <pre>DEV ──────► STAGE ──────► PROD</pre>
 </div>
 </div>
-<div class="admonitionblock note">
-<table>
+<div class="paragraph">
+<p>Promotion is enforced via the <code>POST /groups/{g}/artifacts/{a}/contract/promote</code> endpoint, which validates that the target stage follows the allowed progression. The promotion stage can also be set directly via the contract metadata API.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-contracts-migration_registry"><a class="anchor" href="#data-contracts-migration_registry"></a>Schema migration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Schema migration allows you to transform data records between different schema versions using migration rules.</p>
+</div>
+<div class="sect2">
+<h3 id="_migration_rules"><a class="anchor" href="#_migration_rules"></a>Migration rules</h3>
+<div class="paragraph">
+<p>Migration rules use the UPGRADE or DOWNGRADE mode and are typically JSONata TRANSFORM rules that reshape data from one version to another:</p>
+</div>
+<div class="listingblock">
+<div class="title">Migration rule example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "domainRules": [],
+  "migrationRules": [
+    {
+      "name": "v1-to-v2-upgrade",
+      "kind": "TRANSFORM",
+      "type": "JSONATA",
+      "mode": "UPGRADE",
+      "expr": "$ ~&gt; |$|{'fullName': firstName &amp; ' ' &amp; lastName}|",
+      "onFailure": "ERROR",
+      "disabled": false
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_migration_endpoint"><a class="anchor" href="#_migration_endpoint"></a>Migration endpoint</h3>
+<div class="paragraph">
+<p>The migration endpoint chains transforms across multiple versions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST \
+  http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/contract/migrate \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "sourceVersion": "1",
+    "targetVersion": "3",
+    "record": {"firstName": "John", "lastName": "Doe", "amount": 100}
+  }'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The service determines the direction (upgrade or downgrade), loads migration rules for each intermediate version, and chains the transforms sequentially.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compatibility_groups"><a class="anchor" href="#_compatibility_groups"></a>Compatibility groups</h3>
+<div class="paragraph">
+<p>Compatibility groups partition the version history for compatibility checking. Versions in different groups are not compared against each other during compatibility validation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Set compatibility group
+curl -X PUT \
+  http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/contract/compatibility-group \
+  -H 'Content-Type: application/json' \
+  -d '{"group": "v2-family"}'
+
+# Get compatibility group
+curl http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/contract/compatibility-group</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-contracts-serdes_registry"><a class="anchor" href="#data-contracts-serdes_registry"></a>Kafka SerDes integration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Contract rules can be enforced during normal Kafka serialization and deserialization using the Apicurio Registry SerDes libraries. Rules are executed transparently — no code changes are required beyond configuration.</p>
+</div>
+<div class="sect2">
+<h3 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h3>
+<div class="paragraph">
+<p>Enable contract rule enforcement by setting these properties on your Kafka producer or consumer:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. SerDes contract rule properties</caption>
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
 <tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Automated promotion workflow enforcement is planned for a future release. The promotion stage can be set via the contract metadata API.
-</td>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.contract-rules.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable contract rule execution during serialize/deserialize</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.contract-rules.fail-on-error</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When <code>true</code>, rule violations throw a <code>RuntimeException</code>. When <code>false</code>, violations are logged but serialization proceeds (for DLQ routing by the application)</p></td>
+</tr>
+</tbody>
 </table>
+</div>
+<div class="sect2">
+<h3 id="_how_it_works"><a class="anchor" href="#_how_it_works"></a>How it works</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Producer (serializer):</strong> After schema resolution and before serialization, the serializer calls the server-side rule execution endpoint with mode <code>WRITE</code>. If any CONDITION rule with <code>onFailure=ERROR</code> fails, serialization is rejected.</p>
+</li>
+<li>
+<p><strong>Consumer (deserializer):</strong> After deserialization, the deserializer calls the rule execution endpoint with mode <code>READ</code>. This enables read-side validation rules.</p>
+</li>
+<li>
+<p><strong>DLQ pattern:</strong> Set <code>fail-on-error=false</code> to allow serialization to proceed even when rules fail. Your application can inspect the violations and route the message to a dead letter queue.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_producer_with_contract_rules"><a class="anchor" href="#_example_producer_with_contract_rules"></a>Example: Producer with contract rules</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Properties props = new Properties();
+props.put(SerdeConfig.REGISTRY_URL, "http://localhost:8080/apis/registry/v3");
+props.put(SerdeConfig.EXPLICIT_ARTIFACT_GROUP_ID, "my-group");
+props.put(SerdeConfig.ARTIFACT_RESOLVER_STRATEGY, TopicRecordIdStrategy.class.getName());
+props.put(SerdeConfig.CONTRACT_RULES_ENABLED, "true");
+props.put(SerdeConfig.CONTRACT_RULES_FAIL_ON_ERROR, "true");
+props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, AvroKafkaSerializer.class.getName());
+// ... other Kafka producer properties
+
+KafkaProducer&lt;String, GenericRecord&gt; producer = new KafkaProducer&lt;&gt;(props);</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-contracts-audit_registry"><a class="anchor" href="#data-contracts-audit_registry"></a>Audit log</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The contract audit log records all contract operations for compliance and debugging.</p>
+</div>
+<div class="sect2">
+<h3 id="_audited_operations"><a class="anchor" href="#_audited_operations"></a>Audited operations</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Metadata updates (owner, classification, status changes)</p>
+</li>
+<li>
+<p>Ruleset configuration (create, update, delete)</p>
+</li>
+<li>
+<p>Status transitions (DRAFT → STABLE → DEPRECATED)</p>
+</li>
+<li>
+<p>Contract submission and re-projection</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_querying_the_audit_log"><a class="anchor" href="#_querying_the_audit_log"></a>Querying the audit log</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/contract/audit</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Response</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">[
+  {
+    "action": "STATUS_TRANSITION",
+    "detail": "Status changed from DRAFT to STABLE",
+    "userId": "admin",
+    "createdOn": "2026-05-19T10:30:00Z"
+  },
+  {
+    "action": "RULESET_CONFIGURED",
+    "detail": "Contract ruleset updated",
+    "userId": "admin",
+    "createdOn": "2026-05-19T10:25:00Z"
+  }
+]</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-contracts-search_registry"><a class="anchor" href="#data-contracts-search_registry"></a>Contract search</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Search for contracts across the registry using metadata filters.</p>
+</div>
+<div class="sect2">
+<h3 id="_search_parameters"><a class="anchor" href="#_search_parameters"></a>Search parameters</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Contract search query parameters</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by lifecycle status (DRAFT, STABLE, DEPRECATED)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ownerTeam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by owner team name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>classification</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by data classification (e.g., CONFIDENTIAL, PUBLIC)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groupId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by group</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifactId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by artifact</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>limit</code> / <code>offset</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pagination (default limit: 20, max: 500)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>orderby</code> / <code>order</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sort by field and direction</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_example"><a class="anchor" href="#_example"></a>Example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/apis/registry/v3/search/contracts?status=STABLE&amp;ownerTeam=orders-team&amp;limit=10"</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-contracts-global-rules_registry"><a class="anchor" href="#data-contracts-global-rules_registry"></a>Global contract rules</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Global contract rulesets provide a baseline set of rules applied to all artifacts. Artifact-level and version-level rules override global rules by name.</p>
+</div>
+<div class="sect2">
+<h3 id="_rule_precedence"><a class="anchor" href="#_rule_precedence"></a>Rule precedence</h3>
+<div class="paragraph">
+<p>When rules are executed, they are merged from three scopes:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Global rules</strong> — apply to all artifacts (set via <code>/admin/contracts/ruleset</code>)</p>
+</li>
+<li>
+<p><strong>Artifact rules</strong> — apply to a specific artifact (set via <code>/groups/{g}/artifacts/{a}/contract/ruleset</code>)</p>
+</li>
+<li>
+<p><strong>Version rules</strong> — apply to a specific version (set via <code>&#8230;&#8203;/versions/{v}/contract/ruleset</code>)</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>If a rule with the same name exists at multiple levels, the most specific scope wins.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_managing_global_rules"><a class="anchor" href="#_managing_global_rules"></a>Managing global rules</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Set global ruleset
+curl -X PUT \
+  http://localhost:8080/apis/registry/v3/admin/contracts/ruleset \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "domainRules": [{
+      "name": "require-non-empty",
+      "kind": "CONDITION",
+      "type": "CEL",
+      "mode": "WRITE",
+      "expr": "size(record) &gt; 0",
+      "onFailure": "ERROR",
+      "disabled": false
+    }],
+    "migrationRules": []
+  }'
+
+# Get global ruleset
+curl http://localhost:8080/apis/registry/v3/admin/contracts/ruleset
+
+# Delete global ruleset
+curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -919,7 +1250,7 @@ Automated promotion workflow enforcement is planned for a future release. The pr
 <div class="sect2">
 <h3 id="_odcs_contract_endpoints"><a class="anchor" href="#_odcs_contract_endpoints"></a>ODCS contract endpoints</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. ODCS contract REST API endpoints</caption>
+<caption class="title">Table 4. ODCS contract REST API endpoints</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -969,7 +1300,7 @@ Automated promotion workflow enforcement is planned for a future release. The pr
 <div class="sect2">
 <h3 id="_contract_metadata_endpoints"><a class="anchor" href="#_contract_metadata_endpoints"></a>Contract metadata endpoints</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Contract metadata REST API endpoints</caption>
+<caption class="title">Table 5. Contract metadata REST API endpoints</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -999,7 +1330,7 @@ Automated promotion workflow enforcement is planned for a future release. The pr
 <div class="sect2">
 <h3 id="_contract_ruleset_endpoints"><a class="anchor" href="#_contract_ruleset_endpoints"></a>Contract ruleset endpoints</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Contract ruleset REST API endpoints</caption>
+<caption class="title">Table 6. Contract ruleset REST API endpoints</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1037,7 +1368,7 @@ Automated promotion workflow enforcement is planned for a future release. The pr
 <div class="sect2">
 <h3 id="_contract_status_transition_endpoint"><a class="anchor" href="#_contract_status_transition_endpoint"></a>Contract status transition endpoint</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Contract status transition endpoint</caption>
+<caption class="title">Table 7. Contract status transition endpoint</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1062,7 +1393,7 @@ Automated promotion workflow enforcement is planned for a future release. The pr
 <div class="sect2">
 <h3 id="_governance_and_quality_endpoints"><a class="anchor" href="#_governance_and_quality_endpoints"></a>Governance and quality endpoints</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Governance REST API endpoints</caption>
+<caption class="title">Table 8. Governance REST API endpoints</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1090,9 +1421,9 @@ Automated promotion workflow enforcement is planned for a future release. The pr
 </table>
 </div>
 <div class="sect2">
-<h3 id="_rule_execution_endpoint"><a class="anchor" href="#_rule_execution_endpoint"></a>Rule execution endpoint</h3>
+<h3 id="_rule_execution_and_migration_endpoints"><a class="anchor" href="#_rule_execution_and_migration_endpoints"></a>Rule execution and migration endpoints</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Rule execution REST API endpoint</caption>
+<caption class="title">Table 9. Rule execution REST API endpoints</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1111,10 +1442,130 @@ Automated promotion workflow enforcement is planned for a future release. The pr
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/versions/2024.Q2/contract/execute</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Execute contract rules against a data record. Body: <code>{"mode": "WRITE", "record": {&#8230;&#8203;}}</code></p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/migrate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Migrate a record between versions. Body: <code>{"sourceVersion": "1", "targetVersion": "3", "record": {&#8230;&#8203;}}</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_audit_log_endpoint"><a class="anchor" href="#_audit_log_endpoint"></a>Audit log endpoint</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. Contract audit log REST API endpoint</caption>
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 50%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Endpoint</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/audit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get contract audit log entries for an artifact</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_compatibility_group_endpoints"><a class="anchor" href="#_compatibility_group_endpoints"></a>Compatibility group endpoints</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. Compatibility group REST API endpoints</caption>
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 50%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Endpoint</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/compatibility-group</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the compatibility group for an artifact</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/compatibility-group</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the compatibility group for an artifact</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_contract_search_endpoint"><a class="anchor" href="#_contract_search_endpoint"></a>Contract search endpoint</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 12. Contract search REST API endpoint</caption>
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 50%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Endpoint</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/search/contracts?status=&amp;ownerTeam=&amp;classification=&amp;limit=&amp;offset=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Search contracts across the registry</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_global_contract_ruleset_endpoints"><a class="anchor" href="#_global_contract_ruleset_endpoints"></a>Global contract ruleset endpoints</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 13. Global contract ruleset REST API endpoints</caption>
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 50%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Endpoint</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/admin/contracts/ruleset</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the global contract ruleset</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/admin/contracts/ruleset</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the global contract ruleset</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/admin/contracts/ruleset</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete the global contract ruleset</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Uses real CEL (Common Expression Language) via the <code>cel-standalone</code> library. Full CEL spec support including parenthesized grouping, ternary expressions, string functions, <code>has()</code>, <code>size()</code>.</p>
+<p>Uses real CEL (Common Expression Language) via the <code>cel-standalone</code> library. Full CEL spec support including parenthesized grouping, ternary expressions, string functions, <code>has()</code>, <code>size()</code>. JSONata is also supported for data transformation rules.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1242,6 +1693,36 @@ Automated promotion workflow enforcement is planned for a future release. The pr
 <p>Data contracts are always available — no special configuration is required. Submitting a contract is an explicit opt-in action that does not affect existing registry functionality.</p>
 </div>
 <div class="sect2">
+<h3 id="_serdes_configuration"><a class="anchor" href="#_serdes_configuration"></a>SerDes configuration</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 14. SerDes contract rule properties</caption>
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.contract-rules.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable contract rule execution during serialize/deserialize</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.contract-rules.fail-on-error</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When <code>true</code>, rule violations throw <code>RuntimeException</code>. When <code>false</code>, violations are logged but serialization proceeds</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
 <h3 id="_storage_compatibility"><a class="anchor" href="#_storage_compatibility"></a>Storage compatibility</h3>
 <div class="paragraph">
 <p>Data contracts work across all storage variants:</p>
@@ -1249,7 +1730,7 @@ Automated promotion workflow enforcement is planned for a future release. The pr
 <div class="ulist">
 <ul>
 <li>
-<p><strong>SQL (PostgreSQL)</strong> — Full support with immediate consistency</p>
+<p><strong>SQL (PostgreSQL)</strong> — Full support with immediate consistency. The <code>contract_audit_log</code> table is created automatically (DB upgrade 106).</p>
 </li>
 <li>
 <p><strong>KafkaSQL</strong> — Full support; label writes go through the Kafka journal for multi-node consistency</p>
