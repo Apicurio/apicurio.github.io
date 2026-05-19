@@ -363,7 +363,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter explains how to set configuration options for Apicurio Registry security. For example, this includes authentication in Keycloak, Microsoft Azure Active Directory, or Dex, and role-based authorization in Apicurio Registry.</p>
+<p>You can configure security options for Apicurio Registry, including authentication in Keycloak, Microsoft Azure Active Directory, or Dex, and role-based authorization.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -402,7 +402,7 @@ For a list of all available configuration options, see <a href="assembly-config-
 <h2 id="registry-security-keycloak_registry"><a class="anchor" href="#registry-security-keycloak_registry"></a>Configuring Apicurio Registry authentication and authorization with Keycloak</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section explains how to manually configure authentication and authorization options for Apicurio Registry and Keycloak.</p>
+<p>You can manually configure authentication and authorization options for Apicurio Registry and Keycloak.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -420,7 +420,7 @@ see the <a href="https://www.apicur.io/registry/docs/apicurio-registry-operator/
 </table>
 </div>
 <div class="paragraph">
-<p>The Apicurio Registry web console and core REST API support authentication in Keycloak based on OAuth and OpenID Connect (OIDC). The same Keycloak realm and users are federated across the Apicurio Registry web console and core REST API using OpenID Connect so that you only require one set of credentials.</p>
+<p>The Apicurio Registry web console and core REST API support authentication in Keycloak based on OAuth and OpenID Connect (OIDC). The same Keycloak realm and users are federated across the Apicurio Registry web console and core REST API by using OpenID Connect so that you only require one set of credentials.</p>
 </div>
 <div class="paragraph">
 <p>Apicurio Registry provides role-based authorization for default admin, write, and read-only user roles. Apicurio Registry provides content-based authorization at the schema or API level, where only the creator of the registry artifact can update or delete it. Apicurio Registry authentication and authorization settings are disabled by default.</p>
@@ -466,7 +466,7 @@ see the <a href="https://www.apicur.io/registry/docs/apicurio-registry-operator/
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If you are using Keycloak service accounts, the client <strong>Access Type</strong> must be <code>confidential</code> instead of <code>bearer-only</code>.
+If you use Keycloak service accounts, the client <strong>Access Type</strong> must be <code>confidential</code> instead of <code>bearer-only</code>.
 </td>
 </tr>
 </table>
@@ -501,7 +501,7 @@ If you are using Keycloak service accounts, the client <strong>Access Type</stro
 </div>
 </li>
 <li>
-<p>In your Apicurio Registry deployment on OpenShift, set the following Apicurio Registry environment variables to configure authentication using Keycloak:</p>
+<p>In your Apicurio Registry deployment on OpenShift, set the following Apicurio Registry environment variables to configure authentication by using Keycloak:</p>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 1. Configuration for Apicurio Registry authentication with Keycloak</caption>
 <colgroup>
@@ -521,7 +521,7 @@ If you are using Keycloak service accounts, the client <strong>Access Type</stro
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_TENANT_ENABLED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables authentication for Apicurio Registry. When set to <code>true</code>, the environment variables that follow are required for authentication using Keycloak.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables authentication for Apicurio Registry. When set to <code>true</code>, the environment variables that follow are required for authentication by using Keycloak.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
@@ -587,7 +587,7 @@ For an example of setting environment variables on OpenShift, see <a href="#conf
 </table>
 </li>
 <li>
-<p>When Apicurio Registry user roles are enabled, you must assign Apicurio Registry users to at least one of the following default user roles in your Keycloak realm:</p>
+<p>Assign Apicurio Registry users to at least one of the following default user roles in your Keycloak realm:</p>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 3. Default user roles for registry authentication and authorization</caption>
 <colgroup>
@@ -665,14 +665,13 @@ For an example of setting environment variables on OpenShift, see <a href="#conf
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For details on configuring non-default user role names, see <a href="#registry-security-settings_registry">Apicurio Registry authentication and authorization configuration options</a>.</p>
+<p><a href="#registry-security-settings_registry">Apicurio Registry authentication and authorization configuration options</a></p>
 </li>
 <li>
-<p>For an open source example application and Keycloak realm, see <a href="https://github.com/Apicurio/apicurio-registry/tree/3.1.x/distro/docker-compose">Docker Compose example of Apicurio Registry with Keycloak</a>.</p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/3.1.x/distro/docker-compose">Docker Compose example of Apicurio Registry with Keycloak</a></p>
 </li>
 <li>
-<p>For details on how to use Keycloak in a production environment, see
-the <a href="https://www.keycloak.org/documentation">Keycloak documentation</a>.</p>
+<p><a href="https://www.keycloak.org/documentation">Keycloak documentation</a></p>
 </li>
 </ul>
 </div>
@@ -682,13 +681,13 @@ the <a href="https://www.keycloak.org/documentation">Keycloak documentation</a>.
 <h2 id="registry-security-azure_registry"><a class="anchor" href="#registry-security-azure_registry"></a>Configuring Apicurio Registry authentication and authorization with Microsoft Azure Active Directory</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section explains how to manually configure authentication and authorization options for Apicurio Registry and Microsoft Azure Active Directory (Azure AD).</p>
+<p>You can manually configure authentication and authorization options for Apicurio Registry and Microsoft Azure Active Directory (Azure AD).</p>
 </div>
 <div class="paragraph">
 <p>The Apicurio Registry web console and core REST API support authentication in Azure AD based on OpenID Connect (OIDC) and the OAuth Authorization Code Flow. Apicurio Registry provides role-based authorization for default admin, write, and read-only user roles. Apicurio Registry authentication and authorization settings are disabled by default.</p>
 </div>
 <div class="paragraph">
-<p>To secure Apicurio Registry with Azure AD, you require a valid directory in Azure AD with specific configuration. This involves registering the Apicurio Registry application in the Azure AD portal with recommended settings and configuring environment variables in Apicurio Registry.</p>
+<p>To secure Apicurio Registry with Azure AD, you require a valid directory in Azure AD with specific configuration. You must register the Apicurio Registry application in the Azure AD portal with recommended settings and configure environment variables in Apicurio Registry.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -705,7 +704,7 @@ the <a href="https://www.keycloak.org/documentation">Keycloak documentation</a>.
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Log in to the Azure AD portal using your email address or GitHub account.</p>
+<p>Log in to the Azure AD portal by using your email address or GitHub account.</p>
 </li>
 <li>
 <p>In the navigation menu, select <strong>Manage &gt; App registrations &gt; New registration</strong>, and complete the following settings:</p>
@@ -726,7 +725,7 @@ the <a href="https://www.keycloak.org/documentation">Keycloak documentation</a>.
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-You must register your Apicurio Registry application host as a <strong>Redirect URI</strong>. When logging in, users are redirected from Apicurio Registry to Azure AD for authentication, and you want to send them back to your application afterwards. Azure AD does not allow any redirect URLs that are not registered.
+You must register your Apicurio Registry application host as a <strong>Redirect URI</strong>. When logging in, users are redirected from Apicurio Registry to Azure AD for authentication, and you want to send them back to your application afterward. Azure AD does not allow any redirect URLs that are not registered.
 </td>
 </tr>
 </table>
@@ -739,7 +738,7 @@ You must register your Apicurio Registry application host as a <strong>Redirect 
 <p>Click <strong>Register</strong>. You can view your app registration details by selecting <strong>Manage &gt; App registrations</strong> &gt; <strong>apicurio-registry-example</strong>.</p>
 </li>
 <li>
-<p>Select <strong>Manage &gt; Authentication</strong> and ensure that the application is configured with your redirect URLs and tokens as follows:</p>
+<p>Select <strong>Manage &gt; Authentication</strong> and verify that the application has your redirect URLs and tokens configured as follows:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -875,26 +874,40 @@ When you enable roles in Apicurio Registry, you must also create the same roles 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_TOKEN_TYPE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Which token to use. Azure AD has non-standard access tokens, so we need to use id tokens.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The token type to use. Azure AD has non-standard access tokens, so you must use ID tokens.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 </tr>
 </tbody>
 </table>
-<div class="sect2">
-<h3 id="_multiple_role_mappings_for_azure_entra_id"><a class="anchor" href="#_multiple_role_mappings_for_azure_entra_id"></a>Multiple role mappings for Azure Entra ID</h3>
-<div class="paragraph">
-<p>When using Azure Entra ID (formerly Azure AD), you may need to map multiple Azure AD groups or app roles to a single Apicurio Registry role. This is useful when:</p>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#registry-security-settings_registry">Apicurio Registry authentication and authorization configuration options</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/azure">Microsoft Azure AD user documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-security-azure-role-mappings_registry"><a class="anchor" href="#registry-security-azure-role-mappings_registry"></a>Multiple role mappings for Azure Entra ID</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When you use Azure Entra ID (formerly Azure AD), you might need to map multiple Azure AD groups or app roles to a single Apicurio Registry role. Use multiple role mappings when:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Interactive users authenticate via Azure AD groups</p>
+<p>Interactive users authenticate by using Azure AD groups</p>
 </li>
 <li>
-<p>Service principals authenticate via app roles</p>
+<p>Service principals authenticate by using app roles</p>
 </li>
 <li>
-<p>Both should grant the same Apicurio Registry permissions</p>
+<p>Both must grant the same Apicurio Registry permissions</p>
 </li>
 </ul>
 </div>
@@ -910,12 +923,14 @@ APICURIO_AUTH_ROLES_READONLY=sr-readonly,abcd1234-aaaa-bbbb-cccc-ddddeeeefffff,A
 </div>
 </div>
 <div class="paragraph">
-<p>With this configuration, a user with any of the listed roles or group memberships will be granted the corresponding Apicurio Registry authorization level.</p>
+<p>With this configuration, a user with any of the listed roles or group memberships receives the corresponding Apicurio Registry authorization level.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_client_specific_oauth_scopes_for_azure_entra_id"><a class="anchor" href="#_client_specific_oauth_scopes_for_azure_entra_id"></a>Client-specific OAuth scopes for Azure Entra ID</h3>
-<div class="paragraph">
+</div>
+<div class="sect1">
+<h2 id="registry-security-azure-oauth-scopes_registry"><a class="anchor" href="#registry-security-azure-oauth-scopes_registry"></a>Client-specific OAuth scopes for Azure Entra ID</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>Azure Entra ID requires that each app registration uses a unique scope. When you have multiple app registrations (for example, one for developers and one for read-only access), you can configure client-specific scopes:</p>
 </div>
 <div class="listingblock">
@@ -930,7 +945,7 @@ APICURIO_AUTHN_BASIC_SCOPE_SR_READONLY_CLIENT=api://readonly-app-id/.default</co
 </div>
 </div>
 <div class="paragraph">
-<p>When a client authenticates, Apicurio Registry will:</p>
+<p>When a client authenticates, Apicurio Registry does the following:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -952,22 +967,10 @@ APICURIO_AUTHN_BASIC_SCOPE_SR_READONLY_CLIENT=api://readonly-app-id/.default</co
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Multiple scopes can be specified using comma separation. They will be converted to space-separated format per the OAuth2 specification.
+You can specify multiple scopes by using comma separation. The scopes are converted to space-separated format per the OAuth2 specification.
 </td>
 </tr>
 </table>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p>For details on configuring non-default user role names, see <a href="#registry-security-settings_registry">Apicurio Registry authentication and authorization configuration options</a>.</p>
-</li>
-<li>
-<p>For more details on using Azure AD, see the <a href="https://learn.microsoft.com/en-us/azure">Microsoft Azure AD user documentation</a>.</p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 </div>
@@ -975,10 +978,10 @@ Multiple scopes can be specified using comma separation. They will be converted 
 <h2 id="registry-security-dex_registry"><a class="anchor" href="#registry-security-dex_registry"></a>Configuring Apicurio Registry authentication and authorization with Dex</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section explains how to configure authentication and authorization for Apicurio Registry by using <a href="https://dexidp.io/">Dex</a> as a federated OpenID Connect (OIDC) identity provider.</p>
+<p>You can configure authentication and authorization for Apicurio Registry by using <a href="https://dexidp.io/">Dex</a> as a federated OpenID Connect (OIDC) identity provider.</p>
 </div>
 <div class="paragraph">
-<p>Dex acts as an OIDC-compliant bridge in front of identity providers that do not fully implement the OIDC specification. This is useful when your platform uses an OAuth server that does not expose standard OIDC endpoints, such as OpenShift&#8217;s built-in OAuth server, LDAP directories, or SAML-based providers. Dex has <a href="https://dexidp.io/docs/connectors/">connectors</a> for 15+ identity providers including OpenShift, LDAP, SAML, GitHub, GitLab, Google, and Microsoft.</p>
+<p>Dex acts as an OIDC-compliant bridge in front of identity providers that do not fully implement the OIDC specification. Use Dex when your platform uses an OAuth server that does not expose standard OIDC endpoints, such as OpenShift&#8217;s built-in OAuth server, LDAP directories, or SAML-based providers. Dex has <a href="https://dexidp.io/docs/connectors/">connectors</a> for 15+ identity providers including OpenShift, LDAP, SAML, GitHub, GitLab, Google, and Microsoft.</p>
 </div>
 <div class="paragraph">
 <p>Without an OIDC-compliant provider, the following Apicurio Registry features do not work:</p>
@@ -1006,7 +1009,7 @@ Multiple scopes can be specified using comma separation. They will be converted 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Principal identity</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not available</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The username cannot be extracted because it may be nested in a non-standard location in the token. Apicurio Registry expects flat top-level claims.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The username cannot be extracted because it might be nested in a non-standard location in the token. Apicurio Registry expects flat top-level claims.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Owner-based authorization</p></td>
@@ -1048,7 +1051,7 @@ helm repo update
 <li>
 <p>Create a Helm values file named <code>dex-values.yaml</code> with the following content. Replace the placeholder values with your actual configuration.</p>
 <div class="paragraph">
-<p>Apicurio Registry needs two OAuth clients: a public client for the browser-based UI (which cannot hold a secret) and a confidential client for the backend and CLI. You must also configure <code>allowedOrigins</code> so the UI can fetch the Dex OIDC discovery endpoint via CORS.</p>
+<p>Apicurio Registry needs two OAuth clients: a public client for the browser-based UI (which cannot hold a secret) and a confidential client for the backend and CLI. You must also configure <code>allowedOrigins</code> so the UI can fetch the Dex OIDC discovery endpoint by using CORS.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1106,7 +1109,7 @@ ingress:
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-The UI client must be <code>public: true</code> because the browser-based authorization code flow with PKCE cannot securely store a client secret. If you use a single confidential client for both UI and backend, the UI login will fail with <code>invalid_client</code> errors. The <code>/dashboard</code> redirect URI is needed because the Apicurio Registry UI redirects there after login.
+The UI client must be <code>public: true</code> because the browser-based authorization code flow with PKCE cannot securely store a client secret. If you use a single confidential client for both UI and backend, the UI login fails with <code>invalid_client</code> errors. The <code>/dashboard</code> redirect URI is needed because the Apicurio Registry UI redirects there after login.
 </td>
 </tr>
 </table>
@@ -1118,13 +1121,13 @@ The UI client must be <code>public: true</code> because the browser-based author
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-When generating the client secret, avoid special characters such as <code>+</code>, <code>/</code>, or <code>=</code> that may cause URL encoding mismatches. Use <code>openssl rand -base64 32 | tr -d '+/=' | head -c 32</code> to generate a safe secret.
+When generating the client secret, avoid special characters such as <code>+</code>, <code>/</code>, or <code>=</code> that can cause URL encoding mismatches. Use <code>openssl rand -base64 32 | tr -d '+/=' | head -c 32</code> to generate a safe secret.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>On OpenShift, create a Route instead of using Ingress:</p>
+<p>On OpenShift, create a Route instead of an Ingress:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1150,10 +1153,10 @@ When generating the client secret, avoid special characters such as <code>+</cod
 </div>
 </li>
 <li>
-<p>Configure a connector for your upstream identity provider. Add the connector configuration to the <code>connectors</code> section in your <code>dex-values.yaml</code> file. See <a href="#registry-security-dex-connectors">Dex connector examples</a> for configuration examples.</p>
+<p>Configure a connector for your upstream identity provider. Add the connector configuration to the <code>connectors</code> section in your <code>dex-values.yaml</code> file. See <a href="#registry-security-dex-connectors_registry">Dex connector examples</a> for configuration examples.</p>
 </li>
 <li>
-<p>After updating the connector configuration, upgrade the Dex Helm release:</p>
+<p>Upgrade the Dex Helm release after updating the connector configuration:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade dex dex/dex -n dex -f dex-values.yaml</code></pre>
@@ -1161,7 +1164,7 @@ When generating the client secret, avoid special characters such as <code>+</cod
 </div>
 </li>
 <li>
-<p>In your Apicurio Registry deployment, set the following environment variables to configure authentication using Dex:</p>
+<p>In your Apicurio Registry deployment, set the following environment variables to configure authentication by using Dex:</p>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 8. Configuration for Apicurio Registry authentication with Dex</caption>
 <colgroup>
@@ -1230,7 +1233,7 @@ When generating the client secret, avoid special characters such as <code>+</cod
 </tbody>
 </table>
 <div class="paragraph">
-<p>For example, when using Dex, set these values:</p>
+<p>For example, when you use Dex, set these values:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1251,7 +1254,7 @@ APICURIO_UI_AUTH_OIDC_SCOPE=openid profile email groups</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Both <code>QUARKUS_OIDC_CLIENT_ID</code> and <code>APICURIO_UI_AUTH_OIDC_CLIENT_ID</code> must be set to the public client ID (<code>apicurio-registry-ui</code>). If they do not match, the backend will reject tokens issued for a different audience with <code>InvalidJwtSignatureException</code> errors.
+Both <code>QUARKUS_OIDC_CLIENT_ID</code> and <code>APICURIO_UI_AUTH_OIDC_CLIENT_ID</code> must be set to the public client ID (<code>apicurio-registry-ui</code>). If they do not match, the backend rejects tokens issued for a different audience with <code>InvalidJwtSignatureException</code> errors.
 </td>
 </tr>
 </table>
@@ -1357,11 +1360,11 @@ Both <code>QUARKUS_OIDC_CLIENT_ID</code> and <code>APICURIO_UI_AUTH_OIDC_CLIENT_
 </div>
 </div>
 <div class="paragraph">
-<p>With this setting, only the user who created an artifact can modify or delete it. For more details on owner-only authorization, see <a href="#registry-security-obac-enabled">Apicurio Registry owner-only authorization</a>.</p>
+<p>With this setting, only the user who created an artifact can modify or delete it. For more details on owner-only authorization, see <a href="#registry-security-obac-enabled_registry">Apicurio Registry owner-only authorization</a>.</p>
 </div>
 </li>
 <li>
-<p>If you are using the Apicurio Registry Operator on Kubernetes, you can configure all of the above in the <code>ApicurioRegistry3</code> custom resource. The <code>spec.app.auth</code> section covers the standard OIDC settings, and Dex-specific properties must be set using <code>spec.app.env</code>. Use <code>spec.app.ingress</code> with TLS annotations instead of the bare <code>host</code> field:</p>
+<p>If you use the Apicurio Registry Operator on Kubernetes, configure all of the preceding settings in the <code>ApicurioRegistry3</code> custom resource. The <code>spec.app.auth</code> section covers the standard OIDC settings, and you must set Dex-specific properties by using <code>spec.app.env</code>. Use <code>spec.app.ingress</code> with TLS annotations instead of the bare <code>host</code> field:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
@@ -1431,16 +1434,16 @@ spec:
 </div>
 </div>
 <div class="paragraph">
-<p>There are a few important details in this CR:</p>
+<p>Note the following important details in this CR:</p>
 </div>
 <div class="paragraph">
-<p><strong>Two-client architecture</strong> — Both <code>appClientId</code> and <code>uiClientId</code> are set to <code>apicurio-registry-ui</code> (the public Dex client). The browser-based UI uses <code>oidc-client-ts</code>, which cannot securely hold a client secret. If you use a confidential client for the UI, the token exchange will fail with <code>Invalid client credentials</code>. The backend validates JWT signatures via the JWKS endpoint and does not need a client secret. The separate confidential client (<code>apicurio-registry</code>) is kept for CLI/API token exchange via curl or scripts.</p>
+<p><strong>Two-client architecture</strong> — Both <code>appClientId</code> and <code>uiClientId</code> are set to <code>apicurio-registry-ui</code> (the public Dex client). The browser-based UI uses <code>oidc-client-ts</code>, which cannot securely hold a client secret. If you use a confidential client for the UI, the token exchange fails with <code>Invalid client credentials</code>. The backend validates JWT signatures by using the JWKS endpoint and does not need a client secret. The separate confidential client (<code>apicurio-registry</code>) is kept for CLI/API token exchange by using curl or scripts.</p>
 </div>
 <div class="paragraph">
-<p><strong>UI scope with <code>groups</code></strong> — The <code>APICURIO_UI_AUTH_OIDC_SCOPE</code> env var adds <code>groups</code> to the scope the UI requests from Dex. Without this, the default scope (<code>openid profile email</code>) does not include groups, and Dex will not put group membership in the token. RBAC then denies all write operations because it cannot determine the user&#8217;s role. This has been verified on a live cluster with Dex v2.45.1 and the OpenShift connector: tokens include the <code>groups</code> claim with the user&#8217;s OpenShift group memberships, and Apicurio Registry successfully resolves roles for RBAC authorization.</p>
+<p><strong>UI scope with <code>groups</code></strong> — The <code>APICURIO_UI_AUTH_OIDC_SCOPE</code> env var adds <code>groups</code> to the scope the UI requests from Dex. Without this, the default scope (<code>openid profile email</code>) does not include groups, and Dex does not put group membership in the token. RBAC then denies all write operations because it cannot determine the user&#8217;s role. Verified on a live cluster with Dex v2.45.1 and the OpenShift connector: tokens include the <code>groups</code> claim with the user&#8217;s OpenShift group memberships, and Apicurio Registry successfully resolves roles for RBAC authorization.</p>
 </div>
 <div class="paragraph">
-<p><strong>Explicit <code>redirectUri</code></strong> — Without this, <code>oidc-client-ts</code> uses <code>window.location.href</code> as the redirect URI for silent token refresh. After the initial login, the URL may still contain <code>?code=&#8230;&#8203;&amp;state=&#8230;&#8203;</code> query parameters, which do not match any registered redirect URI in Dex, causing a 400 error.</p>
+<p><strong>Explicit <code>redirectUri</code></strong> — Without this, <code>oidc-client-ts</code> uses <code>window.location.href</code> as the redirect URI for silent token refresh. After the initial login, the URL might still contain <code>?code=&#8230;&#8203;&amp;state=&#8230;&#8203;</code> query parameters, which do not match any registered redirect URI in Dex, causing a 400 error.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1477,12 +1480,16 @@ curl -sk https://&lt;registry-app-route&gt;/apis/registry/v3/groups/my-group \
 </li>
 </ol>
 </div>
-<h3 id="registry-security-dex-connectors" class="discrete">Dex connector examples</h3>
-<div class="paragraph">
-<p>Dex supports many upstream identity providers via pluggable connectors. The following examples show how to configure the most common connectors.</p>
 </div>
-<h4 id="_openshift_connector" class="discrete">OpenShift connector</h4>
+</div>
+<div class="sect1">
+<h2 id="registry-security-dex-connectors_registry"><a class="anchor" href="#registry-security-dex-connectors_registry"></a>Dex connector examples</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Dex supports many upstream identity providers by using pluggable connectors. The following examples show how to configure the most common connectors.</p>
+</div>
 <div class="paragraph">
+<div class="title">OpenShift connector</div>
 <p>First, create an OAuthClient for Dex on your OpenShift cluster:</p>
 </div>
 <div class="listingblock">
@@ -1522,8 +1529,8 @@ EOF</code></pre>
       insecureCA: true  # Set to false in production and configure proper CA</code></pre>
 </div>
 </div>
-<h4 id="_ldap_connector" class="discrete">LDAP connector</h4>
 <div class="listingblock">
+<div class="title">LDAP connector</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">connectors:
   - type: ldap
@@ -1549,8 +1556,8 @@ EOF</code></pre>
         nameAttr: cn</code></pre>
 </div>
 </div>
-<h4 id="_github_connector" class="discrete">GitHub connector</h4>
 <div class="listingblock">
+<div class="title">GitHub connector</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">connectors:
   - type: github
@@ -1567,8 +1574,8 @@ EOF</code></pre>
             - registry-developers</code></pre>
 </div>
 </div>
-<h4 id="_microsoft_azure_ad_connector" class="discrete">Microsoft Azure AD connector</h4>
 <div class="listingblock">
+<div class="title">Microsoft Azure AD connector</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">connectors:
   - type: microsoft
@@ -1584,8 +1591,8 @@ EOF</code></pre>
         - &lt;registry-developers-group-uuid&gt;</code></pre>
 </div>
 </div>
-<h4 id="_saml_2_0_connector" class="discrete">SAML 2.0 connector</h4>
 <div class="listingblock">
+<div class="title">SAML 2.0 connector</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">connectors:
   - type: saml
@@ -1607,18 +1614,22 @@ EOF</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Dex supports using multiple connectors simultaneously. This enables federation across multiple identity providers, allowing users from different organizations or systems to authenticate to Apicurio Registry through a single Dex instance.
+Dex supports multiple connectors simultaneously. You can federate across multiple identity providers so that users from different organizations or systems authenticate to Apicurio Registry through a single Dex instance.
 </td>
 </tr>
 </table>
 </div>
-<h3 id="registry-security-dex-m2m" class="discrete">Machine-to-machine (M2M) access and Kafka SerDes</h3>
-<div class="paragraph">
-<p>The configuration above covers the browser-based UI flow. For CI/CD pipelines, Kafka SerDes, and services that need to interact with the Apicurio Registry API without a browser, additional considerations apply.</p>
 </div>
-<h4 id="_dex_client_credentials_support_unreleased_as_of_v2_45_1" class="discrete">Dex <code>client_credentials</code> support (unreleased as of v2.45.1)</h4>
+</div>
+<div class="sect1">
+<h2 id="registry-security-dex-m2m_registry"><a class="anchor" href="#registry-security-dex-m2m_registry"></a>Machine-to-machine access and Kafka SerDes with Dex</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The preceding configuration covers the browser-based UI flow. For CI/CD pipelines, Kafka SerDes, and services that need to interact with the Apicurio Registry API without a browser, additional considerations apply.</p>
+</div>
 <div class="paragraph">
-<p>Dex added <code>client_credentials</code> support via <a href="https://github.com/dexidp/dex/pull/4583">PR #4583</a> (merged March 3, 2026), but this feature is <strong>not included in Dex v2.45.1</strong> — the latest stable release at time of writing. It will ship in v2.46.0 or later.</p>
+<div class="title">Dex client_credentials support</div>
+<p>Dex added <code>client_credentials</code> support in <a href="https://github.com/dexidp/dex/pull/4583">PR #4583</a> (merged March 3, 2026), but this feature is <strong>not included in Dex v2.45.1</strong> — the latest stable release at time of writing. Expect it to ship in v2.46.0 or later.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1664,7 +1675,7 @@ ACCESS_TOKEN=$(echo $TOKEN_RESPONSE | jq -r .access_token)</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Even with <code>client_credentials</code> working, the tokens <strong>do not include the <code>groups</code> claim</strong>. The <code>groups</code> scope is accepted but no groups are populated because there is no upstream connector or user in the <code>client_credentials</code> flow — the token is built solely from the static client definition, which has no group membership. Since Apicurio Registry uses <code>groups</code> for RBAC, M2M clients authenticating via <code>client_credentials</code> will have no assigned role.
+Even with <code>client_credentials</code> working, the tokens <strong>do not include the <code>groups</code> claim</strong>. The <code>groups</code> scope is accepted but no groups are populated because there is no upstream connector or user in the <code>client_credentials</code> flow — the token is built solely from the static client definition, which has no group membership. Because Apicurio Registry uses <code>groups</code> for RBAC, M2M clients authenticating with <code>client_credentials</code> have no assigned role.
 </td>
 </tr>
 </table>
@@ -1701,16 +1712,16 @@ Even with <code>client_credentials</code> working, the tokens <strong>do not inc
 </tr>
 </tbody>
 </table>
-<h4 id="_recommended_approach_for_kafka_serdes" class="discrete">Recommended approach for Kafka SerDes</h4>
 <div class="paragraph">
-<p>For the most common Kafka use case — <strong>consumers fetching schemas</strong> — you do not need <code>client_credentials</code> at all. Set <code>anonymousReadsEnabled: true</code> in the Apicurio Registry CR and the SerDes can read schemas without any token. This is the recommended approach for read-heavy workloads.</p>
+<div class="title">Recommended approach for Kafka SerDes</div>
+<p>For the most common Kafka use case — <strong>consumers fetching schemas</strong> — you do not need <code>client_credentials</code> at all. Set <code>anonymousReadsEnabled: true</code> in the Apicurio Registry CR and the SerDes can read schemas without any token. Anonymous reads are the recommended approach for read-heavy workloads.</p>
 </div>
 <div class="paragraph">
 <p>For <strong>schema registration</strong> (typically done by developers or CI/CD, not by Kafka producers at runtime), use the authorization code flow with the confidential client and a service user that has the right groups.</p>
 </div>
-<h4 id="_upcoming_fix_groups_on_static_clients" class="discrete">Upcoming fix: groups on static clients</h4>
 <div class="paragraph">
-<p>The lack of groups in <code>client_credentials</code> tokens has been reported in <a href="https://github.com/dexidp/dex/issues/4690">dexidp/dex#4690</a>, and a fix has been submitted in <a href="https://github.com/dexidp/dex/pull/4691">dexidp/dex#4691</a>. The fix adds a <code>clientCredentialsClaims</code> sub-struct to static client definitions, keeping identity attributes separate from core client fields:</p>
+<div class="title">Upcoming fix: groups on static clients</div>
+<p>The Dex project tracks the lack of groups in <code>client_credentials</code> tokens in <a href="https://github.com/dexidp/dex/issues/4690">dexidp/dex#4690</a>, and a proposed fix exists in <a href="https://github.com/dexidp/dex/pull/4691">dexidp/dex#4691</a>. The fix adds a <code>clientCredentialsClaims</code> sub-struct to static client definitions, keeping identity attributes separate from core client fields:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1724,8 +1735,8 @@ Even with <code>client_credentials</code> working, the tokens <strong>do not inc
 <div class="paragraph">
 <p>Track the PR for when this lands in a stable Dex release.</p>
 </div>
-<h4 id="_when_to_use_keycloak_instead" class="discrete">When to use Keycloak instead</h4>
 <div class="paragraph">
+<div class="title">When to use Keycloak instead</div>
 <p>If your deployment requires M2M <strong>write access</strong> with proper RBAC — for example, if Kafka producers register schemas at runtime, or if you have many CI/CD pipelines that need different permission levels — use Keycloak (or Auth0, Azure AD) instead of Dex. These providers support service account roles natively, so <code>client_credentials</code> tokens include all the claims Apicurio Registry needs.</p>
 </div>
 <div class="paragraph">
@@ -1744,14 +1755,18 @@ Even with <code>client_credentials</code> working, the tokens <strong>do not inc
 </li>
 </ul>
 </div>
-<h3 id="_dex_production_considerations" class="discrete">Dex production considerations</h3>
-<div class="paragraph">
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-security-dex-production_registry"><a class="anchor" href="#registry-security-dex-production_registry"></a>Dex production considerations</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>When running Dex in production, consider the following:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>TLS</strong>: Configure Dex with proper TLS via Ingress termination or its own certificate. In the Apicurio Registry CR, set <code>spec.app.auth.tls.tlsVerificationType</code> to <code>certificate</code> and provide a truststore if using a private CA.</p>
+<p><strong>TLS</strong>: Configure Dex with proper TLS by using Ingress termination or its own certificate. In the Apicurio Registry CR, set <code>spec.app.auth.tls.tlsVerificationType</code> to <code>certificate</code> and provide a truststore if using a private CA.</p>
 </li>
 <li>
 <p><strong>High availability</strong>: Run multiple Dex replicas. For better HA, switch Dex&#8217;s storage backend from Kubernetes CRDs to PostgreSQL.</p>
@@ -1760,15 +1775,19 @@ Even with <code>client_credentials</code> working, the tokens <strong>do not inc
 <p><strong>Network policies</strong>: Restrict access so that only Apicurio Registry pods and the ingress controller can reach Dex. Ensure Dex can reach your upstream identity providers.</p>
 </li>
 <li>
-<p><strong>Secret management</strong>: Store the Dex client secret securely using Kubernetes Secrets or a secrets manager such as HashiCorp Vault.</p>
+<p><strong>Secret management</strong>: Store the Dex client secret securely by using Kubernetes Secrets or a secrets manager such as HashiCorp Vault.</p>
 </li>
 </ul>
 </div>
-<h3 id="_dex_troubleshooting" class="discrete">Dex troubleshooting</h3>
-<div class="ulist">
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-security-dex-troubleshooting_registry"><a class="anchor" href="#registry-security-dex-troubleshooting_registry"></a>Dex troubleshooting</h2>
+<div class="sectionbody">
+<div class="ulist _abstract">
 <ul>
 <li>
-<p><strong>"Invalid client credentials" on UI login</strong>: The UI (<code>oidc-client-ts</code>) runs in the browser and cannot send a client secret. Use a <strong>public</strong> Dex client (<code>public: true</code>, no secret) for the UI. A confidential client will always fail.</p>
+<p><strong>"Invalid client credentials" on UI login</strong>: The UI (<code>oidc-client-ts</code>) runs in the browser and cannot send a client secret. Use a <strong>public</strong> Dex client (<code>public: true</code>, no secret) for the UI. A confidential client always fails.</p>
 </li>
 <li>
 <p><strong>403 Forbidden on API calls after UI login</strong>: Two common causes: (1) <strong>Audience mismatch</strong> — the UI gets tokens with <code>aud: "apicurio-registry-ui"</code> but the backend expects <code>aud: "apicurio-registry"</code>. Fix: set both <code>appClientId</code> and <code>uiClientId</code> to the same public client ID. (2) <strong>Missing <code>groups</code> scope</strong> — the default UI scope does not include <code>groups</code>. Fix: set <code>APICURIO_UI_AUTH_OIDC_SCOPE</code> to <code>openid profile email groups</code>.</p>
@@ -1783,7 +1802,7 @@ Even with <code>client_credentials</code> working, the tokens <strong>do not inc
 <p><strong>Silent token refresh returns 400</strong>: <code>oidc-client-ts</code> uses the current page URL (with stale <code>?code=&#8230;&#8203;&amp;state=&#8230;&#8203;</code> params) as the redirect URI. Fix: set <code>redirectUri</code> explicitly in the Apicurio Registry CR auth config.</p>
 </li>
 <li>
-<p><strong>"No end session endpoint" on logout</strong>: Dex does not implement OIDC RP-Initiated Logout. The local session is still cleared, but <code>signoutRedirect</code> fails. This is a known Dex limitation — the error is non-blocking.</p>
+<p><strong>"No end session endpoint" on logout</strong>: Dex does not implement OIDC RP-Initiated Logout. The local session is still cleared, but <code>signoutRedirect</code> fails. The error is a known Dex limitation and is non-blocking.</p>
 </li>
 <li>
 <p><strong>CORS errors in browser console</strong>: The UI cannot fetch <code>/.well-known/openid-configuration</code> from Dex. Add the UI route origin to <code>web.allowedOrigins</code> in the Dex config.</p>
@@ -1798,10 +1817,10 @@ Even with <code>client_credentials</code> working, the tokens <strong>do not inc
 <p><strong>Owner field is empty</strong>: Check that <code>QUARKUS_OIDC_TOKEN_PRINCIPAL_CLAIM</code> is set to a claim that Dex populates, such as <code>email</code>, <code>name</code>, or <code>sub</code>.</p>
 </li>
 <li>
-<p><strong>UI redirects to Dex but gets an error</strong>: Check Dex logs (<code>kubectl logs -n dex deploy/dex</code>). This is usually a redirect URI mismatch or connector misconfiguration.</p>
+<p><strong>UI redirects to Dex but gets an error</strong>: Check Dex logs (<code>kubectl logs -n dex deploy/dex</code>). The cause is usually a redirect URI mismatch or connector misconfiguration.</p>
 </li>
 <li>
-<p><strong><code>client_credentials</code> returns <code>unsupported_grant_type</code></strong>: This grant type was added in <a href="https://github.com/dexidp/dex/pull/4583">Dex PR #4583</a> (merged March 3, 2026) but is not included in v2.45.1 or earlier. You need Dex &gt;= v2.46.0 or a build from <code>master</code>.</p>
+<p><strong><code>client_credentials</code> returns <code>unsupported_grant_type</code></strong>: Dex added this grant type in <a href="https://github.com/dexidp/dex/pull/4583">Dex PR #4583</a> (merged March 3, 2026) but did not include it in v2.45.1 or earlier. You need Dex &gt;= v2.46.0 or a build from <code>master</code>.</p>
 </li>
 <li>
 <p><strong>"OIDC Server is not available"</strong>: The Apicurio Registry pod cannot reach Dex. Check DNS resolution, network policies, and TLS trust configuration.</p>
@@ -1812,13 +1831,13 @@ Even with <code>client_credentials</code> working, the tokens <strong>do not inc
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For details on configuring non-default user role names, see <a href="#registry-security-settings_registry">Apicurio Registry authentication and authorization configuration options</a>.</p>
+<p><a href="#registry-security-settings_registry">Apicurio Registry authentication and authorization configuration options</a></p>
 </li>
 <li>
-<p>For a complete list of supported connectors, see the <a href="https://dexidp.io/docs/connectors/">Dex connectors documentation</a>.</p>
+<p><a href="https://dexidp.io/docs/connectors/">Dex connectors documentation</a></p>
 </li>
 <li>
-<p>For details on Dex deployment and configuration, see the <a href="https://dexidp.io/docs/">Dex documentation</a>.</p>
+<p><a href="https://dexidp.io/docs/">Dex documentation</a></p>
 </li>
 </ul>
 </div>
@@ -1856,33 +1875,33 @@ All authentication and authorization options in Apicurio Registry are disabled b
 </table>
 </div>
 <div class="paragraph">
-<p>This chapter provides details on the following configuration options:</p>
+<p>You can configure the following options:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#registry-security-authn-keycloak">Apicurio Registry authentication by using OpenID Connect with Keycloak</a></p>
+<p><a href="#registry-security-authn-keycloak_registry">Apicurio Registry authentication by using OpenID Connect with Keycloak</a></p>
 </li>
 <li>
-<p><a href="#registry-security-authn-http">Apicurio Registry authentication by using HTTP basic</a></p>
+<p><a href="#registry-security-authn-http_registry">Apicurio Registry authentication by using HTTP basic</a></p>
 </li>
 <li>
-<p><a href="#registry-security-rbac-enabled">Apicurio Registry role-based authorization</a></p>
+<p><a href="#registry-security-rbac-enabled_registry">Apicurio Registry role-based authorization</a></p>
 </li>
 <li>
-<p><a href="#registry-security-obac-enabled">Apicurio Registry owner-only authorization</a></p>
+<p><a href="#registry-security-obac-enabled_registry">Apicurio Registry owner-only authorization</a></p>
 </li>
 <li>
-<p><a href="#registry-security-auth-read">Apicurio Registry authenticated read access</a></p>
+<p><a href="#registry-security-auth-read_registry">Apicurio Registry authenticated read access</a></p>
 </li>
 <li>
-<p><a href="#registry-security-anon-read">Apicurio Registry anonymous read-only access</a></p>
+<p><a href="#registry-security-anon-read_registry">Apicurio Registry anonymous read-only access</a></p>
 </li>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="registry-security-authn-keycloak"><a class="anchor" href="#registry-security-authn-keycloak"></a>Apicurio Registry authentication by using OpenID Connect with Keycloak</h3>
-<div class="paragraph">
+<h3 id="registry-security-authn-keycloak_registry"><a class="anchor" href="#registry-security-authn-keycloak_registry"></a>Apicurio Registry authentication by using OpenID Connect with Keycloak</h3>
+<div class="paragraph _abstract">
 <p>You can set the following environment variables to configure authentication for the Apicurio Registry web console and API with Keycloak:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
@@ -1904,7 +1923,7 @@ All authentication and authorization options in Apicurio Registry are disabled b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_TENANT_ENABLED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables authentication for Apicurio Registry. When set to <code>true</code>, the environment variables that follow are required for authentication using Keycloak.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables authentication for Apicurio Registry. When set to <code>true</code>, the environment variables that follow are required for authentication by using Keycloak.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
@@ -1928,7 +1947,7 @@ All authentication and authorization options in Apicurio Registry are disabled b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_TLS_TRUST_STORE_FILE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the file path to the TLS trust store used by Quarkus for securing OpenID Connect (OIDC) communications. The trust store can be populated with the trusted certificates needed to establish secure TLS connections with the OIDC provider.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The file path to the TLS trust store that Quarkus uses to secure OpenID Connect (OIDC) communications. Populate the trust store with the trusted certificates that are needed to establish secure TLS connections with the OIDC provider.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
@@ -1948,9 +1967,9 @@ All authentication and authorization options in Apicurio Registry are disabled b
 </table>
 </div>
 <div class="sect2">
-<h3 id="registry-security-authn-http"><a class="anchor" href="#registry-security-authn-http"></a>Apicurio Registry authentication by using HTTP basic</h3>
-<div class="paragraph">
-<p>By default, Apicurio Registry supports authentication by using OpenID Connect. Users or API clients must obtain an access token to make authenticated calls to the Apicurio Registry REST API.  However, because some tools do not support OpenID Connect, you can also configure Apicurio Registry to support HTTP basic authentication by setting the following configuration options to <code>true</code>:</p>
+<h3 id="registry-security-authn-http_registry"><a class="anchor" href="#registry-security-authn-http_registry"></a>Apicurio Registry authentication by using HTTP basic</h3>
+<div class="paragraph _abstract">
+<p>By default, Apicurio Registry supports authentication by using OpenID Connect. Users or API clients must obtain an access token to make authenticated calls to the Apicurio Registry REST API. However, because some tools do not support OpenID Connect, you can also configure Apicurio Registry to support HTTP basic authentication by setting the following configuration options to <code>true</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 13. Configuration for Apicurio Registry HTTP basic authentication</caption>
@@ -1985,10 +2004,10 @@ All authentication and authorization options in Apicurio Registry are disabled b
 </table>
 <div class="paragraph">
 <div class="title">Apicurio Registry HTTP basic client credentials cache expiry</div>
-<p>You can also configure the HTTP basic client credentials cache expiry time. By default, when using HTTP basic authentication, Apicurio Registry caches JWT tokens, and does not issue a new token when there is no need. You can configure the cache expiry time for JWT tokens, which is set to 10 mins by default.</p>
+<p>You can also configure the HTTP basic client credentials cache expiry time. By default, when you use HTTP basic authentication, Apicurio Registry caches JWT tokens and does not issue a new token when there is no need. You can configure the cache expiry time for JWT tokens, which is set to 10 mins by default.</p>
 </div>
 <div class="paragraph">
-<p>When using Keycloak, it is best to set this configuration to your Keycloak JWT expiry time minus one minute. For example, if you have the expiry time set to <code>5</code> mins in Keycloak, you should set the following configuration option to <code>4</code> mins:</p>
+<p>When you use Keycloak, set this configuration to your Keycloak JWT expiry time minus one minute. For example, if you have the expiry time set to <code>5</code> mins in Keycloak, set the following configuration option to <code>4</code> mins:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 14. Configuration for HTTP basic client credentials cache expiry</caption>
@@ -2017,8 +2036,8 @@ All authentication and authorization options in Apicurio Registry are disabled b
 </table>
 </div>
 <div class="sect2">
-<h3 id="registry-security-rbac-enabled"><a class="anchor" href="#registry-security-rbac-enabled"></a>Apicurio Registry role-based authorization</h3>
-<div class="paragraph">
+<h3 id="registry-security-rbac-enabled_registry"><a class="anchor" href="#registry-security-rbac-enabled_registry"></a>Apicurio Registry role-based authorization</h3>
+<div class="paragraph _abstract">
 <p>You can set the following options to <code>true</code> to enable role-based authorization in Apicurio Registry:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -2057,9 +2076,9 @@ All authentication and authorization options in Apicurio Registry are disabled b
 </div>
 <div class="paragraph">
 <div class="title">Using roles assigned in Keycloak</div>
-<p>To enable using roles assigned by Keycloak, set the following environment variables:</p>
+<p>To use roles assigned in Keycloak, set the following environment variables:</p>
 </div>
-<table id="registry-security-rbac-keycloak-settings" class="tableblock frame-all grid-all stretch table-expandable">
+<table id="registry-security-rbac-keycloak-settings_registry" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 16. Configuration for Apicurio Registry role-based authorization by using Keycloak</caption>
 <colgroup>
 <col style="width: 35.2941%;">
@@ -2103,8 +2122,8 @@ All authentication and authorization options in Apicurio Registry are disabled b
 </tbody>
 </table>
 <div class="paragraph">
-<p>When Apicurio Registry is configured to use roles from Keycloak, you must assign Apicurio Registry users to at least one
-of the following user roles in Keycloak. However, you can configure different user role names by using the environment variables in <a href="#registry-security-rbac-keycloak-settings">Configuration for Apicurio Registry role-based authorization by using Keycloak</a>.</p>
+<p>When you configure Apicurio Registry to use roles from Keycloak, you must assign Apicurio Registry users to at least one
+of the following user roles in Keycloak. However, you can configure different user role names by using the environment variables in <a href="#registry-security-rbac-keycloak-settings_registry">Configuration for Apicurio Registry role-based authorization by using Keycloak</a>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 17. Apicurio Registry roles for authentication and authorization</caption>
@@ -2150,7 +2169,7 @@ of the following user roles in Keycloak. However, you can configure different us
 </table>
 <div class="paragraph">
 <div class="title">Managing roles directly in Apicurio Registry</div>
-<p>To enable using roles managed internally by Apicurio Registry, set the following environment variable:</p>
+<p>To use roles managed internally by Apicurio Registry, set the following environment variable:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 18. Configuration for Apicurio Registry role-based authorization by using internal role mappings</caption>
@@ -2178,16 +2197,16 @@ of the following user roles in Keycloak. However, you can configure different us
 </tbody>
 </table>
 <div class="paragraph">
-<p>When using internally managed role mappings, users can be assigned a role by using the <code>/admin/roleMappings</code>
-endpoint in the Apicurio Registry REST API.  For more details, see <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<p>When you use internally managed role mappings, you can assign a role to users by using the <code>/admin/roleMappings</code>
+endpoint in the Apicurio Registry REST API. For more details, see <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
 </div>
 <div class="paragraph">
-<p>Users can be granted exactly one role: <code>ADMIN</code>, <code>DEVELOPER</code>, or <code>READ_ONLY</code>. Only users with admin
-privileges can grant access to other users.</p>
+<p>You can grant each user exactly one role: <code>ADMIN</code>, <code>DEVELOPER</code>, or <code>READ_ONLY</code>. Only admin
+users can grant access to other users.</p>
 </div>
 <div class="paragraph">
 <div class="title">Apicurio Registry admin-override configuration</div>
-<p>Because there are no default admin users in Apicurio Registry, it is usually helpful to configure another way for users to be identified as admins. You can configure this admin-override feature by using the following environment variables:</p>
+<p>Because Apicurio Registry has no default admin users, you can configure an alternative way to identify admins. Configure the admin-override feature by using the following environment variables:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 19. Configuration for Apicurio Registry admin-override</caption>
@@ -2214,13 +2233,13 @@ privileges can grant access to other users.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ADMIN_OVERRIDE_FROM</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Where to look for admin-override information.  Only <code>token</code> is currently supported.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where to look for admin-override information. Only <code>token</code> is currently supported.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>token</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ADMIN_OVERRIDE_TYPE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The type of information used to determine if a user is an admin.  Values depend on the value of the FROM variable, for example, <code>role</code> or <code>claim</code> when FROM is <code>token</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The type of information used to determine whether a user is an admin. Values depend on the value of the FROM variable, for example, <code>role</code> or <code>claim</code> when FROM is <code>token</code>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>role</code></p></td>
 </tr>
@@ -2246,13 +2265,13 @@ privileges can grant access to other users.</p>
 </table>
 <div class="paragraph">
 <p>For example, you can use this admin-override feature to assign the <code>sr-admin</code> role to a single user
-in Keycloak, which grants that user the admin role.  That user can then use the <code>/admin/roleMappings</code>
+in Keycloak, which grants that user the admin role. That user can then use the <code>/admin/roleMappings</code>
 REST API (or associated UI) to grant roles to additional users (including additional admins).</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="registry-security-obac-enabled"><a class="anchor" href="#registry-security-obac-enabled"></a>Apicurio Registry owner-only authorization</h3>
-<div class="paragraph">
+<h3 id="registry-security-obac-enabled_registry"><a class="anchor" href="#registry-security-obac-enabled_registry"></a>Apicurio Registry owner-only authorization</h3>
+<div class="paragraph _abstract">
 <p>You can set the following options to <code>true</code> to enable owner-only authorization for updates to artifacts or artifact groups in Apicurio Registry:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -2300,8 +2319,8 @@ REST API (or associated UI) to grant roles to additional users (including additi
 </div>
 </div>
 <div class="sect2">
-<h3 id="registry-security-auth-read"><a class="anchor" href="#registry-security-auth-read"></a>Apicurio Registry authenticated read access</h3>
-<div class="paragraph">
+<h3 id="registry-security-auth-read_registry"><a class="anchor" href="#registry-security-auth-read_registry"></a>Apicurio Registry authenticated read access</h3>
+<div class="paragraph _abstract">
 <p>When the authenticated read access option is enabled, Apicurio Registry grants at least read-only access to requests from any authenticated user in the same organization, regardless of their user role.</p>
 </div>
 <div class="paragraph">
@@ -2339,12 +2358,12 @@ REST API (or associated UI) to grant roles to additional users (including additi
 </tbody>
 </table>
 <div class="paragraph">
-<p>For more details, see <a href="#registry-security-rbac-enabled">Apicurio Registry role-based authorization</a>.</p>
+<p>For more details, see <a href="#registry-security-rbac-enabled_registry">Apicurio Registry role-based authorization</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="registry-security-anon-read"><a class="anchor" href="#registry-security-anon-read"></a>Apicurio Registry anonymous read-only access</h3>
-<div class="paragraph">
+<h3 id="registry-security-anon-read_registry"><a class="anchor" href="#registry-security-anon-read_registry"></a>Apicurio Registry anonymous read-only access</h3>
+<div class="paragraph _abstract">
 <p>In addition to the two main types of authorization (role-based and owner-based authorization), Apicurio Registry
 supports an anonymous read-only access option.</p>
 </div>
@@ -2387,10 +2406,10 @@ calls to the REST API, set the following options to <code>true</code>:</p>
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For an example of how to set environment variables in your Apicurio Registry deployment on OpenShift, see <a href="#configuring-liveness-readiness-probes_registry">[configuring-liveness-readiness-probes_registry]</a></p>
+<p><a href="#configuring-liveness-readiness-probes_registry">[configuring-liveness-readiness-probes_registry]</a></p>
 </li>
 <li>
-<p>For details on configuring custom authentication for Apicurio Registry, the see <a href="https://quarkus.io/guides/security-openid-connect-web-authentication">Quarkus Open ID Connect documentation</a></p>
+<p><a href="https://quarkus.io/guides/security-openid-connect-web-authentication">Quarkus Open ID Connect documentation</a></p>
 </li>
 </ul>
 </div>
@@ -2414,27 +2433,33 @@ Apicurio Registry includes built-in CORS support based on the Quarkus HTTP CORS 
 <p><a href="#registry-cors-defaults_registry">Apicurio Registry CORS defaults</a></p>
 </li>
 <li>
-<p><a href="#registry-cors-env-vars_registry">Configuring CORS environment variables</a></p>
+<p><a href="#registry-cors-env-vars_registry">CORS environment variables</a></p>
 </li>
 <li>
-<p><a href="#registry-cors-local-dev_registry">Configuring CORS for local development</a></p>
+<p><a href="#registry-cors-local-dev_registry">CORS configuration for local development</a></p>
 </li>
 <li>
-<p><a href="#registry-cors-production_registry">Configuring CORS for production</a></p>
+<p><a href="#registry-cors-production_registry">CORS configuration for production</a></p>
 </li>
 <li>
-<p><a href="#registry-cors-authentication_registry">Configuring CORS with authentication</a></p>
+<p><a href="#registry-cors-authentication_registry">CORS configuration with authentication</a></p>
 </li>
 <li>
-<p><a href="#registry-cors-operator_registry">Configuring CORS with the Kubernetes Operator</a></p>
+<p><a href="#registry-cors-operator_registry">CORS configuration with the Kubernetes Operator</a></p>
 </li>
 <li>
 <p><a href="#registry-cors-troubleshooting_registry">Troubleshooting CORS errors</a></p>
 </li>
+<li>
+<p><a href="#registry-cors-diagnosing_registry">Diagnosing CORS errors with browser developer tools</a></p>
+</li>
 </ul>
 </div>
-<div class="sect2">
-<h3 id="registry-cors-understanding_registry"><a class="anchor" href="#registry-cors-understanding_registry"></a>Understanding CORS</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-cors-understanding_registry"><a class="anchor" href="#registry-cors-understanding_registry"></a>Understanding CORS</h2>
+<div class="sectionbody">
 <div class="paragraph _abstract">
 <p>Browsers enforce a same-origin policy that prevents a web page served from one origin (for example, <code><a href="https://my-app.example.com" class="bare">https://my-app.example.com</a></code>) from making HTTP requests to a different origin (for example, <code><a href="https://registry.example.com" class="bare">https://registry.example.com</a></code>).
 CORS is the mechanism by which a server explicitly allows cross-origin requests by including specific HTTP response headers such as <code>Access-Control-Allow-Origin</code>.</p>
@@ -2476,8 +2501,10 @@ No 'Access-Control-Allow-Origin' header is present on the requested resource.</p
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="registry-cors-defaults_registry"><a class="anchor" href="#registry-cors-defaults_registry"></a>Apicurio Registry CORS defaults</h3>
+</div>
+<div class="sect1">
+<h2 id="registry-cors-defaults_registry"><a class="anchor" href="#registry-cors-defaults_registry"></a>Apicurio Registry CORS defaults</h2>
+<div class="sectionbody">
 <div class="paragraph _abstract">
 <p>Apicurio Registry ships with CORS enabled by default, configured for the bundled Apicurio Registry web console.
 The default settings from <code>application.properties</code> are:</p>
@@ -2519,8 +2546,10 @@ If your application runs on a different host, port, or protocol, Apicurio Regist
 You must add your application&#8217;s origin to the allowed list.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="registry-cors-env-vars_registry"><a class="anchor" href="#registry-cors-env-vars_registry"></a>Configuring CORS environment variables</h3>
+</div>
+<div class="sect1">
+<h2 id="registry-cors-env-vars_registry"><a class="anchor" href="#registry-cors-env-vars_registry"></a>CORS environment variables</h2>
+<div class="sectionbody">
 <div class="paragraph _abstract">
 <p>You can override the default CORS settings by using environment variables.
 Environment variables are the recommended approach because they let you configure Apicurio Registry without modifying configuration files.</p>
@@ -2578,8 +2607,10 @@ Setting <code>QUARKUS_HTTP_CORS_ORIGINS</code> by using an environment variable 
 <p>For the full set of Quarkus CORS options, see the <a href="https://quarkus.io/guides/http-reference#cors-filter">Quarkus HTTP Reference - CORS Filter</a>.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="registry-cors-local-dev_registry"><a class="anchor" href="#registry-cors-local-dev_registry"></a>Configuring CORS for local development</h3>
+</div>
+<div class="sect1">
+<h2 id="registry-cors-local-dev_registry"><a class="anchor" href="#registry-cors-local-dev_registry"></a>CORS configuration for local development</h2>
+<div class="sectionbody">
 <div class="paragraph _abstract">
 <p>During local development, you can allow all origins by using <code>*</code> as the value for <code>QUARKUS_HTTP_CORS_ORIGINS</code>.</p>
 </div>
@@ -2633,14 +2664,16 @@ console.log(data);</code></pre>
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Using <code>QUARKUS_HTTP_CORS_ORIGINS: "*"</code> is acceptable for local development but should not be used in production. A wildcard origin allows any website to make requests to your Apicurio Registry instance.
+Using <code>QUARKUS_HTTP_CORS_ORIGINS: "*"</code> is acceptable for local development but must not be used in production. A wildcard origin means any website can make requests to your Apicurio Registry instance.
 </td>
 </tr>
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="registry-cors-production_registry"><a class="anchor" href="#registry-cors-production_registry"></a>Configuring CORS for production</h3>
+</div>
+<div class="sect1">
+<h2 id="registry-cors-production_registry"><a class="anchor" href="#registry-cors-production_registry"></a>CORS configuration for production</h2>
+<div class="sectionbody">
 <div class="paragraph _abstract">
 <p>In production, explicitly list the origins that are allowed to access the Apicurio Registry REST API.</p>
 </div>
@@ -2651,7 +2684,7 @@ Using <code>QUARKUS_HTTP_CORS_ORIGINS: "*"</code> is acceptable for local develo
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you deploy Apicurio Registry by using the Kubernetes Operator, see <a href="#registry-cors-operator_registry">Configuring CORS with the Kubernetes Operator</a>. The operator includes automatic CORS origin detection based on your Ingress configuration, and you often do not need to configure CORS manually.
+If you deploy Apicurio Registry by using the Kubernetes Operator, see <a href="#registry-cors-operator_registry">CORS configuration with the Kubernetes Operator</a>. The operator includes automatic CORS origin detection based on your Ingress configuration, and you often do not need to configure CORS manually.
 </td>
 </tr>
 </table>
@@ -2685,8 +2718,10 @@ If you deploy Apicurio Registry by using the Kubernetes Operator, see <a href="#
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="registry-cors-authentication_registry"><a class="anchor" href="#registry-cors-authentication_registry"></a>Configuring CORS with authentication</h3>
+</div>
+<div class="sect1">
+<h2 id="registry-cors-authentication_registry"><a class="anchor" href="#registry-cors-authentication_registry"></a>CORS configuration with authentication</h2>
+<div class="sectionbody">
 <div class="paragraph _abstract">
 <p>When you use OIDC authentication (for example, Keycloak), CORS and authentication work together.
 Your browser application must send an <code>Authorization</code> header with a bearer token, and the Apicurio Registry CORS configuration must allow that header for authenticated cross-origin requests to succeed.</p>
@@ -2695,7 +2730,7 @@ Your browser application must send an <code>Authorization</code> header with a b
 <p>The <code>authorization</code> header is already included in the default allowed headers, so you typically only need to configure the allowed origins.</p>
 </div>
 <div class="paragraph">
-<p>Use a Docker Compose configuration like this example to run Apicurio Registry with Keycloak and CORS configured for browser-based applications:</p>
+<p>Use a Docker Compose configuration such as this example to run Apicurio Registry with Keycloak and CORS configured for browser-based applications:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2776,8 +2811,10 @@ Authentication is a complex topic with many possible configurations (Keycloak, M
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="registry-cors-operator_registry"><a class="anchor" href="#registry-cors-operator_registry"></a>Configuring CORS with the Kubernetes Operator</h3>
+</div>
+<div class="sect1">
+<h2 id="registry-cors-operator_registry"><a class="anchor" href="#registry-cors-operator_registry"></a>CORS configuration with the Kubernetes Operator</h2>
+<div class="sectionbody">
 <div class="paragraph _abstract">
 <p>When you deploy Apicurio Registry by using the Kubernetes Operator, you can set CORS environment variables in the <code>ApicurioRegistry3</code> custom resource.</p>
 </div>
@@ -2829,8 +2866,10 @@ This automatic CORS detection works whether your networking layer uses Kubernete
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="registry-cors-troubleshooting_registry"><a class="anchor" href="#registry-cors-troubleshooting_registry"></a>Troubleshooting CORS errors</h3>
+</div>
+<div class="sect1">
+<h2 id="registry-cors-troubleshooting_registry"><a class="anchor" href="#registry-cors-troubleshooting_registry"></a>Troubleshooting CORS errors</h2>
+<div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch _abstract">
 <caption class="title">Table 25. Common CORS errors and fixes</caption>
 <colgroup>
@@ -2868,8 +2907,11 @@ This automatic CORS detection works whether your networking layer uses Kubernete
 </tr>
 </tbody>
 </table>
-<div class="sect3">
-<h4 id="registry-cors-diagnosing_registry"><a class="anchor" href="#registry-cors-diagnosing_registry"></a>Diagnosing CORS errors with browser developer tools</h4>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-cors-diagnosing_registry"><a class="anchor" href="#registry-cors-diagnosing_registry"></a>Diagnosing CORS errors with browser developer tools</h2>
+<div class="sectionbody">
 <div class="paragraph _abstract">
 <p>You can use your browser developer tools to identify the cause of CORS errors.</p>
 </div>
@@ -2917,8 +2959,6 @@ This automatic CORS detection works whether your networking layer uses Kubernete
 <p><a href="#registry-security-settings_registry">Apicurio Registry authentication and authorization configuration options</a></p>
 </li>
 </ul>
-</div>
-</div>
 </div>
 </div>
 </div>
