@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>LLM Artifact Types Implementation Guide :: Apicurio Registry</title>
+    <title>LLM artifact types implementation guide :: Apicurio Registry</title>
     <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-llm-artifact-types-implementation.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
@@ -216,13 +216,22 @@
     <span class="nav-text">AI Agent Integration</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-a2a-features.html">A2A Protocol Features in Apicurio Registry</a>
+    <a class="nav-link" href="assembly-agent-registry-quickstart.html">Agent registry quick start</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP Tool Definition Features in Apicurio Registry</a>
+    <a class="nav-link" href="assembly-a2a-features.html">A2A protocol features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP tool definition features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-server-integration.html">MCP server integration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM Artifact Types Implementation Guide</a>
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a>
   </li>
 </ul>
   </li>
@@ -338,7 +347,7 @@
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
     <li>AI Agent Integration</li>
-    <li><a href="assembly-llm-artifact-types-implementation.html">LLM Artifact Types Implementation Guide</a></li>
+    <li><a href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -359,31 +368,34 @@
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">LLM Artifact Types Implementation Guide</h1>
+<h1 class="page">LLM artifact types implementation guide</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter provides implementation documentation for the built-in AI/ML artifact types (MODEL_SCHEMA and PROMPT_TEMPLATE) in Apicurio Registry. It covers the architecture, JSON Schema backing, MCP integration, and implementation details.</p>
+<p>Apicurio Registry includes built-in AI/ML artifact types (MODEL_SCHEMA and PROMPT_TEMPLATE). You can learn about the architecture, JSON Schema backing, MCP integration, and implementation details for these types.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#llm-artifact-types-architecture_registry">Architecture Overview</a></p>
+<p><a href="#llm-artifact-types-architecture_registry">Architecture overview</a></p>
 </li>
 <li>
-<p><a href="#llm-artifact-types-json-schema-backing_registry">JSON Schema Backing and Industry Standards</a></p>
+<p><a href="#llm-artifact-types-json-schema-backing_registry">JSON Schema backing and industry standards</a></p>
 </li>
 <li>
-<p><a href="#llm-artifact-types-mcp-integration_registry">MCP (Model Context Protocol) Integration</a></p>
+<p><a href="#llm-artifact-types-mcp-integration_registry">MCP (Model Context Protocol) integration</a></p>
 </li>
 <li>
-<p><a href="#llm-artifact-types-prompt-template-implementation_registry">PROMPT_TEMPLATE Implementation Details</a></p>
+<p><a href="#llm-artifact-types-prompt-template-implementation_registry">PROMPT_TEMPLATE implementation details</a></p>
 </li>
 <li>
-<p><a href="#llm-artifact-types-model-schema-implementation_registry">MODEL_SCHEMA Implementation Details</a></p>
+<p><a href="#llm-artifact-types-model-schema-implementation_registry">MODEL_SCHEMA implementation details</a></p>
 </li>
 <li>
-<p><a href="#llm-artifact-types-prompt-rendering-service_registry">Prompt Rendering Service</a></p>
+<p><a href="#llm-artifact-types-prompt-rendering-service_registry">Prompt rendering service</a></p>
+</li>
+<li>
+<p><a href="#llm-artifact-types-customization_registry">LLM artifact type customization</a></p>
 </li>
 </ul>
 </div>
@@ -391,7 +403,7 @@
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For usage documentation, see <a href="#registry-artifact-types_registry">[registry-artifact-types_registry]</a></p>
+<p><a href="assembly-artifact-reference.html" class="page">Apicurio Registry artifact reference</a></p>
 </li>
 <li>
 <p><a href="https://prompty.ai/specification/page/">Microsoft Prompty Specification</a></p>
@@ -407,18 +419,17 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="llm-artifact-types-architecture_registry"><a class="anchor" href="#llm-artifact-types-architecture_registry"></a>Architecture Overview</h2>
+<h2 id="llm-artifact-types-architecture_registry"><a class="anchor" href="#llm-artifact-types-architecture_registry"></a>Architecture overview</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Apicurio Registry implements the LLM artifact types as first-class Java artifact types, following the same pattern as other built-in types such as Avro, JSON Schema, and Agent Card.</p>
+<div class="paragraph _abstract">
+<p>The LLM artifact types are first-class Java artifact types in Apicurio Registry. They follow the same pattern as other built-in types such as Avro, JSON Schema, and Agent Card.</p>
 </div>
-<div class="sect2">
-<h3 id="_native_java_artifact_type_system"><a class="anchor" href="#_native_java_artifact_type_system"></a>Native Java Artifact Type System</h3>
 <div class="paragraph">
-<p>The LLM artifact types are implemented using the following components:</p>
+<div class="title">Native Java artifact type system</div>
+<p>The LLM artifact types consist of the following components:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Architecture Components</caption>
+<caption class="title">Table 1. Architecture components</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -431,27 +442,25 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Java Implementation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Located in <code>schema-util/common/src/main/java/io/apicurio/registry/</code>. Contains accepters, validators, compatibility checkers, reference finders, dereferencers, content extractors, and canonicalizers for each type.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java implementation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Source files in <code>schema-util/common/src/main/java/io/apicurio/registry/</code>, including accepters, validators, compatibility checkers, reference finders, dereferencers, content extractors, and canonicalizers for each type.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Provider Wiring</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provider wiring</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ModelSchemaArtifactTypeUtilProvider</code> and <code>PromptTemplateArtifactTypeUtilProvider</code> in <code>schema-util/util-provider/</code> wire each type&#8217;s implementations together and register them as standard artifact types.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prompt Rendering Service</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Java service (<code>PromptRenderingService</code>) provides server-side template rendering for PROMPT_TEMPLATE artifacts.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prompt rendering service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java service (<code>PromptRenderingService</code>) for server-side template rendering of PROMPT_TEMPLATE artifacts.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_handler_functions"><a class="anchor" href="#_handler_functions"></a>Handler Functions</h3>
 <div class="paragraph">
-<p>Each artifact type implements the following handler functions (as Java classes in <code>schema-util/common/</code>):</p>
+<div class="title">Handler functions</div>
+<p>Each artifact type includes the following handler functions (as Java classes in <code>schema-util/common/</code>):</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Artifact Type Handler Functions</caption>
+<caption class="title">Table 2. Artifact type handler functions</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -465,7 +474,7 @@
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>acceptsContent()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Determines if content matches this artifact type based on structure and content type.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Checks whether content matches this artifact type based on structure and content type.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>validate()</code></p></td>
@@ -481,7 +490,7 @@
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>findExternalReferences()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Locates <code>$ref</code> references to external schemas.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifies <code>$ref</code> references to external schemas.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>dereference()</code></p></td>
@@ -493,26 +502,24 @@
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>validateReferences()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ensures all references are properly mapped.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verifies that all references are properly mapped.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="llm-artifact-types-json-schema-backing_registry"><a class="anchor" href="#llm-artifact-types-json-schema-backing_registry"></a>JSON Schema Backing and Industry Standards</h2>
+<h2 id="llm-artifact-types-json-schema-backing_registry"><a class="anchor" href="#llm-artifact-types-json-schema-backing_registry"></a>JSON Schema backing and industry standards</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Apicurio Registry provides formal JSON Schemas for PROMPT_TEMPLATE and MODEL_SCHEMA artifact types, aligned with industry standards for interoperability.</p>
+<div class="paragraph _abstract">
+<p>The PROMPT_TEMPLATE and MODEL_SCHEMA artifact types in Apicurio Registry have formal JSON Schemas, aligned with industry standards for interoperability.</p>
 </div>
-<div class="sect2">
-<h3 id="_schema_locations"><a class="anchor" href="#_schema_locations"></a>Schema Locations</h3>
 <div class="paragraph">
-<p>The JSON Schemas are located in <code>app/src/main/resources/schemas/</code>:</p>
+<div class="title">Schema locations</div>
+<p>You can find the JSON Schemas in <code>app/src/main/resources/schemas/</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. JSON Schema Files</caption>
+<caption class="title">Table 3. JSON Schema files</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -534,14 +541,12 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_prompt_template_schema_prompty_alignment"><a class="anchor" href="#_prompt_template_schema_prompty_alignment"></a>PROMPT_TEMPLATE Schema - Prompty Alignment</h3>
 <div class="paragraph">
+<div class="title">PROMPT_TEMPLATE schema - Prompty alignment</div>
 <p>The PROMPT_TEMPLATE schema is aligned with the <a href="https://prompty.ai/specification/page/">Microsoft Prompty specification</a> for interoperability with the Azure AI ecosystem.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Prompty Field Mappings</caption>
+<caption class="title">Table 4. Prompty field mappings</caption>
 <colgroup>
 <col style="width: 28.5714%;">
 <col style="width: 28.5714%;">
@@ -549,8 +554,8 @@
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Apicurio Field</th>
-<th class="tableblock halign-left valign-top">Prompty Field</th>
+<th class="tableblock halign-left valign-top">Apicurio field</th>
+<th class="tableblock halign-left valign-top">Prompty field</th>
 <th class="tableblock halign-left valign-top">Notes</th>
 </tr>
 </thead>
@@ -593,7 +598,7 @@
 </tbody>
 </table>
 <div class="listingblock">
-<div class="title">PROMPT_TEMPLATE with Prompty-aligned Fields</div>
+<div class="title">PROMPT_TEMPLATE with Prompty-aligned fields</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">templateId: sentiment-analysis
 name: Sentiment Analysis Prompt
@@ -625,14 +630,12 @@ variables:
     required: true</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_model_schema_schema_model_card_toolkit_alignment"><a class="anchor" href="#_model_schema_schema_model_card_toolkit_alignment"></a>MODEL_SCHEMA Schema - Model Card Toolkit Alignment</h3>
 <div class="paragraph">
+<div class="title">MODEL_SCHEMA schema - Model Card Toolkit alignment</div>
 <p>The MODEL_SCHEMA is aligned with the <a href="https://github.com/tensorflow/model-card-toolkit">Google Model Card Toolkit</a> for governance and compliance use cases.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Model Card Field Mappings</caption>
+<caption class="title">Table 5. Model Card field mappings</caption>
 <colgroup>
 <col style="width: 28.5714%;">
 <col style="width: 28.5714%;">
@@ -640,8 +643,8 @@ variables:
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Apicurio Field</th>
-<th class="tableblock halign-left valign-top">Model Card Field</th>
+<th class="tableblock halign-left valign-top">Apicurio field</th>
+<th class="tableblock halign-left valign-top">Model Card field</th>
 <th class="tableblock halign-left valign-top">Notes</th>
 </tr>
 </thead>
@@ -689,7 +692,7 @@ variables:
 </tbody>
 </table>
 <div class="listingblock">
-<div class="title">MODEL_SCHEMA with Model Card-aligned Sections</div>
+<div class="title">MODEL_SCHEMA with Model Card-aligned sections</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "modelId": "claude-3-opus",
@@ -715,16 +718,14 @@ variables:
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="llm-artifact-types-mcp-integration_registry"><a class="anchor" href="#llm-artifact-types-mcp-integration_registry"></a>MCP (Model Context Protocol) Integration</h2>
+<h2 id="llm-artifact-types-mcp-integration_registry"><a class="anchor" href="#llm-artifact-types-mcp-integration_registry"></a>MCP (Model Context Protocol) integration</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Apicurio Registry integrates with the <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a> to expose PROMPT_TEMPLATE artifacts as MCP prompts, enabling AI agents to discover and use prompt templates.</p>
+<div class="paragraph _abstract">
+<p>Apicurio Registry supports the <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a> and makes PROMPT_TEMPLATE artifacts available as MCP prompts. AI agents can discover and use prompt templates through MCP.</p>
 </div>
-<div class="sect2">
-<h3 id="_mcp_extension_in_prompt_template"><a class="anchor" href="#_mcp_extension_in_prompt_template"></a>MCP Extension in PROMPT_TEMPLATE</h3>
 <div class="paragraph">
+<div class="title">MCP extension in PROMPT_TEMPLATE</div>
 <p>Prompt templates can include an <code>mcp</code> section to enable MCP protocol integration:</p>
 </div>
 <div class="listingblock">
@@ -751,7 +752,7 @@ mcp:
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. MCP Configuration Fields</caption>
+<caption class="title">Table 6. MCP configuration fields</caption>
 <colgroup>
 <col style="width: 28.5714%;">
 <col style="width: 14.2857%;">
@@ -768,7 +769,7 @@ mcp:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to expose this prompt via MCP (default: false)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to make this prompt available through MCP (default: false)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
@@ -787,14 +788,12 @@ mcp:
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_mcp_server_module"><a class="anchor" href="#_mcp_server_module"></a>MCP Server Module</h3>
 <div class="paragraph">
-<p>The <code>mcp/</code> module provides an MCP Server that exposes registry prompts:</p>
+<div class="title">MCP server module</div>
+<p>The <code>mcp/</code> module contains an MCP Server for registry prompts:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. MCP Server Components</caption>
+<caption class="title">Table 7. MCP server components</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -808,7 +807,7 @@ mcp:
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>PromptTemplateMCPServer.java</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">MCP Server exposing prompt templates as MCP prompts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP Server that makes prompt templates available as MCP prompts</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>PromptTemplateConverter.java</code></p></td>
@@ -816,14 +815,12 @@ mcp:
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_mcp_tools_and_prompts"><a class="anchor" href="#_mcp_tools_and_prompts"></a>MCP Tools and Prompts</h3>
 <div class="paragraph">
-<p>The MCP Server exposes these tools and prompts:</p>
+<div class="title">MCP tools and prompts</div>
+<p>The MCP Server includes the following tools and prompts:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. MCP Tools</caption>
+<caption class="title">Table 8. MCP tools</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -850,7 +847,7 @@ mcp:
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. MCP Prompts</caption>
+<caption class="title">Table 9. MCP prompts</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -868,10 +865,8 @@ mcp:
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_using_the_mcp_server"><a class="anchor" href="#_using_the_mcp_server"></a>Using the MCP Server</h3>
 <div class="paragraph">
+<div class="title">MCP server usage</div>
 <p>To run the MCP Server:</p>
 </div>
 <div class="listingblock">
@@ -881,51 +876,72 @@ mcp:
 </div>
 </div>
 <div class="paragraph">
-<p>The MCP Server connects to the registry and exposes prompts via the MCP protocol, enabling AI agents (Claude, ChatGPT, etc.) to discover and use registry-stored prompts.</p>
+<p>The MCP Server communicates with the registry and makes prompts available through the MCP protocol. AI agents such as Claude and ChatGPT can discover and use registry-stored prompts.</p>
 </div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. MCP architecture data flow</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Layer</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry (PROMPT_TEMPLATE artifacts)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stores prompt templates with <code>mcp.enabled: true</code> in the MCP configuration section.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP server module</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Connects Apicurio Registry to AI agents by using the MCP protocol. Provides the following tools:</p>
 </div>
-<div class="sect2">
-<h3 id="_mcp_architecture"><a class="anchor" href="#_mcp_architecture"></a>MCP Architecture</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">┌─────────────────────────────────────────────────────────────┐
-│                     Apicurio Registry                        │
-├─────────────────────────────────────────────────────────────┤
-│  PROMPT_TEMPLATE Artifacts (with mcp.enabled: true)         │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    MCP Server Module                         │
-│  - list_mcp_prompts(): List MCP-enabled templates           │
-│  - get_mcp_prompt(): Render template with arguments         │
-│  - render_prompt_template(): Render any template            │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                     AI Agent / LLM                           │
-│  (Claude, ChatGPT, etc.)                                    │
-│                                                              │
-│  MCP Protocol:                                               │
-│  - prompts/list → Discover available prompts                 │
-│  - prompts/get  → Get prompt content with arguments          │
-└─────────────────────────────────────────────────────────────┘</code></pre>
+<div class="ulist">
+<ul>
+<li>
+<p><code>list_mcp_prompts()</code>: lists MCP-enabled templates</p>
+</li>
+<li>
+<p><code>get_mcp_prompt()</code>: renders a template with arguments</p>
+</li>
+<li>
+<p><code>render_prompt_template()</code>: renders any template</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AI agent or LLM (such as Claude or ChatGPT)</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Communicates with the MCP server by using the MCP protocol:</p>
 </div>
-</div>
-</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>prompts/list</code>: discovers available prompts</p>
+</li>
+<li>
+<p><code>prompts/get</code>: retrieves prompt content with arguments</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="llm-artifact-types-prompt-template-implementation_registry"><a class="anchor" href="#llm-artifact-types-prompt-template-implementation_registry"></a>PROMPT_TEMPLATE Implementation Details</h2>
+<h2 id="llm-artifact-types-prompt-template-implementation_registry"><a class="anchor" href="#llm-artifact-types-prompt-template-implementation_registry"></a>PROMPT_TEMPLATE implementation details</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>The PROMPT_TEMPLATE artifact type is implemented in <code>app/llm-artifact-types-src/src/PromptTemplateArtifactType.ts</code>.</p>
+<div class="paragraph _abstract">
+<p>The PROMPT_TEMPLATE artifact type implementation resides in <code>schema-util/util-provider/src/main/java/io/apicurio/registry/types/provider/PromptTemplateArtifactTypeUtilProvider.java</code>, with validators, extractors, and compatibility checkers in <code>schema-util/common/</code>.</p>
 </div>
-<div class="sect2">
-<h3 id="_schema_structure"><a class="anchor" href="#_schema_structure"></a>Schema Structure</h3>
 <div class="listingblock">
-<div class="title">PROMPT_TEMPLATE Schema Interface (Prompty-aligned)</div>
+<div class="title">PROMPT_TEMPLATE schema interface (Prompty-aligned)</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">interface PromptTemplate {
     $schema?: string;           // Schema URL for identification
@@ -986,58 +1002,51 @@ interface MCPConfiguration {
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_content_detection"><a class="anchor" href="#_content_detection"></a>Content Detection</h3>
 <div class="paragraph">
-<p>The <code>acceptsContent()</code> function identifies PROMPT_TEMPLATE content by checking:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><strong>Content type</strong> is <code>application/json</code>, <code>application/x-yaml</code>, or <code>text/x-prompt-template</code></p>
-</li>
-<li>
-<p><strong>Schema identifier</strong>: <code>$schema</code> field contains <code>prompt-template</code></p>
-</li>
-<li>
-<p><strong>Required fields</strong>: presence of both <code>templateId</code> and <code>template</code> fields</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_validation_rules"><a class="anchor" href="#_validation_rules"></a>Validation Rules</h3>
-<div class="paragraph">
-<p>The <code>validate()</code> function enforces:</p>
+<div class="title">Content detection</div>
+<p>The <code>acceptsContent()</code> function detects PROMPT_TEMPLATE content by checking the following criteria:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>templateId</code> must be a non-empty string</p>
+<p>Content type is <code>application/json</code>, <code>application/x-yaml</code>, or <code>text/x-prompt-template</code>.</p>
 </li>
 <li>
-<p><code>template</code> must be a non-empty string</p>
+<p>Schema identifier: the <code>$schema</code> field contains <code>prompt-template</code>.</p>
 </li>
 <li>
-<p>All <code>{{variable}}</code> placeholders in template must have corresponding definitions in <code>variables</code></p>
-</li>
-<li>
-<p>Variable types must be valid: <code>string</code>, <code>integer</code>, <code>number</code>, <code>boolean</code>, <code>array</code>, <code>object</code></p>
-</li>
-<li>
-<p>Numeric constraints (<code>minimum</code>, <code>maximum</code>) must be numbers</p>
-</li>
-<li>
-<p>Enum values must be arrays</p>
+<p>Required fields: both <code>templateId</code> and <code>template</code> fields are present.</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<div class="title">Validation rules</div>
+<p>The <code>validate()</code> function checks the following rules:</p>
 </div>
-<div class="sect2">
-<h3 id="_compatibility_rules"><a class="anchor" href="#_compatibility_rules"></a>Compatibility Rules</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>templateId</code> must be a non-empty string.</p>
+</li>
+<li>
+<p><code>template</code> must be a non-empty string.</p>
+</li>
+<li>
+<p>All <code>{{variable}}</code> placeholders in the template must have corresponding definitions in <code>variables</code>.</p>
+</li>
+<li>
+<p>Variable types must be valid: <code>string</code>, <code>integer</code>, <code>number</code>, <code>boolean</code>, <code>array</code>, <code>object</code>.</p>
+</li>
+<li>
+<p>Numeric constraints (<code>minimum</code>, <code>maximum</code>) must be numbers.</p>
+</li>
+<li>
+<p>Enum values must be arrays.</p>
+</li>
+</ul>
+</div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 10. PROMPT_TEMPLATE Backward Compatibility</caption>
+<caption class="title">Table 11. PROMPT_TEMPLATE backward compatibility</caption>
 <colgroup>
 <col style="width: 42.8571%;">
 <col style="width: 14.2857%;">
@@ -1045,7 +1054,7 @@ interface MCPConfiguration {
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Change Type</th>
+<th class="tableblock halign-left valign-top">Change type</th>
 <th class="tableblock halign-left valign-top">Allowed</th>
 <th class="tableblock halign-left valign-top">Reason</th>
 </tr>
@@ -1069,17 +1078,17 @@ interface MCPConfiguration {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Change variable type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Existing variable values may become invalid</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing variable values might become invalid</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Make optional variable required</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Existing consumers may not provide value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing consumers might not provide the value</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Narrow enum values (remove options)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Existing valid values may become invalid</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing valid values might become invalid</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Change template text (same variables)</p></td>
@@ -1089,15 +1098,13 @@ interface MCPConfiguration {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Remove output schema property</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Consumer expectations may be violated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consumers might depend on removed properties</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_template_variable_extraction"><a class="anchor" href="#_template_variable_extraction"></a>Template Variable Extraction</h3>
 <div class="paragraph">
-<p>Variables are extracted from template text using regex pattern <code>\{\{(\w+)\}\}</code>:</p>
+<div class="title">Template variable extraction</div>
+<p>The system extracts variables from template text by using the regex pattern <code>\{\{(\w+)\}\}</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1114,11 +1121,9 @@ interface MCPConfiguration {
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_canonicalization"><a class="anchor" href="#_canonicalization"></a>Canonicalization</h3>
 <div class="paragraph">
-<p>PROMPT_TEMPLATE content is canonicalized to YAML format with:</p>
+<div class="title">Canonicalization</div>
+<p>The canonicalization process converts PROMPT_TEMPLATE content to YAML format with the following characteristics:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1135,17 +1140,14 @@ interface MCPConfiguration {
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="llm-artifact-types-model-schema-implementation_registry"><a class="anchor" href="#llm-artifact-types-model-schema-implementation_registry"></a>MODEL_SCHEMA Implementation Details</h2>
+<h2 id="llm-artifact-types-model-schema-implementation_registry"><a class="anchor" href="#llm-artifact-types-model-schema-implementation_registry"></a>MODEL_SCHEMA implementation details</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>The MODEL_SCHEMA artifact type is implemented in <code>app/llm-artifact-types-src/src/ModelSchemaArtifactType.ts</code>.</p>
+<div class="paragraph _abstract">
+<p>The MODEL_SCHEMA artifact type implementation resides in <code>schema-util/util-provider/src/main/java/io/apicurio/registry/types/provider/ModelSchemaArtifactTypeUtilProvider.java</code>, with validators, extractors, and compatibility checkers in <code>schema-util/common/</code>.</p>
 </div>
-<div class="sect2">
-<h3 id="_schema_structure_2"><a class="anchor" href="#_schema_structure_2"></a>Schema Structure</h3>
 <div class="listingblock">
-<div class="title">MODEL_SCHEMA Schema Interface (Model Card Toolkit-aligned)</div>
+<div class="title">MODEL_SCHEMA schema interface (Model Card Toolkit-aligned)</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">interface ModelSchema {
     $schema?: string;                           // Schema URL for identification
@@ -1188,52 +1190,45 @@ interface Considerations {
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_content_detection_2"><a class="anchor" href="#_content_detection_2"></a>Content Detection</h3>
 <div class="paragraph">
-<p>The <code>acceptsContent()</code> function identifies MODEL_SCHEMA content by checking:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><strong>Content type</strong> is <code>application/json</code> or <code>application/x-yaml</code></p>
-</li>
-<li>
-<p><strong>Schema identifier</strong>: <code>$schema</code> field contains <code>model-schema</code></p>
-</li>
-<li>
-<p><strong>Required fields</strong>: presence of <code>modelId</code> and at least one of <code>input</code> or <code>output</code></p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_validation_rules_2"><a class="anchor" href="#_validation_rules_2"></a>Validation Rules</h3>
-<div class="paragraph">
-<p>The <code>validate()</code> function enforces:</p>
+<div class="title">Content detection</div>
+<p>The <code>acceptsContent()</code> function detects MODEL_SCHEMA content by checking the following criteria:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>modelId</code> must be a non-empty string</p>
+<p>Content type is <code>application/json</code> or <code>application/x-yaml</code>.</p>
 </li>
 <li>
-<p>At least one of <code>input</code> or <code>output</code> must be defined</p>
+<p>Schema identifier: the <code>$schema</code> field contains <code>model-schema</code>.</p>
 </li>
 <li>
-<p><code>input</code> and <code>output</code> must be objects (JSON Schema format)</p>
-</li>
-<li>
-<p><code>metadata</code> must be an object if provided</p>
+<p>Required fields: <code>modelId</code> and at least one of <code>input</code> or <code>output</code> are present.</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<div class="title">Validation rules</div>
+<p>The <code>validate()</code> function checks the following rules:</p>
 </div>
-<div class="sect2">
-<h3 id="_compatibility_rules_2"><a class="anchor" href="#_compatibility_rules_2"></a>Compatibility Rules</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>modelId</code> must be a non-empty string.</p>
+</li>
+<li>
+<p>At least one of <code>input</code> or <code>output</code> must be defined.</p>
+</li>
+<li>
+<p><code>input</code> and <code>output</code> must be objects (JSON Schema format).</p>
+</li>
+<li>
+<p><code>metadata</code> must be an object if provided.</p>
+</li>
+</ul>
+</div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 11. MODEL_SCHEMA Backward Compatibility</caption>
+<caption class="title">Table 12. MODEL_SCHEMA backward compatibility</caption>
 <colgroup>
 <col style="width: 42.8571%;">
 <col style="width: 14.2857%;">
@@ -1241,7 +1236,7 @@ interface Considerations {
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Change Type</th>
+<th class="tableblock halign-left valign-top">Change type</th>
 <th class="tableblock halign-left valign-top">Allowed</th>
 <th class="tableblock halign-left valign-top">Reason</th>
 </tr>
@@ -1255,17 +1250,17 @@ interface Considerations {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Add required input property</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Existing consumers won&#8217;t provide new required fields</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing consumers do not provide new required fields</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Remove input property</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Consumers may still send removed properties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consumers might still send removed properties</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Change input property type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Existing data may become invalid</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing data might become invalid</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Add output property</p></td>
@@ -1275,12 +1270,12 @@ interface Considerations {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Remove output property</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Consumers may depend on removed properties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consumers might depend on removed properties</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Change output property type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Consumer parsing may break</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consumer parsing might break</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Remove input schema entirely</p></td>
@@ -1294,11 +1289,9 @@ interface Considerations {
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_canonicalization_2"><a class="anchor" href="#_canonicalization_2"></a>Canonicalization</h3>
 <div class="paragraph">
-<p>MODEL_SCHEMA content is canonicalized to JSON format with:</p>
+<div class="title">Canonicalization</div>
+<p>The canonicalization process converts MODEL_SCHEMA content to JSON format with the following characteristics:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1315,22 +1308,20 @@ interface Considerations {
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="llm-artifact-types-prompt-rendering-service_registry"><a class="anchor" href="#llm-artifact-types-prompt-rendering-service_registry"></a>Prompt Rendering Service</h2>
+<h2 id="llm-artifact-types-prompt-rendering-service_registry"><a class="anchor" href="#llm-artifact-types-prompt-rendering-service_registry"></a>Prompt rendering service</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Apicurio Registry provides a server-side prompt rendering service for PROMPT_TEMPLATE artifacts.</p>
+<div class="paragraph _abstract">
+<p>Apicurio Registry includes a server-side prompt rendering service for PROMPT_TEMPLATE artifacts.</p>
 </div>
-<div class="sect2">
-<h3 id="_rest_api_endpoint"><a class="anchor" href="#_rest_api_endpoint"></a>REST API Endpoint</h3>
 <div class="listingblock">
+<div class="title">REST API endpoint</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">POST /apis/registry/v3/groups/{groupId}/artifacts/{artifactId}/versions/{versionExpression}/render</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">Request Body</div>
+<div class="title">Request body</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "variables": {
@@ -1341,7 +1332,7 @@ interface Considerations {
 </div>
 </div>
 <div class="listingblock">
-<div class="title">Response Body</div>
+<div class="title">Response body</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "rendered": "The fully rendered template with substituted values",
@@ -1352,14 +1343,12 @@ interface Considerations {
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_java_implementation"><a class="anchor" href="#_java_implementation"></a>Java Implementation</h3>
 <div class="paragraph">
-<p>The <code>PromptRenderingService</code> class (<code>app/src/main/java/io/apicurio/registry/services/PromptRenderingService.java</code>) provides:</p>
+<div class="title">Java implementation</div>
+<p>The <code>PromptRenderingService</code> class (<code>app/src/main/java/io/apicurio/registry/services/PromptRenderingService.java</code>) includes the following features:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 12. Rendering Service Features</caption>
+<caption class="title">Table 13. Rendering service features</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -1372,35 +1361,33 @@ interface Considerations {
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Content Parsing</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Automatically parses YAML or JSON prompt templates</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content parsing</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parses YAML or JSON prompt templates</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Variable Substitution</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Variable substitution</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Replaces <code>{{variable}}</code> placeholders with provided values</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Type Validation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Validates variable values match their defined types</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type validation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validates that variable values match their defined types</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Required Field Checking</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required field checking</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Reports missing required variables as validation errors</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enum Validation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ensures values are within allowed enum options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enum validation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Checks that values are within allowed enum options</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Range Validation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Range validation</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Validates numeric values against minimum/maximum constraints</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_validation_error_response"><a class="anchor" href="#_validation_error_response"></a>Validation Error Response</h3>
 <div class="paragraph">
+<div class="title">Validation error response</div>
 <p>When validation fails, the response includes validation errors:</p>
 </div>
 <div class="listingblock">
@@ -1425,17 +1412,14 @@ interface Considerations {
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="llm-artifact-types-customization_registry"><a class="anchor" href="#llm-artifact-types-customization_registry"></a>Customizing LLM Artifact Types</h2>
+<h2 id="llm-artifact-types-customization_registry"><a class="anchor" href="#llm-artifact-types-customization_registry"></a>LLM artifact type customization</h2>
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>You can modify the built-in LLM artifact types or use them as templates for custom types.</p>
 </div>
-<div class="sect2">
-<h3 id="_source_code_location"><a class="anchor" href="#_source_code_location"></a>Source Code Location</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. Source Files</caption>
+<caption class="title">Table 14. Source files</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -1481,7 +1465,6 @@ interface Considerations {
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </div>
 </article>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>MCP Tool Definition Features in Apicurio Registry :: Apicurio Registry</title>
+    <title>MCP tool definition features in Apicurio Registry :: Apicurio Registry</title>
     <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-mcp-tool-features.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
@@ -216,13 +216,22 @@
     <span class="nav-text">AI Agent Integration</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-a2a-features.html">A2A Protocol Features in Apicurio Registry</a>
-  </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP Tool Definition Features in Apicurio Registry</a>
+    <a class="nav-link" href="assembly-agent-registry-quickstart.html">Agent registry quick start</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM Artifact Types Implementation Guide</a>
+    <a class="nav-link" href="assembly-a2a-features.html">A2A protocol features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP tool definition features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-server-integration.html">MCP server integration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a>
   </li>
 </ul>
   </li>
@@ -338,7 +347,7 @@
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
     <li>AI Agent Integration</li>
-    <li><a href="assembly-mcp-tool-features.html">MCP Tool Definition Features in Apicurio Registry</a></li>
+    <li><a href="assembly-mcp-tool-features.html">MCP tool definition features in Apicurio Registry</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -359,68 +368,137 @@
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">MCP Tool Definition Features in Apicurio Registry</h1>
+<h1 class="page">MCP tool definition features in Apicurio Registry</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
-<p>Apicurio Registry supports storing and managing MCP (Model Context Protocol) tool definitions as first-class artifacts. This enables central governance, version management, and discovery of MCP tools across an organization.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a> allows servers to expose tools that can be invoked by language models. Tools enable models to interact with external systems, such as querying databases, calling APIs, or performing computations.</p>
-</div>
-<div class="paragraph">
-<p>Apicurio Registry acts as a <strong>Tool Registry</strong>, storing MCP tool definitions with:</p>
+<div class="paragraph _abstract">
+<p>You can store and manage MCP (Model Context Protocol) tool definitions as first-class artifacts in Apicurio Registry. You can use MCP tool features for central governance, version management, and discovery of MCP tools across your organization.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Version management</strong> — Track tool evolution with full version history</p>
+<p><a href="#mcp-tool-features-overview_registry">Overview</a></p>
 </li>
 <li>
-<p><strong>Validation</strong> — Ensure tool definitions conform to the MCP specification</p>
+<p><a href="#mcp-tool-configuration_registry">Configuration</a></p>
 </li>
 <li>
-<p><strong>Compatibility checking</strong> — Detect breaking changes in tool input schemas</p>
+<p><a href="#mcp-tool-definition-schema_registry">MCP tool definition schema</a></p>
 </li>
 <li>
-<p><strong>Discovery</strong> — Search for tools by name or input parameter</p>
+<p><a href="#mcp-well-known-endpoints_registry">Well-known endpoints</a></p>
 </li>
 <li>
-<p><strong>Well-known endpoints</strong> — Serve tool definitions at standard URLs</p>
+<p><a href="#creating-mcp-tool-artifact_registry">Creating an MCP tool artifact</a></p>
+</li>
+<li>
+<p><a href="#mcp-validation-rules_registry">Validation rules</a></p>
+</li>
+<li>
+<p><a href="#mcp-compatibility-checking_registry">Compatibility checking</a></p>
+</li>
+<li>
+<p><a href="#mcp-automatic-label-extraction_registry">Automatic label extraction</a></p>
 </li>
 </ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">┌─────────────────────────────────────────────────────────────────────────────┐
-│                           Apicurio Registry                                  │
-│                                                                              │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                    MCP Tool Registry                                   │   │
-│  │                                                                        │   │
-│  │  /.well-known/mcp-tools                (search tools)                  │   │
-│  │  /.well-known/mcp-tools/{group}/{id}   (retrieve tool)                 │   │
-│  │                                                                        │   │
-│  │  - Store tool definitions                                              │   │
-│  │  - Search by name or parameter                                         │   │
-│  │  - Version management                                                  │   │
-│  │  - Validation and compatibility checking                               │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────┘</code></pre>
-</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<h2 id="mcp-tool-features-overview_registry"><a class="anchor" href="#mcp-tool-features-overview_registry"></a>Overview</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a> defines a standard for servers to expose tools that language models can invoke. With MCP tools, models can interact with external systems, such as querying databases, calling APIs, or running computations.</p>
+</div>
 <div class="paragraph">
-<p>MCP tool features are controlled via configuration properties:</p>
+<p>Apicurio Registry provides a Tool Registry that stores MCP tool definitions with the following capabilities:</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Storing an <code>MCP_TOOL</code> definition in Apicurio Registry provides governance, versioning, and searchability for tool definitions. To make stored tools available to LLM clients such as Claude Desktop, you must also deploy the Apicurio Registry MCP server. For more information, see <a href="assembly-mcp-server-integration.html" class="page">MCP server integration</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Version management</dt>
+<dd>
+<p>Track tool evolution with full version history.</p>
+</dd>
+<dt class="hdlist1">Validation</dt>
+<dd>
+<p>Ensure that tool definitions conform to the MCP specification.</p>
+</dd>
+<dt class="hdlist1">Compatibility checking</dt>
+<dd>
+<p>Detect breaking changes in tool input schemas.</p>
+</dd>
+<dt class="hdlist1">Discovery</dt>
+<dd>
+<p>Search for tools by name or input parameter.</p>
+</dd>
+<dt class="hdlist1">Well-known endpoints</dt>
+<dd>
+<p>Serve tool definitions at standard URLs.</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. MCP tool registry endpoints and capabilities</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Well-known endpoints</th>
+<th class="tableblock halign-left valign-top">Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><code>/.well-known/mcp-tools</code> (search tools)</p>
+</li>
+<li>
+<p><code>/.well-known/mcp-tools/{groupId}/{artifactId}</code> (retrieve tool)</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Store tool definitions as <code>MCP_TOOL</code> artifacts</p>
+</li>
+<li>
+<p>Search by name or input parameter</p>
+</li>
+<li>
+<p>Version management</p>
+</li>
+<li>
+<p>Validation and compatibility checking</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-tool-configuration_registry"><a class="anchor" href="#mcp-tool-configuration_registry"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure MCP tool features by using the following configuration properties.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -439,12 +517,12 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp-tools.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable MCP tool definition support (experimental)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables or disables MCP tool definition support (experimental)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.features.experimental.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Must be enabled to use experimental features like MCP tools</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to use experimental features such as MCP tools</p></td>
 </tr>
 </tbody>
 </table>
@@ -460,9 +538,9 @@ apicurio.mcp-tools.enabled=true</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_mcp_tool_definition_schema"><a class="anchor" href="#_mcp_tool_definition_schema"></a>MCP Tool Definition Schema</h2>
+<h2 id="mcp-tool-definition-schema_registry"><a class="anchor" href="#mcp-tool-definition-schema_registry"></a>MCP tool definition schema</h2>
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>Tool definitions follow the <a href="https://modelcontextprotocol.io/specification/2025-11-25/server/tools">MCP specification (2025-11-25)</a>.</p>
 </div>
 <div class="admonitionblock note">
@@ -472,14 +550,13 @@ apicurio.mcp-tools.enabled=true</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The MCP specification has two authoritative sources: the formal <a href="https://github.com/modelcontextprotocol/specification/blob/main/schema/2025-11-25/schema.json">JSON schema</a> and the <a href="https://modelcontextprotocol.io/specification/2025-11-25/server/tools">specification docs</a>. In some cases these sources diverge. The table below notes where Apicurio Registry&#8217;s validation follows the spec docs guidance rather than the formal JSON schema.
+The MCP specification has two authoritative sources: the formal <a href="https://github.com/modelcontextprotocol/specification/blob/main/schema/2025-11-25/schema.json">JSON schema</a> and the <a href="https://modelcontextprotocol.io/specification/2025-11-25/server/tools">specification docs</a>. In some cases, these sources diverge. The following table notes where Apicurio Registry validation follows the spec docs guidance rather than the formal JSON schema.
 </td>
 </tr>
 </table>
 </div>
-<div class="sect2">
-<h3 id="_tool_fields"><a class="anchor" href="#_tool_fields"></a>Tool Fields</h3>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Tool fields</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 16.6666%;">
@@ -545,11 +622,9 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_input_schema"><a class="anchor" href="#_input_schema"></a>Input Schema</h3>
 <div class="paragraph">
-<p>The <code>inputSchema</code> field is a JSON Schema object with these properties:</p>
+<div class="title">Input schema</div>
+<p>The <code>inputSchema</code> field is a JSON Schema object with the following properties:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -587,11 +662,9 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_annotations_toolannotations"><a class="anchor" href="#_annotations_toolannotations"></a>Annotations (ToolAnnotations)</h3>
 <div class="paragraph">
-<p>Annotations provide metadata about the tool using the MCP <code>ToolAnnotations</code> type:</p>
+<div class="title">Annotations (ToolAnnotations)</div>
+<p>Annotations provide metadata about the tool by using the MCP <code>ToolAnnotations</code> type:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -610,7 +683,7 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>title</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Optional fallback display name. Per the spec docs, display precedence is: top-level <code>title</code> &#8594; <code>annotations.title</code> &#8594; <code>name</code>. <em>Note: this field is referenced in the spec docs as a display name fallback but is not formally defined in the <code>ToolAnnotations</code> JSON schema.</em> Apicurio Registry validates and displays it for interoperability.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional fallback display name. Per the spec docs, display precedence is: top-level <code>title</code> &#8594; <code>annotations.title</code> &#8594; <code>name</code>. <em>Note: the spec docs reference the <code>annotations.title</code> field as a display name fallback, but the <code>ToolAnnotations</code> JSON schema does not formally define it.</em> Apicurio Registry validates and displays it for interoperability.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>audience</code></p></td>
@@ -624,10 +697,8 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_example_tool_definition"><a class="anchor" href="#_example_tool_definition"></a>Example Tool Definition</h3>
 <div class="listingblock">
+<div class="title">Example tool definition</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "name": "get_weather",
@@ -667,19 +738,18 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="_well_known_endpoints"><a class="anchor" href="#_well_known_endpoints"></a>Well-Known Endpoints</h2>
+<h2 id="mcp-well-known-endpoints_registry"><a class="anchor" href="#mcp-well-known-endpoints_registry"></a>Well-known endpoints</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_get_well_knownmcp_tools"><a class="anchor" href="#_get_well_knownmcp_tools"></a>GET /.well-known/mcp-tools</h3>
+<div class="paragraph _abstract">
+<p>You can search for and retrieve MCP tool definitions by using the following well-known endpoints.</p>
+</div>
 <div class="paragraph">
+<div class="title">GET /.well-known/mcp-tools</div>
 <p>Search for registered MCP tool definitions with filtering support.</p>
 </div>
-<div class="paragraph">
-<p><strong>Query Parameters:</strong></p>
-</div>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Query parameters</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -715,18 +785,14 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><strong>Example Request:</strong></p>
-</div>
 <div class="listingblock">
+<div class="title">Example request</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/.well-known/mcp-tools?parameter=location"</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>Response:</strong> <code>McpToolSearchResults</code></p>
-</div>
 <div class="listingblock">
+<div class="title">Response: <code>McpToolSearchResults</code></div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "count": 1,
@@ -745,58 +811,70 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_get_well_knownmcp_toolsgroupidartifactid"><a class="anchor" href="#_get_well_knownmcp_toolsgroupidartifactid"></a>GET /.well-known/mcp-tools/{groupId}/{artifactId}</h3>
 <div class="paragraph">
+<div class="title">GET /.well-known/mcp-tools/{groupId}/{artifactId}</div>
 <p>Retrieve a specific registered MCP tool definition.</p>
 </div>
-<div class="paragraph">
-<p><strong>Path Parameters:</strong></p>
+<div class="dlist">
+<div class="title">Path parameters</div>
+<dl>
+<dt class="hdlist1"><code>groupId</code></dt>
+<dd>
+<p>The group containing the tool definition</p>
+</dd>
+<dt class="hdlist1"><code>artifactId</code></dt>
+<dd>
+<p>The artifact ID of the tool definition</p>
+</dd>
+</dl>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>groupId</code> - The group containing the tool definition</p>
-</li>
-<li>
-<p><code>artifactId</code> - The artifact ID of the tool definition</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Query Parameters:</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>version</code> (optional) - Specific version (defaults to latest)</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Response:</strong> MCP tool definition JSON document</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_get_well_knownschemasmcp_toolv1"><a class="anchor" href="#_get_well_knownschemasmcp_toolv1"></a>GET /.well-known/schemas/mcp-tool/v1</h3>
-<div class="paragraph">
-<p>Returns the JSON Schema for MCP tool definitions. This enables IDE autocompletion and validation.</p>
+<div class="dlist">
+<div class="title">Query parameters</div>
+<dl>
+<dt class="hdlist1"><code>version</code> (optional)</dt>
+<dd>
+<p>Specific version (defaults to latest)</p>
+</dd>
+</dl>
 </div>
 <div class="paragraph">
-<p><strong>Example:</strong></p>
+<div class="title">Response</div>
+<p>MCP tool definition JSON document</p>
+</div>
+<div class="paragraph">
+<div class="title">GET /.well-known/schemas/mcp-tool/v1</div>
+<p>Use this endpoint to retrieve the JSON Schema for MCP tool definitions. You can use the schema for IDE autocompletion and validation.</p>
 </div>
 <div class="listingblock">
+<div class="title">Example</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/.well-known/schemas/mcp-tool/v1"</code></pre>
 </div>
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="_creating_an_mcp_tool_artifact"><a class="anchor" href="#_creating_an_mcp_tool_artifact"></a>Creating an MCP Tool Artifact</h2>
+<h2 id="creating-mcp-tool-artifact_registry"><a class="anchor" href="#creating-mcp-tool-artifact_registry"></a>Creating an MCP tool artifact</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can create an MCP tool artifact in Apicurio Registry by using the REST API.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running.</p>
+</li>
+<li>
+<p>MCP tools support is enabled (<code>apicurio.mcp-tools.enabled=true</code> and <code>apicurio.features.experimental.enabled=true</code>).</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Send a <code>POST</code> request to the Apicurio Registry REST API to create the MCP tool artifact:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST "http://localhost:8080/apis/registry/v3/groups/mcp-tools/artifacts" \
@@ -814,13 +892,16 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
   }'</code></pre>
 </div>
 </div>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_validation_rules"><a class="anchor" href="#_validation_rules"></a>Validation Rules</h2>
+<h2 id="mcp-validation-rules_registry"><a class="anchor" href="#mcp-validation-rules_registry"></a>Validation rules</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>MCP tool definitions support three validation levels:</p>
+<div class="paragraph _abstract">
+<p>Apicurio Registry validates MCP tool definitions at three levels.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -836,7 +917,7 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>NONE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No validation performed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No validation</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SYNTAX_ONLY</code></p></td>
@@ -844,33 +925,47 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>FULL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Complete validation including:
-- Required <code>name</code> field (non-empty string)
-- Required <code>inputSchema</code> field (object with <code>type</code> = <code>"object"</code> per spec docs guidance)
-- Optional <code>title</code> and <code>description</code> must be strings if present
-- Optional <code>outputSchema</code> must be an object if present
-- Optional <code>annotations</code> validated as ToolAnnotations: <code>title</code> (string), <code>audience</code> (array of strings), <code>priority</code> (number 0-1). Note: <code>annotations.title</code> validation follows spec docs guidance; <code>audience</code> values are not restricted to the <code>Role</code> enum for forward compatibility.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Complete validation including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Required <code>name</code> field (non-empty string)</p>
+</li>
+<li>
+<p>Required <code>inputSchema</code> field (object with <code>type</code> = <code>"object"</code> per spec docs guidance)</p>
+</li>
+<li>
+<p>Optional <code>title</code> and <code>description</code> must be strings if present</p>
+</li>
+<li>
+<p>Optional <code>outputSchema</code> must be an object if present</p>
+</li>
+<li>
+<p>Optional <code>annotations</code> validated as ToolAnnotations: <code>title</code> (string), <code>audience</code> (array of strings), <code>priority</code> (number 0-1). Note: <code>annotations.title</code> validation follows spec docs guidance; <code>audience</code> values are not restricted to the <code>Role</code> enum for forward compatibility.</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_compatibility_checking"><a class="anchor" href="#_compatibility_checking"></a>Compatibility Checking</h2>
+<h2 id="mcp-compatibility-checking_registry"><a class="anchor" href="#mcp-compatibility-checking_registry"></a>Compatibility checking</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>When versioning MCP tool definitions, compatibility rules detect breaking changes:</p>
-</div>
-<div class="paragraph">
-<p><strong>Compatible Changes (allowed):</strong></p>
+<div class="paragraph _abstract">
+<p>When you version MCP tool definitions, Apicurio Registry checks for breaking changes based on compatibility rules.</p>
 </div>
 <div class="ulist">
+<div class="title">Compatible changes (allowed)</div>
 <ul>
 <li>
 <p>Adding optional input parameters</p>
 </li>
 <li>
-<p>Changing name, title, description</p>
+<p>Changing name, title, or description</p>
 </li>
 <li>
 <p>Changing annotations</p>
@@ -880,10 +975,8 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><strong>Incompatible Changes (may break clients):</strong></p>
-</div>
 <div class="ulist">
+<div class="title">Incompatible changes (might break clients)</div>
 <ul>
 <li>
 <p>Removing input parameters from inputSchema.properties</p>
@@ -902,10 +995,10 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 </div>
 </div>
 <div class="sect1">
-<h2 id="_automatic_label_extraction"><a class="anchor" href="#_automatic_label_extraction"></a>Automatic Label Extraction</h2>
+<h2 id="mcp-automatic-label-extraction_registry"><a class="anchor" href="#mcp-automatic-label-extraction_registry"></a>Automatic label extraction</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>When MCP tool definitions are stored, structured elements are automatically extracted for search:</p>
+<div class="paragraph _abstract">
+<p>When you store MCP tool definitions, Apicurio Registry automatically extracts structured elements for search.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -914,7 +1007,7 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Element Pattern</th>
+<th class="tableblock halign-left valign-top">Element pattern</th>
 <th class="tableblock halign-left valign-top">Source</th>
 </tr>
 </thead>
@@ -926,14 +1019,10 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 </tbody>
 </table>
 <div class="paragraph">
-<p>This enables efficient parameter-based discovery using the Registry&#8217;s search.</p>
+<p>You can use the extracted labels for efficient parameter-based discovery by using the Apicurio Registry search.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_see_also"><a class="anchor" href="#_see_also"></a>See Also</h2>
-<div class="sectionbody">
-<div class="ulist">
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
 <ul>
 <li>
 <p><a href="assembly-a2a-features.html" class="page">A2A Protocol Features</a></p>

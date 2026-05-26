@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Agent discovery and multi-agent orchestration :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-agent-discovery-patterns.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.3.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-compatibility-modes.html">Apicurio Registry schema compatibility modes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-secured-kafka.html">Deploying Apicurio Registry with a secured Kafka instance</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Usage Telemetry and Lifecycle Governance</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-usage-telemetry.html">Usage Telemetry and API Lifecycle Governance</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-registry-quickstart.html">Agent registry quick start</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A protocol features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP tool definition features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-server-integration.html">MCP server integration</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Best Practices Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-schema-lifecycle-best-practices.html">Schema lifecycle best practices</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.3.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.2.x/index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>AI Agent Integration</li>
+    <li><a href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.3.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-agent-discovery-patterns.html">3.3.x</a>
+    <a class="version" href="../../3.2.x/getting-started/assembly-agent-discovery-patterns.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Agent discovery and multi-agent orchestration</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use Apicurio Registry well-known endpoints to discover AI agents by skill, capability, and input or output mode. You can also orchestrate multi-agent workflows by chaining agent outputs as context for subsequent agents.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#well-known-endpoint-architecture_registry">Well-known endpoint architecture</a></p>
+</li>
+<li>
+<p><a href="#agent-discovery-patterns-overview_registry">Discovery patterns</a></p>
+</li>
+<li>
+<p><a href="#multi-agent-orchestration-patterns_registry">Multi-agent orchestration patterns</a></p>
+</li>
+<li>
+<p><a href="#agent-error-handling-and-resilience_registry">Error handling and resilience</a></p>
+</li>
+<li>
+<p><a href="#agent-catalog-design_registry">Agent catalog design</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="well-known-endpoint-architecture_registry"><a class="anchor" href="#well-known-endpoint-architecture_registry"></a>Well-known endpoint architecture</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry exposes well-known endpoints for agent discovery, MCP tool discovery, and JSON schema retrieval. Each endpoint serves a specific role in the A2A and MCP ecosystems.</p>
+</div>
+<div class="paragraph">
+<p>The following table lists all available well-known endpoints.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 12.5%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/agent.json</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the agent card for this Apicurio Registry instance. Use this endpoint for standard A2A protocol discovery.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/a2a</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the agent card for this Apicurio Registry instance. As the canonical A2A v1.0 discovery endpoint, it returns the same response as <code>/.well-known/agent.json</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/agents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Searches for registered agent cards by name, skill, capability, input mode, or output mode. Supports pagination with <code>offset</code> and <code>limit</code> parameters.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/agents/{groupId}/{artifactId}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a specific registered agent card by group ID and artifact ID. Accepts an optional <code>version</code> query parameter that defaults to the latest version.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/mcp-tools</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Searches for registered MCP tool definitions by name or input parameter. Supports pagination with <code>offset</code> and <code>limit</code> parameters.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/mcp-tools/{groupId}/{artifactId}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a specific registered MCP tool definition by group ID and artifact ID. Accepts an optional <code>version</code> query parameter that defaults to the latest version.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/schemas/{type}/{version}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the JSON schema for a specific LLM artifact type. Supported types are <code>prompt-template</code>, <code>model-schema</code>, and <code>mcp-tool</code>, each with version <code>v1</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>/.well-known/agent.json</code> and <code>/.well-known/a2a</code> endpoints return the Apicurio Registry instance agent card, which represents the registry itself as an A2A agent. These endpoints require no authentication.</p>
+</div>
+<div class="paragraph">
+<p>The <code>/.well-known/agents</code> and <code>/.well-known/agents/{groupId}/{artifactId}</code> endpoints operate on agent cards that you store in Apicurio Registry as <code>AGENT_CARD</code> artifacts. These endpoints require read-level authorization.</p>
+</div>
+<div class="paragraph">
+<p>The <code>/.well-known/mcp-tools</code> and <code>/.well-known/mcp-tools/{groupId}/{artifactId}</code> endpoints operate on MCP tool definitions that you store in Apicurio Registry as <code>MCP_TOOL</code> artifacts. These endpoints require read-level authorization and are available only when MCP tools support is enabled.</p>
+</div>
+<div class="paragraph">
+<p>The <code>/.well-known/schemas/{type}/{version}</code> endpoint serves built-in JSON schemas that you can use for IDE autocompletion and validation of <code>PROMPT_TEMPLATE</code>, <code>MODEL_SCHEMA</code>, and <code>MCP_TOOL</code> artifacts. This endpoint requires no authentication.</p>
+</div>
+<div class="paragraph">
+<p>For detailed endpoint reference and Agent Card JSON structure, see <a href="#assembly-a2a-features_registry">[assembly-a2a-features_registry]</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="agent-discovery-patterns-overview_registry"><a class="anchor" href="#agent-discovery-patterns-overview_registry"></a>Discovery patterns</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry indexes agent card content as structured data when you store an <code>AGENT_CARD</code> artifact. You can query agents by skill, capability, input mode, output mode, or name by using the <code>/.well-known/agents</code> endpoint.</p>
+</div>
+<div class="paragraph">
+<div class="title">Capability-based discovery</div>
+<p>You can find agents that have specific skills by using the <code>skill</code> query parameter. Apicurio Registry indexes each skill ID from the agent card <code>skills</code> array as structured content with the key <code>agent_card:skill:&lt;id&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p>To find agents that have a specific skill, send a request with one <code>skill</code> parameter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/agents?skill=translation"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To find agents that have multiple skills, repeat the <code>skill</code> parameter. Apicurio Registry returns only agents that match all specified skills:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/agents?skill=translation&amp;skill=sentiment-analysis"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Filtering by capabilities</div>
+<p>You can filter agents by capabilities such as streaming or push notification support. Apicurio Registry indexes each enabled capability from the agent card <code>capabilities</code> object as structured content with the key <code>agent_card:capability:&lt;name&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p>Specify capabilities in <code>name:value</code> format. For example, to find agents that support streaming:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/agents?capability=streaming:true"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To exclude agents that support streaming, set the value to <code>false</code>. Apicurio Registry negates the filter and returns only agents that do not have streaming enabled:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/agents?capability=streaming:false"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Input and output mode filtering</div>
+<p>You can match agents by the data modalities they accept or produce. Apicurio Registry indexes each mode from the agent card <code>defaultInputModes</code> and <code>defaultOutputModes</code> arrays as structured content with the keys <code>agent_card:inputmode:&lt;mode&gt;</code> and <code>agent_card:outputmode:&lt;mode&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p>To find agents that accept image input and produce text output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/agents?inputMode=image&amp;outputMode=text"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Name-based search</div>
+<p>You can filter agents by name by using partial matching. Apicurio Registry matches the <code>name</code> parameter against the artifact name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/agents?name=sentiment"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Combined filtering</div>
+<p>You can combine any of the previous filters in a single request. Apicurio Registry applies all filters together and returns only agents that match all specified criteria:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/agents?skill=translation&amp;inputMode=text&amp;outputMode=text&amp;capability=streaming:true&amp;limit=10"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">MCP tool discovery</div>
+<p>You can search for registered MCP tool definitions by name or input parameter. Apicurio Registry indexes each input parameter name from the tool <code>inputSchema.properties</code> as structured content with the key <code>mcp_tool:parameter:&lt;name&gt;</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/mcp-tools?name=search&amp;parameter=query"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="multi-agent-orchestration-patterns_registry"><a class="anchor" href="#multi-agent-orchestration-patterns_registry"></a>Multi-agent orchestration patterns</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can orchestrate multi-agent workflows by combining Apicurio Registry discovery endpoints with A2A task execution. Apicurio Registry provides the discovery layer, and your orchestrator code coordinates the agent interactions.</p>
+</div>
+<div class="paragraph">
+<div class="title">Sequential pipeline with context chaining</div>
+<p>In a sequential pipeline, each agent receives the original message and the accumulated outputs from all previous agents. Each agent builds on the work of the agents that ran before it.</p>
+</div>
+<div class="paragraph">
+<p>Use a sequential pipeline when:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Each processing step depends on results from previous steps</p>
+</li>
+<li>
+<p>You need to accumulate context across a multi-step workflow</p>
+</li>
+<li>
+<p>Agent outputs serve as inputs to subsequent agents</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>examples/a2a-real-world-integration</code> example in the Apicurio Registry repository shows context chaining with four agents that process a customer complaint:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Sentiment agent</strong>: analyzes the original message and produces a sentiment score</p>
+</li>
+<li>
+<p><strong>Issue analyzer</strong>: receives the original message and the sentiment output, then identifies specific issues</p>
+</li>
+<li>
+<p><strong>Response generator</strong>: receives the original message, sentiment, and analysis, then generates a response</p>
+</li>
+<li>
+<p><strong>Translation agent</strong>: receives the generated response and translates it</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Each step stores its output under a context key. Subsequent steps reference previous outputs by using <code>\{{variable}}</code> template placeholders. A <code>WorkflowContext</code> object tracks the original message and all agent outputs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">WorkflowContext context = new WorkflowContext();
+context.originalMessage = customerMessage;
+
+// After each step completes:
+context.agentOutputs.put("sentiment", sentimentResult);
+context.agentOutputs.put("analysis", analysisResult);
+
+// Build prompt for the next step:
+String prompt = context.buildPrompt("Original: {{original}}\nSentiment: {{sentiment}}");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Parallel fan-out</div>
+<p>In a parallel fan-out, you send the same input to multiple agents simultaneously and aggregate the results. You discover the agents by using <code>/.well-known/agents</code> with appropriate filters.</p>
+</div>
+<div class="paragraph">
+<p>Use parallel fan-out when:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Multiple independent agents can process the same input</p>
+</li>
+<li>
+<p>You want to reduce total processing time</p>
+</li>
+<li>
+<p>You need to compare or merge results from different agents</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In a typical parallel fan-out, the orchestrator discovers agents with a specific skill by querying <code>/.well-known/agents?skill=&lt;skill-id&gt;</code>, sends the same A2A task to each discovered agent in parallel, and then collects the responses to merge or compare them.</p>
+</div>
+<div class="paragraph">
+<div class="title">Conditional routing</div>
+<p>In conditional routing, you use agent capabilities and skills to decide which agent handles a request. You inspect agent cards to select the best match.</p>
+</div>
+<div class="paragraph">
+<p>Use conditional routing when:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Different request types require different agents</p>
+</li>
+<li>
+<p>You want to select agents based on their reported capabilities</p>
+</li>
+<li>
+<p>You need to match input and output modalities</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In a typical conditional routing flow, the orchestrator determines the required capability from the incoming request (for example, <code>streaming:true</code> for real-time processing), queries <code>/.well-known/agents</code> with the appropriate filters, selects an agent from the results based on additional criteria such as version or provider, and sends the A2A task to the selected agent.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="agent-error-handling-and-resilience_registry"><a class="anchor" href="#agent-error-handling-and-resilience_registry"></a>Error handling and resilience</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When you build multi-agent workflows, you must handle agent unavailability, version changes, and unexpected errors. The following table lists common error scenarios and recommended handling strategies.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Scenario</th>
+<th class="tableblock halign-left valign-top">HTTP status</th>
+<th class="tableblock halign-left valign-top">Recommended handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A2A support is disabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">404</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify that <code>apicurio.a2a.enabled</code> is set to <code>true</code> in the Apicurio Registry configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agent card not found</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">404</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check that the agent card exists in the specified group and artifact ID. Verify that the artifact type is <code>AGENT_CARD</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP tools support is disabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">404</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify that MCP tools support is enabled in the Apicurio Registry configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP tool not found</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">404</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check that the MCP tool definition exists in the specified group and artifact ID. Verify that the artifact type is <code>MCP_TOOL</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact type mismatch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">404</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The artifact exists but is not an <code>AGENT_CARD</code> or <code>MCP_TOOL</code>. Store the artifact with the correct artifact type.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schema not found</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">404</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The requested schema type or version is not supported. Use one of the supported types: <code>prompt-template</code>, <code>model-schema</code>, or <code>mcp-tool</code> with version <code>v1</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agent task execution fails</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Varies</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Store the error in the workflow context so that subsequent steps can detect and handle the failure. Implement fallback agent selection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Search returns no results</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">200 (empty)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify that agent cards are stored with artifact type <code>AGENT_CARD</code>, check that your filter values match stored values, and confirm that structured content was indexed correctly.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<div class="title">Resilience strategies</div>
+<dl>
+<dt class="hdlist1">Agent health checks</dt>
+<dd>
+<p>Before you send a task to a discovered agent, verify that the agent is reachable. Fetch the agent card from <code>/.well-known/agents/{groupId}/{artifactId}</code> and check the <code>supportedInterfaces</code> array for the agent URL. Send a health check request to the agent URL before dispatching the full task.</p>
+</dd>
+<dt class="hdlist1">Fallback agent selection</dt>
+<dd>
+<p>When your primary agent is unavailable, query <code>/.well-known/agents</code> with the same skill filter to find alternative agents. Select the next available agent from the results and retry the task.</p>
+</dd>
+<dt class="hdlist1">Version pinning</dt>
+<dd>
+<p>By default, the <code>/.well-known/agents/{groupId}/{artifactId}</code> endpoint returns the latest version of an agent card. To pin a specific version, include the <code>version</code> query parameter:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/agents/ai-agents/my-agent?version=1.0.0"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use version pinning in production environments to prevent unexpected behavior when you update agent cards.</p>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="agent-catalog-design_registry"><a class="anchor" href="#agent-catalog-design_registry"></a>Agent catalog design</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can organize your agent cards in Apicurio Registry by using groups, naming conventions, and versioning strategies that support efficient discovery and lifecycle management.</p>
+</div>
+<div class="paragraph">
+<div class="title">Group structure</div>
+<p>Organize agent cards into groups based on your organizational needs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>By team</strong>: <code>team-alpha</code>, <code>team-beta</code>. Use this approach when teams own distinct sets of agents and you want clear ownership boundaries.</p>
+</li>
+<li>
+<p><strong>By capability</strong>: <code>nlp-agents</code>, <code>vision-agents</code>, <code>data-agents</code>. Use this approach when you want to browse agents by functional area.</p>
+</li>
+<li>
+<p><strong>By environment</strong>: <code>dev-agents</code>, <code>staging-agents</code>, <code>prod-agents</code>. Use this approach when you run separate agent registries per environment, or when you need to distinguish agent versions by deployment target.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Agent card naming and versioning</div>
+<p>Use descriptive artifact IDs that indicate the agent purpose, such as <code>sentiment-analyzer</code> or <code>document-translator</code>. Include the version in the agent card content to distinguish between released versions.</p>
+</div>
+<div class="paragraph">
+<p>Follow semantic versioning for agent cards:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Increment the major version when you remove skills or change the agent URL.</p>
+</li>
+<li>
+<p>Increment the minor version when you add skills or capabilities.</p>
+</li>
+<li>
+<p>Increment the patch version for description or metadata updates.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Agent lifecycle</div>
+<p>Manage agent cards through a defined lifecycle:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Draft</strong>: an initial agent card in a development group (for example, <code>dev-agents/my-agent</code>), validated against Apicurio Registry validation rules.</p>
+</li>
+<li>
+<p><strong>Published</strong>: a production-ready agent card in a production group (for example, <code>prod-agents/my-agent</code>). Other agents and orchestrators discover the agent through well-known endpoints.</p>
+</li>
+<li>
+<p><strong>Deprecated</strong>: a disabled agent card version. Disabled versions are excluded from the <code>latest</code> branch and do not appear in search results that use default version resolution.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Structured content taxonomy</div>
+<p>Apicurio Registry automatically extracts structured content from agent cards for search indexing. The following table lists the structured content key prefixes and their sources.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Structured content key</th>
+<th class="tableblock halign-left valign-top">Source in agent card</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent_card:skill:&lt;id&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Each <code>id</code> value in the <code>skills</code> array</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent_card:capability:&lt;name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Each property name in the <code>capabilities</code> object where the value is <code>true</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent_card:inputmode:&lt;mode&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Each value in the <code>defaultInputModes</code> array</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent_card:outputmode:&lt;mode&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Each value in the <code>defaultOutputModes</code> array</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent_card:protocolbinding:&lt;binding&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Each <code>protocolBinding</code> value in the <code>supportedInterfaces</code> array</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent_card:securityscheme:&lt;name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Each key in the <code>securitySchemes</code> object</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent_card:tag:&lt;value&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Each value in the <code>tags</code> array within each skill (deduplicated across skills)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Design your agent cards with consistent skill IDs and capability names across your organization. With consistent naming, discovery queries return accurate results. For example, use <code>translation</code> rather than <code>translate</code> or <code>translator</code> as the skill ID across all translation agents.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-a2a-features.html" class="page">A2A agent features</a></p>
+</li>
+<li>
+<p><a href="assembly-agent-registry-quickstart.html" class="page">Agent registry quick start</a></p>
+</li>
+<li>
+<p><a href="assembly-mcp-server-integration.html" class="page">MCP server integration</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.3.x/getting-started/assembly-agent-discovery-patterns.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>A2A Protocol Features in Apicurio Registry :: Apicurio Registry</title>
+    <title>A2A protocol features in Apicurio Registry :: Apicurio Registry</title>
     <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-a2a-features.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
@@ -200,11 +200,20 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">AI Agent Integration</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-registry-quickstart.html">Agent registry quick start</a>
+  </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="assembly-a2a-features.html">A2A Protocol Features in Apicurio Registry</a>
+    <a class="nav-link" href="assembly-a2a-features.html">A2A protocol features in Apicurio Registry</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM Artifact Types Implementation Guide</a>
+    <a class="nav-link" href="assembly-mcp-server-integration.html">MCP server integration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a>
   </li>
 </ul>
   </li>
@@ -311,7 +320,7 @@
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
     <li>AI Agent Integration</li>
-    <li><a href="assembly-a2a-features.html">A2A Protocol Features in Apicurio Registry</a></li>
+    <li><a href="assembly-a2a-features.html">A2A protocol features in Apicurio Registry</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -332,58 +341,149 @@
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">A2A Protocol Features in Apicurio Registry</h1>
+<h1 class="page">A2A protocol features in Apicurio Registry</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
-<p>Apicurio Registry implements the A2A (Agent-to-Agent) protocol, enabling AI agent discovery, orchestration, and lifecycle management. This document provides comprehensive documentation of all A2A features.</p>
+<div class="paragraph _abstract">
+<p>Apicurio Registry implements the A2A (Agent-to-Agent) protocol for AI agent discovery, orchestration, and lifecycle management.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#a2a-overview_registry">A2A protocol overview</a></p>
+</li>
+<li>
+<p><a href="#a2a-configuration_registry">A2A configuration properties</a></p>
+</li>
+<li>
+<p><a href="#a2a-well-known-endpoints_registry">A2A well-known endpoints</a></p>
+</li>
+<li>
+<p><a href="#a2a-agent-card-artifact-type_registry">Agent Card artifact type</a></p>
+</li>
+<li>
+<p><a href="#a2a-validation-rules_registry">Agent Card validation rules</a></p>
+</li>
+<li>
+<p><a href="#a2a-compatibility-checking_registry">Agent Card compatibility rules</a></p>
+</li>
+<li>
+<p><a href="#a2a-automatic-label-extraction_registry">Automatic label extraction for Agent Cards</a></p>
+</li>
+<li>
+<p><a href="#a2a-registry-built-in-skills_registry">Apicurio Registry built-in A2A skills</a></p>
+</li>
+<li>
+<p><a href="#a2a-llm-lifecycle-management_registry">LLM lifecycle management</a></p>
+</li>
+<li>
+<p><a href="#a2a-multi-agent-workflow-example_registry">Multi-agent workflow example</a></p>
+</li>
+<li>
+<p><a href="#a2a-java-sdk-usage_registry">Java SDK usage for A2A</a></p>
+</li>
+<li>
+<p><a href="#a2a-rest-api-reference_registry">A2A REST API endpoints</a></p>
+</li>
+<li>
+<p><a href="#a2a-troubleshooting_registry">A2A troubleshooting</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<h2 id="a2a-overview_registry"><a class="anchor" href="#a2a-overview_registry"></a>A2A protocol overview</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>With the A2A protocol, AI agents can discover and communicate with each other through standardized endpoints. Apicurio Registry serves as both an A2A agent and an agent registry.</p>
+</div>
 <div class="paragraph">
-<p>The A2A protocol enables AI agents to discover and communicate with each other through standardized endpoints. Apicurio Registry serves as both:</p>
+<div class="title">Apicurio Registry as an A2A agent</div>
+<p>Apicurio Registry provides its own capabilities, including schema validation, search, and artifact management.</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="paragraph">
+<div class="title">Apicurio Registry as an agent registry</div>
+<p>Apicurio Registry stores and discovers other agents' Agent Cards.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Apicurio Registry dual-role A2A architecture</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Apicurio Registry as an A2A agent</th>
+<th class="tableblock halign-left valign-top">Apicurio Registry as an agent card registry</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Endpoint: <code>/.well-known/agent.json</code></p>
+</div>
+<div class="paragraph">
+<p>Built-in skills:</p>
+</div>
+<div class="ulist">
+<ul>
 <li>
-<p><strong>An A2A Agent</strong> - Exposing its own capabilities (schema validation, search, artifact management)</p>
+<p><code>schema-validation</code></p>
 </li>
 <li>
-<p><strong>An Agent Registry</strong> - Storing and discovering other agents' Agent Cards</p>
+<p><code>schema-search</code></p>
 </li>
-</ol>
+<li>
+<p><code>artifact-management</code></p>
+</li>
+<li>
+<p><code>compatibility-check</code></p>
+</li>
+<li>
+<p><code>agent-discovery</code></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Endpoints:</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">┌─────────────────────────────────────────────────────────────────────────────┐
-│                           Apicurio Registry                                  │
-│                                                                              │
-│  ┌─────────────────────┐        ┌──────────────────────────────────────┐    │
-│  │  Registry as Agent  │        │        Agent Card Registry           │    │
-│  │                     │        │                                      │    │
-│  │  /.well-known/      │        │  /.well-known/agents                 │    │
-│  │    agent.json       │        │  /.well-known/agents/{group}/{id}    │    │
-│  │                     │        │                                      │    │
-│  │  Skills:            │        │  - Store agent cards                 │    │
-│  │  - schema-validation│        │  - Search by skill                   │    │
-│  │  - schema-search    │        │  - Filter by capability              │    │
-│  │  - artifact-mgmt    │        │  - Version management                │    │
-│  │  - compatibility    │        │  - Compatibility checking            │    │
-│  │  - agent-discovery  │        │                                      │    │
-│  └─────────────────────┘        └──────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────────────────┘</code></pre>
+<div class="ulist">
+<ul>
+<li>
+<p><code>/.well-known/agents</code></p>
+</li>
+<li>
+<p><code>/.well-known/agents/{groupId}/{artifactId}</code></p>
+</li>
+</ul>
 </div>
+<div class="paragraph">
+<p>Capabilities:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>Store agent cards as <code>AGENT_CARD</code> artifacts</p>
+</li>
+<li>
+<p>Search by skill, capability, or input/output mode</p>
+</li>
+<li>
+<p>Version management and compatibility checking</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<h2 id="a2a-configuration_registry"><a class="anchor" href="#a2a-configuration_registry"></a>A2A configuration properties</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>A2A features are controlled via configuration properties:</p>
+<div class="paragraph _abstract">
+<p>You can control A2A features by using the following configuration properties.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -401,8 +501,8 @@
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable/disable A2A protocol support</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable or disable A2A protocol support</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.agent.name</code></p></td>
@@ -449,15 +549,17 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_well_known_endpoints"><a class="anchor" href="#_well_known_endpoints"></a>Well-Known Endpoints</h2>
+<h2 id="a2a-well-known-endpoints_registry"><a class="anchor" href="#a2a-well-known-endpoints_registry"></a>A2A well-known endpoints</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_get_well_knownagent_json"><a class="anchor" href="#_get_well_knownagent_json"></a>GET /.well-known/agent.json</h3>
-<div class="paragraph">
-<p>Returns the Agent Card for the Apicurio Registry instance itself.</p>
+<div class="paragraph _abstract">
+<p>Apicurio Registry provides the following well-known endpoints for A2A agent discovery and retrieval.</p>
 </div>
 <div class="paragraph">
-<p><strong>Response:</strong> Agent Card JSON document</p>
+<div class="title">GET /.well-known/agent.json</div>
+<p>Retrieves the Agent Card for the Apicurio Registry instance.</p>
+</div>
+<div class="paragraph">
+<p>Response: Agent Card JSON document</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -491,16 +593,12 @@
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_get_well_knownagents"><a class="anchor" href="#_get_well_knownagents"></a>GET /.well-known/agents</h3>
 <div class="paragraph">
-<p>Search for registered Agent Cards with filtering support.</p>
-</div>
-<div class="paragraph">
-<p><strong>Query Parameters:</strong></p>
+<div class="title">GET /.well-known/agents</div>
+<p>Searches for registered Agent Cards with filtering support.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Query parameters for /.well-known/agents</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -527,12 +625,12 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>capability</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by capability (e.g., <code>streaming:true</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by capability (for example, <code>streaming:true</code>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>inputMode</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by input mode (e.g., <code>text</code>, <code>image</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by input mode (for example, <code>text</code>, <code>image</code>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>outputMode</code></p></td>
@@ -551,18 +649,14 @@
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><strong>Example Request:</strong></p>
-</div>
 <div class="listingblock">
+<div class="title">Example request</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/.well-known/agents?skill=translation&amp;capability=streaming:true"</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>Response:</strong> <code>AgentSearchResults</code></p>
-</div>
 <div class="listingblock">
+<div class="title">Example response: AgentSearchResults</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "count": 2,
@@ -581,36 +675,42 @@
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_get_well_knownagentsgroupidartifactid"><a class="anchor" href="#_get_well_knownagentsgroupidartifactid"></a>GET /.well-known/agents/{groupId}/{artifactId}</h3>
 <div class="paragraph">
-<p>Retrieve a specific registered Agent Card.</p>
+<div class="title">GET /.well-known/agents/{groupId}/{artifactId}</div>
+<p>Retrieves a specific registered Agent Card.</p>
+</div>
+<div class="ulist">
+<div class="title">Path parameters</div>
+<ul>
+<li>
+<p><code>groupId</code> - The group containing the agent card</p>
+</li>
+<li>
+<p><code>artifactId</code> - The artifact ID of the agent card</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Query parameters</div>
+<ul>
+<li>
+<p><code>version</code> (optional) - Specific version (defaults to latest)</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p><strong>Path Parameters:</strong>
-- <code>groupId</code> - The group containing the agent card
-- <code>artifactId</code> - The artifact ID of the agent card</p>
-</div>
-<div class="paragraph">
-<p><strong>Query Parameters:</strong>
-- <code>version</code> (optional) - Specific version (defaults to latest)</p>
-</div>
-<div class="paragraph">
-<p><strong>Response:</strong> Agent Card JSON document</p>
-</div>
+<p>Response: Agent Card JSON document</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_agent_card_artifact_type"><a class="anchor" href="#_agent_card_artifact_type"></a>Agent Card Artifact Type</h2>
+<h2 id="a2a-agent-card-artifact-type_registry"><a class="anchor" href="#a2a-agent-card-artifact-type_registry"></a>Agent Card artifact type</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Agent Cards are stored as artifacts with type <code>AGENT_CARD</code>.</p>
+<div class="paragraph _abstract">
+<p>Agent Cards are stored as artifacts with type <code>AGENT_CARD</code>. You can create Agent Cards by using the REST API and you can validate them against the A2A specification JSON schema.</p>
 </div>
-<div class="sect2">
-<h3 id="_creating_an_agent_card"><a class="anchor" href="#_creating_an_agent_card"></a>Creating an Agent Card</h3>
 <div class="listingblock">
+<div class="title">Agent Card creation example</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST "http://localhost:8080/apis/registry/v3/groups/ai-agents/artifacts" \
   -H "Content-Type: application/json" \
@@ -627,10 +727,8 @@
   }'</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_agent_card_json_schema"><a class="anchor" href="#_agent_card_json_schema"></a>Agent Card JSON Schema</h3>
 <div class="paragraph">
+<div class="title">Agent Card JSON schema</div>
 <p>Agent Cards must conform to the A2A specification:</p>
 </div>
 <div class="listingblock">
@@ -686,12 +784,11 @@
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="_validation_rules"><a class="anchor" href="#_validation_rules"></a>Validation Rules</h2>
+<h2 id="a2a-validation-rules_registry"><a class="anchor" href="#a2a-validation-rules_registry"></a>Agent Card validation rules</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Agent Cards support three validation levels:</p>
+<div class="paragraph _abstract">
+<p>Agent Cards have three validation levels that control how much validation occurs when you create or update an Agent Card.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -707,53 +804,103 @@
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>NONE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No validation performed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No validation.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SYNTAX_ONLY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Validates JSON syntax only</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validates that the content is syntactically valid JSON and is a JSON object.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>FULL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Complete schema validation including:
-- Required <code>name</code> field
-- Valid JSON structure
-- Skill objects with <code>id</code> and <code>name</code>
-- Boolean capability values
-- Array types for modes</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Complete schema validation including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Required <code>name</code> field</p>
+</li>
+<li>
+<p>Valid JSON structure</p>
+</li>
+<li>
+<p>Skill objects with <code>id</code> and <code>name</code></p>
+</li>
+<li>
+<p>Boolean capability values</p>
+</li>
+<li>
+<p>Array types for <code>defaultInputModes</code> and <code>defaultOutputModes</code></p>
+</li>
+<li>
+<p>Valid <code>supportedInterfaces</code> entries with <code>url</code> and <code>protocolBinding</code></p>
+</li>
+<li>
+<p>Valid <code>provider</code> object with <code>organization</code> field</p>
+</li>
+<li>
+<p>Authentication and security scheme validation</p>
+</li>
+</ul>
+</div></div></td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_compatibility_checking"><a class="anchor" href="#_compatibility_checking"></a>Compatibility Checking</h2>
+<h2 id="a2a-compatibility-checking_registry"><a class="anchor" href="#a2a-compatibility-checking_registry"></a>Agent Card compatibility rules</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>When versioning Agent Cards, compatibility rules are enforced:</p>
+<div class="paragraph _abstract">
+<p>When you version Agent Cards, Apicurio Registry enforces compatibility rules to ensure that changes do not break existing clients.</p>
 </div>
-<div class="paragraph">
-<p><strong>Compatible Changes (allowed):</strong>
-- Adding new skills
-- Adding new capabilities
-- Adding authentication schemes
-- Adding input/output modes</p>
+<div class="ulist">
+<div class="title">Compatible changes (allowed)</div>
+<ul>
+<li>
+<p>Adding new skills</p>
+</li>
+<li>
+<p>Adding new capabilities</p>
+</li>
+<li>
+<p>Adding authentication schemes</p>
+</li>
+<li>
+<p>Adding input or output modes</p>
+</li>
+</ul>
 </div>
-<div class="paragraph">
-<p><strong>Incompatible Changes (may break clients):</strong>
-- Removing skills
-- Removing or disabling capabilities
-- Changing the agent URL
-- Removing authentication schemes
-- Removing input/output modes</p>
+<div class="ulist">
+<div class="title">Incompatible changes (can break clients)</div>
+<ul>
+<li>
+<p>Removing skills</p>
+</li>
+<li>
+<p>Removing or disabling capabilities</p>
+</li>
+<li>
+<p>Removing supported interfaces (matched by URL and protocol binding)</p>
+</li>
+<li>
+<p>Changing the protocol version on an existing interface</p>
+</li>
+<li>
+<p>Removing authentication schemes</p>
+</li>
+<li>
+<p>Removing input or output modes</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_automatic_label_extraction"><a class="anchor" href="#_automatic_label_extraction"></a>Automatic Label Extraction</h2>
+<h2 id="a2a-automatic-label-extraction_registry"><a class="anchor" href="#a2a-automatic-label-extraction_registry"></a>Automatic label extraction for Agent Cards</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>When Agent Cards are stored, labels are automatically extracted for search:</p>
+<div class="paragraph _abstract">
+<p>Apicurio Registry automatically extracts labels from Agent Cards for search. You can use these labels for efficient capability-based discovery by using the Apicurio Registry label search.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -762,47 +909,48 @@
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Label Pattern</th>
+<th class="tableblock halign-left valign-top">Label pattern</th>
 <th class="tableblock halign-left valign-top">Source</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>a2a.skill.&lt;id&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent_card:skill:&lt;id&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Each skill ID in the skills array</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>a2a.capability.&lt;name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent_card:capability:&lt;name&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enabled capabilities (streaming, pushNotifications)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>a2a.inputMode.&lt;mode&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent_card:inputmode:&lt;mode&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Each input mode</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>a2a.outputMode.&lt;mode&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent_card:outputmode:&lt;mode&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Each output mode</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>a2a.name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Agent name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent_card:protocolbinding:&lt;binding&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Each protocol binding from the supported interfaces</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>a2a.url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Agent URL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent_card:securityscheme:&lt;name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Each security scheme from the authentication configuration</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent_card:tag:&lt;value&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Each tag value from skills</p></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>This enables efficient capability-based discovery using the Registry&#8217;s label search.</p>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_registry_built_in_skills"><a class="anchor" href="#_registry_built_in_skills"></a>Registry Built-in Skills</h2>
+<h2 id="a2a-registry-built-in-skills_registry"><a class="anchor" href="#a2a-registry-built-in-skills_registry"></a>Apicurio Registry built-in A2A skills</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Apicurio Registry exposes itself as an A2A agent with these skills:</p>
+<div class="paragraph _abstract">
+<p>Apicurio Registry operates as an A2A agent with the following built-in skills.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -830,7 +978,7 @@
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>compatibility-check</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Check schema compatibility between versions using configurable rules</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check schema compatibility between versions by using configurable rules</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent-discovery</code></p></td>
@@ -841,15 +989,14 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_llm_lifecycle_management"><a class="anchor" href="#_llm_lifecycle_management"></a>LLM Lifecycle Management</h2>
+<h2 id="a2a-llm-lifecycle-management_registry"><a class="anchor" href="#a2a-llm-lifecycle-management_registry"></a>LLM lifecycle management</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>The A2A integration extends to full LLM lifecycle management with additional artifact types:</p>
+<div class="paragraph _abstract">
+<p>A2A integration includes full LLM lifecycle management with additional artifact types, including MODEL_SCHEMA and PROMPT_TEMPLATE.</p>
 </div>
-<div class="sect2">
-<h3 id="_model_schema"><a class="anchor" href="#_model_schema"></a>MODEL_SCHEMA</h3>
 <div class="paragraph">
-<p>Defines input/output schemas for LLM agents:</p>
+<div class="title">MODEL_SCHEMA artifact type</div>
+<p>The MODEL_SCHEMA artifact type defines input and output schemas for LLM agents:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -869,11 +1016,9 @@
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_prompt_template"><a class="anchor" href="#_prompt_template"></a>PROMPT_TEMPLATE</h3>
 <div class="paragraph">
-<p>Stores versioned prompt templates with variable support:</p>
+<div class="title">PROMPT_TEMPLATE artifact type</div>
+<p>The PROMPT_TEMPLATE artifact type stores versioned prompt templates with variable support:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -898,11 +1043,9 @@ metadata:
   outputSchema: urn:apicurio:llm-agents.schemas/sentiment-output</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_linking_artifacts"><a class="anchor" href="#_linking_artifacts"></a>Linking Artifacts</h3>
 <div class="paragraph">
-<p>Agent Cards can reference their schemas and prompts using URN references:</p>
+<div class="title">Artifact links</div>
+<p>Agent Cards can reference their schemas and prompts by using URN references:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -921,48 +1064,53 @@ metadata:
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="_example_multi_agent_workflow"><a class="anchor" href="#_example_multi_agent_workflow"></a>Example: Multi-Agent Workflow</h2>
+<h2 id="a2a-multi-agent-workflow-example_registry"><a class="anchor" href="#a2a-multi-agent-workflow-example_registry"></a>Multi-agent workflow example</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The <a href="https://github.com/Apicurio/apicurio-registry/tree/3.2.x/examples/a2a-real-world-integration">examples/a2a-real-world-integration</a> directory contains an example of context chaining across multiple agents.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Context chaining pipeline</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Step</th>
+<th class="tableblock halign-left valign-top">Input context</th>
+<th class="tableblock halign-left valign-top">Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1. Sentiment agent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>\{{original}}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{"sentiment": "very_negative", "urgency": "critical"}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2. Issue analyzer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>\{{original}}</code> + <code>\{{sentiment}}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{"priority": "P1", "issue_type": "delayed_delivery"}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3. Response generator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>\{{original}}</code> + <code>\{{sentiment}}</code> + <code>\{{analysis}}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{"response": "Dear customer, I sincerely apologize&#8230;&#8203;"}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4. Translation agent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>\{{response}}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{"translated": "Estimado cliente, le pido disculpas&#8230;&#8203;"}</code></p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
-<p>The <code>examples/a2a-real-world-integration</code> demonstrates context chaining:</p>
+<div class="title">Example commands</div>
+<p>The following commands start the example application:</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Customer Message
-       │
-       ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│  Step 1: Sentiment Agent                                                  │
-│  Input:  {{original}}                                                     │
-│  Output: {"sentiment": "very_negative", "urgency": "critical"}           │
-└──────────────────────────────────────────────────────────────────────────┘
-       │
-       ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│  Step 2: Issue Analyzer                                                   │
-│  Input:  {{original}} + {{sentiment}}                                     │
-│  Output: {"priority": "P1", "issue_type": "delayed_delivery"}            │
-└──────────────────────────────────────────────────────────────────────────┘
-       │
-       ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│  Step 3: Response Generator                                               │
-│  Input:  {{original}} + {{sentiment}} + {{analysis}}                      │
-│  Output: {"response": "Dear customer, I sincerely apologize..."}         │
-└──────────────────────────────────────────────────────────────────────────┘
-       │
-       ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│  Step 4: Translation Agent                                                │
-│  Input:  {{response}}                                                     │
-│  Output: {"translated": "Estimado cliente, le pido disculpas..."}        │
-└──────────────────────────────────────────────────────────────────────────┘</code></pre>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_running_the_example"><a class="anchor" href="#_running_the_example"></a>Running the Example</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd examples/a2a-real-world-integration
@@ -971,17 +1119,18 @@ mvn clean compile exec:java</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Access the Web UI at <a href="http://localhost:9000" class="bare">http://localhost:9000</a>.</p>
-</div>
+<p>The Web UI is available at <a href="http://localhost:9000" class="bare">http://localhost:9000</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_java_sdk_usage"><a class="anchor" href="#_java_sdk_usage"></a>Java SDK Usage</h2>
+<h2 id="a2a-java-sdk-usage_registry"><a class="anchor" href="#a2a-java-sdk-usage_registry"></a>Java SDK usage for A2A</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_discovering_agents"><a class="anchor" href="#_discovering_agents"></a>Discovering Agents</h3>
+<div class="paragraph _abstract">
+<p>You can use the Java SDK to discover agents and register Agent Cards programmatically.</p>
+</div>
 <div class="listingblock">
+<div class="title">Agent discovery example</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">RegistryClient client = RegistryClientFactory.create(
     RegistryClientOptions.create("http://localhost:8080/apis/registry/v3"));
@@ -998,10 +1147,8 @@ for (var agent : agents.getAgents()) {
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_registering_an_agent_card"><a class="anchor" href="#_registering_an_agent_card"></a>Registering an Agent Card</h3>
 <div class="listingblock">
+<div class="title">Agent Card registration example</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">CreateArtifact artifact = new CreateArtifact();
 artifact.setArtifactId("my-agent");
@@ -1025,12 +1172,12 @@ client.groups().byGroupId("ai-agents").artifacts()
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="_rest_api_reference"><a class="anchor" href="#_rest_api_reference"></a>REST API Reference</h2>
+<h2 id="a2a-rest-api-reference_registry"><a class="anchor" href="#a2a-rest-api-reference_registry"></a>A2A REST API endpoints</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_core_a2a_endpoints"><a class="anchor" href="#_core_a2a_endpoints"></a>Core A2A Endpoints</h3>
+<div class="paragraph _abstract">
+<p>The following table describes the core A2A endpoints available in Apicurio Registry.</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 28.5714%;">
@@ -1048,7 +1195,7 @@ client.groups().byGroupId("ai-agents").artifacts()
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/agent.json</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get registry&#8217;s own Agent Card</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the registry&#8217;s own Agent Card</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/agents</code></p></td>
@@ -1058,12 +1205,12 @@ client.groups().byGroupId("ai-agents").artifacts()
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/agents/{groupId}/{artifactId}</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get specific Agent Card by artifact ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get a specific Agent Card by artifact ID</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/registry/v3/groups/{groupId}/artifacts</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Create Agent Card artifact (type: AGENT_CARD)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create an Agent Card artifact (type: AGENT_CARD)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/registry/v3/groups/{groupId}/artifacts/{artifactId}</code></p></td>
@@ -1071,7 +1218,7 @@ client.groups().byGroupId("ai-agents").artifacts()
 <td class="tableblock halign-left valign-top"><p class="tableblock">Get Agent Card artifact metadata</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/registry/v3/groups/{groupId}/artifacts/{artifactId}/versions/{version}/content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/registry/v3/groups/{groupId}/artifacts/{artifactId}/versions/2024.Q2/content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Get Agent Card content</p></td>
 </tr>
@@ -1079,46 +1226,60 @@ client.groups().byGroupId("ai-agents").artifacts()
 </table>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="_troubleshooting"><a class="anchor" href="#_troubleshooting"></a>Troubleshooting</h2>
+<h2 id="a2a-troubleshooting_registry"><a class="anchor" href="#a2a-troubleshooting_registry"></a>A2A troubleshooting</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_a2a_endpoints_return_404"><a class="anchor" href="#_a2a_endpoints_return_404"></a>A2A Endpoints Return 404</h3>
+<div class="paragraph _abstract">
+<p>Use the following information to troubleshoot common issues with A2A features in Apicurio Registry.</p>
+</div>
 <div class="paragraph">
-<p>Ensure A2A is enabled:</p>
+<div class="title">A2A endpoints return 404</div>
+<p>Ensure A2A is enabled in your configuration:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.a2a.enabled=true</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_agent_card_validation_fails"><a class="anchor" href="#_agent_card_validation_fails"></a>Agent Card Validation Fails</h3>
 <div class="paragraph">
-<p>Check that:
-1. The <code>name</code> field is present and non-empty
-2. Skills have both <code>id</code> and <code>name</code> fields
-3. Capabilities are boolean values
-4. The JSON is well-formed</p>
+<div class="title">Agent Card validation fails</div>
+<p>Verify the following conditions:</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_search_returns_no_results"><a class="anchor" href="#_search_returns_no_results"></a>Search Returns No Results</h3>
-<div class="paragraph">
-<p>Verify:
-1. Agent Cards are stored with type <code>AGENT_CARD</code>
-2. Labels were extracted (check artifact labels)
-3. Search filters match stored values exactly</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_see_also"><a class="anchor" href="#_see_also"></a>See Also</h2>
-<div class="sectionbody">
 <div class="ulist">
+<ul>
+<li>
+<p>The <code>name</code> field is present and non-empty.</p>
+</li>
+<li>
+<p>Skills have both <code>id</code> and <code>name</code> fields.</p>
+</li>
+<li>
+<p>Capabilities are boolean values.</p>
+</li>
+<li>
+<p>The JSON is well-formed.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Search returns no results</div>
+<p>Verify the following conditions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Agent Cards are stored with type <code>AGENT_CARD</code>.</p>
+</li>
+<li>
+<p>The registry extracted labels correctly (check artifact labels).</p>
+</li>
+<li>
+<p>Search filters match stored values exactly.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
 <ul>
 <li>
 <p><a href="assembly-llm-artifact-types-implementation.html" class="page">LLM Artifact Types</a></p>
@@ -1127,7 +1288,7 @@ client.groups().byGroupId("ai-agents").artifacts()
 <p><a href="https://google.github.io/A2A/">A2A Protocol Specification</a></p>
 </li>
 <li>
-<p><a href="assembly-configuring-the-registry.html" class="page">Registry Configuration</a></p>
+<p><a href="assembly-configuring-the-registry.html" class="page">Apicurio Registry configuration</a></p>
 </li>
 </ul>
 </div>

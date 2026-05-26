@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>MCP server integration :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-mcp-server-integration.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.2.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">getting-started/assembly-registry-concepts-glossary.adoc</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-registry-quickstart.html">Agent registry quick start</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A protocol features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-server-integration.html">MCP server integration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.2.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../3.3.x/index.html">3.3.x</a>
+        </li>
+        <li class="version is-current">
+          <a href="../index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../3.3.x/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>AI Agent Integration</li>
+    <li><a href="assembly-mcp-server-integration.html">MCP server integration</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.2.x</button>
+  <div class="version-menu">
+    <a class="version" href="../../3.3.x/getting-started/assembly-mcp-server-integration.html">3.3.x</a>
+    <a class="version is-current" href="assembly-mcp-server-integration.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">MCP server integration</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can connect Large Language Model (LLM) clients such as Claude Desktop to Apicurio Registry by using the Model Context Protocol (MCP) server. The MCP server is a lightweight adapter that uses stdio transport on the LLM client side and connects to Apicurio Registry over HTTP or HTTPS by using the REST API. You configure the target Apicurio Registry instance by setting the <code>REGISTRY_URL</code> environment variable. Through this adapter, you can manage groups, artifacts, versions, and configuration properties by using natural language.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#mcp-server-overview_registry">MCP server overview</a></p>
+</li>
+<li>
+<p><a href="#installing-the-mcp-server_registry">Installing the MCP server</a></p>
+</li>
+<li>
+<p><a href="#configuring-claude-desktop-for-mcp_registry">Configuring Claude Desktop for MCP</a></p>
+</li>
+<li>
+<p><a href="#mcp-server-available-tools_registry">Available MCP tools</a></p>
+</li>
+<li>
+<p><a href="#mcp-server-configuration-properties_registry">MCP server configuration properties</a></p>
+</li>
+<li>
+<p><a href="#configuring-mcp-server-authentication_registry">Configuring MCP server authentication</a></p>
+</li>
+<li>
+<p><a href="#configuring-mcp-server-tls_registry">Configuring MCP server TLS</a></p>
+</li>
+<li>
+<p><a href="#mcp-server-troubleshooting_registry">MCP server troubleshooting</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-server-overview_registry"><a class="anchor" href="#mcp-server-overview_registry"></a>MCP server overview</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the Apicurio Registry MCP server to interact with Apicurio Registry through the Model Context Protocol (MCP) from any LLM client. The MCP server acts as an adapter between two protocols: on the LLM client side, it communicates over stdio transport; on the Apicurio Registry side, it connects over HTTP or HTTPS by using the REST API. You configure the target Apicurio Registry instance by setting the <code>REGISTRY_URL</code> environment variable (or the <code>registry.url</code> Java system property).</p>
+</div>
+<div class="paragraph">
+<p>When an LLM client sends a request, the MCP server converts that request into Apicurio Registry REST API calls, runs the operation, and returns the results to the LLM client. The LLM client prompts you for confirmation before each tool call.</p>
+</div>
+<div class="paragraph">
+<p>The MCP server supports operations in the following categories:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>System</strong>: Retrieve server information such as version and status</p>
+</li>
+<li>
+<p><strong>Groups</strong>: Create, list, search, and update artifact groups</p>
+</li>
+<li>
+<p><strong>Artifacts</strong>: Create, list, search, and update artifacts and metadata</p>
+</li>
+<li>
+<p><strong>Versions</strong>: Create, list, search, update content, and manage version state</p>
+</li>
+<li>
+<p><strong>Configuration</strong>: List, get, and update dynamic configuration properties</p>
+</li>
+<li>
+<p><strong>Prompt templates</strong>: List, get, and render prompt templates stored in Apicurio Registry</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The MCP server has a safe mode that is enabled by default. Safe mode restricts operations that could cause unintended changes, such as limiting which configuration properties you can update.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-the-mcp-server_registry"><a class="anchor" href="#installing-the-mcp-server_registry"></a>Installing the MCP server</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can run the Apicurio Registry MCP server as a Docker container or build it from source. Both methods produce a server binary that LLM clients start on demand.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Docker or Podman is installed, or Java 21 and Maven are installed for building from source.</p>
+</li>
+<li>
+<p>A running Apicurio Registry instance is accessible at <code>localhost:8080</code>, or you set a custom URL by using the <code>registry.url</code> property.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+All Docker commands in this guide also work with Podman. Substitute <code>podman</code> for <code>docker</code> if you use Podman as your container runtime.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Pull the MCP server Docker image:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker pull quay.io/apicurio/apicurio-registry-mcp-server:latest</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>latest</code> tag refers to the most recent stable release. For development builds, use the <code>latest-snapshot</code> tag. For a specific version, use the version number as the tag, for example <code>3.2.4</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Alternatively, to build the MCP server from source, clone the Apicurio Registry repository and run the following Maven command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn clean install -pl mcp -am -DskipTests</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-claude-desktop-for-mcp_registry"><a class="anchor" href="#configuring-claude-desktop-for-mcp_registry"></a>Configuring Claude Desktop for MCP</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure Claude Desktop to use the Apicurio Registry MCP server. After configuration, you interact with Apicurio Registry artifacts, groups, and versions by using natural language in Claude Desktop.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Claude Desktop is installed.</p>
+</li>
+<li>
+<p>A running Apicurio Registry instance is accessible at <code>localhost:8080</code>.</p>
+</li>
+<li>
+<p>The Apicurio Registry MCP server Docker image is available, or you have built the MCP server JAR from source.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In Claude Desktop, navigate to <strong>File</strong> &gt; <strong>Settings</strong> &gt; <strong>Developer</strong> &gt; <strong>Edit Config</strong> to open the MCP configuration file.</p>
+</li>
+<li>
+<p>Add the Apicurio Registry MCP server entry to the configuration file.</p>
+<div class="paragraph">
+<p>If you are using the Docker image, add the following configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "mcpServers": {
+    "Apicurio Registry (docker)": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e", "REGISTRY_URL=&lt;registry-url&gt;",
+        "quay.io/apicurio/apicurio-registry-mcp-server:latest"
+      ]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace <code>&lt;registry-url&gt;</code> with the URL of your Apicurio Registry instance, for example <code><a href="http://localhost:8080" class="bare">http://localhost:8080</a></code>.</p>
+</div>
+<div class="paragraph">
+<p>If you built the MCP server from source, add the following configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "mcpServers": {
+    "Apicurio Registry (jar)": {
+      "command": "java",
+      "args": [
+        "-jar",
+        "&lt;path-to-repo&gt;/apicurio-registry/mcp/target/apicurio-registry-mcp-server-&lt;version&gt;-runner.jar"
+      ]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace <code>&lt;path-to-repo&gt;</code> with the absolute path to your local clone of the Apicurio Registry repository, and replace <code>&lt;version&gt;</code> with the version you built.</p>
+</div>
+</li>
+<li>
+<p>Save the configuration file and restart Claude Desktop by selecting <strong>File</strong> &gt; <strong>Exit</strong> and reopening the application.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Verify the connection by asking Claude a question about Apicurio Registry, for example:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>"What is the version of the Registry server?"</p>
+</li>
+<li>
+<p>"What groups are present in the Registry?"</p>
+</li>
+<li>
+<p>"Create 10 example artifacts."</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-server-available-tools_registry"><a class="anchor" href="#mcp-server-available-tools_registry"></a>Available MCP tools</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The Apicurio Registry MCP server provides the following tools for LLM clients to call. Claude Desktop prompts you for confirmation before each tool call.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. System tools</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tool name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_server_info</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns information about the Apicurio Registry server, including the version number.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Group tools</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tool name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list_groups</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of artifact groups from Apicurio Registry. The result always contains the default group named <code>default</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>create_group</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creates a group in Apicurio Registry with an optional description and labels.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_group_metadata</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns metadata for a specific group.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>update_group_metadata</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Updates the description and labels for a group.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>search_groups</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Searches for groups by group ID, description, or labels.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Artifact tools</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tool name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list_artifacts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of artifacts within a group.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_artifact_metadata</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns metadata for a specific artifact within a group.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>update_artifact_metadata</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Updates the name, description, and labels for an artifact.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>create_artifact</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creates an empty artifact in Apicurio Registry with optional name, description, type, and labels. Add content later by creating a version.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>search_artifacts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Searches for artifacts by group ID, artifact ID, type, name, description, or labels.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Version tools</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tool name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list_versions</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of versions within an artifact.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_version_content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the content of a specific artifact version, identified by a version expression.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_version_metadata</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns metadata for a specific artifact version.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>create_version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creates an artifact version with content. Supports draft mode for mutable versions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>update_version_state</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Updates the state of an artifact version to ENABLED, DEPRECATED, DISABLED, or DRAFT.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>update_version_metadata</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Updates the name, description, and labels for an artifact version.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>update_version_content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Updates the content of an artifact version that is in the DRAFT state.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>search_versions</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Searches for versions by group ID, artifact ID, type, name, description, or labels.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Configuration tools</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tool name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_artifact_types</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of artifact types supported by Apicurio Registry.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list_configuration_properties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of all dynamic configuration properties that you can modify without restarting Apicurio Registry.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_configuration_property</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns information about a specific dynamic configuration property.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>update_configuration_property</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Updates a dynamic configuration property. In safe mode, you can update only the <code>apicurio.rest.mutability.artifact-version-content.enabled</code> property.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Prompt template tools</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tool name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list_mcp_prompts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lists all <code>PROMPT_TEMPLATE</code> artifacts that are MCP-enabled in Apicurio Registry.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_mcp_prompt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Retrieves an MCP-enabled prompt template from Apicurio Registry and renders it with arguments that you provide.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>render_prompt_template</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Renders any <code>PROMPT_TEMPLATE</code> artifact with variables that you provide, regardless of MCP enablement.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>You can also use the following MCP prompts in Claude Desktop by clicking the <strong>+</strong> icon and selecting <strong>Add from Apicurio Registry</strong>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>create_new_artifact_version</strong>: A guided workflow for creating artifact versions, including draft mode support and content iteration.</p>
+</li>
+<li>
+<p><strong>render_registry_prompt</strong>: Renders a prompt template from Apicurio Registry for interactive use.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-server-configuration-properties_registry"><a class="anchor" href="#mcp-server-configuration-properties_registry"></a>MCP server configuration properties</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure the Apicurio Registry MCP server by using the following properties. Pass properties as Java system properties when you use the JAR, or as environment variables when you use Docker.</p>
+</div>
+<div class="paragraph">
+<p>For the JAR method, place properties before the <code>-jar</code> argument:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -Dregistry.url=myhost:8080 -jar apicurio-registry-mcp-server-*-runner.jar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the Docker method, pass environment variables by using separate <code>-e</code> elements in the <code>args</code> array of the Claude Desktop configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">"args": [
+  "run", "-i", "--rm",
+  "-e", "REGISTRY_URL=myhost:8080",
+  "quay.io/apicurio/apicurio-registry-mcp-server:latest"
+]</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. General properties</caption>
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 10%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>localhost:8080</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL of the Apicurio Registry server that the MCP server connects to.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.safe-mode</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_SAFE_MODE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Restricts certain operations for safety. When enabled, you can update only allowlisted configuration properties.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.paging.limit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_PAGING_LIMIT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>200</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of items to return in a single paged result. Increase this value if Apicurio Registry contains a large number of objects.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.paging.limit-error</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_PAGING_LIMIT_ERROR</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When the result count exceeds the paging limit, the operation fails. This property helps prevent inaccurate results when you count or list large datasets.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Authentication properties</caption>
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 10%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.auth.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_AUTH_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to <code>true</code>, the MCP server uses OAuth2 client credentials authentication for connections to Apicurio Registry.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.auth.token-endpoint</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_AUTH_TOKEN_ENDPOINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>none</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 token endpoint URL. Required when authentication is enabled.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.auth.client-id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_AUTH_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>none</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client ID. Required when authentication is enabled.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.auth.client-secret</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_AUTH_CLIENT_SECRET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>none</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client secret. Required when authentication is enabled.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.auth.scope</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_AUTH_SCOPE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>none</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 scope. Optional.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. TLS properties</caption>
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 10%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.tls.trust-all</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_TLS_TRUST_ALL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to <code>true</code>, all certificates are trusted. Use only in development environments.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.tls.verify-host</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_TLS_VERIFY_HOST</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to <code>true</code>, the MCP server verifies the hostname in the server certificate.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.tls.truststore.type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_TLS_TRUSTSTORE_TYPE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>none</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Trust store type: <code>JKS</code>, <code>PKCS12</code>, or <code>PEM</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.tls.truststore.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_TLS_TRUSTSTORE_PATH</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>none</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the trust store file.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.tls.truststore.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_TLS_TRUSTSTORE_PASSWORD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>none</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Trust store password. Not required for PEM type.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.tls.keystore.type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_TLS_KEYSTORE_TYPE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>none</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Key store type for mTLS client certificates: <code>JKS</code> or <code>PKCS12</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.tls.keystore.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_TLS_KEYSTORE_PATH</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>none</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the key store file for mTLS.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp.tls.keystore.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_MCP_TLS_KEYSTORE_PASSWORD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>none</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Key store password for mTLS.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-mcp-server-authentication_registry"><a class="anchor" href="#configuring-mcp-server-authentication_registry"></a>Configuring MCP server authentication</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure the Apicurio Registry MCP server to authenticate with Apicurio Registry by using OAuth2 client credentials. You must configure authentication when Apicurio Registry is secured with an OIDC provider such as Keycloak.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is configured with OIDC authentication.</p>
+</li>
+<li>
+<p>An OAuth2 client is configured in your OIDC provider with client credentials grant type.</p>
+</li>
+<li>
+<p>You know the token endpoint URL, client ID, and client secret.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Update the Claude Desktop MCP configuration to include OAuth2 credentials.</p>
+<div class="paragraph">
+<p>If you are using the Docker image, add environment variables to the <code>args</code> array:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "mcpServers": {
+    "Apicurio Registry (docker)": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "REGISTRY_URL=&lt;registry-url&gt;",
+        "-e", "APICURIO_MCP_AUTH_ENABLED=true",
+        "-e", "APICURIO_MCP_AUTH_TOKEN_ENDPOINT=http://localhost:8090/realms/registry/protocol/openid-connect/token",
+        "-e", "APICURIO_MCP_AUTH_CLIENT_ID=registry-api",
+        "-e", "APICURIO_MCP_AUTH_CLIENT_SECRET=&lt;your-client-secret&gt;",
+        "quay.io/apicurio/apicurio-registry-mcp-server:latest"
+      ]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace <code>&lt;your-client-secret&gt;</code> with the client secret from your OIDC provider.</p>
+</div>
+<div class="paragraph">
+<p>If you built the MCP server from source, add system properties before the <code>-jar</code> argument:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "mcpServers": {
+    "Apicurio Registry (jar)": {
+      "command": "java",
+      "args": [
+        "-Dapicurio.mcp.auth.enabled=true",
+        "-Dapicurio.mcp.auth.token-endpoint=http://localhost:8090/realms/registry/protocol/openid-connect/token",
+        "-Dapicurio.mcp.auth.client-id=registry-api",
+        "-Dapicurio.mcp.auth.client-secret=&lt;your-client-secret&gt;",
+        "-jar",
+        "&lt;path-to-repo&gt;/apicurio-registry/mcp/target/apicurio-registry-mcp-server-&lt;version&gt;-runner.jar"
+      ]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace <code>&lt;your-client-secret&gt;</code> with the client secret from your OIDC provider.</p>
+</div>
+</li>
+<li>
+<p>Optional: Add the scope property if your OIDC provider requires a specific scope:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Docker: <code>"-e", "APICURIO_MCP_AUTH_SCOPE=openid"</code></p>
+</li>
+<li>
+<p>JAR: <code>"-Dapicurio.mcp.auth.scope=openid"</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Restart Claude Desktop to apply the changes.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-mcp-server-tls_registry"><a class="anchor" href="#configuring-mcp-server-tls_registry"></a>Configuring MCP server TLS</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure the Apicurio Registry MCP server to connect to Apicurio Registry over TLS. You configure trust store settings to verify the server certificate, and optionally configure key store settings for mutual TLS (mTLS) client certificate authentication.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is configured with TLS.</p>
+</li>
+<li>
+<p>You have the trust store file containing the CA certificate or server certificate.</p>
+</li>
+<li>
+<p>For mTLS, you have a key store file containing the client certificate and private key.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Update the Claude Desktop MCP configuration to include TLS settings.</p>
+<div class="paragraph">
+<p>If you are using the Docker image, add environment variables and mount the certificate files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "mcpServers": {
+    "Apicurio Registry (docker)": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-v", "/path/to/certs:/certs:ro",
+        "-e", "REGISTRY_URL=https://registry.example.com:8443",
+        "-e", "APICURIO_MCP_TLS_TRUSTSTORE_TYPE=PKCS12",
+        "-e", "APICURIO_MCP_TLS_TRUSTSTORE_PATH=/certs/truststore.p12",
+        "-e", "APICURIO_MCP_TLS_TRUSTSTORE_PASSWORD=&lt;truststore-password&gt;",
+        "quay.io/apicurio/apicurio-registry-mcp-server:latest"
+      ]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you built the MCP server from source, add system properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "mcpServers": {
+    "Apicurio Registry (jar)": {
+      "command": "java",
+      "args": [
+        "-Dregistry.url=https://registry.example.com:8443",
+        "-Dapicurio.mcp.tls.truststore.type=PKCS12",
+        "-Dapicurio.mcp.tls.truststore.path=/path/to/truststore.p12",
+        "-Dapicurio.mcp.tls.truststore.password=&lt;truststore-password&gt;",
+        "-jar",
+        "&lt;path-to-repo&gt;/apicurio-registry/mcp/target/apicurio-registry-mcp-server-&lt;version&gt;-runner.jar"
+      ]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Optional: Add key store properties in addition to the trust store properties to configure mTLS with a client certificate:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Docker: add <code>"-e", "APICURIO_MCP_TLS_KEYSTORE_TYPE=PKCS12"</code>, <code>"-e", "APICURIO_MCP_TLS_KEYSTORE_PATH=/certs/keystore.p12"</code>, and <code>"-e", "APICURIO_MCP_TLS_KEYSTORE_PASSWORD=&lt;keystore-password&gt;"</code> to the <code>args</code> array.</p>
+</li>
+<li>
+<p>JAR: add <code>-Dapicurio.mcp.tls.keystore.type=PKCS12</code>, <code>-Dapicurio.mcp.tls.keystore.path=/path/to/keystore.p12</code>, and <code>-Dapicurio.mcp.tls.keystore.password=&lt;keystore-password&gt;</code> before the <code>-jar</code> argument.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Optional: In development environments, skip certificate verification by setting <code>apicurio.mcp.tls.trust-all=true</code>. Do not use this setting in production.</p>
+</li>
+<li>
+<p>Restart Claude Desktop to apply the changes.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-server-troubleshooting_registry"><a class="anchor" href="#mcp-server-troubleshooting_registry"></a>MCP server troubleshooting</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Use the following information to diagnose common issues with the Apicurio Registry MCP server.</p>
+</div>
+<div class="paragraph">
+<div class="title">Enabling detailed logging</div>
+<p>By default, the MCP server does not write logs to a file. To enable file logging for troubleshooting, add logging properties to the Claude Desktop MCP configuration.</p>
+</div>
+<div class="paragraph">
+<p>For the Docker image, add the following to the <code>args</code> array before the image name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">"-e", "QUARKUS_LOG_FILE_ENABLE=true",
+"-e", "QUARKUS_LOG_FILE_PATH=/mnt/log/mcp-server.log",
+"-v", "&lt;path-to-log-dir&gt;:/mnt/log",</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the JAR, add the following before the <code>-jar</code> argument:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">"-Dquarkus.log.file.enable=true",
+"-Dquarkus.log.file.path=&lt;path-to-log-dir&gt;/mcp-server.log",</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace <code>&lt;path-to-log-dir&gt;</code> with the directory where you want to store the log file.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. Common issues</caption>
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Issue</th>
+<th class="tableblock halign-left valign-top">Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Claude Desktop does not show the Apicurio Registry MCP server tools.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify that the MCP configuration file is valid JSON. Restart Claude Desktop completely by selecting <strong>File</strong> &gt; <strong>Exit</strong> and reopening the application.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The MCP server cannot connect to Apicurio Registry.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify that Apicurio Registry is running and accessible at the configured URL. Check the <code>REGISTRY_URL</code> environment variable or <code>registry.url</code> property. If you run the MCP server in Docker, ensure that <code>REGISTRY_URL</code> points to the correct host and port of your Apicurio Registry instance.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The paging limit error occurs when listing objects.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry contains more objects than the configured paging limit. Increase the <code>apicurio.mcp.paging.limit</code> property, or set <code>apicurio.mcp.paging.limit-error</code> to <code>false</code> to allow partial results.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authentication fails with OAuth2 credentials.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify that the token endpoint URL, client ID, and client secret are correct. Ensure that the OAuth2 client is configured for the client credentials grant type.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A configuration property update is rejected.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Safe mode restricts which configuration properties you can update. Set <code>apicurio.mcp.safe-mode</code> to <code>false</code> to allow all updates, or use the Apicurio Registry REST API directly.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Claude Desktop does not reflect changes to the MCP server code.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">After you rebuild the MCP server, restart Claude Desktop completely by selecting <strong>File</strong> &gt; <strong>Exit</strong> and reopening the application.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-a2a-features.html" class="page">A2A agent features</a></p>
+</li>
+<li>
+<p><a href="assembly-agent-registry-quickstart.html" class="page">Agent registry quick start</a></p>
+</li>
+<li>
+<p><a href="https://modelcontextprotocol.io/introduction">Introduction to MCP</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.2.x/getting-started/assembly-mcp-server-integration.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
