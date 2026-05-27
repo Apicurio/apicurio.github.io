@@ -375,7 +375,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter explains how to use Apicurio Registry as an Apache Iceberg REST Catalog to manage table metadata for your data lakehouse applications:</p>
+<p>You can use Apicurio Registry as an Apache Iceberg REST Catalog to manage table metadata for your data lakehouse applications.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -383,13 +383,13 @@
 <p><a href="#registry-iceberg-catalog-overview_registry">Overview of the Apicurio Registry Iceberg REST Catalog</a></p>
 </li>
 <li>
-<p><a href="#registry-iceberg-catalog-config_registry">Configuring the Apicurio Registry Iceberg REST Catalog</a></p>
+<p><a href="#registry-iceberg-catalog-config_registry">Apicurio Registry Iceberg REST Catalog configuration</a></p>
 </li>
 <li>
-<p><a href="#registry-iceberg-catalog-rest-api_registry">Using the Iceberg REST API</a></p>
+<p><a href="#registry-iceberg-catalog-rest-api_registry">Iceberg REST API usage</a></p>
 </li>
 <li>
-<p><a href="#registry-iceberg-catalog-commit-table_registry">Committing updates to a table</a></p>
+<p><a href="#registry-iceberg-catalog-commit-table_registry">Table commit operations</a></p>
 </li>
 <li>
 <p><a href="#registry-iceberg-catalog-error-handling_registry">Error handling</a></p>
@@ -398,7 +398,10 @@
 <p><a href="#registry-iceberg-catalog-auth_registry">Authentication and authorization</a></p>
 </li>
 <li>
-<p><a href="#registry-iceberg-catalog-query-engines_registry">Using Apicurio Registry with query engines</a></p>
+<p><a href="#registry-iceberg-catalog-query-engines_registry">Query engine configuration for Apicurio Registry</a></p>
+</li>
+<li>
+<p><a href="#registry-iceberg-catalog-api-reference_registry">API reference</a></p>
 </li>
 <li>
 <p><a href="#registry-iceberg-catalog-limitations_registry">Limitations</a></p>
@@ -422,7 +425,7 @@
 <h2 id="registry-iceberg-catalog-overview_registry"><a class="anchor" href="#registry-iceberg-catalog-overview_registry"></a>Overview of the Apicurio Registry Iceberg REST Catalog</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry implements the Apache Iceberg REST Catalog API specification, enabling it to serve as a metadata catalog for Iceberg tables. This allows query engines like Apache Spark, Trino, ClickHouse, DuckDB, and Flink to use Apicurio Registry as their Iceberg catalog for managing table metadata.</p>
+<p>Apicurio Registry implements the Apache Iceberg REST Catalog API specification, which means it can serve as a metadata catalog for Iceberg tables. Query engines such as Apache Spark, Trino, ClickHouse, DuckDB, and Flink can use Apicurio Registry as their Iceberg catalog for managing table metadata.</p>
 </div>
 <div class="paragraph">
 <p>The catalog maps Apicurio Registry concepts to Iceberg concepts as follows:</p>
@@ -436,8 +439,8 @@
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Apicurio Registry Concept</th>
-<th class="tableblock halign-left valign-top">Iceberg Concept</th>
+<th class="tableblock halign-left valign-top">Apicurio Registry concept</th>
+<th class="tableblock halign-left valign-top">Iceberg concept</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -482,10 +485,10 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-iceberg-catalog-config_registry"><a class="anchor" href="#registry-iceberg-catalog-config_registry"></a>Configuring the Apicurio Registry Iceberg REST Catalog</h2>
+<h2 id="registry-iceberg-catalog-config_registry"><a class="anchor" href="#registry-iceberg-catalog-config_registry"></a>Apicurio Registry Iceberg REST Catalog configuration</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section describes the configuration options available for the Apicurio Registry Iceberg REST Catalog.</p>
+<p>You can configure the Apicurio Registry Iceberg REST Catalog by using several properties.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 2. Apicurio Registry Iceberg configuration properties</caption>
@@ -498,7 +501,7 @@
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Environment Variable</th>
+<th class="tableblock halign-left valign-top">Environment variable</th>
 <th class="tableblock halign-left valign-top">Default</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
@@ -508,13 +511,13 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.iceberg.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_ICEBERG_ENABLED</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables or disables the Iceberg REST Catalog API. This is an experimental feature and also requires <code>apicurio.features.experimental.enabled=true</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables or disables the Iceberg REST Catalog API. Because this feature is experimental, you must also set <code>apicurio.features.experimental.enabled=true</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.iceberg.warehouse</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_ICEBERG_WAREHOUSE</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Empty string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The default warehouse location for Iceberg tables. This is returned in the catalog configuration.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The default warehouse location for Iceberg tables. The catalog configuration response includes this value.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.iceberg.default-prefix</code></p></td>
@@ -536,14 +539,13 @@ apicurio.iceberg.default-prefix=production</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-iceberg-catalog-rest-api_registry"><a class="anchor" href="#registry-iceberg-catalog-rest-api_registry"></a>Using the Iceberg REST API</h2>
+<h2 id="registry-iceberg-catalog-rest-api_registry"><a class="anchor" href="#registry-iceberg-catalog-rest-api_registry"></a>Iceberg REST API usage</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry exposes the Iceberg REST Catalog API at the <code>/apis/iceberg/v1</code> endpoint. The following examples demonstrate how to interact with the API using <code>curl</code>.</p>
+<p>Apicurio Registry exposes the Iceberg REST Catalog API at the <code>/apis/iceberg/v1</code> endpoint. You can interact with the API by using <code>curl</code> as shown in these examples.</p>
 </div>
-<div class="sect2">
-<h3 id="_getting_catalog_configuration"><a class="anchor" href="#_getting_catalog_configuration"></a>Getting catalog configuration</h3>
 <div class="listingblock">
+<div class="title">Getting catalog configuration</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://localhost:8080/apis/iceberg/v1/config</code></pre>
 </div>
@@ -557,10 +559,8 @@ apicurio.iceberg.default-prefix=production</code></pre>
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_creating_a_namespace"><a class="anchor" href="#_creating_a_namespace"></a>Creating a namespace</h3>
 <div class="listingblock">
+<div class="title">Creating a namespace</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST http://localhost:8080/apis/iceberg/v1/default/namespaces \
   -H "Content-Type: application/json" \
@@ -585,10 +585,8 @@ apicurio.iceberg.default-prefix=production</code></pre>
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_listing_namespaces"><a class="anchor" href="#_listing_namespaces"></a>Listing namespaces</h3>
 <div class="listingblock">
+<div class="title">Listing namespaces</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://localhost:8080/apis/iceberg/v1/default/namespaces</code></pre>
 </div>
@@ -604,10 +602,8 @@ apicurio.iceberg.default-prefix=production</code></pre>
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_creating_a_table"><a class="anchor" href="#_creating_a_table"></a>Creating a table</h3>
 <div class="listingblock">
+<div class="title">Creating a table</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST http://localhost:8080/apis/iceberg/v1/default/namespaces/my_database/tables \
   -H "Content-Type: application/json" \
@@ -629,18 +625,14 @@ apicurio.iceberg.default-prefix=production</code></pre>
   }'</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_loading_a_table"><a class="anchor" href="#_loading_a_table"></a>Loading a table</h3>
 <div class="listingblock">
+<div class="title">Loading a table</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://localhost:8080/apis/iceberg/v1/default/namespaces/my_database/tables/users</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_listing_tables_in_a_namespace"><a class="anchor" href="#_listing_tables_in_a_namespace"></a>Listing tables in a namespace</h3>
 <div class="listingblock">
+<div class="title">Listing tables in a namespace</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://localhost:8080/apis/iceberg/v1/default/namespaces/my_database/tables</code></pre>
 </div>
@@ -658,10 +650,8 @@ apicurio.iceberg.default-prefix=production</code></pre>
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_renaming_a_table"><a class="anchor" href="#_renaming_a_table"></a>Renaming a table</h3>
 <div class="listingblock">
+<div class="title">Renaming a table</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST http://localhost:8080/apis/iceberg/v1/default/tables/rename \
   -H "Content-Type: application/json" \
@@ -677,17 +667,18 @@ apicurio.iceberg.default-prefix=production</code></pre>
   }'</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_dropping_a_table"><a class="anchor" href="#_dropping_a_table"></a>Dropping a table</h3>
 <div class="listingblock">
+<div class="title">Dropping a table</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X DELETE http://localhost:8080/apis/iceberg/v1/default/namespaces/my_database/tables/users</code></pre>
 </div>
 </div>
+<div class="listingblock">
+<div class="title">Dropping a namespace</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X DELETE http://localhost:8080/apis/iceberg/v1/default/namespaces/my_database</code></pre>
 </div>
-<div class="sect2">
-<h3 id="_dropping_a_namespace"><a class="anchor" href="#_dropping_a_namespace"></a>Dropping a namespace</h3>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -695,24 +686,18 @@ apicurio.iceberg.default-prefix=production</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-A namespace must be empty (contain no tables) before it can be dropped.
+A namespace must be empty (contain no tables) before you can drop it.
 </td>
 </tr>
 </table>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X DELETE http://localhost:8080/apis/iceberg/v1/default/namespaces/my_database</code></pre>
-</div>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-iceberg-catalog-commit-table_registry"><a class="anchor" href="#registry-iceberg-catalog-commit-table_registry"></a>Committing updates to a table</h2>
+<h2 id="registry-iceberg-catalog-commit-table_registry"><a class="anchor" href="#registry-iceberg-catalog-commit-table_registry"></a>Table commit operations</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The CommitTable operation is the core mechanism for updating Iceberg table metadata. It enables atomic metadata updates with optimistic concurrency control, which is the foundation of Iceberg&#8217;s snapshot isolation model.</p>
+<p>The CommitTable operation is the core mechanism for updating Iceberg table metadata. It provides atomic metadata updates with optimistic concurrency control, which is the foundation of Iceberg&#8217;s snapshot isolation model.</p>
 </div>
 <div class="paragraph">
 <p>A commit request contains two parts:</p>
@@ -720,16 +705,15 @@ A namespace must be empty (contain no tables) before it can be dropped.
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Requirements</strong>&#8201;&#8212;&#8201;preconditions that must be satisfied for the commit to proceed. If any requirement is not met, the commit fails with a <code>409 Conflict</code> response and no changes are applied.</p>
+<p><strong>Requirements</strong>: preconditions that must be satisfied for the commit to proceed. If any requirement is not met, the commit fails with a <code>409 Conflict</code> response and no changes are applied.</p>
 </li>
 <li>
-<p><strong>Updates</strong>&#8201;&#8212;&#8201;mutations to apply to the table metadata. All updates within a single commit are applied atomically to produce one new metadata version.</p>
+<p><strong>Updates</strong>: mutations to apply to the table metadata. All updates within a single commit are applied atomically to produce one new metadata version.</p>
 </li>
 </ul>
 </div>
-<div class="sect2">
-<h3 id="_concurrency_control"><a class="anchor" href="#_concurrency_control"></a>Concurrency control</h3>
 <div class="paragraph">
+<div class="title">Concurrency control</div>
 <p>Apicurio Registry uses optimistic concurrency to detect conflicting commits. When a commit is processed:</p>
 </div>
 <div class="olist arabic">
@@ -747,26 +731,24 @@ A namespace must be empty (contain no tables) before it can be dropped.
 <p>The new metadata is stored as a new artifact version.</p>
 </li>
 <li>
-<p>If another commit was interleaved between steps 1 and 4, the conflict is detected and the commit fails with a <code>409 Conflict</code> response.</p>
+<p>If another commit is interleaved between steps 1 and 4, the conflict is detected and the commit fails with a <code>409 Conflict</code> response.</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>This ensures that concurrent writers cannot silently overwrite each other&#8217;s changes. Clients that receive a <code>409</code> response should reload the current table metadata, revalidate their changes, and retry the commit.</p>
+<p>Concurrent writers cannot silently overwrite each other&#8217;s changes. Clients that receive a <code>409</code> response must reload the current table metadata, revalidate their changes, and retry the commit.</p>
 </div>
 <div class="paragraph">
-<p>All changes within a single commit&#8201;&#8212;&#8201;including the new version and any artifact-level label updates&#8201;&#8212;&#8201;are applied atomically within a single storage transaction. If any part of the commit fails, the entire operation is rolled back and no partial state is persisted.</p>
+<p>All changes within a single commit, including the new version and any artifact-level label updates, are applied atomically within a single storage transaction. If any part of the commit fails, the entire operation is rolled back and no partial state is persisted.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_conflict_handling_and_retries"><a class="anchor" href="#_conflict_handling_and_retries"></a>Conflict handling and retries</h3>
 <div class="paragraph">
+<div class="title">Conflict handling and retries</div>
 <p>When a commit fails with a <code>409 Conflict</code> response, the appropriate client behavior is:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Reload the current table metadata using the <code>LoadTable</code> endpoint.</p>
+<p>Reload the current table metadata by using the <code>LoadTable</code> endpoint.</p>
 </li>
 <li>
 <p>Revalidate the intended changes against the new metadata.</p>
@@ -782,29 +764,25 @@ A namespace must be empty (contain no tables) before it can be dropped.
 <div class="paragraph">
 <p>Most Iceberg client libraries (such as the Apache Iceberg Java SDK) handle this retry loop automatically.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_kafkasql_storage_considerations"><a class="anchor" href="#_kafkasql_storage_considerations"></a>KafkaSQL storage considerations</h3>
 <div class="paragraph">
-<p>When Apicurio Registry is deployed with the KafkaSQL storage backend, all write operations&#8201;&#8212;&#8201;including commits&#8201;&#8212;&#8201;are serialized through a Kafka journal topic. This has the following implications:</p>
+<div class="title">KafkaSQL storage considerations</div>
+<p>When Apicurio Registry is deployed with the KafkaSQL storage backend, all write operations, including commits, are serialized through a Kafka journal topic. This serialization has several implications:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Ordering</strong>: Commits to the same table are totally ordered through Kafka partitioning. This means the optimistic concurrency check is always evaluated against the true latest state.</p>
+<p><strong>Ordering</strong>: Commits to the same table are totally ordered through Kafka partitioning. The optimistic concurrency check is always evaluated against the true latest state.</p>
 </li>
 <li>
-<p><strong>Failed commits</strong>: When a commit fails (for example, due to a concurrent write detected by the version-order check), the Kafka message remains in the journal. This is expected and harmless: during journal replay (such as when a new replica starts up), the message is re-consumed, the same version-order check fails again, and the message is silently discarded since no HTTP thread is waiting for a response.</p>
+<p><strong>Failed commits</strong>: When a commit fails (for example, due to a concurrent write detected by the version-order check), the Kafka message remains in the journal. This behavior is expected and harmless: during journal replay (such as when a new replica starts up), the message is re-consumed, the same version-order check fails again, and the message is silently discarded because no HTTP thread is waiting for a response.</p>
 </li>
 <li>
 <p><strong>Atomicity</strong>: The version creation and any artifact-level metadata updates are performed in a single SQL transaction. If the transaction fails, no data is written and the Kafka message becomes a no-op on replay.</p>
 </li>
 </ul>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_requirements"><a class="anchor" href="#_requirements"></a>Requirements</h3>
 <div class="paragraph">
+<div class="title">Requirements</div>
 <p>Requirements are assertions about the current state of the table. Each requirement has a <code>type</code> field that specifies the kind of assertion.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
@@ -864,10 +842,8 @@ A namespace must be empty (contain no tables) before it can be dropped.
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_updates"><a class="anchor" href="#_updates"></a>Updates</h3>
 <div class="paragraph">
+<div class="title">Updates</div>
 <p>Updates are mutations applied to the table metadata. Each update has an <code>action</code> field that specifies the type of mutation.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
@@ -962,10 +938,8 @@ A namespace must be empty (contain no tables) before it can be dropped.
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_example_adding_a_schema_and_setting_it_as_current"><a class="anchor" href="#_example_adding_a_schema_and_setting_it_as_current"></a>Example: Adding a schema and setting it as current</h3>
 <div class="listingblock">
+<div class="title">Example: Adding a schema and setting it as current</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST http://localhost:8080/apis/iceberg/v1/default/namespaces/my_database/tables/users \
   -H "Content-Type: application/json" \
@@ -993,10 +967,8 @@ A namespace must be empty (contain no tables) before it can be dropped.
   }'</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_example_adding_a_snapshot_and_updating_the_main_branch"><a class="anchor" href="#_example_adding_a_snapshot_and_updating_the_main_branch"></a>Example: Adding a snapshot and updating the main branch</h3>
 <div class="listingblock">
+<div class="title">Example: Adding a snapshot and updating the main branch</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST http://localhost:8080/apis/iceberg/v1/default/namespaces/my_database/tables/users \
   -H "Content-Type: application/json" \
@@ -1024,10 +996,8 @@ A namespace must be empty (contain no tables) before it can be dropped.
   }'</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_example_setting_and_removing_table_properties"><a class="anchor" href="#_example_setting_and_removing_table_properties"></a>Example: Setting and removing table properties</h3>
 <div class="listingblock">
+<div class="title">Example: Setting and removing table properties</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST http://localhost:8080/apis/iceberg/v1/default/namespaces/my_database/tables/users \
   -H "Content-Type: application/json" \
@@ -1049,9 +1019,6 @@ A namespace must be empty (contain no tables) before it can be dropped.
   }'</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_error_responses"><a class="anchor" href="#_error_responses"></a>Error responses</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 5. CommitTable error responses</caption>
 <colgroup>
@@ -1061,8 +1028,8 @@ A namespace must be empty (contain no tables) before it can be dropped.
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">HTTP Status</th>
-<th class="tableblock halign-left valign-top">Error Type</th>
+<th class="tableblock halign-left valign-top">HTTP status</th>
+<th class="tableblock halign-left valign-top">Error type</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -1091,12 +1058,11 @@ A namespace must be empty (contain no tables) before it can be dropped.
 </table>
 </div>
 </div>
-</div>
 <div class="sect1">
 <h2 id="registry-iceberg-catalog-error-handling_registry"><a class="anchor" href="#registry-iceberg-catalog-error-handling_registry"></a>Error handling</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>All Iceberg REST Catalog API endpoints return errors in the Iceberg error format. The following table lists the error types that can be returned by the API.</p>
+<p>All Iceberg REST Catalog API endpoints return errors in the Iceberg error format. Each error response includes an HTTP status code and error type.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 6. Iceberg REST Catalog API error types</caption>
@@ -1107,8 +1073,8 @@ A namespace must be empty (contain no tables) before it can be dropped.
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">HTTP Status</th>
-<th class="tableblock halign-left valign-top">Error Type</th>
+<th class="tableblock halign-left valign-top">HTTP status</th>
+<th class="tableblock halign-left valign-top">Error type</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -1173,7 +1139,7 @@ A namespace must be empty (contain no tables) before it can be dropped.
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Operation</th>
-<th class="tableblock halign-left valign-top">Minimum Level</th>
+<th class="tableblock halign-left valign-top">Minimum level</th>
 <th class="tableblock halign-left valign-top">Notes</th>
 </tr>
 </thead>
@@ -1253,14 +1219,13 @@ A namespace must be empty (contain no tables) before it can be dropped.
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-iceberg-catalog-query-engines_registry"><a class="anchor" href="#registry-iceberg-catalog-query-engines_registry"></a>Using Apicurio Registry with query engines</h2>
+<h2 id="registry-iceberg-catalog-query-engines_registry"><a class="anchor" href="#registry-iceberg-catalog-query-engines_registry"></a>Query engine configuration for Apicurio Registry</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section provides configuration examples for popular query engines that support the Iceberg REST Catalog specification.</p>
+<p>You can configure popular query engines that support the Iceberg REST Catalog specification to use Apicurio Registry as their catalog.</p>
 </div>
-<div class="sect2">
-<h3 id="_apache_spark"><a class="anchor" href="#_apache_spark"></a>Apache Spark</h3>
 <div class="paragraph">
+<div class="title">Apache Spark</div>
 <p>Configure Spark to use Apicurio Registry as the Iceberg catalog:</p>
 </div>
 <div class="listingblock">
@@ -1291,10 +1256,8 @@ CREATE TABLE apicurio.my_database.events (
 SELECT * FROM apicurio.my_database.events;</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_trino"><a class="anchor" href="#_trino"></a>Trino</h3>
 <div class="paragraph">
+<div class="title">Trino</div>
 <p>Configure Trino to use Apicurio Registry as the Iceberg catalog by creating a catalog properties file:</p>
 </div>
 <div class="listingblock">
@@ -1323,10 +1286,8 @@ CREATE TABLE apicurio.my_database.products (
 SELECT * FROM apicurio.my_database.products;</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_duckdb"><a class="anchor" href="#_duckdb"></a>DuckDB</h3>
 <div class="paragraph">
+<div class="title">DuckDB</div>
 <p>Configure DuckDB to use Apicurio Registry as the Iceberg catalog:</p>
 </div>
 <div class="listingblock">
@@ -1342,10 +1303,8 @@ ATTACH 'http://localhost:8080/apis/iceberg/v1' AS apicurio (TYPE ICEBERG);
 SELECT * FROM apicurio.my_database.users;</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_clickhouse"><a class="anchor" href="#_clickhouse"></a>ClickHouse</h3>
 <div class="paragraph">
+<div class="title">ClickHouse</div>
 <p>Configure ClickHouse to use Apicurio Registry as the Iceberg catalog:</p>
 </div>
 <div class="listingblock">
@@ -1363,12 +1322,11 @@ SELECT * FROM apicurio_db.users;</code></pre>
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
 <h2 id="registry-iceberg-catalog-api-reference_registry"><a class="anchor" href="#registry-iceberg-catalog-api-reference_registry"></a>API reference</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The following table lists all Iceberg REST Catalog API endpoints supported by Apicurio Registry.</p>
+<p>Apicurio Registry supports a set of Iceberg REST Catalog API endpoints for managing namespaces, tables, and views.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 8. Iceberg REST Catalog API endpoints</caption>
@@ -1498,7 +1456,7 @@ SELECT * FROM apicurio_db.users;</code></pre>
 <h2 id="registry-iceberg-catalog-limitations_registry"><a class="anchor" href="#registry-iceberg-catalog-limitations_registry"></a>Limitations</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The Apicurio Registry Iceberg REST Catalog implementation has the following limitations:</p>
+<p>The Apicurio Registry Iceberg REST Catalog implementation has several known limitations:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1520,13 +1478,13 @@ SELECT * FROM apicurio_db.users;</code></pre>
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more information about the Iceberg REST Catalog specification, see the <a href="https://github.com/apache/iceberg/blob/main/open-api/rest-catalog-open-api.yaml">Apache Iceberg REST Catalog OpenAPI specification</a></p>
+<p><a href="https://github.com/apache/iceberg/blob/main/open-api/rest-catalog-open-api.yaml">Apache Iceberg REST Catalog OpenAPI specification</a></p>
 </li>
 <li>
-<p>For information on Apicurio Registry groups and artifacts, see <a href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a></p>
+<p><a href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a></p>
 </li>
 <li>
-<p>For information about Apache Iceberg, see the <a href="https://iceberg.apache.org/">Apache Iceberg documentation</a></p>
+<p><a href="https://iceberg.apache.org/">Apache Iceberg documentation</a></p>
 </li>
 </ul>
 </div>
