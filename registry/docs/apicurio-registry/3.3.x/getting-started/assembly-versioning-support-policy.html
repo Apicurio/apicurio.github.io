@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Apicurio Registry content rules :: Apicurio Registry</title>
-    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-intro-to-registry-rules.html">
+    <title>Versioning and support policy :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-versioning-support-policy.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
     <link rel="stylesheet" href="../../../assets/css/site.css">
@@ -80,7 +80,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -125,7 +125,7 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Versioning and support</span>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="assembly-versioning-support-policy.html">Versioning and support policy</a>
   </li>
 </ul>
@@ -358,227 +358,355 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
-    <li>Introduction</li>
-    <li><a href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a></li>
+    <li>Versioning and support</li>
+    <li><a href="assembly-versioning-support-policy.html">Versioning and support policy</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">3.3.x</button>
   <div class="version-menu">
-    <a class="version is-current" href="assembly-intro-to-registry-rules.html">3.3.x</a>
-    <a class="version" href="../../3.2.x/getting-started/assembly-intro-to-registry-rules.html">3.2.x</a>
-    <a class="version" href="../../3.1.x/getting-started/assembly-intro-to-registry-rules.html">3.1.x</a>
-    <a class="version" href="../../3.0.x/getting-started/assembly-intro-to-registry-rules.html">3.0.x</a>
-    <a class="version" href="../../2.6.x/getting-started/assembly-intro-to-registry-rules.html">2.6.x</a>
-    <a class="version" href="../../2.2.x/getting-started/assembly-intro-to-registry-rules.html">2.2.x</a>
-    <a class="version" href="../../2.1.x/getting-started/assembly-intro-to-registry-rules.html">2.1.x</a>
-    <a class="version" href="../../2.0.x/getting-started/assembly-intro-to-registry-rules.html">2.0.x</a>
-    <a class="version" href="../../1.3.3.Final/getting-started/assembly-intro-to-registry-rules.html">1.3.3.Final</a>
+    <a class="version is-current" href="assembly-versioning-support-policy.html">3.3.x</a>
+    <a class="version is-missing" href="../../3.2.x/index.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
   </div>
 </div>
   <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Apicurio Registry content rules</h1>
+<h1 class="page">Versioning and support policy</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter introduces the optional rules used to govern Apicurio Registry content and provides details on the available rule configuration:</p>
+<p>This chapter describes the Apicurio Registry versioning scheme, support policy, release channels, and guidance for upgrading and handling rollbacks.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#registry-rules_registry">Govern Apicurio Registry content using rules</a></p>
+<p><a href="#versioning-scheme_registry">Versioning scheme</a></p>
 </li>
 <li>
-<p><a href="#registry-rules-apply_registry">When rules are applied</a></p>
+<p><a href="#support-window_registry">Support window</a></p>
 </li>
 <li>
-<p><a href="#registry-rules-precedence_registry">Order of precedence of rules</a></p>
+<p><a href="#release-channels_registry">Release channels</a></p>
 </li>
 <li>
-<p><a href="#registry-rules-work_registry">How rules work</a></p>
+<p><a href="#upgrading-registry_registry">Upgrading Apicurio Registry</a></p>
 </li>
 <li>
-<p><a href="#registry-rules-config_registry">Content rule configuration</a></p>
+<p><a href="#downgrades-and-rollbacks_registry">Downgrades and rollbacks</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-rules_registry"><a class="anchor" href="#registry-rules_registry"></a>Govern Apicurio Registry content using rules</h2>
+<h2 id="versioning-scheme_registry"><a class="anchor" href="#versioning-scheme_registry"></a>Versioning scheme</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>To govern the evolution of artifact content added to Apicurio Registry, you can configure optional rules. All configured global rules, group-specific rules, or artifact-specific rules must pass before a new artifact version can be added to Apicurio Registry. Configured artifact-specific rules override any configured group-specific rules, which in turn override any configured global rules.</p>
+<p>Apicurio Registry follows <a href="https://semver.org/">Semantic Versioning</a> with a clear distinction between minor and patch releases.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Release type</th>
+<th class="tableblock halign-left valign-top">Contents</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Minor</strong> (e.g., 3.3.0 &#8594; 3.4.0)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">New features, enhancements, and bug fixes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scheduled development milestones</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Patch</strong> (e.g., 3.3.0 &#8594; 3.3.1)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CVE and security fixes only</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dependency upgrades, security patches</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Patch releases do not contain new features or bug fixes.
+They are limited to changes that address known security vulnerabilities.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="support-window_registry"><a class="anchor" href="#support-window_registry"></a>Support window</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry maintains the <strong>two most recent minor versions</strong> with security patches.</p>
 </div>
 <div class="paragraph">
-<p>The goal of these rules is to prevent invalid content from being added to Apicurio Registry and to control the evolution of an artifact (by e.g. checking the compatibility of a new artifact version against previous versions). For example, content can be invalid for the following reasons:</p>
+<p>When a new minor version is released, the oldest supported minor version reaches end-of-life and no longer receives updates.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Invalid syntax for a given artifact type, for example, <code>AVRO</code> or <code>PROTOBUF</code>.</p>
-</li>
-<li>
-<p>Valid syntax, but semantics violate a specification.</p>
-</li>
-<li>
-<p>Incompatibility, when new content includes breaking changes relative to the current artifact version.</p>
-</li>
-<li>
-<p>Artifact reference integrity, for example, a duplicate or non-existent artifact reference mapping.</p>
-</li>
-</ul>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Example support timeline</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Event</th>
+<th class="tableblock halign-left valign-top">Supported versions</th>
+<th class="tableblock halign-left valign-top">End-of-life</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.3.0 released</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.3.x, 3.2.x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.x and older</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.4.0 released</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.4.x, 3.3.x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.2.x and older</p></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="paragraph">
-<p>You can enable optional content rules using the Apicurio Registry web console, REST API commands, or by using one of the SDKs.</p>
+</div>
+<div class="sect1">
+<h2 id="release-channels_registry"><a class="anchor" href="#release-channels_registry"></a>Release channels</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry provides multiple release channels so that you can choose the update cadence that suits your deployment.</p>
 </div>
 <div class="sect2">
-<h3 id="registry-rules-apply_registry"><a class="anchor" href="#registry-rules-apply_registry"></a>When rules are applied</h3>
+<h3 id="_docker_image_tags"><a class="anchor" href="#_docker_image_tags"></a>Docker image tags</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tag</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.3.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pinned to an exact release. Never changes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.3</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Floating tag that always points to the latest patch in the 3.3.x series (e.g., 3.3.0 &#8594; 3.3.1 &#8594; 3.3.2).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>latest</code> / <code>latest-release</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Always points to the most recent stable release across all minor versions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>latest-snapshot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Most recent build from the <code>main</code> branch. Unstable and not recommended for production.</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
-<p>Rules are applied only when content is added to Apicurio Registry. This includes the following REST operations:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Adding an artifact</p>
-</li>
-<li>
-<p>Adding an artifact version</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>If a rule is violated, Apicurio Registry returns an HTTP error. The response body includes the violated rule and a message showing what went wrong.</p>
+<p>Use the minor-series floating tag (e.g., <code>3.3</code>) to automatically receive security patches without upgrading to a new minor version.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="registry-rules-precedence_registry"><a class="anchor" href="#registry-rules-precedence_registry"></a>Order of precedence of rules</h3>
+<h3 id="_olm_channels_kubernetes_operator"><a class="anchor" href="#_olm_channels_kubernetes_operator"></a>OLM channels (Kubernetes operator)</h3>
 <div class="paragraph">
-<p>The order of precedence for artifact-specific and global rules is as follows:</p>
+<p>If you deploy Apicurio Registry using the Apicurio Registry Operator, each minor version has its own OLM channel:</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Artifact-specific rules have the highest priority</p>
-</li>
-<li>
-<p>Group-specific rules have the next highest priority</p>
-</li>
-<li>
-<p>Global rules have the lowest priority</p>
-</li>
-</ul>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Channel</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.3.x</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Receives only patch updates within the 3.3 minor version.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.x</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rolling channel that always tracks the latest minor version.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Subscribe to a minor-version channel (e.g., <code>3.3.x</code>) for stability, or to the <code>3.x</code> rolling channel to always receive the latest features.</p>
 </div>
-<div class="admonitionblock note">
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="upgrading-registry_registry"><a class="anchor" href="#upgrading-registry_registry"></a>Upgrading Apicurio Registry</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry supports forward upgrades.
+Database schema migrations run automatically on startup and do not require manual intervention.</p>
+</div>
+<div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-If a rule is configured at a higher level (e.g. at the global level), but you want that rule to be disabled at a lower level, you must configure the same rule (so that it overrides it) at the lower level and set its rules value to <code>NONE</code>.
+<div class="paragraph">
+<p>Always back up your database before upgrading to a new minor version.
+See <a href="#backup-before-upgrade_registry">Backing up before an upgrade</a>.</p>
+</div>
 </td>
 </tr>
 </table>
 </div>
+<div class="sect2">
+<h3 id="_patch_upgrades_within_a_minor_version"><a class="anchor" href="#_patch_upgrades_within_a_minor_version"></a>Patch upgrades (within a minor version)</h3>
+<div class="paragraph">
+<p>Patch upgrades (e.g., 3.3.0 &#8594; 3.3.1) are safe and always recommended.
+They contain only CVE fixes and do not introduce behavioral changes.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Back up your database.</p>
+</li>
+<li>
+<p>Replace the Apicurio Registry container image with the new patch version or use the minor-series floating tag.</p>
+</li>
+<li>
+<p>Start Apicurio Registry. Any required schema migrations run automatically.</p>
+</li>
+</ol>
+</div>
 </div>
 <div class="sect2">
-<h3 id="registry-rules-work_registry"><a class="anchor" href="#registry-rules-work_registry"></a>How rules work</h3>
+<h3 id="_minor_upgrades"><a class="anchor" href="#_minor_upgrades"></a>Minor upgrades</h3>
 <div class="paragraph">
-<p>Each rule has a name and configuration information. Apicurio Registry maintains the list of rules for each artifact, each group, and the list of global rules. Each rule in the list consists of a name and configuration for the rule implementation.</p>
+<p>Minor upgrades (e.g., 3.3.x &#8594; 3.4.0) include new features, enhancements, and bug fixes.</p>
 </div>
-<div class="paragraph">
-<p>When a rule is executed, it is provided with the content of the current version of the artifact (if one exists) and the new version of the artifact being added. The rule implementation returns either passes or fails depending on whether the artifact passes the rule. If not, Apicurio Registry reports the reason why in an HTTP error response. Some rules might not use the previous version of the content. For example, compatibility rules use previous versions, but syntax or semantic validity rules do not.</p>
-</div>
-<div class="paragraph _additional-resources">
-<div class="title">Additional resources</div>
-<p>For more details, see <a href="assembly-rule-reference.html">Apicurio Registry rule reference</a>.</p>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Review the release notes for the target version to understand new features and any behavioral changes.</p>
+</li>
+<li>
+<p>Back up your database.</p>
+</li>
+<li>
+<p>Replace the Apicurio Registry container image with the new minor version.</p>
+</li>
+<li>
+<p>Start Apicurio Registry. Database schema migrations run automatically.</p>
+</li>
+<li>
+<p>Verify that your client applications work correctly with the new version.</p>
+</li>
+</ol>
 </div>
 </div>
 <div class="sect2">
-<h3 id="registry-rules-config_registry"><a class="anchor" href="#registry-rules-config_registry"></a>Content rule configuration</h3>
+<h3 id="_skipping_minor_versions"><a class="anchor" href="#_skipping_minor_versions"></a>Skipping minor versions</h3>
 <div class="paragraph">
-<p>Administrators can configure Apicurio Registry global rules, group-specific rules, and artifact-specific rules. Developers can configure group-specific and artifact-specific rules only.</p>
-</div>
-<div class="paragraph">
-<p>Apicurio Registry applies the rules configured for the specific artifact. If no rules are configured at that level, Apicurio Registry applies the group-specific rules.  If no rules are configured at the group level, then Apicurio Registry applies the globally configured rules. If no global rules are configured, then no rules are applied.</p>
-</div>
-<h4 id="_configure_group_and_artifact_specific_rules" class="discrete">Configure group and artifact specific rules</h4>
-<div class="paragraph">
-<p>You can configure group-specific and artifact-specific rules using the Apicurio Registry web console or REST API. For details, see the following:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a></p>
-</li>
-<li>
-<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
-</li>
-</ul>
-</div>
-<h4 id="_configure_global_rules" class="discrete">Configure global rules</h4>
-<div class="paragraph">
-<p>Administrators can configure global rules in several ways:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Use the <code>admin/rules</code> operations in the REST API</p>
-</li>
-<li>
-<p>Use the Apicurio Registry web console</p>
-</li>
-<li>
-<p>Set default global rules using Apicurio Registry application properties</p>
-</li>
-</ul>
+<p>Upgrading across multiple minor versions (e.g., 3.2.x &#8594; 3.4.x) is supported.
+Database migrations are cumulative and applied in order on startup.</p>
 </div>
 <div class="paragraph">
-<div class="title">Configure default global rules</div>
-<p>Administrators can configure Apicurio Registry at the application level to enable or disable global rules. You can configure default global rules at installation time without post-install configuration using the following application property format:</p>
+<p>Review the release notes for all intermediate versions to understand the full set of changes.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="downgrades-and-rollbacks_registry"><a class="anchor" href="#downgrades-and-rollbacks_registry"></a>Downgrades and rollbacks</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry does <strong>not</strong> support downgrades.</p>
+</div>
+<div class="paragraph">
+<p>Database schema migrations are forward-only and irreversible.
+Starting an older version of Apicurio Registry against a database that has been migrated to a newer schema version will fail.</p>
+</div>
+<div class="paragraph">
+<p>If you deploy Apicurio Registry using the Apicurio Registry Operator, switching to an older OLM channel is also not supported.</p>
+</div>
+<div class="sect2">
+<h3 id="_handling_a_failed_upgrade"><a class="anchor" href="#_handling_a_failed_upgrade"></a>Handling a failed upgrade</h3>
+<div class="paragraph">
+<p>If an upgrade introduces issues, restore from the database backup taken before the upgrade:</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Stop Apicurio Registry.</p>
+</li>
+<li>
+<p>Restore the database from the backup taken before the upgrade.</p>
+</li>
+<li>
+<p>Deploy the previous version of Apicurio Registry.</p>
+</li>
+<li>
+<p>Investigate the issue before attempting the upgrade again.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Do <strong>not</strong> attempt to manually revert database schema changes.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="backup-before-upgrade_registry"><a class="anchor" href="#backup-before-upgrade_registry"></a>Backing up before an upgrade</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Before any minor version upgrade, create a backup of your Apicurio Registry database.</p>
+</div>
+<div class="paragraph">
+<p>For PostgreSQL deployments:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>apicurio.rules.global.&lt;ruleName&gt;</pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pg_dump -h &lt;host&gt; -U &lt;username&gt; -d &lt;database&gt; -F c -f registry-backup-$(date +%Y%m%d).dump</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The following rule names are currently supported:</p>
+<p>For KafkaSQL deployments, back up both the Kafka topic data and the SQL snapshot database.</p>
 </div>
-<div class="ulist">
+<div class="paragraph">
+<p>Store backups in a secure location and verify that they can be restored before proceeding with the upgrade.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
 <ul>
 <li>
-<p><code>compatibility</code></p>
-</li>
-<li>
-<p><code>validity</code></p>
-</li>
-<li>
-<p><code>integrity</code></p>
+<p><a href="#registry-migration_registry">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a></p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>The value of the application property must be a valid configuration option that is specific to the rule being
-configured.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-You can configure these application properties as Java system properties or include them in the Quarkus
-<code>application.properties</code> file. For more details, see the <a href="https://quarkus.io/guides/config#overriding-properties-at-runtime">Quarkus documentation</a>.
-</td>
-</tr>
-</table>
-</div>
 </div>
 </div>
 </div>
@@ -594,7 +722,7 @@ You can configure these application properties as Java system properties or incl
 </footer>
 <script src="../../../assets/js/site.js"></script>
 <script src="../../../assets/js/vendor/lunr.js"></script>
-<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.3.x/getting-started/assembly-intro-to-registry-rules.html"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.3.x/getting-started/assembly-versioning-support-policy.html"></script>
 <script async src="../../../assets/../search-index.js"></script>
 <script async src="../../../assets/js/vendor/highlight.js"></script>
   </body>
