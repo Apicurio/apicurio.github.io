@@ -384,7 +384,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter explains how to set important configuration options for your Apicurio Registry deployment. This includes features such as the Apicurio Registry web console, logging, health checks, and observability:</p>
+<p>You can set important configuration options for your Apicurio Registry deployment, including the Apicurio Registry web console, logging, health checks, and observability:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -392,7 +392,13 @@
 <p><a href="#configuring-registry-ui_registry">Configuring the Apicurio Registry web console</a></p>
 </li>
 <li>
-<p><a href="#configuring-registry-observability_registry">Configuring Apicurio Registry observability with OpenTelemetry</a></p>
+<p><a href="#configuring-registry-observability_registry">Apicurio Registry observability with OpenTelemetry</a></p>
+</li>
+<li>
+<p><a href="#otel-features_registry">OpenTelemetry features in Apicurio Registry</a></p>
+</li>
+<li>
+<p><a href="#otel-performance_registry">OpenTelemetry performance impact</a></p>
 </li>
 <li>
 <p><a href="#configuring-liveness-readiness-probes_registry">Configuring Apicurio Registry health checks on OpenShift</a></p>
@@ -430,34 +436,19 @@ For a list of all available configuration options, see <a href="assembly-config-
 </li>
 </ul>
 </div>
-<h3 id="_configuring_the_web_console_deployment_environment" class="discrete">Configuring the web console deployment environment</h3>
-<div class="paragraph">
-<p>When you access the Apicurio Registry web console in your browser, some initial configuration settings are loaded. The following configuration settings are required:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>URL for core Apicurio Registry server REST API v3</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Typically the Apicurio Registry Operator will automatically configure the UI component with the REST API v3 URL.  However, you can override this value by configuring the appropriate environment variable in the UI component deployment configuration.</p>
-</div>
-<div class="paragraph">
+<div class="olist arabic">
 <div class="title">Procedure</div>
-<p>Configure the following environment variables to override the default URL:</p>
-</div>
-<div class="ulist">
-<ul>
+<ol class="arabic">
 <li>
-<p><code>REGISTRY_API_URL</code>: Specifies the URL for the core Apicurio Registry server REST API v3. For example, <code>https://registry-api.my-domain.com/apis/registry/v3</code></p>
-</li>
-</ul>
-</div>
-<h3 id="_configuring_the_web_console_in_read_only_mode" class="discrete">Configuring the web console in read-only mode</h3>
+<p>Set the <code>REGISTRY_API_URL</code> environment variable to override the default REST API URL. For example, <code>https://registry-api.my-domain.com/apis/registry/v3</code>.</p>
 <div class="paragraph">
-<p>You can configure the Apicurio Registry web console in read-only mode as an optional feature. This mode disables all features in the Apicurio Registry web console that allow users to make changes to registered artifacts. For example, this includes the following:</p>
+<p>Typically the Apicurio Registry Operator automatically configures the UI component with the REST API v3 URL. Override this value only if your deployment requires a custom URL.</p>
+</div>
+</li>
+<li>
+<p>Set the <code>REGISTRY_FEATURE_READ_ONLY</code> environment variable to <code>true</code> to enable read-only mode. The default value is <code>false</code>.</p>
+<div class="paragraph">
+<p>In read-only mode, you cannot make changes to registered artifacts. For example, the following actions are unavailable:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -478,24 +469,16 @@ For a list of all available configuration options, see <a href="assembly-config-
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p>Configure the following environment variable:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>REGISTRY_FEATURE_READ_ONLY</code>: Set to <code>true</code> to enable read-only mode. Defaults to <code>false</code>.</p>
 </li>
-</ul>
+</ol>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuring-registry-observability_registry"><a class="anchor" href="#configuring-registry-observability_registry"></a>Configuring Apicurio Registry observability with OpenTelemetry</h2>
+<h2 id="configuring-registry-observability_registry"><a class="anchor" href="#configuring-registry-observability_registry"></a>Apicurio Registry observability with OpenTelemetry</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can configure Apicurio Registry to export telemetry data using OpenTelemetry (OTel) for comprehensive observability. This includes distributed tracing, metrics export via OTLP protocol, and log correlation with trace context.</p>
+<p>You can configure Apicurio Registry to export telemetry data using OpenTelemetry (OTel) for comprehensive observability. This includes distributed tracing, metrics export by using the OTLP protocol, and log correlation with trace context.</p>
 </div>
 <div class="paragraph">
 <p>Apicurio Registry is built with OpenTelemetry support and all telemetry signals (traces, metrics, logs) are enabled at build time. However, the OpenTelemetry SDK is disabled by default at runtime. When enabled, Apicurio Registry exports telemetry data to an OpenTelemetry-compatible collector such as Jaeger, Grafana Tempo, or the OpenTelemetry Collector.</p>
@@ -512,18 +495,18 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
 </tr>
 </table>
 </div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>You have already installed Apicurio Registry.</p>
-</li>
-<li>
-<p>You have an OpenTelemetry-compatible backend available (for example, Jaeger, Grafana Tempo, or OpenTelemetry Collector).</p>
-</li>
-</ul>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Before you configure OpenTelemetry, ensure that you have installed Apicurio Registry and have an OpenTelemetry-compatible backend available, for example, Jaeger, Grafana Tempo, or OpenTelemetry Collector.
+</td>
+</tr>
+</table>
 </div>
-<h3 id="_enabling_opentelemetry" class="discrete">Enabling OpenTelemetry</h3>
 <div class="paragraph">
 <p>To enable OpenTelemetry observability, configure the following environment variables:</p>
 </div>
@@ -535,7 +518,7 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Environment Variable</th>
+<th class="tableblock halign-left valign-top">Environment variable</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -558,9 +541,8 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
   QUARKUS_OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4317"</code></pre>
 </div>
 </div>
-<h3 id="_configuring_trace_sampling_for_production" class="discrete">Configuring trace sampling for production</h3>
 <div class="paragraph">
-<p>In production environments, you should configure trace sampling to reduce overhead and control the volume of trace data:</p>
+<p>In production environments, configure trace sampling to reduce processing overhead and control the volume of trace data:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 2. Environment variables for trace sampling</caption>
@@ -570,7 +552,7 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Environment Variable</th>
+<th class="tableblock halign-left valign-top">Environment variable</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -595,9 +577,8 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
   QUARKUS_OTEL_TRACES_SAMPLER_ARG: "0.1"</code></pre>
 </div>
 </div>
-<h3 id="_configuring_structured_logging_with_trace_context" class="discrete">Configuring structured logging with trace context</h3>
 <div class="paragraph">
-<p>When using JSON logging format, Apicurio Registry automatically includes trace context (trace ID and span ID) in log entries. This enables correlation between logs and traces.</p>
+<p>When you use JSON logging format, Apicurio Registry automatically includes trace context (trace ID and span ID) in log entries. You can then correlate logs and traces.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example: Enabling structured logging with trace context</div>
@@ -607,9 +588,13 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
   QUARKUS_LOG_CONSOLE_JSON: "true"</code></pre>
 </div>
 </div>
-<h3 id="_opentelemetry_features_in_apicurio_registry" class="discrete">OpenTelemetry features in Apicurio Registry</h3>
-<div class="paragraph">
-<p>When OpenTelemetry is enabled, Apicurio Registry provides the following observability features:</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="otel-features_registry"><a class="anchor" href="#otel-features_registry"></a>OpenTelemetry features in Apicurio Registry</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When OpenTelemetry is enabled, Apicurio Registry provides several observability features that are fully compatible with your existing monitoring setup.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -617,7 +602,7 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
 <p><strong>Distributed tracing</strong>: All REST API requests are automatically traced with spans containing request details, path parameters, and Apicurio-specific attributes such as <code>groupId</code>, <code>artifactId</code>, and <code>version</code>.</p>
 </li>
 <li>
-<p><strong>Storage layer tracing</strong>: All storage operations create child spans, enabling you to trace the complete request flow from REST API to database.</p>
+<p><strong>Storage layer tracing</strong>: All storage operations create child spans. You can trace the complete request flow from REST API to database.</p>
 </li>
 <li>
 <p><strong>Kafka tracing</strong>: When using KafkaSQL storage, Kafka operations are automatically traced with context propagation.</p>
@@ -626,12 +611,32 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
 <p><strong>Custom metrics</strong>: OpenTelemetry metrics for artifact operations, schema validations, and search requests are exported alongside existing Prometheus metrics.</p>
 </li>
 <li>
-<p><strong>Log correlation</strong>: When JSON logging is enabled, trace context is automatically injected into log entries for easy correlation.</p>
+<p><strong>Log correlation</strong>: When JSON logging is enabled, trace context is automatically injected into log entries for correlation.</p>
 </li>
 </ul>
 </div>
-<h3 id="_performance_considerations" class="discrete">Performance considerations</h3>
 <div class="paragraph">
+<p>Existing monitoring endpoints continue to function:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The Prometheus metrics endpoint is available at <code>/metrics</code> on the management port (default 9000).</p>
+</li>
+<li>
+<p>Health check endpoints (<code>/health/ready</code>, <code>/health/live</code>) are served on the management port (default 9000).</p>
+</li>
+<li>
+<p>All existing Micrometer-based metrics continue to function.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="otel-performance_registry"><a class="anchor" href="#otel-performance_registry"></a>OpenTelemetry performance impact</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>OpenTelemetry instrumentation adds a small performance overhead. The following table shows the measured impact when all telemetry signals are enabled with 100% sampling:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
@@ -645,9 +650,9 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Operation</th>
-<th class="tableblock halign-left valign-top">Latency Increase</th>
-<th class="tableblock halign-left valign-top">Throughput Decrease</th>
-<th class="tableblock halign-left valign-top">Impact Level</th>
+<th class="tableblock halign-left valign-top">Latency increase</th>
+<th class="tableblock halign-left valign-top">Throughput decrease</th>
+<th class="tableblock halign-left valign-top">Impact level</th>
 </tr>
 </thead>
 <tbody>
@@ -692,7 +697,7 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
 <p>Average overhead is approximately 4-6% in throughput with 100% trace sampling.</p>
 </li>
 <li>
-<p>With the recommended 10% sampling ratio (<code>QUARKUS_OTEL_TRACES_SAMPLER_ARG=0.1</code>), the overhead is reduced to less than 1%.</p>
+<p>With the recommended 10% sampling ratio (<code>QUARKUS_OTEL_TRACES_SAMPLER_ARG=0.1</code>), the overhead drops to less than 1%.</p>
 </li>
 <li>
 <p>OpenTelemetry signals are disabled by default to avoid any overhead for users who do not require observability features.</p>
@@ -716,23 +721,6 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
     -DOpenTelemetryPerformanceTest=enabled</code></pre>
 </div>
 </div>
-<h3 id="_backwards_compatibility" class="discrete">Backwards compatibility</h3>
-<div class="paragraph">
-<p>OpenTelemetry support is fully backwards compatible:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The Prometheus metrics endpoint is available at <code>/metrics</code> on the management port (default 9000).</p>
-</li>
-<li>
-<p>Health check endpoints (<code>/health/ready</code>, <code>/health/live</code>) are served on the management port (default 9000).</p>
-</li>
-<li>
-<p>All existing Micrometer-based metrics continue to function.</p>
-</li>
-</ul>
-</div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
@@ -747,8 +735,11 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
 </li>
 </ul>
 </div>
-<div class="sect2">
-<h3 id="configuring-liveness-readiness-probes_registry"><a class="anchor" href="#configuring-liveness-readiness-probes_registry"></a>Configuring Apicurio Registry health checks on OpenShift</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-liveness-readiness-probes_registry"><a class="anchor" href="#configuring-liveness-readiness-probes_registry"></a>Configuring Apicurio Registry health checks on OpenShift</h2>
+<div class="sectionbody">
 <div class="paragraph _abstract">
 <p>Health check endpoints are served on the management interface (port 9000 by default), separate from the main application port (8080). Configure liveness and readiness probes to target port 9000.</p>
 </div>
@@ -772,7 +763,7 @@ The individual signal properties (<code>QUARKUS_OTEL_TRACES_ENABLED</code>, <cod
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-The default values of the liveness and readiness environment variables are designed for most cases and should only be changed if required by your environment. Any changes to the defaults depend on your hardware, network, and amount of data stored. These values should be kept as low as possible to avoid unnecessary overhead.
+The default values of the liveness and readiness environment variables are designed for most cases. Change these values only if required by your environment. Any changes to the defaults depend on your hardware, network, and amount of data stored. Keep these values as low as possible to avoid unnecessary processing overhead.
 </td>
 </tr>
 </table>
@@ -825,7 +816,7 @@ The default values of the liveness and readiness environment variables are desig
 <li>
 <p>Click <strong>Save</strong> at the bottom.</p>
 <div class="paragraph">
-<p>Alternatively, you can perform these steps using the OpenShift <code>oc</code> command. For more details, see the <a href="https://docs.openshift.com/container-platform/4.14/cli_reference/openshift_cli/getting-started-cli.html">OpenShift CLI documentation</a>.</p>
+<p>Alternatively, you can complete these steps by using the OpenShift <code>oc</code> command. For more details, see the <a href="https://docs.openshift.com/container-platform/4.14/cli_reference/openshift_cli/getting-started-cli.html">OpenShift CLI documentation</a>.</p>
 </div>
 </li>
 </ol>
@@ -843,12 +834,11 @@ The default values of the liveness and readiness environment variables are desig
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
 <h2 id="registry-liveness-env-vars_registry"><a class="anchor" href="#registry-liveness-env-vars_registry"></a>Environment variables for Apicurio Registry health checks</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This section describes the available environment variables for Apicurio Registry health checks on OpenShift. These include liveness and readiness probes to monitor the health of the Apicurio Registry server on OpenShift. For an example procedure, see <a href="#configuring-liveness-readiness-probes_registry">Configuring Apicurio Registry health checks on OpenShift</a>.</p>
+<div class="paragraph _abstract">
+<p>You can use the following environment variables to configure Apicurio Registry health checks on OpenShift. These variables control liveness and readiness probes that monitor the health of the Apicurio Registry server. For an example procedure, see <a href="#configuring-liveness-readiness-probes_registry">Configuring Apicurio Registry health checks on OpenShift</a>.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -857,12 +847,11 @@ The default values of the liveness and readiness environment variables are desig
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-The following environment variables are provided for reference only. The default values are designed for most cases and should only be changed if required by your environment. Any changes to the defaults depend on your hardware, network, and amount of data stored. These values should be kept as low as possible to avoid unnecessary overhead.
+The following environment variables are provided for reference only. The default values are designed for most cases. Change these values only if required by your environment. Any changes to the defaults depend on your hardware, network, and amount of data stored. Keep these values as low as possible to avoid unnecessary processing overhead.
 </td>
 </tr>
 </table>
 </div>
-<h3 id="_liveness_environment_variables" class="discrete">Liveness environment variables</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 4. Environment variables for Apicurio Registry liveness probes</caption>
 <colgroup>
@@ -888,7 +877,7 @@ The following environment variables are provided for reference only. The default
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LIVENESS_COUNTER_RESET</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Period in which the threshold number of errors must occur. For example, if this value is 60 and the threshold is 1, the check fails after two errors occur in 1 minute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Period in which the threshold number of errors must occur. For example, if this value is 60 and the threshold is 1, the check fails after two errors occur in 1 minute.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Seconds</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>60</code></p></td>
 </tr>
@@ -918,7 +907,6 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 </tr>
 </table>
 </div>
-<h3 id="_readiness_environment_variables" class="discrete">Readiness environment variables</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 5. Environment variables for Apicurio Registry readiness probes</caption>
 <colgroup>
@@ -950,7 +938,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>READINESS_STATUS_RESET</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of seconds that must elapse without any more errors for the liveness probe to reset to OK status. In this case, this means how long the Pod stays not ready, until it returns to normal operation.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of seconds that must elapse without any more errors for the readiness probe to reset to OK status. This value determines how long the Pod remains not ready before it returns to normal operation.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Seconds</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>300</code></p></td>
 </tr>
@@ -970,14 +958,14 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 </ul>
 </div>
 <div class="paragraph">
-<p>If these operations take more time than the configured timeout, this is counted as a readiness issue or error. This value controls the timeouts for both operations.</p>
+<p>If either operation exceeds the configured timeout, Apicurio Registry reports a readiness issue or error. This value controls the timeouts for both operations.</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Seconds</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5</code></p></td>
 </tr>
 </tbody>
 </table>
-<div class="ulist">
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
