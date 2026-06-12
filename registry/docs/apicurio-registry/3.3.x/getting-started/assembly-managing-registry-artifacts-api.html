@@ -387,7 +387,7 @@
 <p>Client applications can use Apicurio Registry REST API operations to manage schema and API artifacts in Apicurio Registry, for example, in a CI/CD pipeline deployed in production. The Core Registry API v3 provides operations for artifacts, versions, metadata, and rules stored in Apicurio Registry. For detailed information, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
 </div>
 <div class="paragraph">
-<p>This chapter shows examples of how to use the Core Registry API v3 to perform the following tasks:</p>
+<p>Use the Core Registry API v3 to perform the following tasks:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -405,8 +405,10 @@
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p><strong>Prerequisites</strong></p>
+</div>
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
 <p><a href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a></p>
@@ -427,7 +429,7 @@
 <h2 id="managing-artifacts-using-rest-api_registry"><a class="anchor" href="#managing-artifacts-using-rest-api_registry"></a>Managing schema and API artifacts using Apicurio Registry REST API commands</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section shows a simple curl-based example of using the Core Registry API v3 to add and retrieve a simple schema artifact in Apicurio Registry.</p>
+<p>Use the Core Registry API v3 to add and retrieve a schema artifact in Apicurio Registry.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -441,7 +443,7 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Add an artifact to Apicurio Registry using the <code>/groups/{groupId}/artifacts</code> operation. The following example <code>curl</code> command adds a simple schema artifact for a share price application:</p>
+<p>Add an artifact to Apicurio Registry using the <code>/groups/{groupId}/artifacts</code> operation. The following example <code>curl</code> command adds a schema artifact for a share price application:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts \
@@ -466,7 +468,7 @@
 </li>
 <li>
 <p><code>MY-REGISTRY-URL</code> is the
-host name on which Apicurio Registry is deployed. For example: <code>http://localhost:8080</code>.</p>
+hostname on which Apicurio Registry is deployed. For example: <code>http://localhost:8080</code>.</p>
 </li>
 <li>
 <p>This example specifies a group ID of <code>my-group</code> in the API path. If you do not specify a unique group ID, you must specify <code>../groups/default</code> in the API path.</p>
@@ -484,7 +486,7 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <div class="ulist">
 <ul>
 <li>
-<p>No version was specified when adding the artifact, so the default version <code>1</code> is created automatically.</p>
+<p>You did not specify a version when adding the artifact, so the default version <code>1</code> is created automatically.</p>
 </li>
 <li>
 <p>This was the second artifact added to Apicurio Registry, so the global ID and content ID have a value of <code>2</code>.</p>
@@ -509,7 +511,7 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
 </li>
 </ul>
 </div>
@@ -522,10 +524,10 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <p>If you do not specify an artifact version number when adding schema and API artifacts using the Core Registry API v3, Apicurio Registry generates a version number automatically. The default version when creating a new artifact is <code>1</code>.</p>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry also supports custom versioning where you can specify a version number when creating the artifact or artifact version.  Specifying a custom version value overrides the default version normally assigned when creating an artifact or artifact version. You can then use this version value when executing REST API operations that require a version number.</p>
+<p>Apicurio Registry also supports custom versioning where you can specify a version number when creating the artifact or artifact version. Specifying a custom version value overrides the default version normally assigned when creating an artifact or artifact version. You can then use this version value when running REST API operations that require a version number.</p>
 </div>
 <div class="paragraph">
-<p>This section shows a simple curl-based example of using the Core Registry API v3 to add and retrieve a custom Apache Avro schema version in Apicurio Registry. You can specify custom version numbers to create artifacts, or to add artifact versions.</p>
+<p>Use the Core Registry API v3 to add and retrieve a custom Apache Avro schema version in Apicurio Registry. You can specify custom version numbers to create artifacts, or to add artifact versions.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -539,7 +541,7 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Add an artifact version in the registry using the <code>/groups/{groupId}/artifacts</code> operation. The following example <code>curl</code> command adds a simple artifact for a share price application:</p>
+<p>Add an artifact version in the registry using the <code>/groups/{groupId}/artifacts</code> operation. The following example <code>curl</code> command adds an artifact for a share price application:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts \
@@ -565,7 +567,7 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 </li>
 <li>
 <p><code>MY-REGISTRY-URL</code> is the
-host name on which Apicurio Registry is deployed. For example: <code>http://localhost:8080</code>.</p>
+hostname on which Apicurio Registry is deployed. For example: <code>http://localhost:8080</code>.</p>
 </li>
 <li>
 <p>This example specifies a group ID of <code>my-group</code> in the API path. If you do not specify a unique group ID, you must specify <code>../groups/default</code> in the API path.</p>
@@ -583,7 +585,7 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <div class="ulist">
 <ul>
 <li>
-<p>A custom version of <code>1.1.1</code> was specified when adding the artifact.</p>
+<p>You specified a custom version of <code>1.1.1</code> when adding the artifact.</p>
 </li>
 <li>
 <p>This was the fourth artifact added to the registry, so the global ID and content ID have a value of <code>4</code>.</p>
@@ -608,7 +610,7 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
 </li>
 </ul>
 </div>
@@ -643,13 +645,15 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 </ul>
 </div>
 <div class="paragraph">
-<p>This section shows a simple curl-based example of using the Core Registry API v3 to add and retrieve an artifact reference to a simple Avro schema artifact in Apicurio Registry.</p>
+<p>Use the Core Registry API v3 to add and retrieve an artifact reference in Apicurio Registry.</p>
 </div>
 <div class="paragraph">
 <p>This example first creates a schema artifact named <code>ItemId</code>:</p>
 </div>
+<div class="paragraph">
+<p><strong>ItemId schema</strong></p>
+</div>
 <div class="listingblock">
-<div class="title">ItemId schema</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
     "namespace":"com.example.common",
@@ -667,8 +671,10 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <div class="paragraph">
 <p>This example then creates a schema artifact named <code>Item</code>, which includes a reference to the nested <code>ItemId</code> artifact.</p>
 </div>
+<div class="paragraph">
+<p><strong>Item schema with nested ItemId schema</strong></p>
+</div>
 <div class="listingblock">
-<div class="title">Item schema with nested ItemId schema</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
     "namespace":"com.example.common",
@@ -682,6 +688,15 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
     ]
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p><strong>Dereference</strong></p>
+</div>
+<div class="paragraph">
+<p>In some situations, having an artifact&#8217;s content with the referenced content inlined might be helpful. For those situations, the Core Registry API v3 supports the <em>references parameter</em> in certain operations.</p>
+</div>
+<div class="paragraph">
+<p>This support is currently implemented for Avro, JSON Schema, Protobuf, OpenAPI, and AsyncAPI when the parameter is present in a particular API operation. The parameter is not supported in other schema types.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -711,7 +726,7 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 </li>
 <li>
 <p><code>MY-REGISTRY-URL</code> is the
-host name on which Apicurio Registry is deployed. For example: <code>http://localhost:8080</code>.</p>
+hostname on which Apicurio Registry is deployed. For example: <code>http://localhost:8080</code>.</p>
 </li>
 <li>
 <p>This example specifies a group ID of <code>my-group</code> in the API path. If you do not specify a unique group ID, you must specify <code>../groups/default</code> in the API path.</p>
@@ -780,19 +795,6 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 </div>
 </div>
 </li>
-</ol>
-</div>
-<div class="paragraph">
-<p><strong>Dereference</strong></p>
-</div>
-<div class="paragraph">
-<p>There are some situations where having an artifact&#8217;s content with the referenced content inlined might be helpful. For those situations, the Core Registry API v3 supports the <em>references parameter</em> in certain operations.</p>
-</div>
-<div class="paragraph">
-<p>This support is currently implemented for Avro, JSON Schema, Protobuf, OpenAPI and AsyncAPI when the parameter is present in a particular API operation. The parameter is not supported in other schema types.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
 <li>
 <p>Retrieve the dereferenced (inlined) schema content:</p>
 <div class="listingblock">
@@ -807,9 +809,6 @@ host name on which Apicurio Registry is deployed. For example: <code>http://loca
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"type":"record","name":"Item","namespace":"com.example.common","fields":[{"name":"itemId","type":{"type":"record","name":"ItemId","fields":[{"name":"id","type":"int"}]}}]}</code></pre>
 </div>
-</div>
-</li>
-</ol>
 </div>
 <div class="paragraph">
 <p>This support is currently implemented only for Avro, Protobuf, OpenAPI, AsyncAPI, and JSON Schema artifacts when the <code>dereference</code> parameter is specified in the API operation. This parameter is not supported for any other artifact types.</p>
@@ -833,19 +832,22 @@ For Protobuf artifacts, dereferencing content is supported only when all the sch
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Circular dependencies are allowed by some artifact types (e.g. JSON Schema) but are not supported by Apicurio Registry.
+Some artifact types (for example, JSON Schema) allow circular dependencies, but Apicurio Registry does not support them.
 </td>
 </tr>
 </table>
+</div>
+</li>
+</ol>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
 </li>
 <li>
-<p>For more examples of artifact references, see the section on configuring each artifact type in <a href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>.</p>
+<p><a href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a></p>
 </li>
 </ul>
 </div>
@@ -858,7 +860,7 @@ Circular dependencies are allowed by some artifact types (e.g. JSON Schema) but 
 <p>As an administrator, you can use the Core Registry API v3 to export data from one Apicurio Registry instance and import into another Apicurio Registry instance, so you can migrate data between different instances.</p>
 </div>
 <div class="paragraph">
-<p>This section shows a simple curl-based example of using the Core Registry API v3 to export and import existing data in <code>.zip</code> format from one Apicurio Registry instance to another. All the artifact data contained in the Apicurio Registry instance is exported in the <code>.zip</code> file.</p>
+<p>Use the Core Registry API v3 to export and import data in <code>.zip</code> format between Apicurio Registry instances. All the artifact data contained in the Apicurio Registry instance is exported in the <code>.zip</code> file.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -895,7 +897,7 @@ Circular dependencies are allowed by some artifact types (e.g. JSON Schema) but 
 </div>
 <div class="paragraph">
 <p><code>MY-REGISTRY-URL</code> is the
-host name on which the source Apicurio Registry is deployed. For example: <code>http://my-source-registry:8080</code>.</p>
+hostname on which the source Apicurio Registry is deployed. For example: <code>http://my-source-registry:8080</code>.</p>
 </div>
 </li>
 <li>
@@ -909,7 +911,7 @@ host name on which the source Apicurio Registry is deployed. For example: <code>
 </div>
 <div class="paragraph">
 <p><code>MY-REGISTRY-URL</code> is the
-host name on which the target Apicurio Registry is deployed. For example: <code>http://my-target-registry:8080</code>.</p>
+hostname on which the target Apicurio Registry is deployed. For example: <code>http://my-target-registry:8080</code>.</p>
 </div>
 </li>
 </ol>
@@ -918,7 +920,7 @@ host name on which the target Apicurio Registry is deployed. For example: <code>
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details, see the <code>admin</code> endpoint in the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
 </li>
 </ul>
 </div>
