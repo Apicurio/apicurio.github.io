@@ -384,7 +384,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter explains how to deploy and configure Apicurio Registry instances using the Apicurio Registry Operator on
+<p>Deploy and configure Apicurio Registry instances by using the Apicurio Registry Operator on
 Kubernetes:</p>
 </div>
 <div class="ulist">
@@ -405,27 +405,65 @@ Kubernetes:</p>
 <p><a href="#deploying-registry-kafkasql_registry">Deploying Apicurio Registry with KafkaSQL storage</a></p>
 </li>
 <li>
+<p><a href="#configuring-kafkasql-tls_registry">KafkaSQL TLS configuration</a></p>
+</li>
+<li>
+<p><a href="#configuring-kafkasql-sasl_registry">KafkaSQL SASL authentication configuration</a></p>
+</li>
+<li>
 <p><a href="#deploying-registry-kubernetesops_registry">Deploying Apicurio Registry with KubernetesOps storage</a></p>
 </li>
 <li>
 <p><a href="#configuring-registry-authentication_registry">Configuring authentication and authorization</a></p>
 </li>
 <li>
-<p><a href="#configuring-registry-ingress_registry">Configuring Ingress and networking</a></p>
+<p><a href="#configuring-basic-auth-credentials_registry">Basic authentication for client credentials</a></p>
 </li>
 <li>
-<p><a href="#configuring-registry-features_registry">Configuring Apicurio Registry features</a></p>
+<p><a href="#configuring-tls-oidc_registry">TLS configuration for OIDC connections</a></p>
 </li>
 <li>
-<p><a href="#configuring-registry-ui-component_registry">Configuring the UI component</a></p>
+<p><a href="#configuring-ingress-hostname_registry">Ingress hostname and class configuration</a></p>
 </li>
 <li>
-<p><a href="#advanced-registry-configuration_registry">Advanced configuration</a></p>
+<p><a href="#disabling-operator-ingress_registry">Disabling operator-managed Ingress</a></p>
+</li>
+<li>
+<p><a href="#configuring-networkpolicy_registry">NetworkPolicy configuration</a></p>
+</li>
+<li>
+<p><a href="#enabling-resource-deletion_registry">Resource deletion configuration</a></p>
+</li>
+<li>
+<p><a href="#enabling-version-mutability_registry">Artifact version mutability configuration</a></p>
+</li>
+<li>
+<p><a href="#disabling-ui-component_registry">Disabling the UI component</a></p>
+</li>
+<li>
+<p><a href="#configuring-ui-env-vars_registry">UI environment variable configuration</a></p>
+</li>
+<li>
+<p><a href="#configuring-replicas_registry">Replica configuration</a></p>
+</li>
+<li>
+<p><a href="#configuring-poddisruptionbudget_registry">PodDisruptionBudget configuration</a></p>
+</li>
+<li>
+<p><a href="#configuring-env-vars_registry">Environment variable configuration</a></p>
+</li>
+<li>
+<p><a href="#using-podtemplatespec_registry">PodTemplateSpec advanced customization</a></p>
+</li>
+<li>
+<p><a href="#configuring-app-tls_registry">Application TLS configuration</a></p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p><strong>Prerequisites</strong></p>
+</div>
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
 <p><a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a></p>
@@ -437,8 +475,8 @@ Kubernetes:</p>
 <div class="sect1">
 <h2 id="operator-overview_registry"><a class="anchor" href="#operator-overview_registry"></a>Understanding Apicurio Registry Operator deployment</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>The Apicurio Registry Operator installs the <code>ApicurioRegistry3</code> custom resource defintion (CRD). You use the <code>ApicurioRegistry3</code>  CR  to deploy and manage Apicurio Registry instances on Kubernetes. The custom resource allows you to declaratively configure all aspects of your Apicurio Registry deployment,
+<div class="paragraph _abstract">
+<p>The Apicurio Registry Operator installs the <code>ApicurioRegistry3</code> custom resource definition (CRD). You use the <code>ApicurioRegistry3</code> CR to deploy and manage Apicurio Registry instances on Kubernetes. The custom resource enables you to declaratively configure all aspects of your Apicurio Registry deployment,
 including storage, authentication, networking, and component-specific settings.</p>
 </div>
 <div class="admonitionblock note">
@@ -453,8 +491,6 @@ Additional <code>ApicurioRegistry3</code> custom resource examples can be found 
 </tr>
 </table>
 </div>
-<div class="sect2">
-<h3 id="_custom_resource_structure"><a class="anchor" href="#_custom_resource_structure"></a>Custom resource structure</h3>
 <div class="paragraph">
 <p>The <code>ApicurioRegistry3</code> custom resource is organized into two main components:</p>
 </div>
@@ -473,9 +509,11 @@ Additional <code>ApicurioRegistry3</code> custom resource examples can be found 
 and pod specifications.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_storage_options"><a class="anchor" href="#_storage_options"></a>Storage options</h3>
-<div class="paragraph">
+</div>
+<div class="sect1">
+<h2 id="operator-storage-options_registry"><a class="anchor" href="#operator-storage-options_registry"></a>Storage options</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>Apicurio Registry supports the following storage options:</p>
 </div>
 <div class="ulist">
@@ -512,11 +550,10 @@ The default embedded H2 configuration is not suitable for production environment
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
 <h2 id="deploying-registry-inmemory_registry"><a class="anchor" href="#deploying-registry-inmemory_registry"></a>Deploying Apicurio Registry with default configuration (embedded H2 database)</h2>
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>You can deploy a basic Apicurio Registry instance by using the default storage configuration (SQL with an embedded H2 database). You do not need to specify a storage type in the CR. When omitted, Apicurio Registry defaults to an embedded H2 database. This configuration is suitable for development and testing environments only.</p>
 </div>
 <div class="ulist">
@@ -594,8 +631,8 @@ Replace the <code>host</code> values with appropriate hostnames for your environ
 <div class="sect1">
 <h2 id="deploying-registry-postgresql_registry"><a class="anchor" href="#deploying-registry-postgresql_registry"></a>Deploying Apicurio Registry with PostgreSQL storage</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This section explains how to deploy Apicurio Registry with PostgreSQL database storage. This configuration is suitable
+<div class="paragraph _abstract">
+<p>Deploy Apicurio Registry with PostgreSQL database storage. This configuration is suitable
 for production environments.</p>
 </div>
 <div class="ulist">
@@ -697,8 +734,7 @@ the database.</p>
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For information on PostgreSQL Operators available on OpenShift, see <a href="assembly-installing-registry-storage-openshift.html#installing-postgresql-operatorhub_registry" class="page">Installing a PostgreSQL database from the OpenShift OperatorHub</a>
-in <a href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>.</p>
+<p><a href="assembly-installing-registry-storage-openshift.html#installing-postgresql-operatorhub_registry" class="page">Installing a PostgreSQL database from the OpenShift OperatorHub</a></p>
 </li>
 </ul>
 </div>
@@ -707,8 +743,8 @@ in <a href="assembly-installing-registry-storage-openshift.html">Installing Apic
 <div class="sect1">
 <h2 id="deploying-registry-mysql_registry"><a class="anchor" href="#deploying-registry-mysql_registry"></a>Deploying Apicurio Registry with MySQL storage</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This section explains how to deploy Apicurio Registry with MySQL database storage. This configuration is suitable
+<div class="paragraph _abstract">
+<p>Deploy Apicurio Registry with MySQL database storage. This configuration is suitable
 for production environments.</p>
 </div>
 <div class="ulist">
@@ -811,7 +847,7 @@ the database.</p>
 <div class="sect1">
 <h2 id="deploying-registry-kafkasql_registry"><a class="anchor" href="#deploying-registry-kafkasql_registry"></a>Deploying Apicurio Registry with KafkaSQL storage</h2>
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>You can deploy Apicurio Registry with KafkaSQL storage. KafkaSQL uses Apache Kafka as the primary
 data store, with an embedded H2 database as a local SQL store that Apicurio Registry rebuilds from the Kafka journal on each startup. This configuration is suitable for production environments
 when you configure persistent Kafka storage.</p>
@@ -913,10 +949,21 @@ You must configure the Kafka topic used by Apicurio Registry with <code>cleanup.
 </li>
 </ul>
 </div>
-<div class="sect2">
-<h3 id="_configuring_kafkasql_with_tls"><a class="anchor" href="#_configuring_kafkasql_with_tls"></a>Configuring KafkaSQL with TLS</h3>
-<div class="paragraph">
-<p>When your Kafka cluster requires TLS encryption, you can configure Apicurio Registry to connect securely:</p>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-installing-registry-storage-openshift.html#setting-up-kafka-streams-storage_registry" class="page">Configuring Apicurio Registry with Kafka storage on OpenShift</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-kafkasql-tls_registry"><a class="anchor" href="#configuring-kafkasql-tls_registry"></a>KafkaSQL TLS configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When your Kafka cluster requires TLS encryption, you can configure Apicurio Registry to connect securely.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -954,12 +1001,14 @@ The Secret containing the Kafka cluster CA certificate must be in PKCS12 format.
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_configuring_kafkasql_with_sasl_authentication"><a class="anchor" href="#_configuring_kafkasql_with_sasl_authentication"></a>Configuring KafkaSQL with SASL authentication</h3>
-<div class="paragraph">
+</div>
+<div class="sect1">
+<h2 id="configuring-kafkasql-sasl_registry"><a class="anchor" href="#configuring-kafkasql-sasl_registry"></a>KafkaSQL SASL authentication configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>When your Kafka cluster requires SASL authentication (such as SCRAM-SHA-512), the recommended approach is to use
 the Strimzi Kafka Access Operator (available starting with Apicurio Registry version 3.2.0), which automatically provides
-all connection details in a single Kubernetes Secret:</p>
+all connection details in a single Kubernetes Secret.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1012,23 +1061,13 @@ spec:
       host: registry.example.com</code></pre>
 </div>
 </div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p>For more information on Kafka storage configuration, see <a href="assembly-installing-registry-storage-openshift.html#setting-up-kafka-streams-storage_registry" class="page">Configuring Apicurio Registry with Kafka storage on OpenShift</a>
-in <a href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>.</p>
-</li>
-</ul>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="deploying-registry-kubernetesops_registry"><a class="anchor" href="#deploying-registry-kubernetesops_registry"></a>Deploying Apicurio Registry with KubernetesOps storage</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This section explains how to deploy Apicurio Registry with KubernetesOps storage. KubernetesOps is a read-only storage
+<div class="paragraph _abstract">
+<p>Deploy Apicurio Registry with KubernetesOps storage. KubernetesOps is a read-only storage
 variant that loads registry data from Kubernetes ConfigMaps, enabling Kubernetes-native and GitOps workflows for
 managing schemas and APIs.</p>
 </div>
@@ -1131,7 +1170,7 @@ REST API or web console.</p>
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For detailed configuration options, see <a href="assembly-configuring-kubernetesops-storage.html" class="page">Configuring Apicurio Registry with KubernetesOps storage</a>.</p>
+<p><a href="assembly-configuring-kubernetesops-storage.html" class="page">Configuring Apicurio Registry with KubernetesOps storage</a></p>
 </li>
 </ul>
 </div>
@@ -1140,8 +1179,8 @@ REST API or web console.</p>
 <div class="sect1">
 <h2 id="configuring-registry-authentication_registry"><a class="anchor" href="#configuring-registry-authentication_registry"></a>Configuring authentication and authorization</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This section explains how to configure Apicurio Registry with OIDC authentication and role-based authorization using
+<div class="paragraph _abstract">
+<p>Configure Apicurio Registry with OIDC authentication and role-based authorization by using
 an identity provider such as Keycloak.</p>
 </div>
 <div class="ulist">
@@ -1166,10 +1205,10 @@ an identity provider such as Keycloak.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Backend API client (e.g., <code>registry-client-api</code>) - Used by the Apicurio Registry backend (REST API) component.</p>
+<p>Backend API client (for example, <code>registry-client-api</code>) - Used by the Apicurio Registry backend (REST API) component.</p>
 </li>
 <li>
-<p>UI client (e.g., <code>registry-client-ui</code>) - Used by the Apicurio Registry web console component.</p>
+<p>UI client (for example, <code>registry-client-ui</code>) - Used by the Apicurio Registry web console component.</p>
 </li>
 </ul>
 </div>
@@ -1270,10 +1309,21 @@ spec:
 </li>
 </ul>
 </div>
-<div class="sect2">
-<h3 id="_configuring_basic_authentication_for_client_credentials"><a class="anchor" href="#_configuring_basic_authentication_for_client_credentials"></a>Configuring basic authentication for client credentials</h3>
-<div class="paragraph">
-<p>To enable HTTP basic authentication for client credentials flow (useful for service accounts):</p>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-configuring-registry-security.html" class="page">Configuring Apicurio Registry security options</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-basic-auth-credentials_registry"><a class="anchor" href="#configuring-basic-auth-credentials_registry"></a>Basic authentication for client credentials</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>To enable HTTP basic authentication for client credentials flow (useful for service accounts), add the <code>basicAuth</code> configuration to your <code>ApicurioRegistry3</code> custom resource.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1289,10 +1339,12 @@ spec:
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_configuring_tls_for_oidc_connections"><a class="anchor" href="#_configuring_tls_for_oidc_connections"></a>Configuring TLS for OIDC connections</h3>
-<div class="paragraph">
-<p>When your identity provider uses custom certificates, configure TLS verification:</p>
+</div>
+<div class="sect1">
+<h2 id="configuring-tls-oidc_registry"><a class="anchor" href="#configuring-tls-oidc_registry"></a>TLS configuration for OIDC connections</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When your identity provider uses custom certificates, configure TLS verification in your <code>ApicurioRegistry3</code> custom resource.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1324,28 +1376,13 @@ Set <code>tlsVerificationType</code> to <code>none</code> to disable TLS verific
 </tr>
 </table>
 </div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p>For more information on Apicurio Registry security configuration, see
-Apicurio Registry security in <a href="assembly-configuring-registry-security.html" class="page">Configuring Apicurio Registry security options</a>.</p>
-</li>
-</ul>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuring-registry-ingress_registry"><a class="anchor" href="#configuring-registry-ingress_registry"></a>Configuring Ingress and networking</h2>
+<h2 id="configuring-ingress-hostname_registry"><a class="anchor" href="#configuring-ingress-hostname_registry"></a>Ingress hostname and class configuration</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This section explains how to configure Ingress resources and networking for Apicurio Registry components.</p>
-</div>
-<div class="sect2">
-<h3 id="_configuring_ingress_hostname_and_class"><a class="anchor" href="#_configuring_ingress_hostname_and_class"></a>Configuring Ingress hostname and class</h3>
-<div class="paragraph">
-<p>You can specify the Ingress hostname and IngressClass for each component:</p>
+<div class="paragraph _abstract">
+<p>You can specify the Ingress hostname and IngressClass for each component.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1369,10 +1406,12 @@ spec:
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_disabling_operator_managed_ingress"><a class="anchor" href="#_disabling_operator_managed_ingress"></a>Disabling operator-managed Ingress</h3>
-<div class="paragraph">
-<p>If you want to manage Ingress resources manually:</p>
+</div>
+<div class="sect1">
+<h2 id="disabling-operator-ingress_registry"><a class="anchor" href="#disabling-operator-ingress_registry"></a>Disabling operator-managed Ingress</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>To manage Ingress resources manually, disable the operator-managed Ingress.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1399,10 +1438,12 @@ services.
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_configuring_networkpolicy"><a class="anchor" href="#_configuring_networkpolicy"></a>Configuring NetworkPolicy</h3>
-<div class="paragraph">
-<p>The operator creates NetworkPolicy resources by default. To manage NetworkPolicy manually:</p>
+</div>
+<div class="sect1">
+<h2 id="configuring-networkpolicy_registry"><a class="anchor" href="#configuring-networkpolicy_registry"></a>NetworkPolicy configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The operator creates NetworkPolicy resources by default. To manage NetworkPolicy manually, disable the operator-managed NetworkPolicy.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1417,17 +1458,11 @@ services.
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="configuring-registry-features_registry"><a class="anchor" href="#configuring-registry-features_registry"></a>Configuring Apicurio Registry features</h2>
+<h2 id="enabling-resource-deletion_registry"><a class="anchor" href="#enabling-resource-deletion_registry"></a>Resource deletion configuration</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This section explains how to enable optional features in Apicurio Registry.</p>
-</div>
-<div class="sect2">
-<h3 id="_enabling_resource_deletion"><a class="anchor" href="#_enabling_resource_deletion"></a>Enabling resource deletion</h3>
-<div class="paragraph">
-<p>By default, artifacts and groups in Apicurio Registry are immutable and cannot be deleted. To enable deletion:</p>
+<div class="paragraph _abstract">
+<p>By default, artifacts and groups in Apicurio Registry are immutable and cannot be deleted. To enable deletion, set the <code>resourceDeleteEnabled</code> feature flag.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1442,10 +1477,12 @@ spec:
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_enabling_artifact_version_mutability"><a class="anchor" href="#_enabling_artifact_version_mutability"></a>Enabling artifact version mutability</h3>
-<div class="paragraph">
-<p>By default, artifact versions are immutable once created. To allow draft versions to be mutable:</p>
+</div>
+<div class="sect1">
+<h2 id="enabling-version-mutability_registry"><a class="anchor" href="#enabling-version-mutability_registry"></a>Artifact version mutability configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>By default, artifact versions are immutable once created. To allow draft versions to be mutable, set the <code>versionMutabilityEnabled</code> feature flag.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1469,17 +1506,11 @@ Enabling version mutability also unlocks Studio functionality in the Apicurio Re
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="configuring-registry-ui-component_registry"><a class="anchor" href="#configuring-registry-ui-component_registry"></a>Configuring the UI component</h2>
+<h2 id="disabling-ui-component_registry"><a class="anchor" href="#disabling-ui-component_registry"></a>Disabling the UI component</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This section explains how to configure the Apicurio Registry web console component.</p>
-</div>
-<div class="sect2">
-<h3 id="_disabling_the_ui_component"><a class="anchor" href="#_disabling_the_ui_component"></a>Disabling the UI component</h3>
-<div class="paragraph">
-<p>If you only need the REST API and don&#8217;t want to deploy the UI:</p>
+<div class="paragraph _abstract">
+<p>If you only need the REST API and do not want to deploy the UI, disable the UI component.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1496,10 +1527,12 @@ spec:
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_configuring_ui_environment_variables"><a class="anchor" href="#_configuring_ui_environment_variables"></a>Configuring UI environment variables</h3>
-<div class="paragraph">
-<p>You can configure the UI with environment variables:</p>
+</div>
+<div class="sect1">
+<h2 id="configuring-ui-env-vars_registry"><a class="anchor" href="#configuring-ui-env-vars_registry"></a>UI environment variable configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure the UI with environment variables in the <code>ApicurioRegistry3</code> custom resource.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1514,17 +1547,11 @@ spec:
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="advanced-registry-configuration_registry"><a class="anchor" href="#advanced-registry-configuration_registry"></a>Advanced configuration</h2>
+<h2 id="configuring-replicas_registry"><a class="anchor" href="#configuring-replicas_registry"></a>Replica configuration</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This section covers advanced configuration options for Apicurio Registry.</p>
-</div>
-<div class="sect2">
-<h3 id="_configuring_replicas"><a class="anchor" href="#_configuring_replicas"></a>Configuring replicas</h3>
-<div class="paragraph">
-<p>You can configure the number of replicas for each component:</p>
+<div class="paragraph _abstract">
+<p>You can configure the number of replicas for each component.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1544,10 +1571,12 @@ spec:
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_configuring_poddisruptionbudget"><a class="anchor" href="#_configuring_poddisruptionbudget"></a>Configuring PodDisruptionBudget</h3>
-<div class="paragraph">
-<p>The operator creates PodDisruptionBudget resources by default. To manage PodDisruptionBudget manually:</p>
+</div>
+<div class="sect1">
+<h2 id="configuring-poddisruptionbudget_registry"><a class="anchor" href="#configuring-poddisruptionbudget_registry"></a>PodDisruptionBudget configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The operator creates PodDisruptionBudget resources by default. To manage PodDisruptionBudget manually, disable the operator-managed PodDisruptionBudget.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1561,10 +1590,12 @@ spec:
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_configuring_environment_variables"><a class="anchor" href="#_configuring_environment_variables"></a>Configuring environment variables</h3>
-<div class="paragraph">
-<p>You can add custom environment variables to Apicurio Registry components:</p>
+</div>
+<div class="sect1">
+<h2 id="configuring-env-vars_registry"><a class="anchor" href="#configuring-env-vars_registry"></a>Environment variable configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can add custom environment variables to Apicurio Registry components.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1587,16 +1618,18 @@ spec:
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-<strong>Order of evaluation:</strong> The environment variables defined in the <code>env</code> field override any environment variables set by the operator. This allows you to customize configuration and provide workarounds in case of bugs while still benefiting from operator-managed settings. You should not use the custom PodTemplateSpec method described below to set environment variables.
+<strong>Order of evaluation:</strong> The environment variables defined in the <code>env</code> field override any environment variables set by the operator. This enables you to customize configuration and provide workarounds while still benefiting from operator-managed settings. Do not use the custom PodTemplateSpec method to set environment variables.
 </td>
 </tr>
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_using_podtemplatespec_for_advanced_customization"><a class="anchor" href="#_using_podtemplatespec_for_advanced_customization"></a>Using PodTemplateSpec for advanced customization</h3>
-<div class="paragraph">
-<p>For advanced pod configuration, you can provide a custom PodTemplateSpec:</p>
+</div>
+<div class="sect1">
+<h2 id="using-podtemplatespec_registry"><a class="anchor" href="#using-podtemplatespec_registry"></a>PodTemplateSpec advanced customization</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>For advanced pod configuration, you can provide a custom PodTemplateSpec.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1646,7 +1679,7 @@ spec:
 </ul>
 </div>
 <div class="paragraph">
-<p>However, you can also add additional containers to the pod if needed.</p>
+<p>You can also add additional containers to the pod if needed.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -1661,10 +1694,12 @@ spec:
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_configuring_tls_for_the_application"><a class="anchor" href="#_configuring_tls_for_the_application"></a>Configuring TLS for the application</h3>
-<div class="paragraph">
-<p>To configure TLS certificates for the Apicurio Registry application:</p>
+</div>
+<div class="sect1">
+<h2 id="configuring-app-tls_registry"><a class="anchor" href="#configuring-app-tls_registry"></a>Application TLS configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>To configure TLS certificates for the Apicurio Registry application, provide keystore references in the <code>ApicurioRegistry3</code> custom resource.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1683,13 +1718,12 @@ spec:
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For the complete configuration reference, see <a href="assembly-operator-config-reference.html" class="page">Apicurio Registry Operator configuration reference</a>.</p>
+<p><a href="assembly-operator-config-reference.html" class="page">Apicurio Registry Operator configuration reference</a></p>
 </li>
 <li>
-<p>For more information on configuring Apicurio Registry, see <a href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>.</p>
+<p><a href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a></p>
 </li>
 </ul>
-</div>
 </div>
 </div>
 </div>
