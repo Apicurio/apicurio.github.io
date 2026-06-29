@@ -384,10 +384,12 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter explains how to install and configure your chosen registry storage option:</p>
+<p>Install and configure your chosen registry storage option:</p>
+</div>
+<div class="paragraph">
+<p><strong>Kafka storage</strong></p>
 </div>
 <div class="ulist">
-<div class="title">Kafka storage</div>
 <ul>
 <li>
 <p><a href="#installing-kafka-streams-operatorhub_registry">Installing Strimzi from the OpenShift OperatorHub</a></p>
@@ -403,8 +405,10 @@
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p><strong>PostgreSQL database storage</strong></p>
+</div>
 <div class="ulist">
-<div class="title">PostgreSQL database storage</div>
 <ul>
 <li>
 <p><a href="#installing-postgresql-operatorhub_registry">Installing a PostgreSQL database from the OpenShift OperatorHub</a></p>
@@ -414,8 +418,10 @@
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p><strong>Prerequisites</strong></p>
+</div>
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
 <p><a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a></p>
@@ -427,14 +433,14 @@
 <div class="sect1">
 <h2 id="installing-kafka-streams-operatorhub_registry"><a class="anchor" href="#installing-kafka-streams-operatorhub_registry"></a>Installing Strimzi from the OpenShift OperatorHub</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>If you do not already have Strimzi installed, you can install the Strimzi Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see <a href="https://docs.openshift.com/container-platform/latest/operators/understanding/olm-understanding-operatorhub.html">Understanding OperatorHub</a>.</p>
+<div class="paragraph _abstract">
+<p>If you do not already have Strimzi installed, you can install the Strimzi Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console. It provides an interface for cluster administrators to discover and install Operators. For more details, see <a href="https://docs.openshift.com/container-platform/latest/operators/understanding/olm-understanding-operatorhub.html">Understanding OperatorHub</a>.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You must have cluster administrator access to an OpenShift cluster</p>
+<p>Cluster administrator access to an OpenShift cluster is configured.</p>
 </li>
 </ul>
 </div>
@@ -457,11 +463,11 @@
 <p>Read the information about the Operator, and click <strong>Install</strong> to display the Operator subscription page.</p>
 </li>
 <li>
-<p>Select your subscription settings, for example:</p>
+<p>Select your subscription settings:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Update Channel</strong> and then <strong>stable</strong></p>
+<p><strong>Update Channel</strong>: Select <strong>stable</strong>.</p>
 </li>
 <li>
 <p><strong>Installation Mode</strong>: Select one of the following:</p>
@@ -477,7 +483,7 @@
 </div>
 </li>
 <li>
-<p><strong>Approval Strategy</strong>: Select <strong>Automatic</strong> or <strong>Manual</strong></p>
+<p><strong>Approval Strategy</strong>: Select <strong>Automatic</strong> or <strong>Manual</strong>.</p>
 </li>
 </ul>
 </div>
@@ -513,13 +519,13 @@
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You must have an OpenShift cluster with cluster administrator access.</p>
+<p>An OpenShift cluster with cluster administrator access is configured.</p>
 </li>
 <li>
-<p>You must have already installed Apicurio Registry. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
+<p>Apicurio Registry is installed. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
 </li>
 <li>
-<p>You must have already installed Strimzi. See <a href="#installing-kafka-streams-operatorhub_registry">Installing Strimzi from the OpenShift OperatorHub</a>.</p>
+<p>Strimzi is installed. See <a href="#installing-kafka-streams-operatorhub_registry">Installing Strimzi from the OpenShift OperatorHub</a>.</p>
 </li>
 </ul>
 </div>
@@ -653,14 +659,17 @@ The journal topic must use <code>cleanup.policy: delete</code> with infinite ret
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details on installing Strimzi and on creating Kafka clusters and topics, see <a href="https://strimzi.io/docs/overview/latest/" class="bare">https://strimzi.io/docs/overview/latest/</a></p>
+<p><a href="https://strimzi.io/docs/overview/latest/">Strimzi documentation</a></p>
 </li>
 </ul>
 </div>
-<div class="sect2 _abstract">
-<h3 id="registry-kafka-topic-names_registry"><a class="anchor" href="#registry-kafka-topic-names_registry"></a>Kafka topic name configuration</h3>
-<div class="paragraph">
-<p>The default Kafka topic name that Apicurio Registry uses to store data is <code>kafkasql-journal</code>. This topic is created automatically by Apicurio Registry. However, you can override this behavior or the default topic name by setting the appropriate environment variable or Java system property:</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-kafka-topic-names_registry"><a class="anchor" href="#registry-kafka-topic-names_registry"></a>Kafka topic name configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The default Kafka topic name that Apicurio Registry uses to store data is <code>kafkasql-journal</code>. This topic is created automatically by Apicurio Registry. You can override this behavior or the default topic name by setting the appropriate environment variable or Java system property.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Kafka topic name configuration</caption>
@@ -691,7 +700,6 @@ The journal topic must use <code>cleanup.policy: delete</code> with infinite ret
 </table>
 </div>
 </div>
-</div>
 <div class="sect1">
 <h2 id="configuring-kafka-oauth_registry"><a class="anchor" href="#configuring-kafka-oauth_registry"></a>Configuring OAuth authentication for Kafka storage</h2>
 <div class="sectionbody">
@@ -702,13 +710,13 @@ The journal topic must use <code>cleanup.policy: delete</code> with infinite ret
 <p>If you are using the Apicurio Registry Operator, you can configure OAuth directly in the <code>ApicurioRegistry3</code> CR using the <code>spec.app.storage.kafkasql.auth</code> section. See the operator documentation for details on configuring KafkaSQL with OAuth authentication.</p>
 </div>
 <div class="paragraph">
-<p>Alternatively, you can configure OAuth by setting environment variables in your Apicurio Registry deployment. When you set these environment variables, the Kafka producer and consumer applications in Apicurio Registry will use this configuration to authenticate to the Kafka cluster over OAuth.</p>
+<p>Alternatively, you can configure OAuth by setting environment variables in your Apicurio Registry deployment. When you set these environment variables, the Kafka producer and consumer applications in Apicurio Registry use this configuration to authenticate to the Kafka cluster over OAuth.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You must have already configured Kafka-based storage of Apicurio Registry data in Strimzi. See <a href="#setting-up-kafka-streams-storage_registry">Configuring Apicurio Registry with Kafka storage on OpenShift</a>.</p>
+<p>Kafka-based storage of Apicurio Registry data in Strimzi is configured. See <a href="#setting-up-kafka-streams-storage_registry">Configuring Apicurio Registry with Kafka storage on OpenShift</a>.</p>
 </li>
 </ul>
 </div>
@@ -756,12 +764,11 @@ The journal topic must use <code>cleanup.policy: delete</code> with infinite ret
 </li>
 </ul>
 </div>
-<div class="ulist">
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For an example of how to set Apicurio Registry environment variables on OpenShift, see
-<em>Configuring Apicurio Registry health checks on OpenShift</em> in <a href="assembly-configuring-the-registry.html" class="page">Configuring your Apicurio Registry deployment</a></p>
+<p><a href="assembly-configuring-the-registry.html" class="page">Configuring your Apicurio Registry deployment</a></p>
 </li>
 </ul>
 </div>
@@ -770,14 +777,14 @@ The journal topic must use <code>cleanup.policy: delete</code> with infinite ret
 <div class="sect1">
 <h2 id="installing-postgresql-operatorhub_registry"><a class="anchor" href="#installing-postgresql-operatorhub_registry"></a>Installing a PostgreSQL database from the OpenShift OperatorHub</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>If you do not already have a PostgreSQL database Operator installed, you can install a PostgreSQL Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console and provides an interface for cluster administrators to discover and install Operators. For more details, see <a href="https://docs.openshift.com/container-platform/latest/operators/understanding/olm-understanding-operatorhub.html">Understanding OperatorHub</a>.</p>
+<div class="paragraph _abstract">
+<p>If you do not already have a PostgreSQL database Operator installed, you can install a PostgreSQL Operator on your OpenShift cluster from the OperatorHub. The OperatorHub is available from the OpenShift Container Platform web console. It provides an interface for cluster administrators to discover and install Operators. For more details, see <a href="https://docs.openshift.com/container-platform/latest/operators/understanding/olm-understanding-operatorhub.html">Understanding OperatorHub</a>.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You must have cluster administrator access to an OpenShift cluster.</p>
+<p>Cluster administrator access to an OpenShift cluster is configured.</p>
 </li>
 </ul>
 </div>
@@ -800,17 +807,17 @@ The journal topic must use <code>cleanup.policy: delete</code> with infinite ret
 <p>Read the information about the Operator, and click <strong>Install</strong> to display the Operator subscription page.</p>
 </li>
 <li>
-<p>Select your subscription settings, for example:</p>
+<p>Select your subscription settings:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Update Channel</strong>: <strong>stable</strong></p>
+<p><strong>Update Channel</strong>: Select <strong>stable</strong>.</p>
 </li>
 <li>
-<p><strong>Installation Mode</strong>: <strong>A specific namespace on the cluster</strong> and then <strong>my-project</strong></p>
+<p><strong>Installation Mode</strong>: Select <strong>A specific namespace on the cluster</strong>, and then select <strong>my-project</strong>.</p>
 </li>
 <li>
-<p><strong>Approval Strategy</strong>: Select <strong>Automatic</strong> or <strong>Manual</strong></p>
+<p><strong>Approval Strategy</strong>: Select <strong>Automatic</strong> or <strong>Manual</strong>.</p>
 </li>
 </ul>
 </div>
@@ -849,19 +856,19 @@ You must read the documentation from your chosen <strong>PostgreSQL</strong> Ope
 <h2 id="setting-up-postgresql-storage_registry"><a class="anchor" href="#setting-up-postgresql-storage_registry"></a>Configuring Apicurio Registry with PostgreSQL database storage on OpenShift</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section explains how to configure storage for Apicurio Registry on OpenShift using a PostgreSQL database Operator. You can install Apicurio Registry in an existing database or create a new database, depending on your environment. This section shows a simple example using the PostgreSQL Operator by Dev4Ddevs.com.</p>
+<p>Configure storage for Apicurio Registry on OpenShift using a PostgreSQL database Operator. You can install Apicurio Registry in an existing database or create a new database, depending on your environment. The following example uses the PostgreSQL Operator by Dev4Ddevs.com.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You must have an OpenShift cluster with cluster administrator access.</p>
+<p>An OpenShift cluster with cluster administrator access is configured.</p>
 </li>
 <li>
-<p>You must have already installed Apicurio Registry. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
+<p>Apicurio Registry is installed. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
 </li>
 <li>
-<p>You must have already installed a PostgreSQL Operator on OpenShift. For example, see <a href="#installing-postgresql-operatorhub_registry">Installing a PostgreSQL database from the OpenShift OperatorHub</a>.</p>
+<p>A PostgreSQL Operator is installed on OpenShift. For example, see <a href="#installing-postgresql-operatorhub_registry">Installing a PostgreSQL database from the OpenShift OperatorHub</a>.</p>
 </li>
 </ul>
 </div>
@@ -937,7 +944,7 @@ spec:
       sql:
         dataSource:
           url: "jdbc:postgresql://&lt;service name&gt;.&lt;namespace&gt;.svc:5432/&lt;database name&gt;"
-          # e.g. url: "jdbc:postgresql://acid-minimal-cluster.my-project.svc:5432/registry"
+          # For example: url: "jdbc:postgresql://acid-minimal-cluster.my-project.svc:5432/registry"
           username: "postgres"
           password:
             name: postgresql-credentials
