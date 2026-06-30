@@ -2,7 +2,7 @@
 title: "This project has moved to Apitomy"
 permalink: /codegen/getting-started/
 layout: page
-redirect_to: https://www.apitomy.io
+redirect_to: https://www.apitomy.io/projects/codegen/
 ---
 
 This project has moved to [Apitomy](https://www.apitomy.io).
