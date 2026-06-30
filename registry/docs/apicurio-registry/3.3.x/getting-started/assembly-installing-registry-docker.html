@@ -384,7 +384,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter explains how to install and run Apicurio Registry using Docker with the following storage options:</p>
+<p>Install and run Apicurio Registry using Docker with the following storage options:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -423,7 +423,7 @@ You can install more than one replica of Apicurio Registry depending on your env
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For details on building from source, see <a href="https://github.com/Apicurio/apicurio-registry" class="bare">https://github.com/Apicurio/apicurio-registry</a>.</p>
+<p><a href="https://github.com/Apicurio/apicurio-registry">Apicurio Registry source repository</a></p>
 </li>
 </ul>
 </div>
@@ -433,7 +433,7 @@ You can install more than one replica of Apicurio Registry depending on your env
 <h2 id="installing-registry-h2-storage_registry"><a class="anchor" href="#installing-registry-h2-storage_registry"></a>Installing Apicurio Registry with default configuration (embedded H2 database)</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can install and run Apicurio Registry with the default storage configuration from a container image. When you do not configure storage explicitly, Apicurio Registry uses SQL storage with an embedded H2 database.</p>
+<p>You can install and run Apicurio Registry with the default storage configuration from a container image. When you do not configure storage explicitly, the registry uses SQL storage with an embedded H2 database.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -442,7 +442,7 @@ You can install more than one replica of Apicurio Registry depending on your env
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The default embedded H2 configuration is suitable for development and testing only. Apicurio Registry stores all data in memory and loses it when you restart the container. For production, configure PostgreSQL or Kafka storage.
+The default embedded H2 configuration is suitable for development and testing only. The registry stores all data in memory and loses it when you restart the container. For production, configure PostgreSQL or Kafka storage.
 </td>
 </tr>
 </table>
@@ -451,10 +451,10 @@ The default embedded H2 configuration is suitable for development and testing on
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You must have Docker installed and the Docker daemon running.</p>
+<p>Docker is installed and the Docker daemon is running.</p>
 </li>
 <li>
-<p>Ensure that you can connect to the container repository: <a href="https://hub.docker.com/r/apicurio/apicurio-registry" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry</a>.</p>
+<p>You can connect to the container repository: <a href="https://hub.docker.com/r/apicurio/apicurio-registry" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry</a>.</p>
 </li>
 </ul>
 </div>
@@ -479,9 +479,6 @@ The default embedded H2 configuration is suitable for development and testing on
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker run -it -p 8080:8080 apicurio/apicurio-registry:VERSION</code></pre>
 </div>
 </div>
-</li>
-</ol>
-</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -489,15 +486,14 @@ The default embedded H2 configuration is suitable for development and testing on
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-All storage variants of Apicurio Registry 3.x now share the same container image of <code>apicurio/apicurio-registry</code>.  This is in contrast to the separate container images used by Apicurio Registry 2.x.  Choosing a storage variant is now a matter of configuring the single backend/server container image.
+All storage variants of Apicurio Registry 3.x now share the same container image of <code>apicurio/apicurio-registry</code>. This is in contrast to the separate container images used by Apicurio Registry 2.x. Choosing a storage variant is now a matter of configuring the single backend/server container image.
 </td>
 </tr>
 </table>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+</li>
 <li>
-<p>Send a test request using the Apicurio Registry REST API. For example, enter the following <code>curl</code> command to create a simple Avro schema artifact for a share price application in the registry:</p>
+<p>Send a test request using the Apicurio Registry REST API. For example, enter the following <code>curl</code> command to create an Avro schema artifact for a share price application in the registry:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST -H "Content-type: application/json; artifactType=AVRO" -H "X-Registry-ArtifactId: share-price" --data '{"type":"record","name":"price","namespace":"com.example","fields":[{"name":"symbol","type":"string"},{"name":"price","type":"string"}]}' http://localhost:8080/apis/registry/v3/groups/my-group/artifacts</code></pre>
@@ -518,10 +514,10 @@ All storage variants of Apicurio Registry 3.x now share the same container image
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more REST API sample requests, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
 </li>
 <li>
-<p>For demonstration examples, see <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples" class="bare">https://github.com/Apicurio/apicurio-registry/tree/main/examples</a>.</p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples" class="bare">https://github.com/Apicurio/apicurio-registry/tree/main/examples</a></p>
 </li>
 </ul>
 </div>
@@ -531,19 +527,19 @@ All storage variants of Apicurio Registry 3.x now share the same container image
 <h2 id="installing-registry-sql-storage_registry"><a class="anchor" href="#installing-registry-sql-storage_registry"></a>Installing Apicurio Registry with SQL database storage</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section explains how to install and run Apicurio Registry with storage in a PostgreSQL database from a container image. This storage option is suitable for production environments.</p>
+<p>Install and run Apicurio Registry with storage in a PostgreSQL database from a container image. This storage option is suitable for production environments.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You must have Docker installed and the Docker daemon running.</p>
+<p>Docker is installed and the Docker daemon is running.</p>
 </li>
 <li>
-<p>Ensure that you can connect to the container repository: <a href="https://hub.docker.com/r/apicurio/apicurio-registry" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry</a>.</p>
+<p>You can connect to the container repository: <a href="https://hub.docker.com/r/apicurio/apicurio-registry" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry</a>.</p>
 </li>
 <li>
-<p>You must already have a PostgreSQL database server installed and running. For example:</p>
+<p>A PostgreSQL database server is installed and running. For example:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ postgres -D /usr/local/pgsql/data</code></pre>
@@ -570,14 +566,14 @@ All storage variants of Apicurio Registry 3.x now share the same container image
 </div>
 </li>
 <li>
-<p>Run the container image and specify the following environment variable for your Postgresql system:</p>
+<p>Run the container image and specify the following environment variables for your PostgreSQL system:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>APICURIO_STORAGE_KIND</code> - The storage variant.  Set this to <code>sql</code>.</p>
+<p><code>APICURIO_STORAGE_KIND</code> - The storage variant. Set this to <code>sql</code>.</p>
 </li>
 <li>
-<p><code>APICURIO_STORAGE_SQL_KIND</code> - The type of SQL database to use.  Set this to <code>postgresql</code></p>
+<p><code>APICURIO_STORAGE_SQL_KIND</code> - The type of SQL database to use. Set this to <code>postgresql</code>.</p>
 </li>
 <li>
 <p><code>APICURIO_DATASOURCE_URL</code> - The database connection URL.</p>
@@ -600,7 +596,7 @@ apicurio/apicurio-registry:VERSION</code></pre>
 </div>
 </li>
 <li>
-<p>Send a test request using the Apicurio Registry REST API. For example, enter the following <code>curl</code> command to create a simple Avro schema artifact for a share price application in the registry:</p>
+<p>Send a test request using the Apicurio Registry REST API. For example, enter the following <code>curl</code> command to create an Avro schema artifact for a share price application in the registry:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST -H "Content-type: application/json" --data '{"artifactId":"share-price","artifactType":"AVRO","name":"Share Price","labels":{"environment":"DEV","category":"finance"},"firstVersion":{"version":"1.0.0","content":{"content":"{\"type\":\"record\",\"name\":\"price\",\"namespace\":\"com.example\",\"fields\":[{\"name\":\"symbol\",\"type\":\"string\"},{\"name\":\"price\",\"type\":\"string\"}]}","contentType":"application/json"}}}' http://localhost:8080/apis/registry/v3/groups/my-group/artifacts</code></pre>
@@ -621,13 +617,13 @@ apicurio/apicurio-registry:VERSION</code></pre>
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more REST API sample requests, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
 </li>
 <li>
-<p>For demonstration examples, see <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples" class="bare">https://github.com/Apicurio/apicurio-registry/tree/main/examples</a>.</p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples" class="bare">https://github.com/Apicurio/apicurio-registry/tree/main/examples</a></p>
 </li>
 <li>
-<p>For more details on PostgreSQL, see the <a href="https://www.postgresql.org/docs/12/index.html">PostgreSQL documentation</a>.</p>
+<p><a href="https://www.postgresql.org/docs/12/index.html">PostgreSQL documentation</a></p>
 </li>
 </ul>
 </div>
@@ -637,62 +633,36 @@ apicurio/apicurio-registry:VERSION</code></pre>
 <h2 id="installing-registry-sql-storage-secrets_registry"><a class="anchor" href="#installing-registry-sql-storage-secrets_registry"></a>Using file-based secrets for database credentials</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section explains how to use file-based secrets for database credentials with Apicurio Registry when using Docker Compose.
-This approach follows Docker&#8217;s recommended secret management practices and is more secure than passing credentials as
+<p>Use file-based secrets for database credentials with Apicurio Registry when you use Docker Compose.
+This approach follows Docker&#8217;s recommended secret management practices. It is more secure than passing credentials as
 environment variables.</p>
 </div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>You must have Docker and Docker Compose installed.</p>
-</li>
-<li>
-<p>You must already have a database server installed and running (PostgreSQL, MySQL, or Microsoft SQL Server).</p>
-</li>
-</ul>
-</div>
 <div class="paragraph">
-<div class="title">Overview</div>
 <p>Instead of passing credentials and secrets as environment variables (which can be exposed in process lists and container
 inspection), you can use file-based secrets. Apicurio Registry supports a generic <code>_FILE</code> suffix pattern that works with
-<strong>any</strong> configuration property.</p>
+any configuration property.</p>
 </div>
 <div class="paragraph">
-<p>Environment variables are automatically converted to configuration properties by Quarkus. For example,
+<p>Quarkus automatically converts environment variables to configuration properties. For example,
 <code>APICURIO_DATASOURCE_PASSWORD_FILE</code> becomes the property <code>apicurio.datasource.password.file</code>. The
 FileBasedSecretsInterceptor reads the file path from these properties and loads the actual values from the files.</p>
 </div>
 <div class="paragraph">
-<div class="title">How it works</div>
-<p>To use file-based secrets for any configuration property:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Take any environment variable name (e.g., <code>APICURIO_DATASOURCE_PASSWORD</code>)</p>
-</li>
-<li>
-<p>Add <code>_FILE</code> suffix (e.g., <code>APICURIO_DATASOURCE_PASSWORD_FILE</code>)</p>
-</li>
-<li>
-<p>Set the value to a file path containing the secret</p>
-</li>
-<li>
-<p>Apicurio Registry reads the file contents and uses them as the actual property value</p>
-</li>
-</ol>
+<p>To use file-based secrets for any configuration property, take any environment variable name (for example, <code>APICURIO_DATASOURCE_PASSWORD</code>), add the <code>_FILE</code> suffix (for example, <code>APICURIO_DATASOURCE_PASSWORD_FILE</code>), and set the value to a file path containing the secret. Apicurio Registry reads the file contents and uses them as the actual property value.</p>
 </div>
 <div class="paragraph">
-<p>This works for <strong>any</strong> configuration property, not just the examples listed below.</p>
+<p>This works for <strong>any</strong> configuration property, not only the examples listed in the following section.</p>
 </div>
 <div class="paragraph">
-<div class="title">Common file-based credential variables</div>
-<p>Some commonly used file-based credential environment variables (and their corresponding properties):</p>
+<p><strong>Common file-based credential variables</strong></p>
 </div>
 <div class="paragraph">
-<p><strong>Database credentials:</strong></p>
+<p>The following list shows commonly used file-based credential environment variables and their corresponding properties:</p>
 </div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Database credentials</dt>
+<dd>
 <div class="ulist">
 <ul>
 <li>
@@ -715,9 +685,9 @@ FileBasedSecretsInterceptor reads the file path from these properties and loads 
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><strong>OAuth/OIDC credentials:</strong></p>
-</div>
+</dd>
+<dt class="hdlist1">OAuth/OIDC credentials</dt>
+<dd>
 <div class="ulist">
 <ul>
 <li>
@@ -728,9 +698,9 @@ FileBasedSecretsInterceptor reads the file path from these properties and loads 
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><strong>Kafka SASL credentials:</strong></p>
-</div>
+</dd>
+<dt class="hdlist1">Kafka SASL credentials</dt>
+<dd>
 <div class="ulist">
 <ul>
 <li>
@@ -741,9 +711,9 @@ FileBasedSecretsInterceptor reads the file path from these properties and loads 
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><strong>Kafka SSL/TLS passwords:</strong></p>
-</div>
+</dd>
+<dt class="hdlist1">Kafka SSL/TLS passwords</dt>
+<dd>
 <div class="ulist">
 <ul>
 <li>
@@ -759,17 +729,29 @@ FileBasedSecretsInterceptor reads the file path from these properties and loads 
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><strong>Any other property:</strong></p>
-</div>
-<div class="paragraph">
-<p>The <code>_FILE</code> suffix works with any configuration property. Simply add <code>_FILE</code> to any environment variable name and set
+</dd>
+<dt class="hdlist1">Any other property</dt>
+<dd>
+<p>The <code>_FILE</code> suffix works with any configuration property. Add <code>_FILE</code> to any environment variable name and set
 the value to a file path.</p>
+</dd>
+</dl>
 </div>
 <div class="paragraph">
-<p>When a <code>_FILE</code> variant is set, Apicurio Registry reads the value from the specified file instead of using the direct
+<p>When a <code>_FILE</code> variant is set, the registry reads the value from the specified file instead of using the direct
 environment variable. Configuration precedence: System properties (400) &gt; File-based secrets (350) &gt; Environment
-variables (300) &gt; application.properties (250).</p>
+variables (300) &gt; <code>application.properties</code> (250).</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Docker and Docker Compose are installed.</p>
+</li>
+<li>
+<p>A database server is installed and running (PostgreSQL, MySQL, or Microsoft SQL Server).</p>
+</li>
+</ul>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
@@ -835,33 +817,41 @@ services:
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker compose up -d</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p><strong>File format</strong></p>
+</div>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<div class="title">File format</div>
-<p>Secret files should contain only the credential value in plain text (UTF-8 encoding). Leading and trailing whitespace
+<p>Secret files must contain only the credential value in plain text (UTF-8 encoding). Leading and trailing whitespace
 is automatically trimmed. For example:</p>
+</div>
+<div class="paragraph">
+<p>+</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">mypassword</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>+
+<strong>Security considerations</strong></p>
+</div>
 <div class="ulist">
-<div class="title">Security considerations</div>
 <ul>
 <li>
-<p>Ensure secret files have restrictive permissions (e.g., <code>chmod 600</code>)</p>
+<p>Ensure that secret files have restrictive permissions (for example, <code>chmod 600</code>)</p>
 </li>
 <li>
 <p>Never commit secret files to version control (add them to <code>.gitignore</code>)</p>
 </li>
 <li>
-<p>Apicurio Registry will log a warning if secret files are world-readable</p>
+<p>The registry logs a warning if secret files are world-readable</p>
 </li>
 <li>
-<p>If a <code>_FILE</code> variable is set but the file doesn&#8217;t exist or isn&#8217;t readable, Apicurio Registry will fail to start with a
+<p>If a <code>_FILE</code> variable is set but the file does not exist or is not readable, the registry fails to start with a
 clear error message</p>
 </li>
 </ul>
@@ -870,13 +860,10 @@ clear error message</p>
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For a complete Docker Compose example with secrets, see
-<a href="https://github.com/Apicurio/apicurio-registry/tree/main/distro/docker-compose/pg-secrets">PostgreSQL with
-file-based secrets example</a>.</p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/distro/docker-compose/pg-secrets">PostgreSQL with file-based secrets example</a></p>
 </li>
 <li>
-<p>For more details on Docker Compose secrets, see
-<a href="https://docs.docker.com/compose/how-tos/use-secrets/">Docker Compose secrets documentation</a>.</p>
+<p><a href="https://docs.docker.com/compose/how-tos/use-secrets/">Docker Compose secrets documentation</a></p>
 </li>
 </ul>
 </div>
@@ -886,22 +873,22 @@ file-based secrets example</a>.</p>
 <h2 id="installing-registry-kafka-storage_registry"><a class="anchor" href="#installing-registry-kafka-storage_registry"></a>Installing Apicurio Registry with Apache Kafka storage</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can install and run Apicurio Registry with Kafka storage from a container image. The <code>kafkasql</code> storage option uses Kafka as the primary data store, with an embedded H2 database as a local SQL store that Apicurio Registry rebuilds from the Kafka journal on each startup. This storage option is suitable for production environments.</p>
+<p>You can install and run Apicurio Registry with Kafka storage from a container image. The <code>kafkasql</code> storage option uses Kafka as the primary data store. It uses an embedded H2 database as a local SQL store that the registry rebuilds from the Kafka journal on each startup. This storage option is suitable for production environments.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You must have Docker installed and the Docker daemon running.</p>
+<p>Docker is installed and the Docker daemon is running.</p>
 </li>
 <li>
-<p>Ensure that you can connect to the container repository: <a href="https://hub.docker.com/r/apicurio/apicurio-registry" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry</a>.</p>
+<p>You can connect to the container repository: <a href="https://hub.docker.com/r/apicurio/apicurio-registry" class="bare">https://hub.docker.com/r/apicurio/apicurio-registry</a>.</p>
 </li>
 <li>
-<p>Ensure that <code>KAFKA_HOME</code> is set to the location of your Kafka-based system.</p>
+<p><code>KAFKA_HOME</code> is set to the location of your Kafka-based system.</p>
 </li>
 <li>
-<p>You must already have your Kafka broker running. For example:</p>
+<p>Kafka broker is running. For example:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$KAFKA_HOME/bin/zookeeper-server-start.sh $KAFKA_HOME/config/zookeeper.properties &amp;
@@ -929,14 +916,14 @@ $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties &amp;
 </div>
 </li>
 <li>
-<p>Run the container image and specify the following environment variable for your Kafka system:</p>
+<p>Run the container image and specify the following environment variables for your Kafka system:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>APICURIO_STORAGE_KIND</code> - Set this to <code>kafkasql</code></p>
+<p><code>APICURIO_STORAGE_KIND</code> - Set this to <code>kafkasql</code>.</p>
 </li>
 <li>
-<p><code>APICURIO_KAFKASQL_BOOTSTRAP_SERVERS</code> - The address(es) of your Kafka broker(s).</p>
+<p><code>APICURIO_KAFKASQL_BOOTSTRAP_SERVERS</code> - The address or addresses of your Kafka brokers.</p>
 <div class="paragraph">
 <p>For example:</p>
 </div>
@@ -950,7 +937,7 @@ $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties &amp;
 </div>
 </li>
 <li>
-<p>Send a test request using the Apicurio Registry REST API. For example, enter the following <code>curl</code> command to create a simple Avro schema artifact for a share price application in the registry:</p>
+<p>Send a test request using the Apicurio Registry REST API. For example, enter the following <code>curl</code> command to create an Avro schema artifact for a share price application in the registry:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST -H "Content-type: application/json" --data '{"artifactId":"share-price","artifactType":"AVRO","name":"Share Price","labels":{"environment":"DEV","category":"finance"},"firstVersion":{"version":"1.0.0","content":{"content":"{\"type\":\"record\",\"name\":\"price\",\"namespace\":\"com.example\",\"fields\":[{\"name\":\"symbol\",\"type\":\"string\"},{\"name\":\"price\",\"type\":\"string\"}]}","contentType":"application/json"}}}' http://localhost:8080/apis/registry/v3/groups/my-group/artifacts</code></pre>
@@ -971,13 +958,13 @@ $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties &amp;
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more REST API sample requests, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
 </li>
 <li>
-<p>For demonstration examples, see <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples" class="bare">https://github.com/Apicurio/apicurio-registry/tree/main/examples</a>.</p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples" class="bare">https://github.com/Apicurio/apicurio-registry/tree/main/examples</a></p>
 </li>
 <li>
-<p>For more details on Apache Kafka, see <a href="https://kafka.apache.org/documentation/" class="bare">https://kafka.apache.org/documentation/</a>.</p>
+<p><a href="https://kafka.apache.org/documentation/">Apache Kafka documentation</a></p>
 </li>
 </ul>
 </div>
