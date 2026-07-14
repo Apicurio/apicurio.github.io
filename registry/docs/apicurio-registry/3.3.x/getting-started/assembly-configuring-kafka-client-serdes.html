@@ -384,7 +384,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter provides detailed information on how to configure Kafka serializers/deserializers (SerDes) in your producer and consumer Java client applications:</p>
+<p>You can configure Kafka serializers/deserializers (SerDes) in your producer and consumer Java client applications:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -395,16 +395,16 @@
 <p><a href="#registry-serdes-config-props_registry">Apicurio Registry serializer/deserializer configuration properties</a></p>
 </li>
 <li>
-<p><a href="#registry-serdes-types-serde_registry">How to configure different client serializer/deserializer types</a></p>
+<p><a href="#registry-serdes-types-serde_registry">Client serializer/deserializer types</a></p>
 </li>
 <li>
-<p><a href="#registry-serdes-types-avro_registry">Configure Avro SerDes with Apicurio Registry</a></p>
+<p><a href="#registry-serdes-types-avro_registry">Avro SerDes configuration</a></p>
 </li>
 <li>
-<p><a href="#registry-serdes-types-json_registry">Configure JSON Schema SerDes with Apicurio Registry</a></p>
+<p><a href="#registry-serdes-types-json_registry">JSON Schema SerDes configuration</a></p>
 </li>
 <li>
-<p><a href="#registry-serdes-types-protobuf_registry">Configure Protobuf SerDes with Apicurio Registry</a></p>
+<p><a href="#registry-serdes-types-protobuf_registry">Protobuf SerDes configuration</a></p>
 </li>
 </ul>
 </div>
@@ -422,113 +422,106 @@
 <h2 id="registry-serdes-concepts-constants_registry"><a class="anchor" href="#registry-serdes-concepts-constants_registry"></a>Apicurio Registry serializer/deserializer configuration in client applications</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can configure specific client serializer/deserializer (SerDes) services and schema lookup strategies directly in a client application using the example constants shown in this section.</p>
+<p>You can configure specific client serializer/deserializer (SerDes) services and schema lookup strategies directly in a client application by using the following example constants.</p>
 </div>
 <div class="paragraph">
-<p>The following sections show examples of commonly used SerDes constants and configuration options.</p>
+<p>The following examples show commonly used SerDes constants and configuration options.</p>
 </div>
-<h3 id="_configuration_for_serdes_services" class="discrete">Configuration for SerDes services</h3>
+<div class="paragraph">
+<p><strong>Configuration for SerDes services</strong></p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class SerdeConfig {
 
-   public static final String REGISTRY_URL = "apicurio.registry.url"; <i class="conum" data-value="1"></i><b>(1)</b>
-   public static final String ID_HANDLER = "apicurio.registry.id-handler"; <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+   public static final String REGISTRY_URL = "apicurio.registry.url";
+   public static final String ID_HANDLER = "apicurio.registry.id-handler";</code></pre>
 </div>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The required URL of Apicurio Registry.</p>
-</li>
-<li>
-<p>Extends ID handling to support other ID formats and make them compatible with Apicurio Registry SerDes services.
-For example, you may change it from the default ID format <code>Integer</code> that&#8217;s also compatible with Confluent&#8217;s ID format to <code>Long</code>.</p>
-</li>
-</ol>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p>For more details on configuration options, see <a href="#registry-serdes-config-props_registry">Apicurio Registry serializer/deserializer configuration properties</a></p>
-</li>
-</ul>
-</div>
-<h3 id="_configuration_for_serdes_lookup_strategies" class="discrete">Configuration for SerDes lookup strategies</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class SerdeConfig {
-
-   public static final String ARTIFACT_RESOLVER_STRATEGY = "apicurio.registry.artifact-resolver-strategy"; <i class="conum" data-value="1"></i><b>(1)</b>
-   public static final String SCHEMA_RESOLVER = "apicurio.registry.schema-resolver"; <i class="conum" data-value="2"></i><b>(2)</b>
-...</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Java class that implements the artifact resolver strategy and maps between the Kafka SerDes and artifact ID.  Defaults to the topic ID strategy. This is only used by the serializer class.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Java class that implements the schema resolver. Defaults to <code>DefaultSchemaResolver</code>. This is used by the serializer and deserializer classes.</td>
-</tr>
-</table>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p>For more details on look up strategies, see <a href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java clients</a></p>
-</li>
-<li>
-<p>For more details on configuration options, see <a href="#registry-serdes-config-props_registry">Apicurio Registry serializer/deserializer configuration properties</a></p>
-</li>
-</ul>
-</div>
-<h3 id="_configuration_for_kafka_converters" class="discrete">Configuration for Kafka converters</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class SerdeBasedConverter&lt;S, T&gt; extends SchemaResolverConfigurer&lt;S, T&gt; implements Converter, Closeable {
-
-   public static final String REGISTRY_CONVERTER_SERIALIZER_PARAM = "apicurio.registry.converter.serializer"; <i class="conum" data-value="1"></i><b>(1)</b>
-   public static final String REGISTRY_CONVERTER_DESERIALIZER_PARAM = "apicurio.registry.converter.deserializer"; <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The required serializer to use with the Apicurio Registry Kafka converter.</p>
-</li>
-<li>
-<p>The required deserializer to use with the Apicurio Registry Kafka converter.</p>
-</li>
-</ol>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p>For more details, see the <a href="https://github.com/Apicurio/apicurio-registry/blob/main/utils/converter/src/main/java/io/apicurio/registry/utils/converter/SerdeBasedConverter.java">SerdeBasedConverter Java class</a></p>
-</li>
-</ul>
-</div>
-<h3 id="_configuration_for_different_schema_types" class="discrete">Configuration for different schema types</h3>
-<div class="paragraph">
-<p>For details on how to configure SerDes for different schema technologies, see the following:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#registry-serdes-types-avro_registry">Configure Avro SerDes with Apicurio Registry</a></p>
+<p><code>REGISTRY_URL</code>: The required URL of Apicurio Registry.</p>
 </li>
 <li>
-<p><a href="#registry-serdes-types-json_registry">Configure JSON Schema SerDes with Apicurio Registry</a></p>
+<p><code>ID_HANDLER</code>: Extends ID handling to support other ID formats and make them compatible with Apicurio Registry SerDes services.
+For example, you can change it from the default ID format <code>Integer</code>, which is also compatible with the Confluent ID format, to <code>Long</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Configuration for SerDes lookup strategies</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class SerdeConfig {
+
+   public static final String ARTIFACT_RESOLVER_STRATEGY = "apicurio.registry.artifact-resolver-strategy";
+   public static final String SCHEMA_RESOLVER = "apicurio.registry.schema-resolver";
+...</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ARTIFACT_RESOLVER_STRATEGY</code>: Java class that implements the artifact resolver strategy and maps between the Kafka SerDes and artifact ID. Defaults to the topic ID strategy. Only the serializer class uses this option.</p>
 </li>
 <li>
-<p><a href="#registry-serdes-types-protobuf_registry">Configure Protobuf SerDes with Apicurio Registry</a></p>
+<p><code>SCHEMA_RESOLVER</code>: Java class that implements the schema resolver. Defaults to <code>DefaultSchemaResolver</code>. The serializer and deserializer classes use this option.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Configuration for Kafka converters</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class SerdeBasedConverter&lt;S, T&gt; extends SchemaResolverConfigurer&lt;S, T&gt; implements Converter, Closeable {
+
+   public static final String REGISTRY_CONVERTER_SERIALIZER_PARAM = "apicurio.registry.converter.serializer";
+   public static final String REGISTRY_CONVERTER_DESERIALIZER_PARAM = "apicurio.registry.converter.deserializer";</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>REGISTRY_CONVERTER_SERIALIZER_PARAM</code>: The required serializer to use with the Apicurio Registry Kafka converter.</p>
+</li>
+<li>
+<p><code>REGISTRY_CONVERTER_DESERIALIZER_PARAM</code>: The required deserializer to use with the Apicurio Registry Kafka converter.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Configuration for different schema types</strong></p>
+</div>
+<div class="paragraph">
+<p>For details about how to configure SerDes for different schema technologies, see the following resources:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#registry-serdes-types-avro_registry">Avro SerDes configuration</a></p>
+</li>
+<li>
+<p><a href="#registry-serdes-types-json_registry">JSON Schema SerDes configuration</a></p>
+</li>
+<li>
+<p><a href="#registry-serdes-types-protobuf_registry">Protobuf SerDes configuration</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#registry-serdes-config-props_registry">Apicurio Registry serializer/deserializer configuration properties</a></p>
+</li>
+<li>
+<p><a href="assembly-using-kafka-client-serdes.html">Validating schemas using Kafka client serializers/deserializers in Java clients</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/blob/main/utils/converter/src/main/java/io/apicurio/registry/utils/converter/SerdeBasedConverter.java">SerdeBasedConverter Java class</a></p>
 </li>
 </ul>
 </div>
@@ -538,9 +531,11 @@ For example, you may change it from the default ID format <code>Integer</code> t
 <h2 id="registry-serdes-config-props_registry"><a class="anchor" href="#registry-serdes-config-props_registry"></a>Apicurio Registry serializer/deserializer configuration properties</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section provides reference information on Java configuration properties for Apicurio Registry Kafka serializers/deserializers (SerDes).</p>
+<p>Apicurio Registry Kafka serializers/deserializers (SerDes) support the following Java configuration properties.</p>
 </div>
-<h3 id="_schemaresolver_interface" class="discrete">SchemaResolver interface</h3>
+<div class="paragraph">
+<p><strong>SchemaResolver interface</strong></p>
+</div>
 <div class="paragraph">
 <p>Apicurio Registry SerDes are based on the <code>SchemaResolver</code> interface, which abstracts access to the registry and applies the same lookup logic for the SerDes classes of all supported formats.</p>
 </div>
@@ -566,7 +561,7 @@ For example, you may change it from the default ID format <code>Integer</code> t
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SCHEMA_RESOLVER</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.schema-resolver</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Fully-qualified Java classname that implements <code>SchemaResolver</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Fully qualified Java class name that implements <code>SchemaResolver</code>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.apicurio.registry.resolver.DefaultSchemaResolver</code></p></td>
 </tr>
@@ -579,15 +574,17 @@ For example, you may change it from the default ID format <code>Integer</code> t
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The <code>DefaultSchemaResolver</code> is recommended and provides useful features for most use cases.
+Use the <code>DefaultSchemaResolver</code>, which provides useful features for most use cases.
 For some advanced use cases, you might use a custom implementation of <code>SchemaResolver</code>.
 </td>
 </tr>
 </table>
 </div>
-<h3 id="_defaultschemaresolver_class" class="discrete">DefaultSchemaResolver class</h3>
 <div class="paragraph">
-<p>You can use the <code>DefaultSchemaResolver</code> to configure features such as:</p>
+<p><strong>DefaultSchemaResolver class</strong></p>
+</div>
+<div class="paragraph">
+<p>You can use the <code>DefaultSchemaResolver</code> to configure the following features:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -605,7 +602,9 @@ For some advanced use cases, you might use a custom implementation of <code>Sche
 </li>
 </ul>
 </div>
-<h4 id="_configuration_for_registry_api_access_options" class="discrete">Configuration for registry API access options</h4>
+<div class="paragraph">
+<p><strong>Configuration for registry API access options</strong></p>
+</div>
 <div class="paragraph">
 <p>The <code>DefaultSchemaResolver</code> provides the following properties to configure access to the core registry API:</p>
 </div>
@@ -645,34 +644,36 @@ For some advanced use cases, you might use a custom implementation of <code>Sche
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_ID</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.auth.client.id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Client ID to access the authentication service. Required when accessing a secure registry using the OAuth client credentials flow.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Client ID to access the authentication service. Required when accessing a secure registry by using the OAuth client credentials flow.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_SECRET</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.auth.client.secret</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Client secret to access the authentication service. Required when accessing a secure registry using the OAuth client credentials flow.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Client secret to access the authentication service. Required when accessing a secure registry by using the OAuth client credentials flow.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_USERNAME</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.auth.username</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Username to access the registry. Required when accessing a secure registry using HTTP basic authentication.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Username to access the registry. Required when accessing a secure registry by using HTTP basic authentication.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_PASSWORD</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registy.auth.password</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Password to access the registry. Required when accessing a secure registry using HTTP basic authentication.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.auth.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Password to access the registry. Required when accessing a secure registry by using HTTP basic authentication.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
 </tbody>
 </table>
-<h5 id="_opentelemetry_distributed_tracing" class="discrete">OpenTelemetry distributed tracing</h5>
+<div class="paragraph">
+<p><strong>OpenTelemetry distributed tracing</strong></p>
+</div>
 <div class="paragraph">
 <p>The SerDes libraries support optional OpenTelemetry trace context propagation. When enabled,
 W3C trace context headers (<code>traceparent</code> and <code>tracestate</code>) are injected into all HTTP requests
@@ -688,15 +689,17 @@ distributed traces alongside your Kafka producer and consumer operations.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>opentelemetry-api</code> library must be on the classpath. When an OpenTelemetry SDK is initialized
-in your application (for example, via the OpenTelemetry Java agent or the Quarkus OpenTelemetry
-extension), the SerDes HTTP calls will participate in the active trace. If no OpenTelemetry SDK is
-configured, the behavior is a no-op and no trace headers are added.</p>
+<p>The <code>opentelemetry-api</code> library must be on the classpath. When you initialize an OpenTelemetry SDK
+in your application (for example, by using the OpenTelemetry Java agent or the Quarkus OpenTelemetry
+extension), the SerDes HTTP calls participate in the active trace. If no OpenTelemetry SDK is
+configured, the behavior is a no-op and the SerDes add no trace headers.</p>
 </div>
 <div class="paragraph">
-<p>For more details on SDK-level configuration, see <a href="#registry-sdk-config_registry">[registry-sdk-config_registry]</a>.</p>
+<p>For more details about SDK-level configuration, see <a href="#registry-sdk-config_registry">[registry-sdk-config_registry]</a>.</p>
 </div>
-<h4 id="_configuration_for_registry_lookup_options" class="discrete">Configuration for registry lookup options</h4>
+<div class="paragraph">
+<p><strong>Configuration for registry lookup options</strong></p>
+</div>
 <div class="paragraph">
 <p>The <code>DefaultSchemaResolver</code> uses the following properties to configure how to look up artifacts in Apicurio Registry.</p>
 </div>
@@ -722,7 +725,7 @@ configured, the behavior is a no-op and no trace headers are added.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ARTIFACT_RESOLVER_STRATEGY</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.artifact-resolver-strategy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers only. Fully-qualified Java classname that implements <code>ArtifactReferenceResolverStrategy</code> and maps each Kafka message to an <code>ArtifactReference</code> (<code>groupId</code>, <code>artifactId</code>, and version).  For example, the default strategy uses the topic name as the schema <code>artifactId</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers only. Fully qualified Java class name that implements <code>ArtifactReferenceResolverStrategy</code> and maps each Kafka message to an <code>ArtifactReference</code> (<code>groupId</code>, <code>artifactId</code>, and version). For example, the default strategy uses the topic name as the schema <code>artifactId</code>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.apicurio.registry.serde.strategy.TopicIdStrategy</code></p></td>
 </tr>
@@ -764,14 +767,14 @@ configured, the behavior is a no-op and no trace headers are added.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DEREFERENCE_SCHEMA</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.dereference-schema</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used to indicate the serdes to dereference the schema. This is used in two different situation, once the schema is registered, instructs the serdes to ask the server for the schema dereferenced. It is also used to instruct the serializer to dereference the schema before registering it Registry, but this is only supported for Avro.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Configures the SerDes to dereference the schema. After the schema is registered, this property instructs the SerDes to request the dereferenced schema from the server. It also instructs the serializer to dereference the schema before registering it in Apicurio Registry, but this is only supported for Avro.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTO_REGISTER_ARTIFACT_IF_EXISTS</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.auto-register.if-exists</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers only. Configures the behavior of the client when there is a conflict creating an artifact because the artifact already exists. Available values are <code>FAIL</code>, <code>UPDATE</code>, <code>RETURN</code>, or <code>RETURN_OR_UPDATE</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers only. Configures the behavior of the client when a conflict occurs while creating an artifact because the artifact already exists. Available values are <code>FAIL</code>, <code>UPDATE</code>, <code>RETURN</code>, or <code>RETURN_OR_UPDATE</code>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RETURN_OR_UPDATE</code></p></td>
 </tr>
@@ -785,28 +788,28 @@ configured, the behavior is a no-op and no trace headers are added.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RETRY_BACKOFF_MS</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.retry-backoff-ms</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. If a schema can not be be retrieved from the Registry, it may retry a number of times. This configuration option controls the delay between the retry attempts (milliseconds).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. If the SerDes cannot retrieve a schema from the registry, they can retry a number of times. This configuration option controls the delay between the retry attempts (milliseconds).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Duration, non-negative Number, or integer String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>300</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RETRY_COUNT</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.retry-count</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. If a schema can not be be retrieved from the Registry, it may retry a number of times. This configuration option controls the number of retry attempts.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. If the SerDes cannot retrieve a schema from the registry, they can retry a number of times. This configuration option controls the number of retry attempts.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>non-negative Number, or integer String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>FAULT_TOLERANT_REFRESH</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.fault-tolerant-refresh</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. If <code>true</code>, will log exceptions instead of throwing them when an error occurs trying to refresh a schema in the cache. This is useful for production situations where a stale schema is better than completely failing schema resolution. Note that this will not impact retry attempts, as retries are attempted before this flag is considered.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. If <code>true</code>, the SerDes log exceptions instead of throwing them when an error occurs while refreshing a schema in the cache. This is useful for production situations where a stale schema is better than completely failing schema resolution. This does not affect retry attempts, because the SerDes attempt retries before considering this flag.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKGROUND_REFRESH_ENABLED</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.background-refresh-enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. If <code>true</code>, enables background refresh of expired cache entries following the "stale-while-revalidate" pattern. When an entry expires and a stale value exists, the cache will return the stale value immediately (non-blocking) and trigger an asynchronous refresh in the background. This prevents latency spikes in high-concurrency scenarios where multiple threads would otherwise block waiting for cache refresh. If no stale value exists (first fetch), falls back to synchronous refresh behavior. When a background refresh fails, errors are logged and stale values continue to be served (similar to <code>FAULT_TOLERANT_REFRESH</code> behavior). This option complements <code>FAULT_TOLERANT_REFRESH</code>, which handles refresh failures rather than refresh latency.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. If <code>true</code>, enables background refresh of expired cache entries following the "stale-while-revalidate" pattern. When an entry expires and a stale value exists, the cache returns the stale value immediately (non-blocking) and triggers an asynchronous refresh in the background. This prevents latency spikes in high-concurrency scenarios where multiple threads would otherwise block waiting for cache refresh. If no stale value exists (first fetch), the cache falls back to synchronous refresh behavior. When a background refresh fails, the cache logs errors and continues to serve stale values (similar to <code>FAULT_TOLERANT_REFRESH</code> behavior). This option complements <code>FAULT_TOLERANT_REFRESH</code>, which handles refresh failures rather than refresh latency.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
@@ -820,27 +823,29 @@ configured, the behavior is a no-op and no trace headers are added.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKGROUND_REFRESH_TIMEOUT_MS</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.background-refresh.timeout-ms</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers when <code>BACKGROUND_REFRESH_ENABLED</code> is enabled. Specifies the maximum time (milliseconds) to wait for a background refresh operation to complete before timing out. If a background refresh exceeds this timeout, it will be interrupted and the stale value will continue to be served until the next refresh attempt.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers when <code>BACKGROUND_REFRESH_ENABLED</code> is enabled. Specifies the maximum time (milliseconds) to wait for a background refresh operation to complete before timing out. If a background refresh exceeds this timeout, it is interrupted and the cache continues to serve the stale value until the next refresh attempt.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Duration, non-negative Number, or integer String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>30000</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>USE_ID</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.use-id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Configures to use the specified <code>IdOption</code> as the identifier for artifacts. Options are <code>globalId</code> and <code>contentId</code>. Instructs the serializer to write the specified ID to Kafka, and instructs the deserializer to use this ID to find the schema.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Configures the SerDes to use the specified <code>IdOption</code> as the identifier for artifacts. Options are <code>globalId</code> and <code>contentId</code>. Instructs the serializer to write the specified ID to Kafka, and instructs the deserializer to use this ID to find the schema.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentId</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CANONICALIZE</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.canonicalize</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers only. Specifies whether the serializer should canonicalize schema content when looking up or creating an artifact version in the registry by content. When set to <code>true</code>, semantically equivalent schemas with different formatting will match. When <code>false</code>, schema content is compared as-is. NOTE: In versions prior to 3.1.0, canonicalization was always attempted as a fallback. Starting with 3.1.0, this property must be explicitly set to <code>true</code> if canonicalized lookups are desired.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers only. Specifies whether the serializer canonicalizes schema content when looking up or creating an artifact version in the registry by content. When set to <code>true</code>, semantically equivalent schemas with different formatting match. When <code>false</code>, schema content is compared as-is. NOTE: In versions before 3.1.0, canonicalization was always attempted as a fallback. Starting with 3.1.0, you must explicitly set this property to <code>true</code> if you want canonicalized lookups.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
 </tbody>
 </table>
-<h4 id="_configuration_to_readwrite_registry_artifacts_in_kafka" class="discrete">Configuration to read/write registry artifacts in Kafka</h4>
+<div class="paragraph">
+<p><strong>Configuration to read and write registry artifacts in Kafka</strong></p>
+</div>
 <div class="paragraph">
 <p>The <code>DefaultSchemaResolver</code> uses the following properties to configure how artifact information is written to and read from Kafka.</p>
 </div>
@@ -866,27 +871,29 @@ configured, the behavior is a no-op and no trace headers are added.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ENABLE_HEADERS</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.headers.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Configures to read/write the artifact identifier to Kafka message headers instead of in the message payload.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Configures the SerDes to read and write the artifact identifier in Kafka message headers instead of in the message payload.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>HEADERS_HANDLER</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.headers.handler</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Fully-qualified Java classname that implements <code>HeadersHandler</code> and writes/reads the artifact identifier to/from the Kafka message headers.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Fully qualified Java class name that implements <code>HeadersHandler</code> and writes and reads the artifact identifier to and from the Kafka message headers.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.apicurio.registry.serde.headers.DefaultHeadersHandler</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ID_HANDLER</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.id-handler</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Fully-qualified Java classname of a class that implements <code>IdHandler</code> and writes/reads the artifact identifier to/from the message payload. Default to a 4 byte format that includes the contentId in the message payload.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Fully qualified Java class name of a class that implements <code>IdHandler</code> and writes and reads the artifact identifier to and from the message payload. Defaults to a 4-byte format that includes the <code>contentId</code> in the message payload.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.apicurio.registry.serde.Default4ByteIdHandler</code></p></td>
 </tr>
 </tbody>
 </table>
-<h4 id="_configuration_for_deserializer_fall_back_options" class="discrete">Configuration for deserializer fall-back options</h4>
+<div class="paragraph">
+<p><strong>Configuration for deserializer fall-back options</strong></p>
+</div>
 <div class="paragraph">
 <p>The <code>DefaultSchemaResolver</code> uses the following property to configure a fall-back provider for all deserializers.</p>
 </div>
@@ -912,7 +919,7 @@ configured, the behavior is a no-op and no trace headers are added.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>FALLBACK_ARTIFACT_PROVIDER</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.fallback.provider</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Only used by deserializers. Sets a custom implementation of <code>FallbackArtifactProvider</code> for resolving the artifact used for deserialization. <code>FallbackArtifactProvider</code> configures a fallback artifact to fetch from the registry in case the lookup fails.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by deserializers only. Sets a custom implementation of <code>FallbackArtifactProvider</code> for resolving the artifact used for deserialization. <code>FallbackArtifactProvider</code> configures a fallback artifact to fetch from the registry if the lookup fails.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.apicurio.registry.serde.fallback.DefaultFallbackArtifactProvider</code></p></td>
 </tr>
@@ -963,36 +970,40 @@ configured, the behavior is a no-op and no trace headers are added.</p>
 </tr>
 </tbody>
 </table>
-<div class="ulist">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p>For more details, see the <a href="https://github.com/Apicurio/apicurio-registry/blob/main/serdes/generic/serde-common/src/main/java/io/apicurio/registry/serde/config/SerdeConfig.java">SerdeConfig Java class</a>.</p>
-</li>
-<li>
+<div class="paragraph">
 <p>You can configure application properties as Java system properties or include them in the Quarkus
 <code>application.properties</code> file.
 For more details, see the <a href="https://quarkus.io/guides/config#overriding-properties-at-runtime">Quarkus documentation</a>.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/blob/main/serdes/generic/serde-common/src/main/java/io/apicurio/registry/serde/config/SerdeConfig.java">SerdeConfig Java class</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="registry-serdes-types-serde_registry"><a class="anchor" href="#registry-serdes-types-serde_registry"></a>How to configure different client serializer/deserializer types</h2>
+<h2 id="registry-serdes-types-serde_registry"><a class="anchor" href="#registry-serdes-types-serde_registry"></a>Client serializer/deserializer types</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>When using schemas in your Kafka client applications, you must choose which specific schema type to use, depending on your use case. Apicurio Registry provides SerDe Java classes for Apache Avro, JSON Schema, and Google Protobuf. The following sections explain how to configure Kafka applications to use each type.</p>
+<p>When you use schemas in your Kafka client applications, you must choose which specific schema type to use, depending on your use case. Apicurio Registry provides SerDe Java classes for Apache Avro, JSON Schema, and Google Protobuf.</p>
 </div>
 <div class="paragraph">
-<p>You can also use Kafka to implement custom serializer and deserializer classes, and leverage Apicurio Registry functionality using the Apicurio Registry REST Java client.</p>
+<p>You can also use Kafka to implement custom serializer and deserializer classes, and use Apicurio Registry functions through the Apicurio Registry REST Java client.</p>
 </div>
-<h3 id="_kafka_application_configuration_for_serializersdeserializers" class="discrete">Kafka application configuration for serializers/deserializers</h3>
 <div class="paragraph">
-<p>Using the SerDe classes provided by Apicurio Registry in your Kafka application involves setting the correct configuration properties. The following simple Avro examples show how to configure a serializer in a Kafka producer application and how to configure a deserializer in a Kafka consumer application.</p>
+<p><strong>Kafka application configuration for serializers/deserializers</strong></p>
+</div>
+<div class="paragraph">
+<p>To use the SerDe classes that Apicurio Registry provides in your Kafka application, set the correct configuration properties. The following Avro examples show how to configure a serializer in a Kafka producer application and how to configure a deserializer in a Kafka consumer application.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows a serializer configuration in a Kafka producer:</p>
 </div>
 <div class="listingblock">
-<div class="title">Example serializer configuration in a Kafka producer</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Create the Kafka producer
 private static Producer&lt;Object, Object&gt; createKafkaProducer() {
@@ -1019,8 +1030,10 @@ private static Producer&lt;Object, Object&gt; createKafkaProducer() {
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The following example shows a deserializer configuration in a Kafka consumer:</p>
+</div>
 <div class="listingblock">
-<div class="title">Example deserializer configuration in a Kafka consumer</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Create the Kafka consumer
 private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
@@ -1054,14 +1067,17 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For an example application, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Simple Avro example</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Simple Avro example</a></p>
 </li>
 </ul>
 </div>
-<div class="sect2">
-<h3 id="registry-serdes-types-avro_registry"><a class="anchor" href="#registry-serdes-types-avro_registry"></a>Configure Avro SerDes with Apicurio Registry</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-serdes-types-avro_registry"><a class="anchor" href="#registry-serdes-types-avro_registry"></a>Avro SerDes configuration</h2>
+<div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This topic explains how to use the Kafka client serializer and deserializer (SerDes) classes for Apache Avro.</p>
+<p>You can configure the Kafka client serializer and deserializer (SerDes) classes for Apache Avro by using the configuration options in this section.</p>
 </div>
 <div class="paragraph">
 <p>Apicurio Registry provides the following Kafka client SerDes classes for Avro:</p>
@@ -1077,8 +1093,10 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 </ul>
 </div>
 <div class="paragraph">
-<div class="title">Configure the Avro serializer</div>
-<p>You can configure the Avro serializer class with the following:</p>
+<p><strong>Avro serializer configuration</strong></p>
+</div>
+<div class="paragraph">
+<p>You can configure the Avro serializer class with the following options:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1103,7 +1121,9 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 </ul>
 </div>
 <div class="paragraph">
-<div class="title">ID location</div>
+<p><strong>ID location</strong></p>
+</div>
+<div class="paragraph">
 <p>The serializer passes the unique ID of the schema as part of the Kafka message so that consumers can use the correct schema for deserialization. The ID can be in the message payload or in the message headers. The default location is the message payload. To send the ID in the message headers, set the following configuration property:</p>
 </div>
 <div class="listingblock">
@@ -1115,16 +1135,18 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 <p>The property name is <code>apicurio.registry.headers.enabled</code>.</p>
 </div>
 <div class="paragraph">
-<div class="title">ID encoding</div>
-<p>You can customize how the schema ID is encoded when passing it in the Kafka message body. Set the <code>apicurio.registry.id-handler</code> configuration property to a class that implements the <code>io.apicurio.registry.serde.IdHandler</code> interface. Apicurio Registry provides the following implementations:</p>
+<p><strong>ID encoding</strong></p>
+</div>
+<div class="paragraph">
+<p>You can customize how the SerDes encode the schema ID when they pass it in the Kafka message body. Set the <code>apicurio.registry.id-handler</code> configuration property to a class that implements the <code>io.apicurio.registry.serde.IdHandler</code> interface. Apicurio Registry provides the following implementations:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>io.apicurio.registry.serde.Default4ByteIdHandler</code>: Stores the ID as an 4-byte long</p>
+<p><code>io.apicurio.registry.serde.Default4ByteIdHandler</code>: Stores the ID as a 4-byte integer</p>
 </li>
 <li>
-<p><code>io.apicurio.registry.serde.Legacy8ByteIdHandler</code>:  Stores the ID as an 8-byte integer</p>
+<p><code>io.apicurio.registry.serde.Legacy8ByteIdHandler</code>: Stores the ID as an 8-byte long</p>
 </li>
 </ul>
 </div>
@@ -1132,7 +1154,9 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 <p>Apicurio Registry represents the schema ID as a long, but for legacy reasons, or for compatibility with other registries or SerDe classes, you might want to use 4 bytes when sending the ID.</p>
 </div>
 <div class="paragraph">
-<div class="title">Avro datum provider</div>
+<p><strong>Avro datum provider</strong></p>
+</div>
+<div class="paragraph">
 <p>Avro provides different datum writers and readers to write and read data. Apicurio Registry supports three different types:</p>
 </div>
 <div class="ulist">
@@ -1149,7 +1173,7 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 </ul>
 </div>
 <div class="paragraph">
-<p>The Apicurio Registry <code>AvroDatumProvider</code> is the abstraction of which type is used, where <code>DefaultAvroDatumProvider</code> is used by default.</p>
+<p>The Apicurio Registry <code>AvroDatumProvider</code> class abstracts which type is used. The default is <code>DefaultAvroDatumProvider</code>.</p>
 </div>
 <div class="paragraph">
 <p>You can set the following configuration options:</p>
@@ -1157,22 +1181,26 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 <div class="ulist">
 <ul>
 <li>
-<p><code>apicurio.registry.avro-datum-provider</code>: Specifies a fully-qualified Java class name of the <code>AvroDatumProvider</code> implementation, for example <code>io.apicurio.registry.serde.avro.ReflectAvroDatumProvider</code></p>
+<p><code>apicurio.registry.avro-datum-provider</code>: Specifies a fully qualified Java class name of the <code>AvroDatumProvider</code> implementation, for example <code>io.apicurio.registry.serde.avro.ReflectAvroDatumProvider</code></p>
 </li>
 <li>
-<p><code>apicurio.registry.use-specific-avro-reader</code>: Set to <code>true</code> to use a specific type when using <code>DefaultAvroDatumProvider</code></p>
+<p><code>apicurio.registry.use-specific-avro-reader</code>: Specifies whether to use a specific type when you use <code>DefaultAvroDatumProvider</code>. Set to <code>true</code> to enable this option.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<div class="title">Avro encoding</div>
-<p>When using Avro to serialize data, you can use the Avro binary encoding format to ensure the data is encoded in as efficient a format as possible. Avro also supports encoding the data as JSON, which makes it easier to inspect the payload of each message, for example, for logging or debugging.</p>
+<p><strong>Avro encoding</strong></p>
+</div>
+<div class="paragraph">
+<p>When you use Avro to serialize data, you can use the Avro binary encoding format to ensure that the data is encoded in as efficient a format as possible. Avro also supports encoding the data as JSON, which you can use to inspect the payload of each message, for example, for logging or debugging.</p>
 </div>
 <div class="paragraph">
 <p>You can set the Avro encoding by configuring the <code>apicurio.registry.avro.encoding</code> property with a value of <code>JSON</code> or <code>BINARY</code>. The default is <code>BINARY</code>.</p>
 </div>
 <div class="paragraph">
-<div class="title">Configure the Avro deserializer</div>
+<p><strong>Avro deserializer configuration</strong></p>
+</div>
+<div class="paragraph">
 <p>You must configure the Avro deserializer class to match the following configuration settings of the serializer:</p>
 </div>
 <div class="ulist">
@@ -1222,14 +1250,15 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 <p>The deserializer class can determine the values for these options from the message. The strategy is not required because the serializer is responsible for sending the ID as part of the message.</p>
 </div>
 <div class="paragraph">
-<p>The ID location is determined by checking for the magic byte at the start of the message payload. If that byte is found, the ID is read from the message payload using the configured handler. If the magic byte is not found, the ID is read from the message headers.</p>
+<p>The deserializer determines the ID location by checking for the magic byte at the start of the message payload. If that byte is found, the deserializer reads the ID from the message payload by using the configured handler. If the magic byte is not found, the deserializer reads the ID from the message headers.</p>
 </div>
 <div class="paragraph">
-<div class="title">Avro SerDes and artifact references</div>
-<p>When working with Avro messages and a schema with nested records, a new artifact is registered per nested record. For example, the following <code>TradeKey</code> schema includes a nested <code>Exchange</code> schema:</p>
+<p><strong>Avro SerDes and artifact references</strong></p>
+</div>
+<div class="paragraph">
+<p>When you work with Avro messages and a schema with nested records, Apicurio Registry registers a new artifact for each nested record. For example, the following <code>TradeKey</code> schema includes a nested <code>Exchange</code> schema:</p>
 </div>
 <div class="listingblock">
-<div class="title">TradeKey schema with nested Exchange schema</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "namespace": "com.kubetrade.schema.trade",
@@ -1248,8 +1277,10 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The nested <code>Exchange</code> schema is defined as follows:</p>
+</div>
 <div class="listingblock">
-<div class="title">Exchange schema</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "namespace": "com.kubetrade.schema.common",
@@ -1260,18 +1291,14 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 </div>
 </div>
 <div class="paragraph">
-<p>When using these schemas with Avro SerDes, two artifacts are created in Apicurio Registry, one for the <code>TradeKey</code> schema and one for the <code>Exchange</code> schema. Whenever a message using the <code>TradeKey</code> schema is serialized or deserialized, both schemas are retrieved, allowing you to split your definitions into different files.</p>
+<p>When you use these schemas with Avro SerDes, Apicurio Registry creates two artifacts, one for the <code>TradeKey</code> schema and one for the <code>Exchange</code> schema. Whenever a message that uses the <code>TradeKey</code> schema is serialized or deserialized, both schemas are retrieved, allowing you to split your definitions into different files.</p>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details on Avro configuration, see the <a href="https://github.com/Apicurio/apicurio-registry/blob/main/serdes/avro-serde/src/main/java/io/apicurio/registry/serde/avro/AvroSerdeConfig.java">AvroSerdeConfig Java class</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/blob/main/serdes/avro-serde/src/main/java/io/apicurio/registry/serde/avro/AvroSerdeConfig.java">AvroSerdeConfig Java class</a></p>
 </li>
-<li>
-<p>For Java example applications, see:</p>
-<div class="ulist">
-<ul>
 <li>
 <p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Simple Avro example</a></p>
 </li>
@@ -1280,14 +1307,13 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 </li>
 </ul>
 </div>
-</li>
-</ul>
 </div>
 </div>
-<div class="sect2">
-<h3 id="registry-serdes-types-json_registry"><a class="anchor" href="#registry-serdes-types-json_registry"></a>Configure JSON Schema SerDes with Apicurio Registry</h3>
+<div class="sect1">
+<h2 id="registry-serdes-types-json_registry"><a class="anchor" href="#registry-serdes-types-json_registry"></a>JSON Schema SerDes configuration</h2>
+<div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This topic explains how to use the Kafka client serializer and deserializer (SerDes) classes for JSON Schema.</p>
+<p>You can configure the Kafka client serializer and deserializer (SerDes) classes for JSON Schema by using the configuration options in this section.</p>
 </div>
 <div class="paragraph">
 <p>Apicurio Registry provides the following Kafka client SerDes classes for JSON Schema:</p>
@@ -1303,10 +1329,12 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 </ul>
 </div>
 <div class="paragraph">
-<p>Unlike Apache Avro, JSON Schema is not a serialization technology, but is instead a validation technology. As a result, configuration options for JSON Schema are quite different. For example, there is no encoding option, because data is always encoded as JSON.</p>
+<p>Unlike Apache Avro, JSON Schema is not a serialization technology, but is instead a validation technology. As a result, configuration options for JSON Schema are different. For example, no encoding option exists, because data is always encoded as JSON.</p>
 </div>
 <div class="paragraph">
-<div class="title">Configure the JSON Schema serializer</div>
+<p><strong>JSON Schema serializer configuration</strong></p>
+</div>
+<div class="paragraph">
 <p>You can configure the JSON Schema serializer class as follows:</p>
 </div>
 <div class="ulist">
@@ -1332,7 +1360,9 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 </div>
 </div>
 <div class="paragraph">
-<div class="title">Configure the JSON Schema deserializer</div>
+<p><strong>JSON Schema deserializer configuration</strong></p>
+</div>
+<div class="paragraph">
 <p>You can configure the JSON Schema deserializer class as follows:</p>
 </div>
 <div class="ulist">
@@ -1358,23 +1388,24 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Deserializer validation only works if the serializer passes the global ID in the Kafka message, which will only happen when validation is enabled in the serializer.
+Deserializer validation only works if the serializer passes the global ID in the Kafka message, which only happens when you enable validation in the serializer.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<div class="title">JSON Schema SerDes and artifact references</div>
-<p>The JSON Schema SerDes cannot discover the schema from the message payload, so the schema artifact must be registered beforehand, and this also applies artifact references.</p>
+<p><strong>JSON Schema SerDes and artifact references</strong></p>
 </div>
 <div class="paragraph">
-<p>Depending on the content of the schema, if the <code>$ref</code> value is a URL, the SerDes try to resolve the referenced schema using that URL, and then validation works as usual, validating the data against the main schema, and validating the nested value against the nested schema. Support for referencing artifacts in Apicurio Registry has also been implemented.</p>
+<p>The JSON Schema SerDes cannot discover the schema from the message payload, so you must register the schema artifact beforehand, and this also applies to artifact references.</p>
+</div>
+<div class="paragraph">
+<p>If the <code>$ref</code> value is a URL, the SerDes try to resolve the referenced schema by using that URL. Validation then works as usual: the SerDes validate the data against the main schema and validate the nested value against the nested schema. The SerDes also support referencing artifacts in Apicurio Registry.</p>
 </div>
 <div class="paragraph">
 <p>For example, the following <code>citizen.json</code> schema references the <code>city.json</code> schema:</p>
 </div>
 <div class="listingblock">
-<div class="title">citizen.json schema with reference to city.json schema</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
  "$id": "https://example.com/citizen.schema.json",
@@ -1402,8 +1433,10 @@ Deserializer validation only works if the serializer passes the global ID in the
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The <code>city.json</code> schema is defined as follows:</p>
+</div>
 <div class="listingblock">
-<div class="title">city.json schema</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
  "$id": "https://example.com/city.schema.json",
@@ -1425,18 +1458,14 @@ Deserializer validation only works if the serializer passes the global ID in the
 </div>
 </div>
 <div class="paragraph">
-<p>In this example, a given citizen has a city. In Apicurio Registry, a citizen artifact with a reference to the city artifact is created using the name <code>city.json</code>. In the SerDes, when the citizen schema is fetched, the city schema is also fetched because it is referenced from the citizen schema. When serializing/deserializing data, the reference name is used to resolve the nested schema, allowing validation against the citizen schema and the nested city schema.</p>
+<p>In this example, a given citizen has a city. Apicurio Registry creates a citizen artifact with a reference to the city artifact by using the name <code>city.json</code>. In the SerDes, when the citizen schema is fetched, the city schema is also fetched because it is referenced from the citizen schema. When you serialize or deserialize data, the SerDes use the reference name to resolve the nested schema, allowing validation against the citizen schema and the nested city schema.</p>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details, see the <a href="https://github.com/Apicurio/apicurio-registry/blob/main/serdes/jsonschema-serde/src/main/java/io/apicurio/registry/serde/jsonschema/JsonSchemaKafkaDeserializerConfig.java">JsonSchemaKafkaDeserializerConfig Java class</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/blob/main/serdes/jsonschema-serde/src/main/java/io/apicurio/registry/serde/jsonschema/JsonSchemaKafkaDeserializerConfig.java">JsonSchemaKafkaDeserializerConfig Java class</a></p>
 </li>
-<li>
-<p>For Java example applications, see:</p>
-<div class="ulist">
-<ul>
 <li>
 <p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Simple JSON Schema example</a></p>
 </li>
@@ -1445,14 +1474,13 @@ Deserializer validation only works if the serializer passes the global ID in the
 </li>
 </ul>
 </div>
-</li>
-</ul>
 </div>
 </div>
-<div class="sect2">
-<h3 id="registry-serdes-types-protobuf_registry"><a class="anchor" href="#registry-serdes-types-protobuf_registry"></a>Configure Protobuf SerDes with Apicurio Registry</h3>
+<div class="sect1">
+<h2 id="registry-serdes-types-protobuf_registry"><a class="anchor" href="#registry-serdes-types-protobuf_registry"></a>Protobuf SerDes configuration</h2>
+<div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This topic explains how to use the Kafka client serializer and deserializer (SerDes) classes for Google Protobuf.</p>
+<p>You can configure the Kafka client serializer and deserializer (SerDes) classes for Google Protobuf by using the configuration options in this section.</p>
 </div>
 <div class="paragraph">
 <p>Apicurio Registry provides the following Kafka client SerDes classes for Protobuf:</p>
@@ -1468,7 +1496,9 @@ Deserializer validation only works if the serializer passes the global ID in the
 </ul>
 </div>
 <div class="paragraph">
-<div class="title">Configure the Protobuf serializer</div>
+<p><strong>Protobuf serializer configuration</strong></p>
+</div>
+<div class="paragraph">
 <p>You can configure the Protobuf serializer class as follows:</p>
 </div>
 <div class="ulist">
@@ -1491,7 +1521,7 @@ Deserializer validation only works if the serializer passes the global ID in the
 </ul>
 </div>
 <div class="paragraph">
-<p>For details on these configuration options, see the following sections:</p>
+<p>For details about these configuration options, see the following sections:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1499,12 +1529,14 @@ Deserializer validation only works if the serializer passes the global ID in the
 <p><a href="#registry-serdes-concepts-constants_registry">Apicurio Registry serializer/deserializer configuration in client applications</a></p>
 </li>
 <li>
-<p><a href="#registry-serdes-types-avro_registry">Configure Avro SerDes with Apicurio Registry</a></p>
+<p><a href="#registry-serdes-types-avro_registry">Avro SerDes configuration</a></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<div class="title">Configure the Protobuf deserializer</div>
+<p><strong>Protobuf deserializer configuration</strong></p>
+</div>
+<div class="paragraph">
 <p>You must configure the Protobuf deserializer class to match the following configuration settings in the serializer:</p>
 </div>
 <div class="ulist">
@@ -1548,7 +1580,7 @@ Deserializer validation only works if the serializer passes the global ID in the
 <p>The deserializer class can determine the values for these options from the message. The strategy is not required because the serializer is responsible for sending the ID as part of the message.</p>
 </div>
 <div class="paragraph">
-<p>The ID location is determined by checking for the magic byte at the start of the message payload. If that byte is found, the ID is read from the message payload using the configured handler. If the magic byte is not found, the ID is read from the message headers.</p>
+<p>The deserializer determines the ID location by checking for the magic byte at the start of the message payload. If that byte is found, the deserializer reads the ID from the message payload by using the configured handler. If the magic byte is not found, the deserializer reads the ID from the message headers.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1557,20 +1589,21 @@ Deserializer validation only works if the serializer passes the global ID in the
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The Protobuf deserializer does not deserialize to your exact Protobuf Message implementation, but rather to a <code>DynamicMessage</code> instance. There is no appropriate API to do otherwise.
+The Protobuf deserializer does not deserialize to your exact Protobuf Message implementation, but rather to a <code>DynamicMessage</code> instance. No appropriate API exists to do otherwise.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<div class="title">Protobuf SerDes and artifact references</div>
-<p>When a complex Protobuf message with an <code>import</code> statement is used, the imported Protobuf messages are stored in Apicurio Registry as separate artifacts. Then when Apicurio Registry gets the main schema to check a Protobuf message, the referenced schemes are also retrieved so the full message schema can be checked and serialized.</p>
+<p><strong>Protobuf SerDes and artifact references</strong></p>
+</div>
+<div class="paragraph">
+<p>When you use a complex Protobuf message with an <code>import</code> statement, Apicurio Registry stores the imported Protobuf messages as separate artifacts. When Apicurio Registry gets the main schema to check a Protobuf message, it also retrieves the referenced schemas so that the full message schema can be checked and serialized.</p>
 </div>
 <div class="paragraph">
 <p>For example, the following <code>table_info.proto</code> schema file includes the imported <code>mode.proto</code> schema file:</p>
 </div>
 <div class="listingblock">
-<div class="title">table_info.proto file with imported mode.proto file</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">syntax = "proto3";
 package sample;
@@ -1593,8 +1626,10 @@ message TableInfo {
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The <code>mode.proto</code> schema file is defined as follows:</p>
+</div>
 <div class="listingblock">
-<div class="title">mode.proto file</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">syntax = "proto3";
 package sample;
@@ -1612,14 +1647,10 @@ COMMAND = 4;
 </div>
 </div>
 <div class="paragraph">
-<p>In this example, two Protobuf artifacts are stored in Apicurio Registry, one for <code>TableInfo</code> and one for <code>Mode</code>. However, because <code>Mode</code> is part of <code>TableInfo</code>, whenever <code>TableInfo</code> is fetched to check a message in the SerDes, <code>Mode</code> is also returned as an artifact referenced by <code>TableInfo</code>.</p>
+<p>In this example, Apicurio Registry stores two Protobuf artifacts, one for <code>TableInfo</code> and one for <code>Mode</code>. However, because <code>Mode</code> is part of <code>TableInfo</code>, whenever <code>TableInfo</code> is fetched to check a message in the SerDes, <code>Mode</code> is also returned as an artifact referenced by <code>TableInfo</code>.</p>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
-<ul>
-<li>
-<p>For Java example applications, see:</p>
-<div class="ulist">
 <ul>
 <li>
 <p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Protobuf Bean and Protobuf Find Latest examples</a></p>
@@ -1628,10 +1659,6 @@ COMMAND = 4;
 <p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">SerDes with references example</a></p>
 </li>
 </ul>
-</div>
-</li>
-</ul>
-</div>
 </div>
 </div>
 </div>
