@@ -384,7 +384,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry provides a compatibility API layer that enables applications using Confluent Schema Registry clients to work seamlessly with Apicurio Registry. This chapter describes the supported features, limitations, and migration considerations.</p>
+<p>Apicurio Registry provides a compatibility API layer so that applications with Confluent Schema Registry clients can work with Apicurio Registry. Review the supported features, behavioral differences, unsupported features, and migration considerations:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -441,7 +441,7 @@
 </tbody>
 </table>
 <div class="paragraph">
-<p>Applications using Confluent Schema Registry client libraries can use Apicurio Registry as a replacement by simply changing the schema registry URL to point to the appropriate Apicurio Registry ccompat endpoint.</p>
+<p>Applications that use Confluent Schema Registry client libraries can use Apicurio Registry as a replacement by changing the schema registry URL to point to the appropriate Apicurio Registry ccompat endpoint.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example configuration</div>
@@ -456,7 +456,7 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 <h2 id="ccompat-supported-features_registry"><a class="anchor" href="#ccompat-supported-features_registry"></a>Supported features</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The following Confluent Schema Registry features are fully supported in Apicurio Registry:</p>
+<p>Apicurio Registry fully supports the following Confluent Schema Registry features:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Fully supported API endpoints</caption>
@@ -477,11 +477,11 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Subjects API</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Complete CRUD operations for subjects including listing, registration, lookup by content (<code>POST /subjects/{subject}</code>), lookup by version (<code>POST /subjects/{subject}/versions/2024.Q2</code>), and deletion. Supports pagination with <code>offset</code>, <code>limit</code>, <code>deleted</code>, and <code>deletedOnly</code> parameters.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Complete create, retrieve, update, and delete operations for subjects including listing, registration, lookup by content (<code>POST /subjects/{subject}</code>), lookup by version (<code>POST /subjects/{subject}/versions/2024.Q2</code>), and deletion. Supports pagination with <code>offset</code>, <code>limit</code>, <code>deleted</code>, and <code>deletedOnly</code> parameters.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Compatibility API</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Schema compatibility checking against specific versions or all versions. Supports <code>verbose</code> and <code>normalize</code> parameters. Defaults to <code>BACKWARD</code> compatibility when no explicit rule is configured, matching Confluent behavior.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schema compatibility checking against specific versions or all versions. Supports <code>verbose</code> and <code>normalize</code> parameters. Defaults to <code>BACKWARD</code> compatibility when you do not configure an explicit rule, matching the Confluent behavior.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Config API</strong></p></td>
@@ -505,8 +505,8 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Schema Type</th>
-<th class="tableblock halign-left valign-top">Support Status</th>
+<th class="tableblock halign-left valign-top">Schema type</th>
+<th class="tableblock halign-left valign-top">Support status</th>
 </tr>
 </thead>
 <tbody>
@@ -539,7 +539,7 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>X-Confluent-Accept-Unknown-Properties header</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When set to <code>true</code>, unknown JSON properties in request bodies are ignored. This provides forward compatibility for clients sending newer API requests.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to <code>true</code>, the API ignores unknown JSON properties in request bodies. This provides forward compatibility for clients that send newer API requests.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Enhanced pagination</strong></p></td>
@@ -547,13 +547,14 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 </tr>
 </tbody>
 </table>
-<div class="sect2">
-<h3 id="_schema_id_mapping"><a class="anchor" href="#_schema_id_mapping"></a>Schema ID mapping</h3>
+<div class="paragraph">
+<p><strong>Schema ID mapping</strong></p>
+</div>
 <div class="paragraph">
 <p>Apicurio Registry uses two internal ID types: <code>globalId</code> (unique per artifact version) and <code>contentId</code> (unique per content hash). Confluent Schema Registry uses a single incrementing schema ID.</p>
 </div>
 <div class="paragraph">
-<p>The mapping between Confluent schema IDs and Apicurio Registry internal IDs is controlled by the <code>apicurio.ccompat.legacy-id-mode.enabled</code> configuration property:</p>
+<p>The <code>apicurio.ccompat.legacy-id-mode.enabled</code> configuration property controls the mapping between Confluent schema IDs and Apicurio Registry internal IDs:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 5. Schema ID mode</caption>
@@ -565,7 +566,7 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Mode</th>
-<th class="tableblock halign-left valign-top">Config Value</th>
+<th class="tableblock halign-left valign-top">Config value</th>
 <th class="tableblock halign-left valign-top">Behavior</th>
 </tr>
 </thead>
@@ -573,7 +574,7 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Content ID mode (default)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Confluent <code>id</code> maps to Apicurio Registry <code>contentId</code>. Registering the same schema content under different subjects returns the same ID, matching Confluent behavior.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Confluent <code>id</code> maps to Apicurio Registry <code>contentId</code>. Registering the same schema content under different subjects returns the same ID, matching the Confluent behavior.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Legacy ID mode</p></td>
@@ -583,11 +584,11 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 </tbody>
 </table>
 <div class="paragraph">
-<p>For most use cases, the default content ID mode is recommended because it matches Confluent&#8217;s behavior where identical schemas share the same ID across subjects.</p>
+<p>For most use cases, use the default content ID mode, because it matches the Confluent behavior where identical schemas share the same ID across subjects.</p>
 </div>
+<div class="paragraph">
+<p><strong>Configuration properties</strong></p>
 </div>
-<div class="sect2">
-<h3 id="_configuration_properties"><a class="anchor" href="#_configuration_properties"></a>Configuration properties</h3>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 6. Confluent compatibility API configuration</caption>
 <colgroup>
@@ -626,45 +627,45 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ccompat.group-concat.separator</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Separator character used when group concatenation is enabled.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Separator character used when you enable group concatenation.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="ccompat-behavioral-differences_registry"><a class="anchor" href="#ccompat-behavioral-differences_registry"></a>Behavioral differences from Confluent</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>While the ccompat API aims for full compatibility, there are some behavioral differences to be aware of when migrating from Confluent Schema Registry.</p>
+<p>Although the ccompat API provides broad compatibility, some behavioral differences exist when you migrate from Confluent Schema Registry.</p>
 </div>
-<div class="sect2">
-<h3 id="_avro_schema_formatting"><a class="anchor" href="#_avro_schema_formatting"></a>Avro schema formatting</h3>
 <div class="paragraph">
-<p>Avro schemas returned through the ccompat API are normalized to compact single-line JSON, matching Confluent&#8217;s behavior. This means:</p>
+<p><strong>Avro schema formatting</strong></p>
+</div>
+<div class="paragraph">
+<p>The ccompat API normalizes returned Avro schemas to compact single-line JSON, matching the Confluent behavior. This normalization has the following effects:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Pretty-printed Avro schemas submitted during registration are returned in compact form.</p>
+<p>The API returns pretty-printed Avro schemas submitted during registration in compact form.</p>
 </li>
 <li>
-<p>Avro primitive type wrappers are simplified (for example, <code>{"type": "string"}</code> becomes <code>"string"</code>).</p>
+<p>The API simplifies Avro primitive type wrappers (for example, <code>{"type": "string"}</code> becomes <code>"string"</code>).</p>
 </li>
 <li>
-<p>Field ordering follows Avro&#8217;s canonical form.</p>
+<p>Field ordering follows the Avro canonical form.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>This normalization applies only to ccompat API responses (<code>/apis/ccompat/*</code>). The native Apicurio Registry v3 API returns schemas in their original submitted format.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_default_compatibility_level"><a class="anchor" href="#_default_compatibility_level"></a>Default compatibility level</h3>
 <div class="paragraph">
-<p>When no explicit compatibility rule is configured at the artifact, group, or global level, the ccompat compatibility check endpoint (<code>POST /compatibility/subjects/{subject}/versions/2024.Q2</code>) defaults to <code>BACKWARD</code> compatibility. This matches Confluent Schema Registry&#8217;s default behavior.</p>
+<p><strong>Default compatibility level</strong></p>
+</div>
+<div class="paragraph">
+<p>When you do not configure an explicit compatibility rule at the artifact, group, or global level, the ccompat compatibility check endpoint (<code>POST /compatibility/subjects/{subject}/versions/2024.Q2</code>) defaults to <code>BACKWARD</code> compatibility. This matches the default behavior of Confluent Schema Registry.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -673,14 +674,14 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-This default only applies to the compatibility <em>check</em> endpoint. Schema registration does not enforce this default unless a compatibility rule is explicitly configured via <code>PUT /config</code> or <code>PUT /config/{subject}</code>.
+This default only applies to the compatibility <em>check</em> endpoint. Schema registration does not enforce this default unless you explicitly configure a compatibility rule by using <code>PUT /config</code> or <code>PUT /config/{subject}</code>.
 </td>
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p><strong>Config response format</strong></p>
 </div>
-<div class="sect2">
-<h3 id="_config_response_format"><a class="anchor" href="#_config_response_format"></a>Config response format</h3>
 <div class="paragraph">
 <p>The <code>PUT /config</code> and <code>PUT /config/{subject}</code> endpoints return a response with the following fields:</p>
 </div>
@@ -693,7 +694,7 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>GET /config</code> endpoint returns:</p>
+<p>The <code>GET /config</code> endpoint returns the following response:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -703,11 +704,11 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 </div>
 </div>
 <div class="paragraph">
-<p>Note the different field name (<code>compatibility</code> vs <code>compatibilityLevel</code>) between the update and get responses. This matches Confluent&#8217;s API behavior.</p>
+<p>The field name differs between the update response (<code>compatibility</code>) and the get response (<code>compatibilityLevel</code>). This matches the Confluent API behavior.</p>
 </div>
+<div class="paragraph">
+<p><strong>Error responses</strong></p>
 </div>
-<div class="sect2">
-<h3 id="_error_responses"><a class="anchor" href="#_error_responses"></a>Error responses</h3>
 <div class="paragraph">
 <p>Error responses use Confluent-compatible error codes and message formats:</p>
 </div>
@@ -720,9 +721,9 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Error Code</th>
+<th class="tableblock halign-left valign-top">Error code</th>
 <th class="tableblock halign-left valign-top">Meaning</th>
-<th class="tableblock halign-left valign-top">HTTP Status</th>
+<th class="tableblock halign-left valign-top">HTTP status</th>
 </tr>
 </thead>
 <tbody>
@@ -763,12 +764,11 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p><strong>Sorted results</strong></p>
 </div>
-<div class="sect2">
-<h3 id="_sorted_results"><a class="anchor" href="#_sorted_results"></a>Sorted results</h3>
 <div class="paragraph">
 <p>List endpoints (<code>GET /subjects</code>, <code>GET /schemas/ids/{id}/subjects</code>, <code>GET /schemas/ids/{id}/versions</code>) return results in sorted order (alphabetical for subjects, numerical for versions).</p>
-</div>
 </div>
 </div>
 </div>
@@ -776,7 +776,7 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 <h2 id="ccompat-unsupported-features_registry"><a class="anchor" href="#ccompat-unsupported-features_registry"></a>Unsupported features</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The following Confluent Schema Registry features are <strong>not supported</strong> in Apicurio Registry. Applications relying on these features will need to use alternative approaches.</p>
+<p>Apicurio Registry does not support the following Confluent Schema Registry features. Applications that rely on these features must use alternative approaches.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 8. Unsupported features</caption>
@@ -796,7 +796,7 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Schema Linking / Exporters</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /exporters</code> returns an empty list. All other exporter operations return an error.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Use Apicurio Registry native import/export functionality or external replication tools.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use Apicurio Registry native import/export functions or external replication tools.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>KEKs (Key Encryption Keys)</strong></p></td>
@@ -815,12 +815,14 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Data Contracts - Rules Enforcement</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>metadata</code> and <code>ruleSet</code> fields are accepted in requests but NOT enforced or stored via the ccompat API. Schema rules are not executed.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ccompat API accepts <code>metadata</code> and <code>ruleSet</code> fields in requests but does not enforce or store them. The API does not execute schema rules.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Use Apicurio Registry native Data Contracts feature (<code>apicurio.contracts.enabled=true</code>) for contract metadata and rulesets. See <a href="assembly-data-contracts.html" class="page">Data Contracts</a>.</p></td>
 </tr>
 </tbody>
 </table>
-<h3 id="_schema_linking_exporters" class="discrete">Schema Linking / Exporters</h3>
+<div class="paragraph">
+<p><strong>Schema Linking / Exporters</strong></p>
+</div>
 <div class="paragraph">
 <p>Confluent Schema Linking uses schema exporters to replicate schemas between Schema Registry clusters. This is an enterprise feature that requires cluster-to-cluster replication infrastructure.</p>
 </div>
@@ -833,16 +835,18 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 <p><strong>Import/Export API</strong>: Use the Apicurio Registry admin API to export all registry content to a ZIP file and import it into another instance.</p>
 </li>
 <li>
-<p><strong>Kafka-based storage</strong>: When using Kafka storage, schemas are stored in a Kafka topic that can be replicated using Kafka&#8217;s native replication features.</p>
+<p><strong>Kafka-based storage</strong>: Use Kafka storage to store schemas in a Kafka topic that you can replicate by using the native replication features of Kafka.</p>
 </li>
 <li>
-<p><strong>GitOps workflows</strong>: Store schemas in Git and use CI/CD pipelines to sync across environments.</p>
+<p><strong>GitOps workflows</strong>: Store schemas in Git and use CI/CD pipelines to synchronize across environments.</p>
 </li>
 </ul>
 </div>
-<h3 id="_data_contracts" class="discrete">Data Contracts</h3>
 <div class="paragraph">
-<p>Confluent Data Contracts provide governance features including:</p>
+<p><strong>Data Contracts</strong></p>
+</div>
+<div class="paragraph">
+<p>Confluent Data Contracts provide the following governance features:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -850,12 +854,12 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 <p><strong>Metadata</strong>: Key-value pairs attached to schemas (owner, email, tags)</p>
 </li>
 <li>
-<p><strong>RuleSets</strong>: Validation and transformation rules using CEL or JSONata</p>
+<p><strong>RuleSets</strong>: Validation and transformation rules that use Common Expression Language (CEL) or JSONata</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>In Apicurio Registry, these fields are accepted in ccompat API requests for client compatibility but are not processed or stored through the ccompat layer. Instead, Apicurio Registry provides its own native Data Contracts feature with richer functionality:</p>
+<p>Apicurio Registry accepts these fields in ccompat API requests for client compatibility but does not process or store them through the ccompat layer. Instead, Apicurio Registry provides its own native Data Contracts feature with more capabilities:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -866,15 +870,15 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 <p><strong>Contract Rulesets</strong>: Domain and migration rules at both artifact and version level, managed through the <code>contract/ruleset</code> REST API</p>
 </li>
 <li>
-<p><strong>Content Rules</strong>: Configure validity, compatibility, and integrity rules</p>
+<p><strong>Content Rules</strong>: Validity, compatibility, and integrity rule configuration</p>
 </li>
 <li>
-<p><strong>Groups</strong>: Organize artifacts by group for governance</p>
+<p><strong>Groups</strong>: Artifact organization by group for governance</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>See <a href="assembly-data-contracts.html" class="page">Data Contracts</a> for full documentation on the native data contracts feature.</p>
+<p>See <a href="assembly-data-contracts.html" class="page">Data Contracts</a> for full documentation about the native data contracts feature.</p>
 </div>
 </div>
 </div>
@@ -882,7 +886,7 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 <h2 id="ccompat-migration-considerations_registry"><a class="anchor" href="#ccompat-migration-considerations_registry"></a>Migration considerations</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>When migrating from Confluent Schema Registry to Apicurio Registry, consider the following:</p>
+<p>When you migrate from Confluent Schema Registry to Apicurio Registry, consider the following areas:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 9. Migration checklist</caption>
@@ -898,36 +902,36 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Basic Operations</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Basic operations</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Schema registration, retrieval, and compatibility checks work identically. No changes required.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Client Configuration</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Update <code>schema.registry.url</code> to point to Apicurio Registry ccompat endpoint.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Client configuration</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update <code>schema.registry.url</code> to point to the Apicurio Registry ccompat endpoint.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Schema Types</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Avro, JSON Schema, and Protobuf are fully supported.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Schema types</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry fully supports Avro, JSON Schema, and Protobuf.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Schema IDs</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry uses <code>contentId</code> by default (same schema content = same ID across subjects). Set <code>apicurio.ccompat.legacy-id-mode.enabled=true</code> if your application depends on unique IDs per registration.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry uses <code>contentId</code> by default (the same schema content produces the same ID across subjects). Set <code>apicurio.ccompat.legacy-id-mode.enabled=true</code> if your application depends on unique IDs per registration.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Avro Schema Formatting</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Avro schema formatting</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Avro schemas are returned in compact JSON through ccompat endpoints. If your application compares schema strings directly, be aware of formatting differences.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Default Compatibility</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The compatibility check endpoint defaults to <code>BACKWARD</code> when no rule is configured, matching Confluent. Set an explicit global compatibility level via <code>PUT /config</code> if you need a different default.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Default compatibility</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The compatibility check endpoint defaults to <code>BACKWARD</code> when you do not configure a rule, matching Confluent. Set an explicit global compatibility level by using <code>PUT /config</code> if you need a different default.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Config Response Parsing</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Config response parsing</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The <code>PUT /config</code> response uses the field name <code>compatibility</code> (not <code>compatibilityLevel</code>). Update client code that parses this response.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Authentication</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry supports OIDC authentication. Update client security configuration as needed.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry supports OpenID Connect (OIDC) authentication. Update client security configuration as needed.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Exporters / Schema Linking</strong></p></td>
