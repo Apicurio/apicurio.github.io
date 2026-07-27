@@ -395,6 +395,9 @@
 <p><a href="#data-contracts-odcs_registry">ODCS native format</a></p>
 </li>
 <li>
+<p><a href="#data-contracts-artifact-references_registry">Artifact references and data contracts</a></p>
+</li>
+<li>
 <p><a href="#data-contracts-field-tags_registry">Field-level tags</a></p>
 </li>
 <li>
@@ -691,6 +694,96 @@ serviceLevel:
 <p><code>OrderEvent</code> - default group, artifact "OrderEvent", latest version</p>
 </li>
 </ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Each entry under <code>schemas[]</code> is independent. Projection and field metadata (PII, tags, classifications) apply only to the artifact named in that entry&#8217;s <code>location</code>. Cross-artifact schema references inside the Avro/JSON Schema/Protobuf content are not followed during projection. If a nested type lives in another artifact, either add a separate <code>schemas[]</code> entry for that artifact or give it its own contract. See <a href="#data-contracts-artifact-references_registry">Artifact references and data contracts</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-contracts-artifact-references_registry"><a class="anchor" href="#data-contracts-artifact-references_registry"></a>Artifact references and data contracts</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Schema artifacts can reference other artifacts (for example an Avro <code>OrderEvent</code> that references a shared <code>Address</code> record). Data contracts stay scoped to each artifact. Apicurio Registry does not walk those cross-artifact references when projecting ODCS field metadata.</p>
+</div>
+<div class="sect2">
+<h3 id="_what_works_at_evaluation_time"><a class="anchor" href="#_what_works_at_evaluation_time"></a>What works at evaluation time</h3>
+<div class="paragraph">
+<p>When a Kafka record is serialized, nested objects are fully materialized. An Avro <code>GenericRecord</code> contains the nested <code>Address</code> values inline, not a pointer to another registry artifact. After conversion to a map, CEL rules can reach nested paths:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "orderId": "ORD-123",
+  "address": { "street": "123 Main St", "zipCode": "90210" }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A CEL expression such as <code>address.zipCode != ""</code> works at rule evaluation time because the nested fields are present on the record.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_what_projection_does_not_do"><a class="anchor" href="#_what_projection_does_not_do"></a>What projection does not do</h3>
+<div class="paragraph">
+<p>ODCS <code>schemas[].fields</code> metadata (PII flags, tags, classifications) is projected only for fields that belong to the artifact listed in that <code>schemas[]</code> entry. The projection engine does not resolve artifact references to discover fields that live on another schema.</p>
+</div>
+<div class="paragraph">
+<p>So you cannot tag <code>address.street</code> as PII from an <code>OrderEvent</code> contract if <code>street</code> is defined on a separate <code>Address</code> artifact. Declare PII on the <code>Address</code> contract (or add <code>Address</code> as its own <code>schemas[]</code> entry) instead.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_why_contracts_stay_per_artifact"><a class="anchor" href="#_why_contracts_stay_per_artifact"></a>Why contracts stay per-artifact</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Ownership stays clear: the team that owns <code>Address</code> declares which of its fields are PII.</p>
+</li>
+<li>
+<p>Changing <code>Address</code> does not force every dependent contract to be re-projected.</p>
+</li>
+<li>
+<p>Conflicting metadata is avoided when two contracts would otherwise both claim the same nested field.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_practical_guidance"><a class="anchor" href="#_practical_guidance"></a>Practical guidance</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Put field-level PII and tags on the contract (or <code>schemas[]</code> entry) for the artifact that actually defines those fields.</p>
+</li>
+<li>
+<p>Use CEL quality rules on the parent artifact when you need to validate nested values on the wire; those rules see the materialized record.</p>
+</li>
+<li>
+<p>List every governed schema under <code>schemas[]</code> when one ODCS document should cover several related artifacts.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>Upgrade note:</strong> Earlier releases projected field tags from every <code>schemas[]</code> entry onto each target artifact. Field-tag projection now uses only the entry whose <code>location</code> resolves to the target artifact. Artifacts with no matching entry receive no projected field tags. Contracts that previously relied on cross-entry tag bleed-through should add a dedicated <code>schemas[]</code> entry per governed artifact.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
