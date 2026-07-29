@@ -384,26 +384,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter introduces the optional rules used to govern Apicurio Registry content and provides details on the available rule configuration:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#registry-rules_registry">Govern Apicurio Registry content using rules</a></p>
-</li>
-<li>
-<p><a href="#registry-rules-apply_registry">When rules are applied</a></p>
-</li>
-<li>
-<p><a href="#registry-rules-precedence_registry">Order of precedence of rules</a></p>
-</li>
-<li>
-<p><a href="#registry-rules-work_registry">How rules work</a></p>
-</li>
-<li>
-<p><a href="#registry-rules-config_registry">Content rule configuration</a></p>
-</li>
-</ul>
+<p>Apicurio Registry supports optional rules that govern the evolution of artifact content, with configuration options at the global, group, and artifact level.</p>
 </div>
 </div>
 </div>
@@ -435,9 +416,12 @@
 <div class="paragraph">
 <p>You can enable optional content rules using the Apicurio Registry web console, REST API commands, or by using one of the SDKs.</p>
 </div>
-<div class="sect2">
-<h3 id="registry-rules-apply_registry"><a class="anchor" href="#registry-rules-apply_registry"></a>When rules are applied</h3>
-<div class="paragraph">
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-rules-apply_registry"><a class="anchor" href="#registry-rules-apply_registry"></a>When rules are applied</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>Rules are applied only when content is added to Apicurio Registry. This includes the following REST operations:</p>
 </div>
 <div class="ulist">
@@ -454,9 +438,11 @@
 <p>If a rule is violated, Apicurio Registry returns an HTTP error. The response body includes the violated rule and a message showing what went wrong.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="registry-rules-precedence_registry"><a class="anchor" href="#registry-rules-precedence_registry"></a>Order of precedence of rules</h3>
-<div class="paragraph">
+</div>
+<div class="sect1">
+<h2 id="registry-rules-precedence_registry"><a class="anchor" href="#registry-rules-precedence_registry"></a>Order of precedence of rules</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>The order of precedence for artifact-specific and global rules is as follows:</p>
 </div>
 <div class="ulist">
@@ -485,32 +471,40 @@ If a rule is configured at a higher level (e.g. at the global level), but you wa
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="registry-rules-work_registry"><a class="anchor" href="#registry-rules-work_registry"></a>How rules work</h3>
-<div class="paragraph">
+</div>
+<div class="sect1">
+<h2 id="registry-rules-work_registry"><a class="anchor" href="#registry-rules-work_registry"></a>How rules work</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>Each rule has a name and configuration information. Apicurio Registry maintains the list of rules for each artifact, each group, and the list of global rules. Each rule in the list consists of a name and configuration for the rule implementation.</p>
 </div>
 <div class="paragraph">
 <p>When a rule is executed, it is provided with the content of the current version of the artifact (if one exists) and the new version of the artifact being added. The rule implementation returns either passes or fails depending on whether the artifact passes the rule. If not, Apicurio Registry reports the reason why in an HTTP error response. Some rules might not use the previous version of the content. For example, compatibility rules use previous versions, but syntax or semantic validity rules do not.</p>
 </div>
-<div class="paragraph _additional-resources">
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
-<p>For more details, see <a href="assembly-rule-reference.html">Apicurio Registry rule reference</a>.</p>
+<ul>
+<li>
+<p><a href="assembly-rule-reference.html">Apicurio Registry rule reference</a></p>
+</li>
+</ul>
 </div>
 </div>
-<div class="sect2">
-<h3 id="registry-rules-config_registry"><a class="anchor" href="#registry-rules-config_registry"></a>Content rule configuration</h3>
-<div class="paragraph">
+</div>
+<div class="sect1">
+<h2 id="registry-rules-config_registry"><a class="anchor" href="#registry-rules-config_registry"></a>Content rule configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>Administrators can configure Apicurio Registry global rules, group-specific rules, and artifact-specific rules. Developers can configure group-specific and artifact-specific rules only.</p>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry applies the rules configured for the specific artifact. If no rules are configured at that level, Apicurio Registry applies the group-specific rules.  If no rules are configured at the group level, then Apicurio Registry applies the globally configured rules. If no global rules are configured, then no rules are applied.</p>
+<p>Apicurio Registry applies the rules configured for the specific artifact. If no rules are configured at that level, Apicurio Registry applies the group-specific rules. If no rules are configured at the group level, then Apicurio Registry applies the globally configured rules. If no global rules are configured, then no rules are applied.</p>
 </div>
-<h4 id="_configure_group_and_artifact_specific_rules" class="discrete">Configure group and artifact specific rules</h4>
 <div class="paragraph">
-<p>You can configure group-specific and artifact-specific rules using the Apicurio Registry web console or REST API. For details, see the following:</p>
+<p>You can configure group-specific and artifact-specific rules using the Apicurio Registry web console or REST API.</p>
 </div>
-<div class="ulist">
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
 <ul>
 <li>
 <p><a href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a></p>
@@ -520,9 +514,13 @@ If a rule is configured at a higher level (e.g. at the global level), but you wa
 </li>
 </ul>
 </div>
-<h4 id="_configure_global_rules" class="discrete">Configure global rules</h4>
-<div class="paragraph">
-<p>Administrators can configure global rules in several ways:</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-rules-config-global_registry"><a class="anchor" href="#registry-rules-config-global_registry"></a>Default global rule configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Administrators can configure global rules in several ways.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -538,7 +536,6 @@ If a rule is configured at a higher level (e.g. at the global level), but you wa
 </ul>
 </div>
 <div class="paragraph">
-<div class="title">Configure default global rules</div>
 <p>Administrators can configure Apicurio Registry at the application level to enable or disable global rules. You can configure default global rules at installation time without post-install configuration using the following application property format:</p>
 </div>
 <div class="listingblock">
@@ -578,7 +575,6 @@ You can configure these application properties as Java system properties or incl
 </td>
 </tr>
 </table>
-</div>
 </div>
 </div>
 </div>

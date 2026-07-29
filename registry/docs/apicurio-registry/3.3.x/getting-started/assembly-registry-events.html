@@ -387,29 +387,7 @@
 <p>Apicurio Registry emits change events whenever artifacts, versions, groups, or rules are created, updated, or deleted. These events enable integration with external systems for auditing, automation, and event-driven workflows.</p>
 </div>
 <div class="paragraph">
-<p>This chapter explains the event system architecture, available event types, and how to configure event delivery for your storage variant:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#registry-events-overview_registry">Overview of Apicurio Registry change events</a></p>
-</li>
-<li>
-<p><a href="#registry-event-types-reference_registry">Event types reference</a></p>
-</li>
-<li>
-<p><a href="#registry-events-architecture_registry">Event system architecture</a></p>
-</li>
-<li>
-<p><a href="#configuring-events-sql-debezium_registry">Configuring events with SQL storage and Debezium</a></p>
-</li>
-<li>
-<p><a href="#configuring-events-kafkasql_registry">Configuring events with KafkaSQL storage</a></p>
-</li>
-<li>
-<p><a href="#registry-events-config-reference_registry">Configuration reference</a></p>
-</li>
-</ul>
+<p>This chapter explains the event system architecture, available event types, and how to configure event delivery for your storage variant.</p>
 </div>
 </div>
 </div>
@@ -471,7 +449,9 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 <div class="paragraph _abstract">
 <p>Apicurio Registry defines the following event types. Each event includes a JSON payload with details about the change.</p>
 </div>
-<h3 id="_artifact_events" class="discrete">Artifact events</h3>
+<div class="paragraph">
+<p>Artifact-level changes produce the following event types:</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Artifact event types</caption>
 <colgroup>
@@ -499,7 +479,9 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 </tr>
 </tbody>
 </table>
-<h3 id="_artifact_version_events" class="discrete">Artifact version events</h3>
+<div class="paragraph">
+<p>Artifact version changes produce the following event types:</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Artifact version event types</caption>
 <colgroup>
@@ -531,7 +513,9 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 </tr>
 </tbody>
 </table>
-<h3 id="_group_events" class="discrete">Group events</h3>
+<div class="paragraph">
+<p>Group changes produce the following event types:</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 3. Group event types</caption>
 <colgroup>
@@ -559,7 +543,9 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 </tr>
 </tbody>
 </table>
-<h3 id="_rule_events" class="discrete">Rule events</h3>
+<div class="paragraph">
+<p>Rule changes produce the following event types:</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 4. Rule event types</caption>
 <colgroup>
@@ -587,7 +573,14 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 </tr>
 </tbody>
 </table>
-<h3 id="_event_payload_structure" class="discrete">Event payload structure</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-event-payload-structure_registry"><a class="anchor" href="#registry-event-payload-structure_registry"></a>Event payload structure</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>All Apicurio Registry change events share a common JSON payload structure, with additional fields depending on the event type.</p>
+</div>
 <div class="paragraph">
 <p>All events share a common base structure:</p>
 </div>
@@ -656,7 +649,9 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 <div class="paragraph _abstract">
 <p>The event system uses CDI (Contexts and Dependency Injection) events internally to decouple the storage layer from event delivery. When a storage operation modifies state, it fires a CDI event. A storage-specific event processor observes the CDI event and routes it to the appropriate delivery mechanism.</p>
 </div>
-<h3 id="_event_flow" class="discrete">Event flow</h3>
+<div class="paragraph">
+<p>The following diagram shows the event flow from a storage operation to external consumers:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre>Storage operation (e.g., createArtifact)
@@ -685,7 +680,14 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
   (Kafka topic: registry-events)</pre>
 </div>
 </div>
-<h3 id="_sql_storage_outbox_pattern_with_debezium" class="discrete">SQL storage: outbox pattern with Debezium</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-events-sql-outbox_registry"><a class="anchor" href="#registry-events-sql-outbox_registry"></a>SQL storage outbox pattern with Debezium</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>With SQL storage, Apicurio Registry writes change events to an outbox database table that Debezium reads using Change Data Capture (CDC).</p>
+</div>
 <div class="paragraph">
 <p>With SQL storage, events are written to an <code>outbox</code> database table as part of the same database transaction that performs the registry operation. This guarantees that events are only produced for changes that are actually committed.</p>
 </div>
@@ -706,7 +708,14 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 );</code></pre>
 </div>
 </div>
-<h3 id="_kafkasql_storage_direct_kafka_publishing" class="discrete">KafkaSQL storage: direct Kafka publishing</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-events-kafkasql-publishing_registry"><a class="anchor" href="#registry-events-kafkasql-publishing_registry"></a>KafkaSQL storage direct Kafka publishing</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>With KafkaSQL storage, Apicurio Registry publishes change events directly to a dedicated Kafka topic without using the outbox table.</p>
+</div>
 <div class="paragraph">
 <p>With KafkaSQL storage, events bypass the database entirely and are published directly to a dedicated Kafka topic. The events topic uses a single partition to guarantee total ordering of all events. The event&#8217;s aggregate ID is used as the Kafka message key.</p>
 </div>
@@ -784,11 +793,11 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
   --topic outbox.event.registry-events --from-beginning</code></pre>
 </div>
 </div>
-</li>
-</ol>
-</div>
 <div class="paragraph">
 <p>The Debezium <code>EventRouter</code> transformation reads the outbox table columns and routes events to Kafka topics based on the <code>aggregatetype</code> column.</p>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>
@@ -836,9 +845,6 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
   --topic registry-events --from-beginning</code></pre>
 </div>
 </div>
-</li>
-</ol>
-</div>
 <div class="paragraph">
 <p>The events topic is configured with the following defaults:</p>
 </div>
@@ -854,6 +860,9 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 <p><strong>Retention</strong>: Infinite (<code>-1</code>)</p>
 </li>
 </ul>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>
@@ -900,7 +909,9 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 </tr>
 </tbody>
 </table>
-<h3 id="_storage_variant_support" class="discrete">Storage variant support</h3>
+<div class="paragraph">
+<p>The following table lists event support by storage variant:</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 6. Event support by storage variant</caption>
 <colgroup>

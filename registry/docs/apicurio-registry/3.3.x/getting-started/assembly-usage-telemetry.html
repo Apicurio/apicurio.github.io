@@ -383,14 +383,17 @@
 <h1 class="page">Usage Telemetry and API Lifecycle Governance</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>Apicurio Registry provides usage telemetry capabilities that track which client applications fetch which schema versions. This enables API lifecycle governance features including dead schema detection, consumer version drift alerts, and deprecation readiness analysis.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<h2 id="con-usage-telemetry-overview_registry"><a class="anchor" href="#con-usage-telemetry-overview_registry"></a>Overview</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Usage telemetry tracks which client applications fetch which schema versions, enabling governance decisions such as dead schema detection, version drift alerts, and deprecation readiness.</p>
+</div>
 <div class="paragraph">
 <p>Usage telemetry answers key governance questions:</p>
 </div>
@@ -447,10 +450,11 @@ Usage telemetry is an <strong>experimental</strong> feature. It requires <code>a
 </div>
 </div>
 <div class="sect1">
-<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<h2 id="ref-usage-telemetry-server-configuration_registry"><a class="anchor" href="#ref-usage-telemetry-server-configuration_registry"></a>Server configuration</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_server_configuration"><a class="anchor" href="#_server_configuration"></a>Server Configuration</h3>
+<div class="paragraph _abstract">
+<p>The registry server exposes the following properties to configure usage telemetry.</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -471,7 +475,7 @@ Usage telemetry is an <strong>experimental</strong> feature. It requires <code>a
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.telemetry.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Master switch for usage telemetry. Must be <code>true</code> for the server to record usage events.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Primary switch for usage telemetry. Must be <code>true</code> for the server to record usage events.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.active-threshold-days</code></p></td>
@@ -512,8 +516,13 @@ Usage telemetry is an <strong>experimental</strong> feature. It requires <code>a
 </tbody>
 </table>
 </div>
-<div class="sect2">
-<h3 id="_client_configuration"><a class="anchor" href="#_client_configuration"></a>Client Configuration</h3>
+</div>
+<div class="sect1">
+<h2 id="ref-usage-telemetry-client-configuration_registry"><a class="anchor" href="#ref-usage-telemetry-client-configuration_registry"></a>Client configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The SerDes client exposes the following property to configure usage telemetry reporting.</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -539,32 +548,35 @@ Usage telemetry is an <strong>experimental</strong> feature. It requires <code>a
 </tbody>
 </table>
 </div>
-<div class="sect2">
-<h3 id="_example_enabling_telemetry"><a class="anchor" href="#_example_enabling_telemetry"></a>Example: Enabling Telemetry</h3>
-<div class="paragraph">
-<p><strong>Server (application.properties):</strong></p>
 </div>
+<div class="sect1">
+<h2 id="proc-usage-telemetry-enabling-telemetry-example_registry"><a class="anchor" href="#proc-usage-telemetry-enabling-telemetry-example_registry"></a>Enabling usage telemetry</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can enable usage telemetry on the registry server and configure a client to report its schema fetches.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Experimental features are enabled (<code>apicurio.features.experimental.enabled=true</code>), because usage telemetry is an experimental feature.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Enable usage telemetry on the server by adding the following properties to its <code>application.properties</code>:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.features.experimental.enabled=true
 apicurio.usage.telemetry.enabled=true</code></pre>
 </div>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Usage telemetry is an experimental feature. You must enable experimental features first with <code>apicurio.features.experimental.enabled=true</code>.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p><strong>Kafka SerDes Client:</strong></p>
-</div>
+</li>
+<li>
+<p>Configure the Kafka SerDes client with the registry URL and a client identifier:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.registry.url=http://registry:8080/apis/registry/v3
@@ -572,24 +584,24 @@ apicurio.registry.usage-telemetry.client-id=payments-svc</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>That&#8217;s it. No additional endpoints to call, no buffers to configure.</p>
+<p>That&#8217;s it — no additional endpoints to call, no buffers to configure.</p>
 </div>
+<div class="paragraph">
+<p>All usage endpoints are under <code>/admin/usage/</code> and require <code>apicurio.usage.telemetry.enabled=true</code>. Endpoints return HTTP 409 (Conflict) when telemetry is not enabled.</p>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_rest_api_endpoints"><a class="anchor" href="#_rest_api_endpoints"></a>REST API Endpoints</h2>
+<h2 id="ref-usage-telemetry-get-usage-summary_registry"><a class="anchor" href="#ref-usage-telemetry-get-usage-summary_registry"></a>Get usage summary</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>All usage endpoints are under <code>/admin/usage/</code> and require <code>apicurio.usage.telemetry.enabled=true</code>. Endpoints return HTTP 409 (Conflict) when telemetry is not enabled.</p>
+<div class="paragraph _abstract">
+<p>Returns global Active, Stale, and Dead counts across all tracked schema versions.</p>
 </div>
-<div class="sect2">
-<h3 id="_get_usage_summary"><a class="anchor" href="#_get_usage_summary"></a>Get Usage Summary</h3>
 <div class="paragraph">
 <p><code>GET /admin/usage/summary</code></p>
-</div>
-<div class="paragraph">
-<p>Returns global Active/Stale/Dead counts across all tracked schema versions.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -601,13 +613,15 @@ apicurio.registry.usage-telemetry.client-id=payments-svc</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_get_artifact_usage_metrics"><a class="anchor" href="#_get_artifact_usage_metrics"></a>Get Artifact Usage Metrics</h3>
-<div class="paragraph">
-<p><code>GET /admin/usage/artifacts/{groupId}/{artifactId}</code></p>
+</div>
+<div class="sect1">
+<h2 id="ref-usage-telemetry-get-artifact-usage-metrics_registry"><a class="anchor" href="#ref-usage-telemetry-get-artifact-usage-metrics_registry"></a>Get artifact usage metrics</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Returns per-version usage metrics for a specific artifact, including fetch counts, client lists, and classification.</p>
 </div>
 <div class="paragraph">
-<p>Returns per-version usage metrics for a specific artifact, including fetch counts, client lists, and classification.</p>
+<p><code>GET /admin/usage/artifacts/{groupId}/{artifactId}</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -630,13 +644,15 @@ apicurio.registry.usage-telemetry.client-id=payments-svc</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_get_consumer_version_heatmap"><a class="anchor" href="#_get_consumer_version_heatmap"></a>Get Consumer Version Heatmap</h3>
-<div class="paragraph">
-<p><code>GET /admin/usage/artifacts/{groupId}/{artifactId}/heatmap</code></p>
+</div>
+<div class="sect1">
+<h2 id="ref-usage-telemetry-get-consumer-version-heatmap_registry"><a class="anchor" href="#ref-usage-telemetry-get-consumer-version-heatmap_registry"></a>Get consumer version heatmap</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Returns a consumer version adoption grid showing which clients use which versions, with version drift detection.</p>
 </div>
 <div class="paragraph">
-<p>Returns a consumer version adoption grid showing which clients use which versions, with version drift detection.</p>
+<p><code>GET /admin/usage/artifacts/{groupId}/{artifactId}/heatmap</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -662,13 +678,15 @@ apicurio.registry.usage-telemetry.client-id=payments-svc</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_get_deprecation_readiness"><a class="anchor" href="#_get_deprecation_readiness"></a>Get Deprecation Readiness</h3>
-<div class="paragraph">
-<p><code>GET /admin/usage/artifacts/{groupId}/{artifactId}/versions/{version}/deprecation-readiness</code></p>
+</div>
+<div class="sect1">
+<h2 id="ref-usage-telemetry-get-deprecation-readiness_registry"><a class="anchor" href="#ref-usage-telemetry-get-deprecation-readiness_registry"></a>Get deprecation readiness</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Returns which consumers are actively using a specific version and whether it is safe to deprecate.</p>
 </div>
 <div class="paragraph">
-<p>Returns which consumers are actively using a specific version and whether it is safe to deprecate.</p>
+<p><code>GET /admin/usage/artifacts/{groupId}/{artifactId}/versions/2024.Q2/deprecation-readiness</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -689,12 +707,11 @@ apicurio.registry.usage-telemetry.client-id=payments-svc</code></pre>
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="_deprecation_workflow"><a class="anchor" href="#_deprecation_workflow"></a>Deprecation Workflow</h2>
+<h2 id="proc-usage-telemetry-deprecation-workflow_registry"><a class="anchor" href="#proc-usage-telemetry-deprecation-workflow_registry"></a>Transitioning a version through the deprecation workflow</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Apicurio Registry supports a version lifecycle state machine for controlled deprecation:</p>
+<div class="paragraph _abstract">
+<p>Apicurio Registry supports a version lifecycle state machine for controlled deprecation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -721,32 +738,46 @@ apicurio.registry.usage-telemetry.client-id=payments-svc</code></pre>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>Transition a version to SUNSET via the API:</p>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>No active consumers depend on the version, verified by using the deprecation readiness endpoint.</p>
+</li>
+</ul>
 </div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Deprecate the version:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># First deprecate
-curl -X PUT http://localhost:8080/apis/registry/v3/groups/default/artifacts/UserEvent/versions/1.0.0/state \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X PUT http://localhost:8080/apis/registry/v3/groups/default/artifacts/UserEvent/versions/1.0.0/state \
   -H "Content-Type: application/json" \
-  -d '{"state":"DEPRECATED"}'
-
-# Then sunset
-curl -X PUT http://localhost:8080/apis/registry/v3/groups/default/artifacts/UserEvent/versions/1.0.0/state \
+  -d '{"state":"DEPRECATED"}'</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Sunset the version:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X PUT http://localhost:8080/apis/registry/v3/groups/default/artifacts/UserEvent/versions/1.0.0/state \
   -H "Content-Type: application/json" \
   -d '{"state":"SUNSET"}'</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Use the deprecation readiness endpoint before transitioning to ensure no active consumers are affected.</p>
+</li>
+</ol>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_ui_features"><a class="anchor" href="#_ui_features"></a>UI Features</h2>
+<h2 id="ref-usage-telemetry-ui-features_registry"><a class="anchor" href="#ref-usage-telemetry-ui-features_registry"></a>UI features</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>When usage telemetry is enabled, the registry UI displays:</p>
+<div class="paragraph _abstract">
+<p>When usage telemetry is enabled, the registry UI displays the following elements.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -780,10 +811,10 @@ curl -X PUT http://localhost:8080/apis/registry/v3/groups/default/artifacts/User
 </div>
 </div>
 <div class="sect1">
-<h2 id="_opentelemetry_metrics_export"><a class="anchor" href="#_opentelemetry_metrics_export"></a>OpenTelemetry Metrics Export</h2>
+<h2 id="ref-usage-telemetry-opentelemetry-metrics-export_registry"><a class="anchor" href="#ref-usage-telemetry-opentelemetry-metrics-export_registry"></a>OpenTelemetry metrics export</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>When OpenTelemetry is enabled (<code>quarkus.otel.sdk.disabled=false</code>), usage classification counts are exported as metrics:</p>
+<div class="paragraph _abstract">
+<p>When OpenTelemetry is enabled (<code>quarkus.otel.sdk.disabled=false</code>), usage classification counts are exported as metrics.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -814,8 +845,19 @@ curl -X PUT http://localhost:8080/apis/registry/v3/groups/default/artifacts/User
 <div class="paragraph">
 <p>These gauges are updated periodically (configured via <code>apicurio.usage.aggregation.every</code>). When OTel is disabled (the default), no overhead.</p>
 </div>
-<div class="sect2">
-<h3 id="_enabling_otel_export"><a class="anchor" href="#_enabling_otel_export"></a>Enabling OTel Export</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="proc-usage-telemetry-enabling-otel-export_registry"><a class="anchor" href="#proc-usage-telemetry-enabling-otel-export_registry"></a>Enabling OTel export</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can export usage classification metrics by enabling OpenTelemetry.</p>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Set the following properties:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.otel.sdk.disabled=false
@@ -823,9 +865,17 @@ quarkus.otel.exporter.otlp.endpoint=http://otel-collector:4317
 quarkus.otel.metrics.enabled=true</code></pre>
 </div>
 </div>
+</li>
+</ul>
 </div>
-<div class="sect2">
-<h3 id="_example_grafana_query"><a class="anchor" href="#_example_grafana_query"></a>Example Grafana Query</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ref-usage-telemetry-example-grafana-query_registry"><a class="anchor" href="#ref-usage-telemetry-example-grafana-query_registry"></a>Example Grafana query</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Use the following PromQL query to chart usage classification metrics in Grafana.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-promql hljs" data-lang="promql">apicurio_usage_schemas_active or apicurio_usage_schemas_stale or apicurio_usage_schemas_dead</code></pre>
@@ -833,10 +883,12 @@ quarkus.otel.metrics.enabled=true</code></pre>
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="_privacy_and_data_collection"><a class="anchor" href="#_privacy_and_data_collection"></a>Privacy and Data Collection</h2>
+<h2 id="ref-usage-telemetry-privacy-and-data-collection_registry"><a class="anchor" href="#ref-usage-telemetry-privacy-and-data-collection_registry"></a>Privacy and data collection</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Usage telemetry is designed to minimize data collection and give operators and clients control over what is recorded.</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
@@ -862,22 +914,35 @@ quarkus.otel.metrics.enabled=true</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_demo_script"><a class="anchor" href="#_demo_script"></a>Demo Script</h2>
+<h2 id="proc-usage-telemetry-demo-script_registry"><a class="anchor" href="#proc-usage-telemetry-demo-script_registry"></a>Running the usage telemetry demo script</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>A demo script is provided to populate realistic usage data for testing:</p>
+<div class="paragraph _abstract">
+<p>A demo script is provided to populate realistic usage data for testing.</p>
 </div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Start the registry with telemetry enabled:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Start the registry with telemetry enabled
-./mvnw quarkus:dev -pl :apicurio-registry-app \
-  -Dapicurio.usage.telemetry.enabled=true
-
-# In another terminal, run the demo
-./examples/usage-telemetry-demo/populate-usage-data.sh</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw quarkus:dev -pl :apicurio-registry-app \
+  -Dapicurio.usage.telemetry.enabled=true</code></pre>
 </div>
+</div>
+</li>
+<li>
+<p>In another terminal, run the demo script:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./examples/usage-telemetry-demo/populate-usage-data.sh</code></pre>
+</div>
+</div>
+</li>
+</ol>
 </div>
 <div class="paragraph">
+<div class="title">Results</div>
 <p>The script creates three artifacts (UserEvent, OrderEvent, PaymentEvent) with multiple versions and simulates usage from five different client applications by fetching schemas with <code>X-Registry-Client-Id</code> headers.</p>
 </div>
 </div>

@@ -384,31 +384,12 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter describes the Apicurio Registry versioning scheme, support policy, release channels, and guidance for upgrading and handling rollbacks.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#versioning-scheme_registry">Versioning scheme</a></p>
-</li>
-<li>
-<p><a href="#support-window_registry">Support window</a></p>
-</li>
-<li>
-<p><a href="#release-channels_registry">Release channels</a></p>
-</li>
-<li>
-<p><a href="#upgrading-registry_registry">Upgrading Apicurio Registry</a></p>
-</li>
-<li>
-<p><a href="#downgrades-and-rollbacks_registry">Downgrades and rollbacks</a></p>
-</li>
-</ul>
+<p>Apicurio Registry follows a defined versioning scheme and support policy, offers multiple release channels, and supports upgrading between versions with guidance for handling rollbacks.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="versioning-scheme_registry"><a class="anchor" href="#versioning-scheme_registry"></a>Versioning scheme</h2>
+<h2 id="versioning-scheme_registry"><a class="anchor" href="#versioning-scheme_registry"></a>Version numbering scheme</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>Apicurio Registry follows <a href="https://semver.org/">Semantic Versioning</a> with a clear distinction between minor and patch releases.</p>
@@ -489,8 +470,17 @@ They are limited to changes that address known security vulnerabilities.</p>
 <div class="paragraph _abstract">
 <p>Apicurio Registry provides multiple release channels so that you can choose the update cadence that suits your deployment.</p>
 </div>
-<div class="sect2">
-<h3 id="_docker_image_tags"><a class="anchor" href="#_docker_image_tags"></a>Docker image tags</h3>
+<div class="paragraph">
+<p>Choose the channel type that matches how you deploy Apicurio Registry: container images or the Apicurio Registry Operator.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="docker-image-tags_registry"><a class="anchor" href="#docker-image-tags_registry"></a>Docker image tags</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry container images use several tag conventions that determine how frequently your deployment receives updates.</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -525,10 +515,12 @@ They are limited to changes that address known security vulnerabilities.</p>
 <p>Use the minor-series floating tag (e.g., <code>3.3</code>) to automatically receive security patches without upgrading to a new minor version.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_olm_channels_kubernetes_operator"><a class="anchor" href="#_olm_channels_kubernetes_operator"></a>OLM channels (Kubernetes operator)</h3>
-<div class="paragraph">
-<p>If you deploy Apicurio Registry using the Apicurio Registry Operator, each minor version has its own OLM channel:</p>
+</div>
+<div class="sect1">
+<h2 id="olm-channels_registry"><a class="anchor" href="#olm-channels_registry"></a>OLM channels (Kubernetes operator)</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>If you deploy Apicurio Registry using the Apicurio Registry Operator, each minor version has its own OLM channel.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -557,9 +549,8 @@ They are limited to changes that address known security vulnerabilities.</p>
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="upgrading-registry_registry"><a class="anchor" href="#upgrading-registry_registry"></a>Upgrading Apicurio Registry</h2>
+<h2 id="upgrading-registry_registry"><a class="anchor" href="#upgrading-registry_registry"></a>Upgrade overview</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>Apicurio Registry supports forward upgrades.
@@ -573,16 +564,26 @@ Database schema migrations run automatically on startup and do not require manua
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Always back up your database before upgrading to a new minor version.
-See <a href="#backup-before-upgrade_registry">Backing up before an upgrade</a>.</p>
+<p>Always back up your database before upgrading to a new minor version.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
-<div class="sect2">
-<h3 id="_patch_upgrades_within_a_minor_version"><a class="anchor" href="#_patch_upgrades_within_a_minor_version"></a>Patch upgrades (within a minor version)</h3>
-<div class="paragraph">
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#backup-before-upgrade_registry">Backing up before an upgrade</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="patch-upgrades_registry"><a class="anchor" href="#patch-upgrades_registry"></a>Performing patch upgrades</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>Patch upgrades (e.g., 3.3.0 &#8594; 3.3.1) are safe and always recommended.
 They contain only CVE fixes and do not introduce behavioral changes.</p>
 </div>
@@ -601,9 +602,11 @@ They contain only CVE fixes and do not introduce behavioral changes.</p>
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_minor_upgrades"><a class="anchor" href="#_minor_upgrades"></a>Minor upgrades</h3>
-<div class="paragraph">
+</div>
+<div class="sect1">
+<h2 id="minor-upgrades_registry"><a class="anchor" href="#minor-upgrades_registry"></a>Performing minor upgrades</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>Minor upgrades (e.g., 3.3.x &#8594; 3.4.0) include new features, enhancements, and bug fixes.</p>
 </div>
 <div class="olist arabic">
@@ -627,15 +630,16 @@ They contain only CVE fixes and do not introduce behavioral changes.</p>
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_skipping_minor_versions"><a class="anchor" href="#_skipping_minor_versions"></a>Skipping minor versions</h3>
-<div class="paragraph">
+</div>
+<div class="sect1">
+<h2 id="skipping-minor-versions_registry"><a class="anchor" href="#skipping-minor-versions_registry"></a>Upgrades across multiple minor versions</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>Upgrading across multiple minor versions (e.g., 3.2.x &#8594; 3.4.x) is supported.
 Database migrations are cumulative and applied in order on startup.</p>
 </div>
 <div class="paragraph">
 <p>Review the release notes for all intermediate versions to understand the full set of changes.</p>
-</div>
 </div>
 </div>
 </div>
@@ -652,10 +656,13 @@ Starting an older version of Apicurio Registry against a database that has been 
 <div class="paragraph">
 <p>If you deploy Apicurio Registry using the Apicurio Registry Operator, switching to an older OLM channel is also not supported.</p>
 </div>
-<div class="sect2">
-<h3 id="_handling_a_failed_upgrade"><a class="anchor" href="#_handling_a_failed_upgrade"></a>Handling a failed upgrade</h3>
-<div class="paragraph">
-<p>If an upgrade introduces issues, restore from the database backup taken before the upgrade:</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="handling-failed-upgrade_registry"><a class="anchor" href="#handling-failed-upgrade_registry"></a>Handling a failed upgrade</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>If an upgrade introduces issues, restore your Apicurio Registry deployment from the database backup taken before the upgrade.</p>
 </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
@@ -671,12 +678,22 @@ Starting an older version of Apicurio Registry against a database that has been 
 </li>
 <li>
 <p>Investigate the issue before attempting the upgrade again.</p>
-</li>
-</ol>
-</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
 <div class="paragraph">
 <p>Do <strong>not</strong> attempt to manually revert database schema changes.</p>
 </div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>
@@ -686,9 +703,11 @@ Starting an older version of Apicurio Registry against a database that has been 
 <div class="paragraph _abstract">
 <p>Before any minor version upgrade, create a backup of your Apicurio Registry database.</p>
 </div>
-<div class="paragraph">
-<p>For PostgreSQL deployments:</p>
-</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>For PostgreSQL deployments, create a database dump:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">pg_dump -h &lt;host&gt; -U &lt;username&gt; -d &lt;database&gt; -F c -f registry-backup-$(date +%Y%m%d).dump</code></pre>
@@ -697,8 +716,14 @@ Starting an older version of Apicurio Registry against a database that has been 
 <div class="paragraph">
 <p>For KafkaSQL deployments, back up both the Kafka topic data and the SQL snapshot database.</p>
 </div>
-<div class="paragraph">
-<p>Store backups in a secure location and verify that they can be restored before proceeding with the upgrade.</p>
+</li>
+<li>
+<p>Store the backup in a secure location.</p>
+</li>
+<li>
+<p>Verify that the backup can be restored before proceeding with the upgrade.</p>
+</li>
+</ol>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>

@@ -386,33 +386,11 @@
 <div class="paragraph _abstract">
 <p>This chapter provides reference information on the supported artifact types, states, and metadata that are stored in Apicurio Registry.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#registry-artifact-types_registry">Apicurio Registry artifact types</a></p>
-</li>
-<li>
-<p><a href="#registry-artifact-states_registry">Apicurio Registry artifact version states</a></p>
-</li>
-<li>
-<p><a href="#registry-group-metadata_registry">Apicurio Registry group metadata</a></p>
-</li>
-<li>
-<p><a href="#registry-artifact-metadata_registry">Apicurio Registry artifact metadata</a></p>
-</li>
-<li>
-<p><a href="#registry-ai-ml-artifact-types_registry">AI/ML artifact types</a></p>
-</li>
-<li>
-<p><a href="#registry-artifact-version-metadata_registry">Apicurio Registry artifact version metadata</a></p>
-</li>
-</ul>
-</div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more information, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
 </li>
 </ul>
 </div>
@@ -520,9 +498,13 @@
 <p>Apicurio Registry includes built-in support for AI/ML artifact types designed for LLMOps and prompt engineering workflows.</p>
 </div>
 <div class="paragraph">
-<div class="title">MCP_TOOL</div>
-<p>MCP (Model Context Protocol) tool definitions. Use this artifact type to:</p>
+<p>Apicurio Registry supports the following AI/ML artifact types:</p>
 </div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>MCP_TOOL</code></dt>
+<dd>
+<p>MCP (Model Context Protocol) tool definitions. Use this artifact type to:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -536,16 +518,16 @@
 </li>
 <li>
 <p>Validate tool definitions against the MCP specification</p>
-</li>
-</ul>
-</div>
 <div class="paragraph">
 <p>Content types: <code>application/json</code></p>
 </div>
-<div class="paragraph">
-<div class="title">MODEL_SCHEMA</div>
-<p>Defines and validates AI/ML model input/output schemas and metadata. Use this artifact type to:</p>
+</li>
+</ul>
 </div>
+</dd>
+<dt class="hdlist1"><code>MODEL_SCHEMA</code></dt>
+<dd>
+<p>Defines and validates AI/ML model input/output schemas and metadata. Use this artifact type to:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -559,16 +541,16 @@
 </li>
 <li>
 <p>Ensure backward compatibility when updating model schemas</p>
-</li>
-</ul>
-</div>
 <div class="paragraph">
 <p>Content types: <code>application/json</code>, <code>application/x-yaml</code></p>
 </div>
-<div class="paragraph">
-<div class="title">PROMPT_TEMPLATE</div>
-<p>Version-controlled prompt templates with variable schemas. Use this artifact type to:</p>
+</li>
+</ul>
 </div>
+</dd>
+<dt class="hdlist1"><code>PROMPT_TEMPLATE</code></dt>
+<dd>
+<p>Version-controlled prompt templates with variable schemas. Use this artifact type to:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -582,20 +564,23 @@
 </li>
 <li>
 <p>Validate prompts have all required variables defined</p>
+<div class="paragraph">
+<p>Content types: <code>application/x-yaml</code>, <code>application/json</code>, <code>text/x-prompt-template</code></p>
+</div>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>Content types: <code>application/x-yaml</code>, <code>application/json</code>, <code>text/x-prompt-template</code></p>
+</dd>
+</dl>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For detailed examples and SDK integration, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/llm-artifact-types">LLM artifact types example</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/llm-artifact-types">LLM artifact types example</a></p>
 </li>
 <li>
-<p>For a complete support chat application with RAG, see <a href="https://github.com/carlesarnal/apicurio-registry-support-chat">Apicurio Registry Support Chat</a></p>
+<p><a href="https://github.com/carlesarnal/apicurio-registry-support-chat">Apicurio Registry Support Chat</a></p>
 </li>
 </ul>
 </div>
@@ -728,8 +713,10 @@
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>You can update group metadata as follows:</p>
+</div>
 <div class="ulist">
-<div class="title">Updating group metadata</div>
 <ul>
 <li>
 <p>You can use the Apicurio Registry REST API or web console to update the set of editable metadata properties.</p>
@@ -739,9 +726,16 @@
 </li>
 </ul>
 </div>
-<div class="paragraph _additional-resources">
+<div class="paragraph">
+<p>For more details, see the <code>/groups/{groupId}</code> endpoint in the Apicurio Registry REST API documentation.</p>
+</div>
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
-<p>For more details, see the <code>/groups/{groupId}</code> endpoint in the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<ul>
+<li>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -857,17 +851,26 @@
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>You can update artifact metadata as follows:</p>
+</div>
 <div class="ulist">
-<div class="title">Updating artifact metadata</div>
 <ul>
 <li>
 <p>You can use the Apicurio Registry REST API or web console to update the set of editable metadata properties.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph _additional-resources">
+<div class="paragraph">
+<p>For more details, see the <code>/groups/{groupId}/artifacts/{artifactId}</code> endpoint in the Apicurio Registry REST API documentation.</p>
+</div>
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
-<p>For more details, see the <code>/groups/{groupId}/artifacts/{artifactId}</code> endpoint in the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<ul>
+<li>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -993,8 +996,10 @@
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>You can update artifact version metadata as follows:</p>
+</div>
 <div class="ulist">
-<div class="title">Updating artifact version metadata</div>
 <ul>
 <li>
 <p>You can use the Apicurio Registry REST API or web console to update the set of editable metadata properties.</p>
@@ -1004,9 +1009,16 @@
 </li>
 </ul>
 </div>
-<div class="paragraph _additional-resources">
+<div class="paragraph">
+<p>For more details, see the <code>/groups/{groupId}/artifacts/{artifactId}/versions/{versionId}</code> endpoint in the Apicurio Registry REST API documentation.</p>
+</div>
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
-<p>For more details, see the <code>/groups/{groupId}/artifacts/{artifactId}/versions/{versionId}</code> endpoint in the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<ul>
+<li>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
