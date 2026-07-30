@@ -386,48 +386,6 @@
 <div class="paragraph _abstract">
 <p>Apicurio Registry includes built-in AI/ML artifact types (MODEL_SCHEMA and PROMPT_TEMPLATE). You can learn about the architecture, JSON Schema backing, MCP integration, and implementation details for these types.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#llm-artifact-types-architecture_registry">Architecture overview</a></p>
-</li>
-<li>
-<p><a href="#llm-artifact-types-json-schema-backing_registry">JSON Schema backing and industry standards</a></p>
-</li>
-<li>
-<p><a href="#llm-artifact-types-mcp-integration_registry">MCP (Model Context Protocol) integration</a></p>
-</li>
-<li>
-<p><a href="#llm-artifact-types-prompt-template-implementation_registry">PROMPT_TEMPLATE implementation details</a></p>
-</li>
-<li>
-<p><a href="#llm-artifact-types-model-schema-implementation_registry">MODEL_SCHEMA implementation details</a></p>
-</li>
-<li>
-<p><a href="#llm-artifact-types-prompt-rendering-service_registry">Prompt rendering service</a></p>
-</li>
-<li>
-<p><a href="#llm-artifact-types-customization_registry">LLM artifact type customization</a></p>
-</li>
-</ul>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="assembly-artifact-reference.html" class="page">Apicurio Registry artifact reference</a></p>
-</li>
-<li>
-<p><a href="https://prompty.ai/specification/page/">Microsoft Prompty Specification</a></p>
-</li>
-<li>
-<p><a href="https://github.com/tensorflow/model-card-toolkit">Google Model Card Toolkit</a></p>
-</li>
-<li>
-<p><a href="https://modelcontextprotocol.io/specification/2025-06-18/server/prompts">MCP Prompts Specification</a></p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -437,8 +395,7 @@
 <p>The LLM artifact types are first-class Java artifact types in Apicurio Registry. They follow the same pattern as other built-in types such as Avro, JSON Schema, and Agent Card.</p>
 </div>
 <div class="paragraph">
-<div class="title">Native Java artifact type system</div>
-<p>The LLM artifact types consist of the following components:</p>
+<p>The LLM artifact types form a native Java artifact type system consisting of the following components:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Architecture components</caption>
@@ -468,7 +425,6 @@
 </tbody>
 </table>
 <div class="paragraph">
-<div class="title">Handler functions</div>
 <p>Each artifact type includes the following handler functions (as Java classes in <code>schema-util/common/</code>):</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -527,7 +483,6 @@
 <p>The PROMPT_TEMPLATE and MODEL_SCHEMA artifact types in Apicurio Registry have formal JSON Schemas, aligned with industry standards for interoperability.</p>
 </div>
 <div class="paragraph">
-<div class="title">Schema locations</div>
 <p>You can find the JSON Schemas in <code>app/src/main/resources/schemas/</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -553,9 +508,13 @@
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<div class="title">PROMPT_TEMPLATE schema - Prompty alignment</div>
-<p>The PROMPT_TEMPLATE schema is aligned with the <a href="https://prompty.ai/specification/page/">Microsoft Prompty specification</a> for interoperability with the Azure AI ecosystem.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="llm-artifact-types-prompt-template-schema-alignment_registry"><a class="anchor" href="#llm-artifact-types-prompt-template-schema-alignment_registry"></a>PROMPT_TEMPLATE schema alignment with Prompty</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The PROMPT_TEMPLATE schema is aligned with the Microsoft Prompty specification for interoperability with the Azure AI ecosystem.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 4. Prompty field mappings</caption>
@@ -642,9 +601,21 @@ variables:
     required: true</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">MODEL_SCHEMA schema - Model Card Toolkit alignment</div>
-<p>The MODEL_SCHEMA is aligned with the <a href="https://github.com/tensorflow/model-card-toolkit">Google Model Card Toolkit</a> for governance and compliance use cases.</p>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://prompty.ai/specification/page/">Microsoft Prompty Specification</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="llm-artifact-types-model-schema-alignment_registry"><a class="anchor" href="#llm-artifact-types-model-schema-alignment_registry"></a>MODEL_SCHEMA schema alignment with Model Card Toolkit</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The MODEL_SCHEMA is aligned with the Google Model Card Toolkit for governance and compliance use cases.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 5. Model Card field mappings</caption>
@@ -728,16 +699,23 @@ variables:
 }</code></pre>
 </div>
 </div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://github.com/tensorflow/model-card-toolkit">Google Model Card Toolkit</a></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="llm-artifact-types-mcp-integration_registry"><a class="anchor" href="#llm-artifact-types-mcp-integration_registry"></a>MCP (Model Context Protocol) integration</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry supports the <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a> and makes PROMPT_TEMPLATE artifacts available as MCP prompts. AI agents can discover and use prompt templates through MCP.</p>
+<p>Apicurio Registry supports the Model Context Protocol (MCP) and makes PROMPT_TEMPLATE artifacts available as MCP prompts. AI agents can discover and use prompt templates through MCP.</p>
 </div>
 <div class="paragraph">
-<div class="title">MCP extension in PROMPT_TEMPLATE</div>
 <p>Prompt templates can include an <code>mcp</code> section to enable MCP protocol integration:</p>
 </div>
 <div class="listingblock">
@@ -801,7 +779,6 @@ mcp:
 </tbody>
 </table>
 <div class="paragraph">
-<div class="title">MCP server module</div>
 <p>The <code>mcp/</code> module contains an MCP Server for registry prompts:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -827,9 +804,21 @@ mcp:
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<div class="title">MCP tools and prompts</div>
-<p>The MCP Server includes the following tools and prompts:</p>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="llm-artifact-types-mcp-tools-and-prompts_registry"><a class="anchor" href="#llm-artifact-types-mcp-tools-and-prompts_registry"></a>MCP tools and prompts</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The MCP Server exposes the following tools and prompts for working with prompt templates through the MCP protocol.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 8. MCP tools</caption>
@@ -877,8 +866,15 @@ mcp:
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="llm-artifact-types-mcp-server-usage_registry"><a class="anchor" href="#llm-artifact-types-mcp-server-usage_registry"></a>MCP server usage</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can run the MCP Server to make Apicurio Registry prompt templates available to AI agents through the MCP protocol.</p>
+</div>
 <div class="paragraph">
-<div class="title">MCP server usage</div>
 <p>To run the MCP Server:</p>
 </div>
 <div class="listingblock">
@@ -1015,7 +1011,6 @@ interface MCPConfiguration {
 </div>
 </div>
 <div class="paragraph">
-<div class="title">Content detection</div>
 <p>The <code>acceptsContent()</code> function detects PROMPT_TEMPLATE content by checking the following criteria:</p>
 </div>
 <div class="ulist">
@@ -1032,7 +1027,6 @@ interface MCPConfiguration {
 </ul>
 </div>
 <div class="paragraph">
-<div class="title">Validation rules</div>
 <p>The <code>validate()</code> function checks the following rules:</p>
 </div>
 <div class="ulist">
@@ -1115,7 +1109,6 @@ interface MCPConfiguration {
 </tbody>
 </table>
 <div class="paragraph">
-<div class="title">Template variable extraction</div>
 <p>The system extracts variables from template text by using the regex pattern <code>\{\{(\w+)\}\}</code>:</p>
 </div>
 <div class="listingblock">
@@ -1134,7 +1127,6 @@ interface MCPConfiguration {
 </div>
 </div>
 <div class="paragraph">
-<div class="title">Canonicalization</div>
 <p>The canonicalization process converts PROMPT_TEMPLATE content to YAML format with the following characteristics:</p>
 </div>
 <div class="ulist">
@@ -1203,7 +1195,6 @@ interface Considerations {
 </div>
 </div>
 <div class="paragraph">
-<div class="title">Content detection</div>
 <p>The <code>acceptsContent()</code> function detects MODEL_SCHEMA content by checking the following criteria:</p>
 </div>
 <div class="ulist">
@@ -1220,7 +1211,6 @@ interface Considerations {
 </ul>
 </div>
 <div class="paragraph">
-<div class="title">Validation rules</div>
 <p>The <code>validate()</code> function checks the following rules:</p>
 </div>
 <div class="ulist">
@@ -1302,7 +1292,6 @@ interface Considerations {
 </tbody>
 </table>
 <div class="paragraph">
-<div class="title">Canonicalization</div>
 <p>The canonicalization process converts MODEL_SCHEMA content to JSON format with the following characteristics:</p>
 </div>
 <div class="ulist">
@@ -1356,7 +1345,6 @@ interface Considerations {
 </div>
 </div>
 <div class="paragraph">
-<div class="title">Java implementation</div>
 <p>The <code>PromptRenderingService</code> class (<code>app/src/main/java/io/apicurio/registry/services/PromptRenderingService.java</code>) includes the following features:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -1399,7 +1387,6 @@ interface Considerations {
 </tbody>
 </table>
 <div class="paragraph">
-<div class="title">Validation error response</div>
 <p>When validation fails, the response includes validation errors:</p>
 </div>
 <div class="listingblock">
@@ -1473,6 +1460,23 @@ interface Considerations {
 </tr>
 </tbody>
 </table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-artifact-reference.html" class="page">Apicurio Registry artifact reference</a></p>
+</li>
+<li>
+<p><a href="https://prompty.ai/specification/page/">Microsoft Prompty Specification</a></p>
+</li>
+<li>
+<p><a href="https://github.com/tensorflow/model-card-toolkit">Google Model Card Toolkit</a></p>
+</li>
+<li>
+<p><a href="https://modelcontextprotocol.io/specification/2025-06-18/server/prompts">MCP Prompts Specification</a></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </article>

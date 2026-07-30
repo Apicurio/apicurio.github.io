@@ -384,32 +384,14 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>When developing client applications, you can use the Apicurio Registry Maven plug-in to manage schema and API artifacts stored in Apicurio Registry:</p>
+<p>When developing client applications, you can use the Apicurio Registry Maven plug-in to manage schema and API artifacts stored in Apicurio Registry.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#adding-artifacts-using-maven-plugin_registry">Adding schema and API artifacts using the Maven plug-in</a></p>
-</li>
-<li>
-<p><a href="#downloading-artifacts-using-maven-plugin_registry">Downloading schema and API artifacts using the Maven plug-in</a></p>
-</li>
-<li>
-<p><a href="#testing-artifacts-using-maven-plugin_registry">Testing schema and API artifacts using the Maven plug-in</a></p>
-</li>
-<li>
-<p><a href="#adding-artifact-references-manually-using-maven-plugin_registry">Adding artifact references manually using the Apicurio Registry Maven plug-in</a></p>
-</li>
-<li>
-<p><a href="#adding-artifact-references-automatically-using-maven-plugin_registry">Adding artifact references automatically using the Apicurio Registry Maven plug-in</a></p>
-</li>
-<li>
-<p><a href="#configuring-tls-maven-plugin_registry">Configuring TLS and authentication for the Maven plug-in</a></p>
-</li>
-</ul>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
 <p>Apicurio Registry is installed and running in your environment.</p>
@@ -450,24 +432,24 @@
       &lt;execution&gt;
         &lt;phase&gt;generate-sources&lt;/phase&gt;
         &lt;goals&gt;
-            &lt;goal&gt;register&lt;/goal&gt;  <i class="conum" data-value="1"></i><b>(1)</b>
+            &lt;goal&gt;register&lt;/goal&gt;
         &lt;/goals&gt;
         &lt;configuration&gt;
-            &lt;registryUrl&gt;MY-REGISTRY-URL/apis/registry/v3&lt;/registryUrl&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+            &lt;registryUrl&gt;MY-REGISTRY-URL/apis/registry/v3&lt;/registryUrl&gt;
             &lt;authServerUrl&gt;MY-AUTH-SERVER&lt;/authServerUrl&gt;
             &lt;clientId&gt;MY-CLIENT-ID&lt;/clientId&gt;
-            &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+            &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt;
             &lt;clientScope&gt;MY-CLIENT-SCOPE&lt;/clientScope&gt;
             &lt;artifacts&gt;
                 &lt;artifact&gt;
-                    &lt;groupId&gt;TestGroup&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+                    &lt;groupId&gt;TestGroup&lt;/groupId&gt;
                     &lt;artifactId&gt;FullNameRecord&lt;/artifactId&gt;
                     &lt;file&gt;${project.basedir}/src/main/resources/schemas/record.avsc&lt;/file&gt;
                     &lt;ifExists&gt;FAIL&lt;/ifExists&gt;
                 &lt;/artifact&gt;
                 &lt;artifact&gt;
                     &lt;groupId&gt;TestGroup&lt;/groupId&gt;
-                    &lt;artifactId&gt;ExampleAPI&lt;/artifactId&gt; <i class="conum" data-value="5"></i><b>(5)</b>
+                    &lt;artifactId&gt;ExampleAPI&lt;/artifactId&gt;
                     &lt;artifactType&gt;GRAPHQL&lt;/artifactType&gt;
                     &lt;file&gt;${project.basedir}/src/main/resources/apis/example.graphql&lt;/file&gt;
                     &lt;ifExists&gt;FIND_OR_CREATE_VERSION&lt;/ifExists&gt;
@@ -480,36 +462,33 @@
  &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specify <code>register</code> as the execution goal to upload the schema artifact to Apicurio Registry.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Specify the Apicurio Registry URL with the <code>../apis/registry/v3</code> endpoint.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>If authentication is required, you can specify your authentication server and client credentials.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group ID.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>You can register multiple artifacts using the specified group ID, artifact ID, and location.</td>
-</tr>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>goal</code></dt>
+<dd>
+<p>Specify <code>register</code> as the execution goal to upload the schema artifact to Apicurio Registry.</p>
+</dd>
+<dt class="hdlist1"><code>registryUrl</code></dt>
+<dd>
+<p>Specify the Apicurio Registry URL with the <code>../apis/registry/v3</code> endpoint.</p>
+</dd>
+<dt class="hdlist1"><code>clientSecret</code></dt>
+<dd>
+<p>If authentication is required, you can specify your authentication server and client credentials.</p>
+</dd>
+<dt class="hdlist1"><code>groupId</code> (first artifact)</dt>
+<dd>
+<p>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group ID.</p>
+</dd>
+<dt class="hdlist1"><code>artifactId</code> (second artifact)</dt>
+<dd>
+<p>You can register multiple artifacts using the specified group ID, artifact ID, and location.</p>
+</dd>
+</dl>
 </div>
 </li>
 <li>
 <p>Build your Maven project, for example, by using the <code>mvn package</code> command.</p>
-</li>
-</ol>
-</div>
 <div class="paragraph">
 <p>You can also run the <code>register</code> goal directly from the command line without a Maven project by passing the artifact configuration as system properties. Use the same field names that you would use in the Maven plug-in configuration:</p>
 </div>
@@ -540,17 +519,13 @@
 </li>
 <li>
 <p>For other artifact types, <code>API_INFO_VERSION</code> is ignored.</p>
-</li>
-</ul>
-</div>
 <div class="paragraph">
-<p>To update draft content or promote a draft created in this way, artifact version mutability must be enabled on the server. For more details, see <a href="#assembly-deploying-registry-operator.adoc#configuring-registry-operator_registry" class="page unresolved">Enabling artifact version mutability</a>.</p>
+<p>To update draft content or promote a draft created in this way, artifact version mutability must be enabled on the server. For more details, see the artifact version mutability configuration reference in the additional resources.</p>
 </div>
 <div class="paragraph">
 <p>For list properties, use an additional numeric index. The following formats are supported:</p>
 </div>
-<div class="ulist">
-<ul>
+</li>
 <li>
 <p><code>artifacts.&lt;index&gt;.references.&lt;index&gt;.&lt;field&gt;</code></p>
 </li>
@@ -559,9 +534,6 @@
 </li>
 <li>
 <p><code>artifacts.&lt;index&gt;.protoPaths.&lt;index&gt;</code></p>
-</li>
-</ul>
-</div>
 <div class="paragraph">
 <p>When registering a single artifact, you can omit the artifact index and use <code>artifacts.references.0.name</code>, <code>artifacts.existingReferences.0.resourceName</code>, or <code>artifacts.protoPaths.0</code>.</p>
 </div>
@@ -596,14 +568,23 @@
   -Dartifacts.versionStrategy=API_INFO_VERSION</code></pre>
 </div>
 </div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details on using Apache Maven, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+<p><a href="assembly-deploying-registry-operator.html#enabling-version-mutability_registry">Artifact version mutability configuration</a></p>
 </li>
 <li>
-<p>For open source examples of using the Apicurio Registry Maven plug-in, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Apicurio Registry demonstration examples</a>.</p>
+<p><a href="https://maven.apache.org/index.html">Apache Maven documentation</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Apicurio Registry demonstration examples</a></p>
 </li>
 </ul>
 </div>
@@ -638,18 +619,18 @@
     &lt;execution&gt;
       &lt;phase&gt;generate-sources&lt;/phase&gt;
       &lt;goals&gt;
-        &lt;goal&gt;download&lt;/goal&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+        &lt;goal&gt;download&lt;/goal&gt;
       &lt;/goals&gt;
       &lt;configuration&gt;
-          &lt;registryUrl&gt;MY-REGISTRY-URL/apis/registry/v3&lt;/registryUrl&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+          &lt;registryUrl&gt;MY-REGISTRY-URL/apis/registry/v3&lt;/registryUrl&gt;
           &lt;authServerUrl&gt;MY-AUTH-SERVER&lt;/authServerUrl&gt;
           &lt;clientId&gt;MY-CLIENT-ID&lt;/clientId&gt;
-          &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+          &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt;
           &lt;clientScope&gt;MY-CLIENT-SCOPE&lt;/clientScope&gt;
           &lt;artifacts&gt;
               &lt;artifact&gt;
-                  &lt;groupId&gt;TestGroup&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
-                  &lt;artifactId&gt;FullNameRecord&lt;/artifactId&gt; <i class="conum" data-value="5"></i><b>(5)</b>
+                  &lt;groupId&gt;TestGroup&lt;/groupId&gt;
+                  &lt;artifactId&gt;FullNameRecord&lt;/artifactId&gt;
                   &lt;file&gt;${project.build.directory}/classes/record.avsc&lt;/file&gt;
                   &lt;overwrite&gt;true&lt;/overwrite&gt;
               &lt;/artifact&gt;
@@ -667,29 +648,29 @@
 &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specify <code>download</code> as the execution goal.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Specify the Apicurio Registry URL with the <code>../apis/registry/v3</code> endpoint.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>If authentication is required, you can specify your authentication server and client credentials.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>You can download multiple artifacts to a specified directory using the artifact ID.</td>
-</tr>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>goal</code></dt>
+<dd>
+<p>Specify <code>download</code> as the execution goal.</p>
+</dd>
+<dt class="hdlist1"><code>registryUrl</code></dt>
+<dd>
+<p>Specify the Apicurio Registry URL with the <code>../apis/registry/v3</code> endpoint.</p>
+</dd>
+<dt class="hdlist1"><code>clientSecret</code></dt>
+<dd>
+<p>If authentication is required, you can specify your authentication server and client credentials.</p>
+</dd>
+<dt class="hdlist1"><code>groupId</code> (first artifact)</dt>
+<dd>
+<p>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group.</p>
+</dd>
+<dt class="hdlist1"><code>artifactId</code> (second artifact)</dt>
+<dd>
+<p>You can download multiple artifacts to a specified directory using the artifact ID.</p>
+</dd>
+</dl>
 </div>
 </li>
 <li>
@@ -701,10 +682,10 @@
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details on using Apache Maven, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+<p><a href="https://maven.apache.org/index.html">Apache Maven documentation</a></p>
 </li>
 <li>
-<p>For open source examples of using the Apicurio Registry Maven plug-in, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Apicurio Registry demonstration examples</a>.</p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Apicurio Registry demonstration examples</a></p>
 </li>
 </ul>
 </div>
@@ -751,19 +732,19 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
       &lt;execution&gt;
         &lt;phase&gt;generate-sources&lt;/phase&gt;
         &lt;goals&gt;
-            &lt;goal&gt;test-update&lt;/goal&gt;  <i class="conum" data-value="1"></i><b>(1)</b>
+            &lt;goal&gt;test-update&lt;/goal&gt;
         &lt;/goals&gt;
         &lt;configuration&gt;
-            &lt;registryUrl&gt;MY-REGISTRY-URL/apis/registry/v3&lt;/registryUrl&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+            &lt;registryUrl&gt;MY-REGISTRY-URL/apis/registry/v3&lt;/registryUrl&gt;
             &lt;authServerUrl&gt;MY-AUTH-SERVER&lt;/authServerUrl&gt;
             &lt;clientId&gt;MY-CLIENT-ID&lt;/clientId&gt;
-            &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+            &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt;
             &lt;clientScope&gt;MY-CLIENT-SCOPE&lt;/clientScope&gt;
             &lt;artifacts&gt;
                 &lt;artifact&gt;
-                    &lt;groupId&gt;TestGroup&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+                    &lt;groupId&gt;TestGroup&lt;/groupId&gt;
                     &lt;artifactId&gt;FullNameRecord&lt;/artifactId&gt;
-                    &lt;file&gt;${project.basedir}/src/main/resources/schemas/record.avsc&lt;/file&gt; <i class="conum" data-value="5"></i><b>(5)</b>
+                    &lt;file&gt;${project.basedir}/src/main/resources/schemas/record.avsc&lt;/file&gt;
                 &lt;/artifact&gt;
             &lt;/artifacts&gt;
         &lt;/configuration&gt;
@@ -772,29 +753,29 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
  &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specify <code>test-update</code> as the execution goal to test the schema artifact.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Specify the Apicurio Registry URL with the <code>../apis/registry/v3</code> endpoint.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>If authentication is required, you can specify your authentication server and client credentials.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>You can test multiple artifacts from a specified directory using the artifact ID.</td>
-</tr>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>goal</code></dt>
+<dd>
+<p>Specify <code>test-update</code> as the execution goal to test the schema artifact.</p>
+</dd>
+<dt class="hdlist1"><code>registryUrl</code></dt>
+<dd>
+<p>Specify the Apicurio Registry URL with the <code>../apis/registry/v3</code> endpoint.</p>
+</dd>
+<dt class="hdlist1"><code>clientSecret</code></dt>
+<dd>
+<p>If authentication is required, you can specify your authentication server and client credentials.</p>
+</dd>
+<dt class="hdlist1"><code>groupId</code></dt>
+<dd>
+<p>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group.</p>
+</dd>
+<dt class="hdlist1"><code>file</code></dt>
+<dd>
+<p>You can test multiple artifacts from a specified directory using the artifact ID.</p>
+</dd>
+</dl>
 </div>
 </li>
 <li>
@@ -806,10 +787,10 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details on using Apache Maven, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+<p><a href="https://maven.apache.org/index.html">Apache Maven documentation</a></p>
 </li>
 <li>
-<p>For open source examples of using the Apicurio Registry Maven plug-in, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Apicurio Registry demonstration examples</a>.</p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Apicurio Registry demonstration examples</a></p>
 </li>
 </ul>
 </div>
@@ -846,8 +827,10 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
 <div class="paragraph">
 <p>This section shows a simple example of using the Apicurio Registry Maven plug-in to manually register an artifact reference to a simple Avro schema artifact stored in Apicurio Registry. This example assumes that the following <code>Exchange</code> schema artifact has already been created in Apicurio Registry:</p>
 </div>
+<div class="paragraph">
+<p>The following example shows the <code>Exchange</code> schema:</p>
+</div>
 <div class="listingblock">
-<div class="title">Exchange schema</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "namespace": "com.kubetrade.schema.common",
@@ -860,8 +843,10 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
 <div class="paragraph">
 <p>This example then creates a <code>TradeKey</code> schema artifact, which includes a reference to the nested <code>Exchange</code> schema artifact:</p>
 </div>
+<div class="paragraph">
+<p>The following <code>TradeKey</code> schema contains a nested reference to the <code>Exchange</code> schema:</p>
+</div>
 <div class="listingblock">
-<div class="title">TradeKey schema with nested reference to Exchange schema</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "namespace": "com.kubetrade.schema.trade",
@@ -906,17 +891,17 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
         &lt;execution&gt;
             &lt;phase&gt;generate-sources&lt;/phase&gt;
             &lt;goals&gt;
-                &lt;goal&gt;register&lt;/goal&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+                &lt;goal&gt;register&lt;/goal&gt;
             &lt;/goals&gt;
             &lt;configuration&gt;
-                &lt;registryUrl&gt;MY-REGISTRY-URL/apis/registry/v3&lt;/registryUrl&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+                &lt;registryUrl&gt;MY-REGISTRY-URL/apis/registry/v3&lt;/registryUrl&gt;
                 &lt;authServerUrl&gt;MY-AUTH-SERVER&lt;/authServerUrl&gt;
                 &lt;clientId&gt;MY-CLIENT-ID&lt;/clientId&gt;
-                &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+                &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt;
                 &lt;clientScope&gt;MY-CLIENT-SCOPE&lt;/clientScope&gt;
                 &lt;artifacts&gt;
                     &lt;artifact&gt;
-                        &lt;groupId&gt;test-group&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+                        &lt;groupId&gt;test-group&lt;/groupId&gt;
                         &lt;artifactId&gt;TradeKey&lt;/artifactId&gt;
                         &lt;version&gt;2.0&lt;/version&gt;
                         &lt;artifactType&gt;AVRO&lt;/artifactType&gt;
@@ -926,7 +911,7 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
                         &lt;ifExists&gt;FIND_OR_CREATE_VERSION&lt;/ifExists&gt;
                         &lt;canonicalize&gt;true&lt;/canonicalize&gt;
                         &lt;references&gt;
-                            &lt;reference&gt; <i class="conum" data-value="5"></i><b>(5)</b>
+                            &lt;reference&gt;
                                 &lt;name&gt;com.kubetrade.schema.common.Exchange&lt;/name&gt;
                                 &lt;groupId&gt;test-group&lt;/groupId&gt;
                                 &lt;artifactId&gt;Exchange&lt;/artifactId&gt;
@@ -947,29 +932,29 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
 &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specify <code>register</code> as the execution goal to upload the schema artifacts to Apicurio Registry.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Specify the Apicurio Registry URL by using the <code>../apis/registry/v3</code> endpoint.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>If authentication is required, you can specify your authentication server and client credentials.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group ID.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Specify the Apicurio Registry artifact reference using its group ID, artifact ID, version, type, and location. You can register multiple artifact references in this way.</td>
-</tr>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>goal</code></dt>
+<dd>
+<p>Specify <code>register</code> as the execution goal to upload the schema artifacts to Apicurio Registry.</p>
+</dd>
+<dt class="hdlist1"><code>registryUrl</code></dt>
+<dd>
+<p>Specify the Apicurio Registry URL by using the <code>../apis/registry/v3</code> endpoint.</p>
+</dd>
+<dt class="hdlist1"><code>clientSecret</code></dt>
+<dd>
+<p>If authentication is required, you can specify your authentication server and client credentials.</p>
+</dd>
+<dt class="hdlist1"><code>groupId</code></dt>
+<dd>
+<p>Specify the Apicurio Registry artifact group ID. You can specify the <code>default</code> group if you do not want to use a unique group ID.</p>
+</dd>
+<dt class="hdlist1"><code>reference</code></dt>
+<dd>
+<p>Specify the Apicurio Registry artifact reference using its group ID, artifact ID, version, type, and location. You can register multiple artifact references in this way.</p>
+</dd>
+</dl>
 </div>
 </li>
 <li>
@@ -981,13 +966,13 @@ When testing artifacts using the Maven plug-in, even if the artifact passes the 
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details on using Apache Maven, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+<p><a href="https://maven.apache.org/index.html">Apache Maven documentation</a></p>
 </li>
 <li>
-<p>For an open source example of using the Apicurio Registry Maven plug-in to manually register an artifact reference, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/avro-maven-with-references">avro-maven-with-references demonstration example</a>.</p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/avro-maven-with-references">avro-maven-with-references demonstration example</a></p>
 </li>
 <li>
-<p>For more examples of artifact references, see the section on configuring each artifact type in <a href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>.</p>
+<p><a href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a></p>
 </li>
 </ul>
 </div>
@@ -1046,8 +1031,10 @@ These features provide early access to upcoming product features, enabling custo
 <div class="paragraph">
 <p>This section shows a simple example of using the Maven plug-in to register an Avro schema and automatically detect and register an artifact reference to a simple schema artifact. This example assumes that the parent <code>TradeKey</code> artifact and the nested <code>Exchange</code> schema artifact are both available in the same directory:</p>
 </div>
+<div class="paragraph">
+<p>The following <code>TradeKey</code> schema contains a nested reference to the <code>Exchange</code> schema:</p>
+</div>
 <div class="listingblock">
-<div class="title">TradeKey schema with nested reference to Exchange schema</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "namespace": "com.kubetrade.schema.trade",
@@ -1066,8 +1053,10 @@ These features provide early access to upcoming product features, enabling custo
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The following example shows the <code>Exchange</code> schema:</p>
+</div>
 <div class="listingblock">
-<div class="title">Exchange schema</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "namespace": "com.kubetrade.schema.common",
@@ -1103,26 +1092,26 @@ These features provide early access to upcoming product features, enabling custo
         &lt;execution&gt;
             &lt;phase&gt;generate-sources&lt;/phase&gt;
             &lt;goals&gt;
-                &lt;goal&gt;register&lt;/goal&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+                &lt;goal&gt;register&lt;/goal&gt;
             &lt;/goals&gt;
             &lt;configuration&gt;
-                &lt;registryUrl&gt;MY-REGISTRY-URL/apis/registry/v3&lt;/registryUrl&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+                &lt;registryUrl&gt;MY-REGISTRY-URL/apis/registry/v3&lt;/registryUrl&gt;
                 &lt;authServerUrl&gt;MY-AUTH-SERVER&lt;/authServerUrl&gt;
                 &lt;clientId&gt;MY-CLIENT-ID&lt;/clientId&gt;
-                &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+                &lt;clientSecret&gt;MY-CLIENT-SECRET&lt;/clientSecret&gt;
                 &lt;clientScope&gt;MY-CLIENT-SCOPE&lt;/clientScope&gt;
                 &lt;artifacts&gt;
                     &lt;artifact&gt;
-                        &lt;groupId&gt;test-group&lt;/groupId&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+                        &lt;groupId&gt;test-group&lt;/groupId&gt;
                         &lt;artifactId&gt;TradeKey&lt;/artifactId&gt;
                         &lt;version&gt;2.0&lt;/version&gt;
                         &lt;artifactType&gt;AVRO&lt;/artifactType&gt;
                         &lt;file&gt;
-                            ${project.basedir}/src/main/resources/schemas/TradeKey.avsc <i class="conum" data-value="5"></i><b>(5)</b>
+                            ${project.basedir}/src/main/resources/schemas/TradeKey.avsc
                         &lt;/file&gt;
                         &lt;ifExists&gt;FIND_OR_CREATE_VERSION&lt;/ifExists&gt;
                         &lt;canonicalize&gt;true&lt;/canonicalize&gt;
-                        &lt;autoRefs&gt;true&lt;/autoRefs&gt; <i class="conum" data-value="6"></i><b>(6)</b>
+                        &lt;autoRefs&gt;true&lt;/autoRefs&gt;
                     &lt;/artifact&gt;
                 &lt;/artifacts&gt;
             &lt;/configuration&gt;
@@ -1131,33 +1120,33 @@ These features provide early access to upcoming product features, enabling custo
 &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specify <code>register</code> as the execution goal to upload the schema artifacts to Apicurio Registry.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Specify the Apicurio Registry URL by using the <code>../apis/registry/v3</code> endpoint.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>If authentication is required, you can specify your authentication server and client credentials.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Specify the parent artifact group ID that contains the references. You can specify the <code>default</code> group if you do not want to use a unique group ID.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Specify the location of the parent artifact file. All referenced artifacts must also be located in the same directory.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>Set the <code>&lt;autoRefs&gt;</code> option to true to automatically detect and register all references to artifacts in the same directory. You can register multiple artifact references in this way.</td>
-</tr>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>goal</code></dt>
+<dd>
+<p>Specify <code>register</code> as the execution goal to upload the schema artifacts to Apicurio Registry.</p>
+</dd>
+<dt class="hdlist1"><code>registryUrl</code></dt>
+<dd>
+<p>Specify the Apicurio Registry URL by using the <code>../apis/registry/v3</code> endpoint.</p>
+</dd>
+<dt class="hdlist1"><code>clientSecret</code></dt>
+<dd>
+<p>If authentication is required, you can specify your authentication server and client credentials.</p>
+</dd>
+<dt class="hdlist1"><code>groupId</code></dt>
+<dd>
+<p>Specify the parent artifact group ID that contains the references. You can specify the <code>default</code> group if you do not want to use a unique group ID.</p>
+</dd>
+<dt class="hdlist1"><code>file</code></dt>
+<dd>
+<p>Specify the location of the parent artifact file. All referenced artifacts must also be located in the same directory.</p>
+</dd>
+<dt class="hdlist1"><code>autoRefs</code></dt>
+<dd>
+<p>Set the <code>&lt;autoRefs&gt;</code> option to true to automatically detect and register all references to artifacts in the same directory. You can register multiple artifact references in this way.</p>
+</dd>
+</dl>
 </div>
 </li>
 <li>
@@ -1169,28 +1158,26 @@ These features provide early access to upcoming product features, enabling custo
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details on using Apache Maven, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+<p><a href="https://maven.apache.org/index.html">Apache Maven documentation</a></p>
 </li>
 <li>
-<p>For an open source example of using the Apicurio Registry Maven plug-in to automatically register multiple artifact references, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/avro-maven-with-references-auto">avro-maven-with-references-auto demonstration example</a>.</p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/avro-maven-with-references-auto">avro-maven-with-references-auto demonstration example</a></p>
 </li>
 <li>
-<p>For more examples of artifact references, see the section on configuring each artifact type in <a href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>.</p>
+<p><a href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuring-tls-maven-plugin_registry"><a class="anchor" href="#configuring-tls-maven-plugin_registry"></a>Configuring TLS and authentication for the Maven plug-in</h2>
+<h2 id="configuring-tls-maven-plugin_registry"><a class="anchor" href="#configuring-tls-maven-plugin_registry"></a>TLS configuration options for the Maven plug-in</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>When connecting to a TLS-enabled Apicurio Registry instance, you can configure the Maven plug-in to use SSL/TLS for secure communication. The plug-in supports various trust store and key store formats, as well as multiple authentication methods.</p>
 </div>
-<div class="sect2">
-<h3 id="_tls_configuration_options"><a class="anchor" href="#_tls_configuration_options"></a>TLS configuration options</h3>
 <div class="paragraph">
-<p>The following table describes the TLS-related configuration options available in the Maven plug-in:</p>
+<p>The following tables describe the TLS-related configuration options available in the Maven plug-in.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Trust store configuration</caption>
@@ -1277,62 +1264,27 @@ These features provide early access to upcoming product features, enabling custo
 </tr>
 </tbody>
 </table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://maven.apache.org/index.html">Apache Maven documentation</a></p>
+</li>
+<li>
+<p><a href="#configuring-tls-maven-plugin-examples_registry">TLS and authentication configuration examples for the Maven plug-in</a></p>
+</li>
+</ul>
 </div>
-<div class="sect2">
-<h3 id="_example_tls_with_pkcs12_trust_store"><a class="anchor" href="#_example_tls_with_pkcs12_trust_store"></a>Example: TLS with PKCS12 trust store</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-tls-maven-plugin-examples_registry"><a class="anchor" href="#configuring-tls-maven-plugin-examples_registry"></a>TLS and authentication configuration examples for the Maven plug-in</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>These examples show how to combine TLS configuration options with different authentication methods when connecting the Maven plug-in to a TLS-enabled Apicurio Registry instance.</p>
+</div>
 <div class="paragraph">
-<p>The following example shows how to configure the Maven plug-in to connect to a TLS-enabled Apicurio Registry using a PKCS12 trust store:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
-  &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
-  &lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;${apicurio.version}&lt;/version&gt;
-  &lt;executions&gt;
-    &lt;execution&gt;
-      &lt;phase&gt;generate-sources&lt;/phase&gt;
-      &lt;goals&gt;
-        &lt;goal&gt;register&lt;/goal&gt;
-      &lt;/goals&gt;
-      &lt;configuration&gt;
-          &lt;registryUrl&gt;https://registry.example.com:8443/apis/registry/v3&lt;/registryUrl&gt; <i class="conum" data-value="1"></i><b>(1)</b>
-          &lt;trustStorePath&gt;${project.basedir}/certs/truststore.p12&lt;/trustStorePath&gt; <i class="conum" data-value="2"></i><b>(2)</b>
-          &lt;trustStorePassword&gt;${env.TRUSTSTORE_PASSWORD}&lt;/trustStorePassword&gt; <i class="conum" data-value="3"></i><b>(3)</b>
-          &lt;artifacts&gt;
-              &lt;artifact&gt;
-                  &lt;groupId&gt;default&lt;/groupId&gt;
-                  &lt;artifactId&gt;MySchema&lt;/artifactId&gt;
-                  &lt;file&gt;${project.basedir}/src/main/resources/schemas/schema.avsc&lt;/file&gt;
-              &lt;/artifact&gt;
-          &lt;/artifacts&gt;
-      &lt;/configuration&gt;
-    &lt;/execution&gt;
-  &lt;/executions&gt;
-&lt;/plugin&gt;</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Use <code>https://</code> for the registry URL when connecting with TLS.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Specify the path to your PKCS12 trust store containing the CA certificate(s).</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Use environment variables for passwords to avoid storing secrets in your <code>pom.xml</code>.</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_example_tls_with_basic_authentication"><a class="anchor" href="#_example_tls_with_basic_authentication"></a>Example: TLS with basic authentication</h3>
-<div class="paragraph">
-<p>The following example shows how to combine TLS with basic authentication:</p>
+<p><strong>TLS with PKCS12 trust store.</strong> The following example shows how to configure the Maven plug-in to connect to a TLS-enabled Apicurio Registry using a PKCS12 trust store:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1350,7 +1302,55 @@ These features provide early access to upcoming product features, enabling custo
           &lt;registryUrl&gt;https://registry.example.com:8443/apis/registry/v3&lt;/registryUrl&gt;
           &lt;trustStorePath&gt;${project.basedir}/certs/truststore.p12&lt;/trustStorePath&gt;
           &lt;trustStorePassword&gt;${env.TRUSTSTORE_PASSWORD}&lt;/trustStorePassword&gt;
-          &lt;username&gt;${env.REGISTRY_USERNAME}&lt;/username&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+          &lt;artifacts&gt;
+              &lt;artifact&gt;
+                  &lt;groupId&gt;default&lt;/groupId&gt;
+                  &lt;artifactId&gt;MySchema&lt;/artifactId&gt;
+                  &lt;file&gt;${project.basedir}/src/main/resources/schemas/schema.avsc&lt;/file&gt;
+              &lt;/artifact&gt;
+          &lt;/artifacts&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+  &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>registryUrl</code></dt>
+<dd>
+<p>Use <code>https://</code> for the registry URL when connecting with TLS.</p>
+</dd>
+<dt class="hdlist1"><code>trustStorePath</code></dt>
+<dd>
+<p>Specify the path to your PKCS12 trust store containing the CA certificate(s).</p>
+</dd>
+<dt class="hdlist1"><code>trustStorePassword</code></dt>
+<dd>
+<p>Use environment variables for passwords to avoid storing secrets in your <code>pom.xml</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong>TLS with basic authentication.</strong> The following example shows how to combine TLS with basic authentication:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+  &lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;${apicurio.version}&lt;/version&gt;
+  &lt;executions&gt;
+    &lt;execution&gt;
+      &lt;phase&gt;generate-sources&lt;/phase&gt;
+      &lt;goals&gt;
+        &lt;goal&gt;register&lt;/goal&gt;
+      &lt;/goals&gt;
+      &lt;configuration&gt;
+          &lt;registryUrl&gt;https://registry.example.com:8443/apis/registry/v3&lt;/registryUrl&gt;
+          &lt;trustStorePath&gt;${project.basedir}/certs/truststore.p12&lt;/trustStorePath&gt;
+          &lt;trustStorePassword&gt;${env.TRUSTSTORE_PASSWORD}&lt;/trustStorePassword&gt;
+          &lt;username&gt;${env.REGISTRY_USERNAME}&lt;/username&gt;
           &lt;password&gt;${env.REGISTRY_PASSWORD}&lt;/password&gt;
           &lt;artifacts&gt;
               &lt;artifact&gt;
@@ -1365,19 +1365,16 @@ These features provide early access to upcoming product features, enabling custo
 &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Combine TLS configuration with basic authentication credentials.</td>
-</tr>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>username</code>, <code>password</code></dt>
+<dd>
+<p>Combine TLS configuration with basic authentication credentials.</p>
+</dd>
+</dl>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_example_tls_with_oauth2_authentication"><a class="anchor" href="#_example_tls_with_oauth2_authentication"></a>Example: TLS with OAuth2 authentication</h3>
 <div class="paragraph">
-<p>The following example shows how to configure TLS with OAuth2/OIDC client credentials authentication:</p>
+<p><strong>TLS with OAuth2 authentication.</strong> The following example shows how to configure TLS with OAuth2/OIDC client credentials authentication:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1395,7 +1392,7 @@ These features provide early access to upcoming product features, enabling custo
           &lt;registryUrl&gt;https://registry.example.com:8443/apis/registry/v3&lt;/registryUrl&gt;
           &lt;trustStorePath&gt;${project.basedir}/certs/truststore.p12&lt;/trustStorePath&gt;
           &lt;trustStorePassword&gt;${env.TRUSTSTORE_PASSWORD}&lt;/trustStorePassword&gt;
-          &lt;authServerUrl&gt;https://keycloak.example.com/realms/registry/protocol/openid-connect/token&lt;/authServerUrl&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+          &lt;authServerUrl&gt;https://keycloak.example.com/realms/registry/protocol/openid-connect/token&lt;/authServerUrl&gt;
           &lt;clientId&gt;${env.CLIENT_ID}&lt;/clientId&gt;
           &lt;clientSecret&gt;${env.CLIENT_SECRET}&lt;/clientSecret&gt;
           &lt;clientScope&gt;openid&lt;/clientScope&gt;
@@ -1412,19 +1409,16 @@ These features provide early access to upcoming product features, enabling custo
 &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Specify the OAuth2/OIDC token endpoint URL for authentication.</td>
-</tr>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>authServerUrl</code></dt>
+<dd>
+<p>Specify the OAuth2/OIDC token endpoint URL for authentication.</p>
+</dd>
+</dl>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_example_mutual_tls_mtls"><a class="anchor" href="#_example_mutual_tls_mtls"></a>Example: Mutual TLS (mTLS)</h3>
 <div class="paragraph">
-<p>The following example shows how to configure mutual TLS where both the client and server authenticate each other using certificates:</p>
+<p><strong>Mutual TLS (mTLS).</strong> The following example shows how to configure mutual TLS where both the client and server authenticate each other using certificates:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1440,9 +1434,9 @@ These features provide early access to upcoming product features, enabling custo
       &lt;/goals&gt;
       &lt;configuration&gt;
           &lt;registryUrl&gt;https://registry.example.com:8443/apis/registry/v3&lt;/registryUrl&gt;
-          &lt;trustStorePath&gt;${project.basedir}/certs/truststore.p12&lt;/trustStorePath&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+          &lt;trustStorePath&gt;${project.basedir}/certs/truststore.p12&lt;/trustStorePath&gt;
           &lt;trustStorePassword&gt;${env.TRUSTSTORE_PASSWORD}&lt;/trustStorePassword&gt;
-          &lt;keyStorePath&gt;${project.basedir}/certs/client-keystore.p12&lt;/keyStorePath&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+          &lt;keyStorePath&gt;${project.basedir}/certs/client-keystore.p12&lt;/keyStorePath&gt;
           &lt;keyStorePassword&gt;${env.KEYSTORE_PASSWORD}&lt;/keyStorePassword&gt;
           &lt;artifacts&gt;
               &lt;artifact&gt;
@@ -1457,66 +1451,20 @@ These features provide early access to upcoming product features, enabling custo
 &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Trust store to verify the server&#8217;s certificate.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Key store containing the client certificate for authentication.</td>
-</tr>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>trustStorePath</code></dt>
+<dd>
+<p>Trust store to verify the server&#8217;s certificate.</p>
+</dd>
+<dt class="hdlist1"><code>keyStorePath</code></dt>
+<dd>
+<p>Key store containing the client certificate for authentication.</p>
+</dd>
+</dl>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_example_tls_with_pem_certificates"><a class="anchor" href="#_example_tls_with_pem_certificates"></a>Example: TLS with PEM certificates</h3>
 <div class="paragraph">
-<p>The following example shows how to use PEM-formatted certificates:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
-  &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
-  &lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;${apicurio.version}&lt;/version&gt;
-  &lt;executions&gt;
-    &lt;execution&gt;
-      &lt;phase&gt;generate-sources&lt;/phase&gt;
-      &lt;goals&gt;
-        &lt;goal&gt;register&lt;/goal&gt;
-      &lt;/goals&gt;
-      &lt;configuration&gt;
-          &lt;registryUrl&gt;https://registry.example.com:8443/apis/registry/v3&lt;/registryUrl&gt;
-          &lt;trustStorePath&gt;${project.basedir}/certs/ca-cert.pem&lt;/trustStorePath&gt; <i class="conum" data-value="1"></i><b>(1)</b>
-          &lt;trustStoreType&gt;PEM&lt;/trustStoreType&gt;
-          &lt;artifacts&gt;
-              &lt;artifact&gt;
-                  &lt;groupId&gt;default&lt;/groupId&gt;
-                  &lt;artifactId&gt;MySchema&lt;/artifactId&gt;
-                  &lt;file&gt;${project.basedir}/src/main/resources/schemas/schema.avsc&lt;/file&gt;
-              &lt;/artifact&gt;
-          &lt;/artifacts&gt;
-      &lt;/configuration&gt;
-    &lt;/execution&gt;
-  &lt;/executions&gt;
-&lt;/plugin&gt;</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>PEM certificate files do not require a password.</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_example_mtls_with_pem_certificates"><a class="anchor" href="#_example_mtls_with_pem_certificates"></a>Example: mTLS with PEM certificates</h3>
-<div class="paragraph">
-<p>The following example shows mTLS configuration using PEM-formatted certificate and key files:</p>
+<p><strong>TLS with PEM certificates.</strong> The following example shows how to use PEM-formatted certificates:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1534,8 +1482,48 @@ These features provide early access to upcoming product features, enabling custo
           &lt;registryUrl&gt;https://registry.example.com:8443/apis/registry/v3&lt;/registryUrl&gt;
           &lt;trustStorePath&gt;${project.basedir}/certs/ca-cert.pem&lt;/trustStorePath&gt;
           &lt;trustStoreType&gt;PEM&lt;/trustStoreType&gt;
-          &lt;keyStorePath&gt;${project.basedir}/certs/client-cert.pem&lt;/keyStorePath&gt; <i class="conum" data-value="1"></i><b>(1)</b>
-          &lt;keyStorePemKeyPath&gt;${project.basedir}/certs/client-key.pem&lt;/keyStorePemKeyPath&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+          &lt;artifacts&gt;
+              &lt;artifact&gt;
+                  &lt;groupId&gt;default&lt;/groupId&gt;
+                  &lt;artifactId&gt;MySchema&lt;/artifactId&gt;
+                  &lt;file&gt;${project.basedir}/src/main/resources/schemas/schema.avsc&lt;/file&gt;
+              &lt;/artifact&gt;
+          &lt;/artifacts&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+  &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>trustStorePath</code></dt>
+<dd>
+<p>PEM certificate files do not require a password.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong>mTLS with PEM certificates.</strong> The following example shows mTLS configuration using PEM-formatted certificate and key files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+  &lt;artifactId&gt;apicurio-registry-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;${apicurio.version}&lt;/version&gt;
+  &lt;executions&gt;
+    &lt;execution&gt;
+      &lt;phase&gt;generate-sources&lt;/phase&gt;
+      &lt;goals&gt;
+        &lt;goal&gt;register&lt;/goal&gt;
+      &lt;/goals&gt;
+      &lt;configuration&gt;
+          &lt;registryUrl&gt;https://registry.example.com:8443/apis/registry/v3&lt;/registryUrl&gt;
+          &lt;trustStorePath&gt;${project.basedir}/certs/ca-cert.pem&lt;/trustStorePath&gt;
+          &lt;trustStoreType&gt;PEM&lt;/trustStoreType&gt;
+          &lt;keyStorePath&gt;${project.basedir}/certs/client-cert.pem&lt;/keyStorePath&gt;
+          &lt;keyStorePemKeyPath&gt;${project.basedir}/certs/client-key.pem&lt;/keyStorePemKeyPath&gt;
           &lt;keyStoreType&gt;PEM&lt;/keyStoreType&gt;
           &lt;artifacts&gt;
               &lt;artifact&gt;
@@ -1550,32 +1538,31 @@ These features provide early access to upcoming product features, enabling custo
 &lt;/plugin&gt;</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Path to the client certificate PEM file.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Path to the client private key PEM file. Required when using PEM format for mTLS.</td>
-</tr>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>keyStorePath</code></dt>
+<dd>
+<p>Path to the client certificate PEM file.</p>
+</dd>
+<dt class="hdlist1"><code>keyStorePemKeyPath</code></dt>
+<dd>
+<p>Path to the client private key PEM file. Required when using PEM format for mTLS.</p>
+</dd>
+</dl>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details on using Apache Maven, see the <a href="https://maven.apache.org/index.html">Apache Maven documentation</a>.</p>
+<p><a href="https://maven.apache.org/index.html">Apache Maven documentation</a></p>
 </li>
 <li>
-<p>For a complete example with multiple TLS and authentication configurations, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/maven-plugin-tls-credentials">maven-plugin-tls-credentials demonstration example</a>.</p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/maven-plugin-tls-credentials">maven-plugin-tls-credentials demonstration example</a></p>
 </li>
 <li>
-<p>For a Kubernetes mTLS setup example, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/mtls-minikube">mTLS Minikube demonstration example</a>.</p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/mtls-minikube">mTLS Minikube demonstration example</a></p>
 </li>
 </ul>
-</div>
 </div>
 </div>
 </div>

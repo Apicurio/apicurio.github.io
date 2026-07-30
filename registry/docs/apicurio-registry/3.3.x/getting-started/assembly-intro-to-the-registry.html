@@ -384,38 +384,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter introduces Apicurio Registry concepts and features and provides details on the supported artifact types that are stored in the registry:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#registry-overview_registry">What is Apicurio Registry?</a></p>
-</li>
-<li>
-<p><a href="#registry-artifacts_registry">Schema and API artifacts in Apicurio Registry</a></p>
-</li>
-<li>
-<p><a href="#registry-web-console_registry">Manage content using the Apicurio Registry web console</a></p>
-</li>
-<li>
-<p><a href="#registry-rest-api_registry">Apicurio Registry REST API for clients</a></p>
-</li>
-<li>
-<p><a href="#registry-storage_registry">Apicurio Registry storage options</a></p>
-</li>
-<li>
-<p><a href="#client-serde_registry">Validate Kafka messages using schemas and Java client serializers/deserializers</a></p>
-</li>
-<li>
-<p><a href="#kafka-connect_registry">Stream data to external systems with Kafka Connect converters</a></p>
-</li>
-<li>
-<p><a href="#registry-demo_registry">Apicurio Registry demonstration examples</a></p>
-</li>
-<li>
-<p><a href="#registry-distros_registry">Apicurio Registry available distributions</a></p>
-</li>
-</ul>
+<p>Apicurio Registry is a datastore for sharing event schemas and API designs across event-driven and API architectures, with support for a range of artifact types, storage options, and client tooling.</p>
 </div>
 </div>
 </div>
@@ -437,7 +406,14 @@
 <div class="paragraph">
 <p>You can configure optional rules to govern the evolution of your Apicurio Registry content. These include rules to ensure that uploaded content is valid, or is compatible with other versions. Any configured rules must pass before new versions can be uploaded to Apicurio Registry, which ensures that time is not wasted on invalid or incompatible schemas or API designs.</p>
 </div>
-<h3 id="_apicurio_registry_capabilities" class="discrete">Apicurio Registry capabilities</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-capabilities_registry"><a class="anchor" href="#registry-capabilities_registry"></a>Apicurio Registry capabilities</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry provides the following capabilities for managing event schemas and API designs across event-driven and API architectures:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
@@ -507,10 +483,8 @@
 <p>When a schema or API design is added as an artifact in Apicurio Registry, client applications can then use that schema or API design to validate that the client messages conform to the correct data structure at runtime.</p>
 </div>
 <div class="paragraph">
-<p>Artifacts have metadata, both generated and editable.  Standard metadata for an artifact includes (but may not be limited to):</p>
+<p>Artifacts have metadata, both generated and editable. Standard metadata for an artifact includes (but may not be limited to) the following generated or immutable properties:</p>
 </div>
-<div class="sect3">
-<h4 id="_generated_or_immutable_properties"><a class="anchor" href="#_generated_or_immutable_properties"></a>Generated or immutable properties</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -533,9 +507,9 @@
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>And the following editable properties:</p>
 </div>
-<div class="sect3">
-<h4 id="_editable_properties"><a class="anchor" href="#_editable_properties"></a>Editable properties</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -552,19 +526,17 @@
 </li>
 </ul>
 </div>
-<h3 id="_artifact_versions" class="discrete">Artifact Versions</h3>
-<div class="paragraph">
-<p>Every artifact is composed of zero or more _artifact version_s.  Only artifact versions have actual
-content (as well as metadata).  These versions represent the evolution of the content of an artifact,
-and are immutable.  You can think of an Artifact as an ordered sequence of Versions, typically with
-the most recent version representing the "current" schema or API design content.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="artifact-versions_registry"><a class="anchor" href="#artifact-versions_registry"></a>Artifact versions</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Every artifact is composed of zero or more _artifact version_s. Only artifact versions have actual content (as well as metadata). These versions represent the evolution of the content of an artifact, and are immutable. You can think of an Artifact as an ordered sequence of Versions, typically with the most recent version representing the "current" schema or API design content.</p>
 </div>
 <div class="paragraph">
-<p>Artifact Versions have metadata, both generated and editable.  Standard metadata for an artifact version includes (but may not be limited to):</p>
+<p>Artifact Versions have metadata, both generated and editable. Standard metadata for an artifact version includes (but may not be limited to) the following generated or immutable properties:</p>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_generated_or_immutable_properties_2"><a class="anchor" href="#_generated_or_immutable_properties_2"></a>Generated or immutable properties</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -596,9 +568,9 @@ the most recent version representing the "current" schema or API design content.
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>And the following editable properties:</p>
 </div>
-<div class="sect3">
-<h4 id="_editable_properties_2"><a class="anchor" href="#_editable_properties_2"></a>Editable properties</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -615,8 +587,12 @@ the most recent version representing the "current" schema or API design content.
 </li>
 </ul>
 </div>
-<h3 id="_groups_of_schemas_and_apis" class="discrete">Groups of schemas and APIs</h3>
-<div class="paragraph">
+</div>
+</div>
+<div class="sect1">
+<h2 id="artifact-groups_registry"><a class="anchor" href="#artifact-groups_registry"></a>Groups of schemas and APIs</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>An <em>artifact group</em> is an optional named collection of schema or API artifacts. Each group contains a logically related set of schemas or API designs, typically managed by a single entity, belonging to a particular application or organization.</p>
 </div>
 <div class="paragraph">
@@ -626,11 +602,8 @@ the most recent version representing the "current" schema or API design content.
 <p>Schema and API groups can contain multiple artifact types. For example, you could have Protobuf, Avro, JSON Schema, OpenAPI, or AsyncAPI artifacts all in the same group.</p>
 </div>
 <div class="paragraph">
-<p>Groups have metadata, both generated and editable.  Standard metadata for a group includes (but may not be limited to):</p>
+<p>Groups have metadata, both generated and editable. Standard metadata for a group includes (but may not be limited to) the following generated or immutable properties:</p>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_generated_or_immutable_properties_3"><a class="anchor" href="#_generated_or_immutable_properties_3"></a>Generated or immutable properties</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -650,9 +623,9 @@ the most recent version representing the "current" schema or API design content.
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>And the following editable properties:</p>
 </div>
-<div class="sect3">
-<h4 id="_editable_properties_3"><a class="anchor" href="#_editable_properties_3"></a>Editable properties</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -682,15 +655,19 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For information on supported artifact types, see <a href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>.</p>
+<p><a href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a></p>
 </li>
 <li>
-<p>For information on the Core Registry API, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
 </li>
 </ul>
 </div>
-<h3 id="_references_to_other_schemas_and_apis" class="discrete">References to other schemas and APIs</h3>
-<div class="paragraph">
+</div>
+</div>
+<div class="sect1">
+<h2 id="artifact-references_registry"><a class="anchor" href="#artifact-references_registry"></a>References to other schemas and APIs</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>Some Apicurio Registry artifact types can include <em>artifact references</em> from one artifact file to another. You can create efficiencies by defining reusable schema or API components, and then referencing them from multiple locations. For example, you can specify a reference in JSON Schema or OpenAPI using a <code>$ref</code> statement, or in Google Protobuf using an <code>import</code> statement, or in Apache Avro using a nested namespace.</p>
 </div>
 <div class="paragraph">
@@ -749,7 +726,6 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 <div class="paragraph">
 <p>You can manage artifact references using the Apicurio Registry core REST API, Maven plug-in, and Java serializers/deserializers (SerDes). Apicurio Registry stores the artifact references along with the artifact content. Apicurio Registry also maintains a collection of all artifact references so you can search them or list all references for a specific artifact.</p>
 </div>
-<h4 id="_supported_artifact_types" class="discrete">Supported artifact types</h4>
 <div class="paragraph">
 <p>Apicurio Registry currently supports artifact references for the following artifact types only:</p>
 </div>
@@ -776,23 +752,15 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For details on managing artifact references, see:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>.</p>
+<p><a href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a></p>
 </li>
 <li>
-<p><a href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>.</p>
+<p><a href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/serdes-with-references">Apicurio Registry SerDes with references demonstration</a></p>
 </li>
 </ul>
-</div>
-</li>
-<li>
-<p>For a Java example, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/serdes-with-references">Apicurio Registry SerDes with references demonstration</a>.</p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 </div>
@@ -800,7 +768,7 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 <h2 id="registry-web-console_registry"><a class="anchor" href="#registry-web-console_registry"></a>Manage content using the Apicurio Registry web console</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can use the Apicurio Registry web console to browse and search the schema and API artifacts and optional groups stored in the registry, and to add new schema and API artifacts, groups, and versions. You can search for artifacts by label, name, group, and description. You can view an artifact’s content or its available versions, or download an artifact file locally.</p>
+<p>You can use the Apicurio Registry web console to browse and search the schema and API artifacts and optional groups stored in the registry, and to add new schema and API artifacts, groups, and versions. You can search for artifacts by label, name, group, and description. You can view an artifact&#8217;s content or its available versions, or download an artifact file locally.</p>
 </div>
 <div class="paragraph">
 <p>You can also configure optional rules for registry content, globally, for groups, and for each schema and API artifact. These optional rules for content validation and compatibility are applied when new schema and API artifacts or versions are uploaded to the registry.</p>
@@ -827,10 +795,10 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 </div>
 </div>
 </div>
-<div class="sect1 _abstract">
+<div class="sect1">
 <h2 id="registry-rest-api_registry"><a class="anchor" href="#registry-rest-api_registry"></a>Apicurio Registry REST API for clients</h2>
 <div class="sectionbody">
-<div class="paragraph">
+<div class="paragraph _abstract">
 <p>Client applications can use the Core Registry API v3 to manage the schema and API artifacts in Apicurio Registry. This API provides operations for the following features:</p>
 </div>
 <div class="dlist">
@@ -841,7 +809,7 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 </dd>
 <dt class="hdlist1">Groups</dt>
 <dd>
-<p>Manage groups of artifacts in Apicurio Registry.  You can create groups to better organize your artifacts.</p>
+<p>Manage groups of artifacts in Apicurio Registry. You can create groups to better organize your artifacts.</p>
 </dd>
 <dt class="hdlist1">Group Rules</dt>
 <dd>
@@ -881,8 +849,23 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 </dd>
 </dl>
 </div>
-<h3 id="_compatibility_with_other_schema_registry_rest_apis" class="discrete">Compatibility with other schema registry REST APIs</h3>
 <div class="paragraph">
+<p>For API documentation on the Core Registry API v3 and all compatible APIs, browse to the <code>/apis</code> endpoint of your Apicurio Registry, for example, <code>http://MY-REGISTRY-URL/apis</code>.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rest-api-compatibility_registry"><a class="anchor" href="#rest-api-compatibility_registry"></a>Compatibility with other schema registry REST APIs</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>Apicurio Registry also provides compatibility with the following schema registries by including implementations of their respective REST APIs:</p>
 </div>
 <div class="ulist">
@@ -905,7 +888,7 @@ Specifying a group is optional when using the Apicurio Registry web console, and
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Some Confluent enterprise features such as Schema Linking, Data Contracts, and client-side encryption (KEK/DEK) are not supported. For details on supported and unsupported features, see <a href="assembly-confluent-schema-registry-compatibility.html" class="page">Confluent Schema Registry compatibility API</a>.
+Some Confluent enterprise features such as Schema Linking, Data Contracts, and client-side encryption (KEK/DEK) are not supported.
 </td>
 </tr>
 </table>
@@ -914,10 +897,7 @@ Some Confluent enterprise features such as Schema Linking, Data Contracts, and c
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more information on the Core Registry API v3, see the <a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a>.</p>
-</li>
-<li>
-<p>For API documentation on the Core Registry API v3 and all compatible APIs, browse to the <code>/apis</code> endpoint of your Apicurio Registry, for example, <code>http://MY-REGISTRY-URL/apis</code>.</p>
+<p><a href="assembly-confluent-schema-registry-compatibility.html" class="page">Confluent Schema Registry compatibility API</a></p>
 </li>
 </ul>
 </div>
@@ -1119,7 +1099,7 @@ Some Confluent enterprise features such as Schema Linking, Data Contracts, and c
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details, see <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples" class="bare">https://github.com/Apicurio/apicurio-registry/tree/main/examples</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Apicurio Registry example applications</a></p>
 </li>
 </ul>
 </div>
@@ -1158,14 +1138,14 @@ Some Confluent enterprise features such as Schema Linking, Data Contracts, and c
 </tr>
 </tbody>
 </table>
-<div class="ulist">
+<div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For details on building from source code and running Docker images, see <a href="https://github.com/Apicurio/apicurio-registry" class="bare">https://github.com/Apicurio/apicurio-registry</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry">Building from source code and running Docker images</a></p>
 </li>
 <li>
-<p>For details on using the Operator to deploy, see <a href="https://github.com/Apicurio/apicurio-registry/tree/main/operator" class="bare">https://github.com/Apicurio/apicurio-registry/tree/main/operator</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/operator">Using the Operator to deploy</a></p>
 </li>
 </ul>
 </div>

@@ -384,29 +384,14 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This chapter explains how to configure Apicurio Registry to use Kubernetes ConfigMaps as the data source for registry artifacts. KubernetesOps storage enables Kubernetes-native management of schemas and APIs using standard tools like <code>kubectl</code>, ArgoCD, or Flux.</p>
+<p>Configure Apicurio Registry to use Kubernetes ConfigMaps as the data source for registry artifacts. KubernetesOps storage enables Kubernetes-native management of schemas and APIs using standard tools like <code>kubectl</code>, ArgoCD, or Flux.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#kubernetesops-overview_registry">Overview of KubernetesOps storage</a></p>
-</li>
-<li>
-<p><a href="#configuring-kubernetesops-storage_registry">Configuring Apicurio Registry with KubernetesOps storage</a></p>
-</li>
-<li>
-<p><a href="#kubernetesops-configmap-format_registry">ConfigMap data format</a></p>
-</li>
-<li>
-<p><a href="#kubernetesops-rbac-requirements_registry">RBAC requirements</a></p>
-</li>
-<li>
-<p><a href="#kubernetesops-limitations_registry">Limitations and considerations</a></p>
-</li>
-</ul>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
 <p>You have installed Apicurio Registry on Kubernetes or OpenShift.</p>
@@ -421,6 +406,9 @@
 <div class="sect1">
 <h2 id="kubernetesops-overview_registry"><a class="anchor" href="#kubernetesops-overview_registry"></a>Overview of KubernetesOps storage</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>KubernetesOps storage is a read-only storage variant that loads registry data from Kubernetes ConfigMaps. It extends the proven GitOps storage pattern to use ConfigMaps instead of Git repositories, enabling Kubernetes-native workflows for managing schemas and APIs.</p>
+</div>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -433,10 +421,9 @@ KubernetesOps storage is an <strong>experimental</strong> feature. You must enab
 </tr>
 </table>
 </div>
-<div class="paragraph _abstract">
-<p>KubernetesOps storage is a read-only storage variant that loads registry data from Kubernetes ConfigMaps. It extends the proven GitOps storage pattern to use ConfigMaps instead of Git repositories, enabling Kubernetes-native workflows for managing schemas and APIs.</p>
+<div class="paragraph">
+<p><strong>Architecture</strong></p>
 </div>
-<h3 id="_architecture" class="discrete">Architecture</h3>
 <div class="paragraph">
 <p>KubernetesOps storage uses a polling-based architecture with blue-green database switching:</p>
 </div>
@@ -472,7 +459,9 @@ KubernetesOps storage is an <strong>experimental</strong> feature. You must enab
 </li>
 </ul>
 </div>
-<h3 id="_when_to_use_kubernetesops_storage" class="discrete">When to use KubernetesOps storage</h3>
+<div class="paragraph">
+<p><strong>When to use KubernetesOps storage</strong></p>
+</div>
 <div class="paragraph">
 <p>KubernetesOps storage is ideal when:</p>
 </div>
@@ -492,7 +481,6 @@ KubernetesOps storage is an <strong>experimental</strong> feature. You must enab
 </li>
 </ul>
 </div>
-<h3 id="_comparison_with_other_storage_options" class="discrete">Comparison with other storage options</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 1. Storage option comparison</caption>
 <colgroup>
@@ -512,7 +500,7 @@ KubernetesOps storage is an <strong>experimental</strong> feature. You must enab
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Data source</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database (PostgreSQL, etc.)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database (PostgreSQL and others)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Git repository</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes ConfigMaps</p></td>
 </tr>
@@ -548,7 +536,7 @@ KubernetesOps storage is an <strong>experimental</strong> feature. You must enab
 <h2 id="configuring-kubernetesops-storage_registry"><a class="anchor" href="#configuring-kubernetesops-storage_registry"></a>Configuring KubernetesOps storage</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This section explains how to configure Apicurio Registry to use KubernetesOps storage.</p>
+<p>Configure Apicurio Registry to use KubernetesOps storage, including the required environment variables and an example deployment.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -604,7 +592,7 @@ KubernetesOps storage is an <strong>experimental</strong> feature. You must enab
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_POLLING_STORAGE_POLL_PERIOD</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>PT10S</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum period between polls for ConfigMap changes. Uses ISO 8601 duration format (e.g., <code>PT10S</code>, <code>PT1M</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum period between polls for ConfigMap changes. Uses ISO 8601 duration format (for example, <code>PT10S</code> or <code>PT1M</code>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_KUBERNETESOPS_LABEL_REGISTRY_ID</code></p></td>
@@ -669,12 +657,23 @@ spec:
 </div>
 </li>
 <li>
-<p>Create the required RBAC resources as described in <a href="#kubernetesops-rbac-requirements_registry">RBAC requirements</a>.</p>
+<p>Create the required RBAC resources as described in the RBAC requirements reference.</p>
 </li>
 <li>
-<p>Create ConfigMaps containing your registry data as described in <a href="#kubernetesops-configmap-format_registry">ConfigMap data format</a>.</p>
+<p>Create ConfigMaps containing your registry data as described in the ConfigMap data format reference.</p>
 </li>
 </ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#kubernetesops-rbac-requirements_registry">RBAC requirements</a></p>
+</li>
+<li>
+<p><a href="#kubernetesops-configmap-format_registry">ConfigMap data format</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -684,24 +683,25 @@ spec:
 <div class="paragraph _abstract">
 <p>ConfigMaps for KubernetesOps storage must use a specific YAML format with <code>$type</code> markers to identify the type of each file. This format is identical to the GitOps storage format.</p>
 </div>
-<h3 id="_configmap_requirements" class="discrete">ConfigMap requirements</h3>
+<div class="paragraph">
+<p><strong>ConfigMap requirements</strong></p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>ConfigMaps must have the registry ID label (e.g., <code>apicurio.io/registry-id: my-registry</code>)</p>
+<p>ConfigMaps must have the registry ID label (for example, <code>apicurio.io/registry-id: my-registry</code>)</p>
 </li>
 <li>
-<p>Each data entry key is treated as a relative path (e.g., <code>test/artifact.registry.yaml</code>)</p>
+<p>Each data entry key is treated as a relative path (for example, <code>test/artifact.registry.yaml</code>)</p>
 </li>
 <li>
-<p>Metadata files (registry, group, artifact, content definitions) should use a recognized file suffix in their data key name. By default, the suffixes <code>registry</code> and <code>ar</code> are recognized, matching patterns like <code><strong>.registry.yaml</code>, <code></strong>.registry.yml</code>, <code><strong>.registry.json</code>, <code></strong>.ar.yaml</code>, etc. Using recognized suffixes enables better error reporting when files fail to parse. Data keys that do not match a recognized suffix are treated as raw content files (e.g., schema data).</p>
+<p>Metadata files (registry, group, artifact, content definitions) should use a recognized file suffix in their data key name. By default, the suffixes <code>registry</code> and <code>ar</code> are recognized, matching patterns such as <code><strong>.registry.yaml</code>, <code></strong>.registry.yml</code>, <code><strong>.registry.json</code>, and <code></strong>.ar.yaml</code>. Using recognized suffixes enables better error reporting when files fail to parse. Data keys that do not match a recognized suffix are treated as raw content files (for example, schema data).</p>
 </li>
 <li>
 <p>Metadata YAML files must contain a <code>$type</code> field identifying the entity type</p>
 </li>
 </ul>
 </div>
-<h3 id="_entity_types" class="discrete">Entity types</h3>
 <div class="paragraph">
 <p>The following <code>$type</code> values are supported:</p>
 </div>
@@ -736,8 +736,8 @@ spec:
 </tr>
 </tbody>
 </table>
-<h3 id="_example_registry_configuration" class="discrete">Example: Registry configuration</h3>
 <div class="listingblock">
+<div class="title">Example: Registry configuration</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
 kind: ConfigMap
@@ -756,8 +756,8 @@ data:
     properties: []</code></pre>
 </div>
 </div>
-<h3 id="_example_group_definition" class="discrete">Example: Group definition</h3>
 <div class="listingblock">
+<div class="title">Example: Group definition</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
 kind: ConfigMap
@@ -774,11 +774,11 @@ data:
     description: "Event schemas for the platform"</code></pre>
 </div>
 </div>
-<h3 id="_example_artifact_with_inline_content" class="discrete">Example: Artifact with inline content</h3>
 <div class="paragraph">
 <p>This example shows the simplest approach, where artifact content is stored directly in the same ConfigMap. The <code>content</code> field in each version references another data key by name.</p>
 </div>
 <div class="listingblock">
+<div class="title">Example: Artifact with inline content</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
 kind: ConfigMap
@@ -822,16 +822,16 @@ data:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The <code>content</code> field in a version uses a relative path that references another data key in the ConfigMap (or across ConfigMaps). Content data keys should <strong>not</strong> use a metadata suffix (e.g., <code>.registry.yaml</code>) since they contain raw schema/API data, not registry metadata.
+The <code>content</code> field in a version uses a relative path that references another data key in the ConfigMap (or across ConfigMaps). Content data keys should <strong>not</strong> use a metadata suffix (for example, <code>.registry.yaml</code>) since they contain raw schema/API data, not registry metadata.
 </td>
 </tr>
 </table>
 </div>
-<h3 id="_example_artifact_with_content_metadata" class="discrete">Example: Artifact with content metadata</h3>
 <div class="paragraph">
 <p>For advanced use cases, you can use <code>content-v0</code> metadata to set an explicit <code>contentId</code> or define content references. The version&#8217;s <code>contentMetadata</code> field points to a <code>content-v0</code> entry, which in turn points to the actual content via its own <code>content</code> field.</p>
 </div>
 <div class="listingblock">
+<div class="title">Example: Artifact with content metadata</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
 kind: ConfigMap
@@ -872,11 +872,11 @@ data:
     }</code></pre>
 </div>
 </div>
-<h3 id="_example_content_references" class="discrete">Example: Content references</h3>
 <div class="paragraph">
-<p>Content references allow one artifact to reference another (e.g., an Avro schema that imports another record type). Use the <code>references</code> field in a <code>content-v0</code> entry to declare these relationships.</p>
+<p>Content references allow one artifact to reference another (for example, an Avro schema that imports another record type). Use the <code>references</code> field in a <code>content-v0</code> entry to declare these relationships.</p>
 </div>
 <div class="listingblock">
+<div class="title">Example: Content references</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
 kind: ConfigMap
@@ -946,9 +946,21 @@ data:
     }</code></pre>
 </div>
 </div>
-<h3 id="_field_reference" class="discrete">Field reference</h3>
-<div class="paragraph">
-<p>The following tables list all supported fields for each entity type. Fields marked with <code>$type</code> are required for type identification. Unknown fields will cause parse errors.</p>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#kubernetesops-field-reference_registry">Field reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="kubernetesops-field-reference_registry"><a class="anchor" href="#kubernetesops-field-reference_registry"></a>Field reference</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Each KubernetesOps entity type (<code>registry-v0</code>, <code>group-v0</code>, <code>artifact-v0</code>, <code>content-v0</code>) supports a specific set of YAML fields. Fields marked with <code>$type</code> are required for type identification, and unknown fields cause parse errors.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 4. registry-v0 fields</caption>
@@ -978,7 +990,7 @@ data:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>globalRules</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">list of rules</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Global validation/compatibility rules. Each rule has <code>ruleType</code> (e.g., <code>VALIDITY</code>, <code>COMPATIBILITY</code>) and <code>config</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global validation/compatibility rules. Each rule has <code>ruleType</code> (for example, <code>VALIDITY</code> or <code>COMPATIBILITY</code>) and <code>config</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>properties</code></p></td>
@@ -1030,12 +1042,12 @@ data:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>owner</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of the group (e.g., username or team name).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of the group (for example, a username or team name).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifactsType</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Constrains all artifacts in this group to a specific type (e.g., <code>AVRO</code>, <code>PROTOBUF</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Constrains all artifacts in this group to a specific type (for example, <code>AVRO</code> or <code>PROTOBUF</code>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>rules</code></p></td>
@@ -1102,7 +1114,7 @@ data:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>owner</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of the artifact (e.g., username or team name).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of the artifact (for example, a username or team name).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>versions</code></p></td>
@@ -1134,7 +1146,7 @@ data:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>version</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Version identifier (e.g., <code>"1"</code>, <code>"2.0.0"</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Version identifier (for example, <code>"1"</code> or <code>"2.0.0"</code>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>state</code></p></td>
@@ -1159,7 +1171,7 @@ data:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Relative path to the content data key (e.g., <code>my-schema.avsc</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Relative path to the content data key (for example, <code>my-schema.avsc</code>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentMetadata</code></p></td>
@@ -1174,7 +1186,7 @@ data:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>owner</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of this version (e.g., username or team name).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of this version (for example, a username or team name).</p></td>
 </tr>
 </tbody>
 </table>
@@ -1238,7 +1250,7 @@ data:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>config</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Rule configuration value (e.g., <code>FULL</code>, <code>BACKWARD</code>, <code>FORWARD</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rule configuration value (for example, <code>FULL</code>, <code>BACKWARD</code>, or <code>FORWARD</code>).</p></td>
 </tr>
 </tbody>
 </table>
@@ -1248,7 +1260,10 @@ data:
 <h2 id="kubernetesops-rbac-requirements_registry"><a class="anchor" href="#kubernetesops-rbac-requirements_registry"></a>RBAC requirements</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry requires read access to ConfigMaps in the configured namespace. Create the following RBAC resources:</p>
+<p>Apicurio Registry requires read access to ConfigMaps in the configured namespace.</p>
+</div>
+<div class="paragraph">
+<p>Create the following RBAC resources:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1294,11 +1309,15 @@ roleRef:
 <div class="paragraph _abstract">
 <p>KubernetesOps storage has specific limitations and considerations you should understand before deployment.</p>
 </div>
-<h3 id="_read_only_storage" class="discrete">Read-only storage</h3>
+<div class="paragraph">
+<p><strong>Read-only storage</strong></p>
+</div>
 <div class="paragraph">
 <p>KubernetesOps storage is <strong>read-only</strong>. You cannot create, update, or delete artifacts through the Apicurio Registry REST API or web console. All changes must be made by updating ConfigMaps.</p>
 </div>
-<h3 id="_configmap_size_limits" class="discrete">ConfigMap size limits</h3>
+<div class="paragraph">
+<p><strong>ConfigMap size limits</strong></p>
+</div>
 <div class="paragraph">
 <p>Kubernetes ConfigMaps have a maximum size of <strong>1 MiB</strong> per ConfigMap. This is a hard limit enforced by etcd, the backing store for all Kubernetes objects, and cannot be changed at the ConfigMap level.</p>
 </div>
@@ -1346,7 +1365,9 @@ ConfigMaps are designed for configuration data, not large data payloads. Artifac
 </li>
 </ul>
 </div>
-<h3 id="_update_latency" class="discrete">Update latency</h3>
+<div class="paragraph">
+<p><strong>Update latency</strong></p>
+</div>
 <div class="paragraph">
 <p>With Watch API enabled (the default), ConfigMap changes are detected in near real-time. When Watch is disabled, changes are detected via polling with a default interval of 10 seconds.</p>
 </div>
@@ -1366,7 +1387,6 @@ ConfigMaps are designed for configuration data, not large data payloads. Artifac
 </li>
 </ul>
 </div>
-<h3 id="_scalability_estimates" class="discrete">Scalability estimates</h3>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 10. Expected performance by deployment size</caption>
 <colgroup>
@@ -1426,7 +1446,9 @@ ConfigMaps are designed for configuration data, not large data payloads. Artifac
 </li>
 </ul>
 </div>
-<h3 id="_memory_usage" class="discrete">Memory usage</h3>
+<div class="paragraph">
+<p><strong>Memory usage</strong></p>
+</div>
 <div class="paragraph">
 <p>The blue-green architecture requires maintaining two copies of the database in memory:</p>
 </div>
@@ -1443,7 +1465,9 @@ ConfigMaps are designed for configuration data, not large data payloads. Artifac
 <div class="paragraph">
 <p>This doubles the memory footprint compared to single-database storage. Plan your resource limits accordingly.</p>
 </div>
-<h3 id="_full_reload_behavior" class="discrete">Full reload behavior</h3>
+<div class="paragraph">
+<p><strong>Full reload behavior</strong></p>
+</div>
 <div class="paragraph">
 <p>On each detected change, the entire dataset is reloaded from ConfigMaps. This approach:</p>
 </div>
@@ -1460,7 +1484,9 @@ ConfigMaps are designed for configuration data, not large data payloads. Artifac
 </li>
 </ul>
 </div>
-<h3 id="_watch_api_and_polling" class="discrete">Watch API and polling</h3>
+<div class="paragraph">
+<p><strong>Watch API and polling</strong></p>
+</div>
 <div class="paragraph">
 <p>By default, KubernetesOps storage uses the Kubernetes Watch API for real-time ConfigMap change detection, with scheduled polling as a fallback. When a ConfigMap is created, modified, or deleted, the registry is notified immediately and reloads the data.</p>
 </div>
