@@ -386,10 +386,14 @@
 <div class="paragraph _abstract">
 <p>One of the supported Apicurio Registry storage options is Apache Kafka, which uses a Kafka topic named <code>kafkasql-journal</code> to store data.
 If you encounter a problem when using this storage option and want to report it to Apicurio Registry developers, you might need to provide an export of the data present in the <code>kafkasql-journal</code> topic for analysis.
-This document contains information on how to create such a topic export using the <code>kcat</code> tool (formerly known as <code>kafkacat</code>).</p>
+You can create such a topic export by using the <code>kcat</code> tool (formerly known as <code>kafkacat</code>).</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
 <p>Kafka has been installed and is running in your environment.</p>
@@ -405,8 +409,33 @@ This document contains information on how to create such a topic export using th
 </div>
 </div>
 <div class="sect1">
-<h2 id="_setting_up_kcat_on_a_kubernetes_work_pod"><a class="anchor" href="#_setting_up_kcat_on_a_kubernetes_work_pod"></a>Setting up kcat on a Kubernetes work pod</h2>
+<h2 id="setting-up-kcat-work-pod_registry"><a class="anchor" href="#setting-up-kcat-work-pod_registry"></a>Setting up kcat on a Kubernetes work pod</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can build the <code>kcat</code> executable from source on an ephemeral work pod so that the topic export includes JSON output with base64 encoded keys and values.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you do not require JSON support, you can use the following commands to install <code>kcat</code> using <code>dnf</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install -y "dnf-command(copr)"
+dnf copr enable bvn13/kcat
+dnf update
+dnf install -y kafkacat</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
@@ -444,8 +473,8 @@ This document contains information on how to create such a topic export using th
 <p>You can install <code>kcat</code> using the <code>dnf</code> package manager. However, that version does not have JSON support enabled.
 Because you want to export the topic data in a JSON format with additional metadata, you must build the <code>kcat</code> executable from source.</p>
 <div class="paragraph">
-<p>In addition, while the <code>kcat</code> project is widely used for this use case, <a href="https://github.com/edenhill/kcat/issues/424">this project seems to be hibernated</a>, and you require an additional feature for the <code>kafkasql-journal</code> topic export to work properly.
-This feature is <a href="https://github.com/edenhill/kcat/pull/206">support for base64 encoded keys and values</a>, and is important because the topic includes raw binary data, which might not be correctly encoded in the JSON output.Therefore, you must build <code>kcat</code> from source that includes base64 support, which has not been merged into the main project yet.</p>
+<p>In addition, while the <code>kcat</code> project is widely used for this use case, the project appears to be hibernated, and you require an additional feature for the <code>kafkasql-journal</code> topic export to work properly.
+This feature is support for base64 encoded keys and values, and is important because the topic includes raw binary data, which might not be correctly encoded in the JSON output. Therefore, you must build <code>kcat</code> from source that includes base64 support, which has not been merged into the main project yet. For the relevant project links, see the additional resources.</p>
 </div>
 <div class="paragraph">
 <p>Install <code>git</code>, and check out the <code>kcat</code> repository:</p>
@@ -488,35 +517,24 @@ make</code></pre>
 </li>
 </ol>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>If you do not require JSON support, you can use the following commands to install <code>kcat</code> using <code>dnf</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install -y "dnf-command(copr)"
-dnf copr enable bvn13/kcat
-dnf update
-dnf install -y kafkacat</code></pre>
-</div>
-</div>
-</td>
-</tr>
-</table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://github.com/edenhill/kcat/issues/424">kcat project hibernation discussion</a></p>
+</li>
+<li>
+<p><a href="https://github.com/edenhill/kcat/pull/206">kcat support for base64 encoded keys and values</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_examples_of_using_kcat"><a class="anchor" href="#_examples_of_using_kcat"></a>Examples of using kcat</h2>
+<h2 id="kcat-usage-examples_registry"><a class="anchor" href="#kcat-usage-examples_registry"></a>Examples of using kcat</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>The following are several examples of how to use <code>kcat</code>, including creation of a topic export:</p>
+<div class="paragraph _abstract">
+<p>The following examples show how to use <code>kcat</code> to list topics and create topic exports.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -556,24 +574,37 @@ done</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_copy_topic_export_files_from_the_work_pod"><a class="anchor" href="#_copy_topic_export_files_from_the_work_pod"></a>Copy topic export files from the work pod</h2>
+<h2 id="copying-topic-export-files_registry"><a class="anchor" href="#copying-topic-export-files_registry"></a>Copying topic export files from the work pod</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>After the topic export files have been created, you can run the following command on your local machine to copy the files from the work pod:</p>
+<div class="paragraph _abstract">
+<p>After the topic export files have been created, you can copy the files from the work pod to your local machine.</p>
 </div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Run the following command on your local machine:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl cp work-pod:/kcat/dump .</code></pre>
 </div>
 </div>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_importing_the_kafkasql_journal_topic_data"><a class="anchor" href="#_importing_the_kafkasql_journal_topic_data"></a>Importing the kafkasql-journal topic data</h2>
+<h2 id="importing-kafkasql-journal-topic-data_registry"><a class="anchor" href="#importing-kafkasql-journal-topic-data_registry"></a>Importing the kafkasql-journal topic data</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>To import <code>kafkasql-journal</code> topic data that has been created with <code>kcat</code>, use an <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/tools/kafkasql-topic-import">application from the Apicurio Registry examples repository</a> as follows:</p>
+<div class="paragraph _abstract">
+<p>You can import <code>kafkasql-journal</code> topic data that has been created with <code>kcat</code> by using an application from the Apicurio Registry examples repository.</p>
 </div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Clone the examples repository, build the import tool, and run it against your topic dump file:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone https://github.com/Apicurio/apicurio-registry.git
@@ -583,14 +614,20 @@ export VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout
 java -jar target/apicurio-registry-tools-kafkasql-topic-import-$VERSION-jar-with-dependencies.jar -b &lt;optional-kafka-bootstrap-server-url&gt; -f &lt;path-to-topic-dump-file&gt;</code></pre>
 </div>
 </div>
+</li>
+</ul>
+</div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p>For more details about <code>kcat</code>, see the <a href="https://github.com/edenhill/kcat">kcat repository</a>.</p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/tools/kafkasql-topic-import">kafkasql-topic-import tool in the Apicurio Registry examples repository</a></p>
 </li>
 <li>
-<p>You can provide additional parameters to configure <code>kcat</code> for accessing Kafka, in the <code>-X property=value</code> format. For the list of parameters, see the <a href="https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md">librdkafka configuration reference</a>.</p>
+<p><a href="https://github.com/edenhill/kcat">kcat repository</a></p>
+</li>
+<li>
+<p><a href="https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md">librdkafka configuration reference</a></p>
 </li>
 </ul>
 </div>
