@@ -416,15 +416,17 @@
 <div class="paragraph">
 <p>Usage tracking is <strong>server-side</strong> and <strong>zero-configuration for the client</strong>. The registry records usage events automatically when it serves schema content. Clients opt in by setting an HTTP header that identifies the application:</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>X-Registry-Client-Id</code> — identifies the client application (e.g., <code>payments-svc</code>). Must contain only letters, digits, dots, hyphens, and underscores. Maximum 256 characters.</p>
-</li>
-<li>
-<p><code>X-Registry-Operation</code> — optional, the operation type: <code>SERIALIZE</code> or <code>DESERIALIZE</code>.</p>
-</li>
-</ul>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>X-Registry-Client-Id</code></dt>
+<dd>
+<p>Identifies the client application (for example, <code>payments-svc</code>). Must contain only letters, digits, dots, hyphens, and underscores. Maximum 256 characters.</p>
+</dd>
+<dt class="hdlist1"><code>X-Registry-Operation</code></dt>
+<dd>
+<p>Optional. The operation type: <code>SERIALIZE</code> or <code>DESERIALIZE</code>.</p>
+</dd>
+</dl>
 </div>
 <div class="paragraph">
 <p>If no <code>X-Registry-Client-Id</code> header is present, the request is not tracked.</p>
@@ -511,7 +513,7 @@ Usage telemetry is an <strong>experimental</strong> feature. It requires <code>a
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.aggregation.every</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">duration</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1h</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">How often the usage metrics are refreshed and old events are cleaned up. Uses Quarkus scheduler expression syntax (e.g., <code>1h</code>, <code>30m</code>, <code>10s</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How often the usage metrics are refreshed and old events are cleaned up. Uses Quarkus scheduler expression syntax (for example, <code>1h</code>, <code>30m</code>, or <code>10s</code>).</p></td>
 </tr>
 </tbody>
 </table>
@@ -584,7 +586,7 @@ apicurio.registry.usage-telemetry.client-id=payments-svc</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>That&#8217;s it — no additional endpoints to call, no buffers to configure.</p>
+<p>No additional endpoints to call and no buffers to configure are required.</p>
 </div>
 <div class="paragraph">
 <p>All usage endpoints are under <code>/admin/usage/</code> and require <code>apicurio.usage.telemetry.enabled=true</code>. Endpoints return HTTP 409 (Conflict) when telemetry is not enabled.</p>
@@ -722,21 +724,25 @@ apicurio.registry.usage-telemetry.client-id=payments-svc</code></pre>
      ◀───────────────────────────────────┘</code></pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>ENABLED</strong> — Version is active and available for use.</p>
-</li>
-<li>
-<p><strong>DEPRECATED</strong> — Version still works but consumers should migrate. A warning is logged on access.</p>
-</li>
-<li>
-<p><strong>SUNSET</strong> — Migration deadline has passed. The version will be removed soon. Requires transitioning through DEPRECATED first.</p>
-</li>
-<li>
-<p><strong>DISABLED</strong> — Version is blocked from use.</p>
-</li>
-</ul>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>ENABLED</code></dt>
+<dd>
+<p>Version is active and available for use.</p>
+</dd>
+<dt class="hdlist1"><code>DEPRECATED</code></dt>
+<dd>
+<p>Version still works but consumers should migrate. A warning is logged on access.</p>
+</dd>
+<dt class="hdlist1"><code>SUNSET</code></dt>
+<dd>
+<p>Migration deadline has passed. The version will be removed soon. Requires transitioning through <code>DEPRECATED</code> first.</p>
+</dd>
+<dt class="hdlist1"><code>DISABLED</code></dt>
+<dd>
+<p>Version is blocked from use.</p>
+</dd>
+</dl>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -779,16 +785,19 @@ apicurio.registry.usage-telemetry.client-id=payments-svc</code></pre>
 <div class="paragraph _abstract">
 <p>When usage telemetry is enabled, the registry UI displays the following elements.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Dashboard widget</strong> — Shows Active/Stale/Dead counts with colored labels (green/orange/red).</p>
-</li>
-<li>
-<p><strong>Version badges</strong> — Each version in the artifact versions table shows its usage classification badge.</p>
-</li>
-<li>
-<p><strong>Usage tab</strong> — The artifact detail page has a "Usage" tab with:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Dashboard widget</dt>
+<dd>
+<p>Shows Active/Stale/Dead counts with colored labels (green/orange/red).</p>
+</dd>
+<dt class="hdlist1">Version badges</dt>
+<dd>
+<p>Each version in the artifact versions table shows its usage classification badge.</p>
+</dd>
+<dt class="hdlist1">Usage tab</dt>
+<dd>
+<p>The artifact detail page has a "Usage" tab with the following panels:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -802,11 +811,12 @@ apicurio.registry.usage-telemetry.client-id=payments-svc</code></pre>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p><strong>SUNSET badge</strong> — Versions in the SUNSET state display a purple badge.</p>
-</li>
-</ul>
+</dd>
+<dt class="hdlist1">SUNSET badge</dt>
+<dd>
+<p>Versions in the <code>SUNSET</code> state display a purple badge.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -889,27 +899,33 @@ quarkus.otel.metrics.enabled=true</code></pre>
 <div class="paragraph _abstract">
 <p>Usage telemetry is designed to minimize data collection and give operators and clients control over what is recorded.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Opt-in only</strong> — Disabled by default on both server and client.</p>
-</li>
-<li>
-<p><strong>No message content</strong> — Only schema coordinates and client identifier are recorded.</p>
-</li>
-<li>
-<p><strong>No user identity</strong> — The <code>clientId</code> is a configured application name, not a user or personal identifier.</p>
-</li>
-<li>
-<p><strong>Client-controlled</strong> — Each client application decides whether to set the <code>X-Registry-Client-Id</code> header.</p>
-</li>
-<li>
-<p><strong>Zero overhead when disabled</strong> — No headers sent, no events recorded, no database writes.</p>
-</li>
-<li>
-<p><strong>Automatic cleanup</strong> — Events older than the retention period are deleted automatically.</p>
-</li>
-</ul>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Opt-in only</dt>
+<dd>
+<p>Disabled by default on both server and client.</p>
+</dd>
+<dt class="hdlist1">No message content</dt>
+<dd>
+<p>Only schema coordinates and the client identifier are recorded.</p>
+</dd>
+<dt class="hdlist1">No user identity</dt>
+<dd>
+<p>The <code>clientId</code> is a configured application name, not a user or personal identifier.</p>
+</dd>
+<dt class="hdlist1">Client-controlled</dt>
+<dd>
+<p>Each client application decides whether to set the <code>X-Registry-Client-Id</code> header.</p>
+</dd>
+<dt class="hdlist1">Zero overhead when disabled</dt>
+<dd>
+<p>No headers are sent, no events are recorded, and no database writes occur.</p>
+</dd>
+<dt class="hdlist1">Automatic cleanup</dt>
+<dd>
+<p>Events older than the retention period are deleted automatically.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
