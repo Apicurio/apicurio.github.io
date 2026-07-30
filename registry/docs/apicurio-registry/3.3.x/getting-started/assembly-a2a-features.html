@@ -386,55 +386,6 @@
 <div class="paragraph _abstract">
 <p>Apicurio Registry implements the A2A (Agent-to-Agent) protocol for AI agent discovery, orchestration, and lifecycle management.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#a2a-overview_registry">A2A protocol overview</a></p>
-</li>
-<li>
-<p><a href="#a2a-configuration_registry">A2A configuration properties</a></p>
-</li>
-<li>
-<p><a href="#a2a-well-known-endpoints_registry">A2A well-known endpoints</a></p>
-</li>
-<li>
-<p><a href="#a2a-discovery-endpoints_registry">Agent discovery and entitlement endpoints</a></p>
-</li>
-<li>
-<p><a href="#a2a-visibility-model_registry">Agent visibility model</a></p>
-</li>
-<li>
-<p><a href="#a2a-agent-card-artifact-type_registry">Agent Card artifact type</a></p>
-</li>
-<li>
-<p><a href="#a2a-validation-rules_registry">Agent Card validation rules</a></p>
-</li>
-<li>
-<p><a href="#a2a-compatibility-checking_registry">Agent Card compatibility rules</a></p>
-</li>
-<li>
-<p><a href="#a2a-automatic-label-extraction_registry">Automatic label extraction for Agent Cards</a></p>
-</li>
-<li>
-<p><a href="#a2a-registry-built-in-skills_registry">Apicurio Registry built-in A2A skills</a></p>
-</li>
-<li>
-<p><a href="#a2a-llm-lifecycle-management_registry">LLM lifecycle management</a></p>
-</li>
-<li>
-<p><a href="#a2a-multi-agent-workflow-example_registry">Multi-agent workflow example</a></p>
-</li>
-<li>
-<p><a href="#a2a-java-sdk-usage_registry">Java SDK usage for A2A</a></p>
-</li>
-<li>
-<p><a href="#a2a-rest-api-reference_registry">A2A REST API endpoints</a></p>
-</li>
-<li>
-<p><a href="#a2a-troubleshooting_registry">A2A troubleshooting</a></p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -443,13 +394,17 @@
 <div class="paragraph _abstract">
 <p>With the A2A protocol, AI agents can discover and communicate with each other through standardized endpoints. Apicurio Registry serves as both an A2A agent and an agent registry.</p>
 </div>
-<div class="paragraph">
-<div class="title">Apicurio Registry as an A2A agent</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Apicurio Registry as an A2A agent</dt>
+<dd>
 <p>Apicurio Registry provides its own capabilities, including schema validation, search, and artifact management.</p>
-</div>
-<div class="paragraph">
-<div class="title">Apicurio Registry as an agent registry</div>
+</dd>
+<dt class="hdlist1">Apicurio Registry as an agent registry</dt>
+<dd>
 <p>Apicurio Registry stores and discovers other agents' Agent Cards.</p>
+</dd>
+</dl>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Apicurio Registry dual-role A2A architecture</caption>
@@ -599,10 +554,11 @@
 <div class="paragraph _abstract">
 <p>Apicurio Registry provides the following well-known endpoints for A2A agent discovery and retrieval.</p>
 </div>
-<div class="paragraph">
-<div class="title">GET /.well-known/agent.json</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">GET /.well-known/agent.json</dt>
+<dd>
 <p>Retrieves the Agent Card for the Apicurio Registry instance.</p>
-</div>
 <div class="paragraph">
 <p>Response: Agent Card JSON document</p>
 </div>
@@ -638,10 +594,10 @@
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">GET /.well-known/agents</div>
+</dd>
+<dt class="hdlist1">GET /.well-known/agents</dt>
+<dd>
 <p>Searches for registered Agent Cards with filtering support.</p>
-</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Query parameters for /.well-known/agents</caption>
 <colgroup>
@@ -720,31 +676,34 @@
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">GET /.well-known/agents/{groupId}/{artifactId}</div>
+</dd>
+<dt class="hdlist1">GET /.well-known/agents/{groupId}/{artifactId}</dt>
+<dd>
 <p>Retrieves a specific registered Agent Card.</p>
+<div class="paragraph">
+<p><strong>Path parameters</strong></p>
 </div>
 <div class="ulist">
-<div class="title">Path parameters</div>
 <ul>
 <li>
 <p><code>groupId</code> - The group containing the agent card</p>
 </li>
 <li>
 <p><code>artifactId</code> - The artifact ID of the agent card</p>
-</li>
-</ul>
+<div class="paragraph">
+<p><strong>Query parameters</strong></p>
 </div>
-<div class="ulist">
-<div class="title">Query parameters</div>
-<ul>
+</li>
 <li>
 <p><code>version</code> (optional) - Specific version (defaults to latest)</p>
+<div class="paragraph">
+<p>Response: Agent Card JSON document</p>
+</div>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>Response: Agent Card JSON document</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -754,34 +713,37 @@
 <div class="paragraph _abstract">
 <p>Apicurio Registry provides a three-tier agent discovery model for enterprise agent catalogs, based on the <a href="https://github.com/a2aproject/A2A/discussions/741">A2A community proposal</a>.</p>
 </div>
-<div class="paragraph">
-<div class="title">GET /.well-known/agents/public</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">GET /.well-known/agents/public</dt>
+<dd>
 <p>Returns agents explicitly marked as public. No authentication required.</p>
-</div>
 <div class="paragraph">
 <p>Only Agent Card artifacts labeled with <code>apicurio.agent.visibility=public</code> are returned.</p>
 </div>
+<div class="paragraph">
+<p><strong>Query parameters</strong></p>
+</div>
 <div class="ulist">
-<div class="title">Query parameters</div>
 <ul>
 <li>
 <p><code>offset</code> (integer) - Pagination offset (default: 0)</p>
 </li>
 <li>
 <p><code>limit</code> (integer) - Pagination limit (default: 20)</p>
-</li>
-</ul>
-</div>
 <div class="listingblock">
 <div class="title">Example request</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/.well-known/agents/public"</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">GET /.well-known/agents/entitled</div>
-<p>Returns agents the authenticated caller is entitled to access, filtered by visibility:</p>
+</li>
+</ul>
 </div>
+</dd>
+<dt class="hdlist1">GET /.well-known/agents/entitled</dt>
+<dd>
+<p>Returns agents the authenticated caller is entitled to access, filtered by visibility:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -792,20 +754,15 @@
 </li>
 <li>
 <p><code>private</code> agents are included only for the artifact owner or admins</p>
-</li>
-</ul>
+<div class="paragraph">
+<p><strong>Query parameters</strong></p>
 </div>
-<div class="ulist">
-<div class="title">Query parameters</div>
-<ul>
+</li>
 <li>
 <p><code>offset</code> (integer) - Pagination offset (default: 0)</p>
 </li>
 <li>
 <p><code>limit</code> (integer) - Pagination limit (default: 20)</p>
-</li>
-</ul>
-</div>
 <div class="listingblock">
 <div class="title">Example request</div>
 <div class="content">
@@ -813,10 +770,13 @@
   "http://localhost:8080/.well-known/agents/entitled"</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">POST /.well-known/agents/search</div>
-<p>Advanced agent search with combined text query and structured filters. Respects the caller&#8217;s entitlements when entitlement filtering is enabled.</p>
+</li>
+</ul>
 </div>
+</dd>
+<dt class="hdlist1">POST /.well-known/agents/search</dt>
+<dd>
+<p>Advanced agent search with combined text query and structured filters. Respects the caller&#8217;s entitlements when entitlement filtering is enabled.</p>
 <div class="listingblock">
 <div class="title">Example request body</div>
 <div class="content">
@@ -849,6 +809,9 @@ The <code>query</code> field matches artifact metadata name and artifact ID, not
 </td>
 </tr>
 </table>
+</div>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -894,8 +857,7 @@ The <code>query</code> field matches artifact metadata name and artifact ID, not
 </div>
 </div>
 <div class="paragraph">
-<div class="title">How entitlements work</div>
-<p>Apicurio Registry maps the A2A community entitlement concept to its existing RBAC model:</p>
+<p><strong>How entitlements work:</strong> Apicurio Registry maps the A2A community entitlement concept to its existing RBAC model:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -984,10 +946,10 @@ When authentication is not configured, visibility filtering is skipped and all a
 </div>
 </div>
 <div class="paragraph">
-<div class="title">Agent Card JSON schema</div>
 <p>Agent Cards must conform to the A2A specification:</p>
 </div>
 <div class="listingblock">
+<div class="title">Agent Card JSON schema</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -1113,8 +1075,10 @@ When authentication is not configured, visibility filtering is skipped and all a
 <div class="paragraph _abstract">
 <p>When you version Agent Cards, Apicurio Registry enforces compatibility rules to ensure that changes do not break existing clients.</p>
 </div>
+<div class="paragraph">
+<p><strong>Compatible changes (allowed):</strong></p>
+</div>
 <div class="ulist">
-<div class="title">Compatible changes (allowed)</div>
 <ul>
 <li>
 <p>Adding new skills</p>
@@ -1130,8 +1094,10 @@ When authentication is not configured, visibility filtering is skipped and all a
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p><strong>Incompatible changes (can break clients):</strong></p>
+</div>
 <div class="ulist">
-<div class="title">Incompatible changes (can break clients)</div>
 <ul>
 <li>
 <p>Removing skills</p>
@@ -1254,10 +1220,10 @@ When authentication is not configured, visibility filtering is skipped and all a
 <p>A2A integration includes full LLM lifecycle management with additional artifact types, including MODEL_SCHEMA and PROMPT_TEMPLATE.</p>
 </div>
 <div class="paragraph">
-<div class="title">MODEL_SCHEMA artifact type</div>
 <p>The MODEL_SCHEMA artifact type defines input and output schemas for LLM agents:</p>
 </div>
 <div class="listingblock">
+<div class="title">MODEL_SCHEMA artifact type</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "$schema": "https://apicurio.io/schemas/model-schema/v1",
@@ -1276,10 +1242,10 @@ When authentication is not configured, visibility filtering is skipped and all a
 </div>
 </div>
 <div class="paragraph">
-<div class="title">PROMPT_TEMPLATE artifact type</div>
 <p>The PROMPT_TEMPLATE artifact type stores versioned prompt templates with variable support:</p>
 </div>
 <div class="listingblock">
+<div class="title">PROMPT_TEMPLATE artifact type</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">templateId: sentiment-analysis
 name: Sentiment Analysis Prompt
@@ -1303,10 +1269,10 @@ metadata:
 </div>
 </div>
 <div class="paragraph">
-<div class="title">Artifact links</div>
 <p>Agent Cards can reference their schemas and prompts by using URN references:</p>
 </div>
 <div class="listingblock">
+<div class="title">Artifact links</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "name": "Sentiment Agent",
@@ -1327,7 +1293,7 @@ metadata:
 <h2 id="a2a-multi-agent-workflow-example_registry"><a class="anchor" href="#a2a-multi-agent-workflow-example_registry"></a>Multi-agent workflow example</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can chain context across multiple agents in a pipeline. The <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/a2a-real-world-integration">a2a-real-world-integration example</a> in the Apicurio Registry repository demonstrates this pattern.</p>
+<p>You can chain context across multiple agents in a pipeline. The <code>a2a-real-world-integration</code> example in the Apicurio Registry repository demonstrates this pattern.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 5. Context chaining pipeline</caption>
@@ -1367,10 +1333,10 @@ metadata:
 </tbody>
 </table>
 <div class="paragraph">
-<div class="title">Example commands</div>
 <p>To run the example application locally, clone the Apicurio Registry repository and run the following commands:</p>
 </div>
 <div class="listingblock">
+<div class="title">Example commands</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd examples/a2a-real-world-integration
 docker-compose up -d
@@ -1378,7 +1344,15 @@ mvn clean compile exec:java</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The Web UI is available at <a href="http://localhost:9000" class="bare">http://localhost:9000</a>.</p>
+<p>The Web UI is available at <code>localhost:9000</code>.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/a2a-real-world-integration">a2a-real-world-integration example</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1491,19 +1465,20 @@ client.groups().byGroupId("ai-agents").artifacts()
 <div class="paragraph _abstract">
 <p>Use the following information to troubleshoot common issues with A2A features in Apicurio Registry.</p>
 </div>
-<div class="paragraph">
-<div class="title">A2A endpoints return 404</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">A2A endpoints return 404</dt>
+<dd>
 <p>Ensure A2A is enabled in your configuration:</p>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.a2a.enabled=true</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">Agent Card validation fails</div>
+</dd>
+<dt class="hdlist1">Agent Card validation fails</dt>
+<dd>
 <p>Verify the following conditions:</p>
-</div>
 <div class="ulist">
 <ul>
 <li>
@@ -1520,10 +1495,10 @@ client.groups().byGroupId("ai-agents").artifacts()
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<div class="title">Search returns no results</div>
+</dd>
+<dt class="hdlist1">Search returns no results</dt>
+<dd>
 <p>Verify the following conditions:</p>
-</div>
 <div class="ulist">
 <ul>
 <li>
@@ -1536,6 +1511,9 @@ client.groups().byGroupId("ai-agents").artifacts()
 <p>Search filters match stored values exactly.</p>
 </li>
 </ul>
+</div>
+</dd>
+</dl>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>

@@ -396,69 +396,16 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-For general versioning policy, upgrade guidance within the 3.x series, and rollback procedures, see <a href="#versioning-support-policy_registry">[versioning-support-policy_registry]</a>.
+For general versioning policy, upgrade guidance within the 3.x series, and rollback procedures, see the versioning and support policy documentation in Additional resources.
 </td>
 </tr>
 </table>
 </div>
-<div class="ulist">
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="#registry-migration-overview_registry">Changes in Apicurio Registry 3.x</a></p>
-</li>
-<li>
-<p><a href="#migration-planning_registry">Migration planning</a></p>
-</li>
-<li>
-<p><a href="#migrating-minimal-downtime_registry">Migrating with minimal downtime</a></p>
-</li>
-<li>
-<p><a href="#migrating-maintenance-window_registry">Migrating within a maintenance window</a></p>
-</li>
-<li>
-<p><a href="#migrating-registry-data_registry">Migrating Apicurio Registry data</a></p>
-</li>
-<li>
-<p><a href="#migrating-registry-applications_registry">Client application backward compatibility</a></p>
-</li>
-<li>
-<p><a href="#migrating-kafka-serdes_registry">Migrating Kafka SerDes applications</a></p>
-</li>
-<li>
-<p><a href="#migrating-rest-api-clients_registry">Migrating REST API and SDK client applications</a></p>
-</li>
-<li>
-<p><a href="#client-migration-reference_registry">Client migration configuration reference</a></p>
-</li>
-<li>
-<p><a href="#migrating-registry-configuration_registry">Configuration property changes</a></p>
-</li>
-<li>
-<p><a href="#kafkasql-architecture_registry">KafkaSQL storage changes in Apicurio Registry 3.x</a></p>
-</li>
-<li>
-<p><a href="#configuring-kafkasql-topic_registry">Configuring the KafkaSQL journal topic</a></p>
-</li>
-<li>
-<p><a href="#verifying-migration-configuration_registry">Verifying migration configuration</a></p>
-</li>
-<li>
-<p><a href="#resolving-configuration-issues_registry">Resolving configuration issues</a></p>
-</li>
-<li>
-<p><a href="#user-interface_registry">User interface architecture changes</a></p>
-</li>
-<li>
-<p><a href="#deploying-registry-ui_registry">Deploying the Apicurio Registry user interface</a></p>
-</li>
-<li>
-<p><a href="#ui-configuration-properties_registry">User interface configuration properties</a></p>
-</li>
-<li>
-<p><a href="#migration-scripts_registry">Migration scripts reference</a></p>
-</li>
-<li>
-<p><a href="#troubleshooting-migration_registry">Troubleshooting migration issues</a></p>
+<p><a href="#versioning-support-policy_registry">[versioning-support-policy_registry]</a></p>
 </li>
 </ul>
 </div>
@@ -605,25 +552,45 @@ For general versioning policy, upgrade guidance within the 3.x series, and rollb
 <div class="ulist">
 <ul>
 <li>
-<p>Test the data migration in a staging environment before you migrate production. A dry run helps you estimate timing for export and import phases. See <a href="#migrating-registry-data_registry">Migrating Apicurio Registry data</a>.</p>
+<p>Test the data migration in a staging environment before you migrate production. A dry run helps you estimate timing for export and import phases.</p>
 </li>
 <li>
-<p>Verify that client applications connect to Apicurio Registry 3.x after the data migration completes. For minimal downtime migrations, verify that the load balancer routes to 3.x and update any clients that bypass the load balancer. For maintenance window migrations, update client configurations directly. See <a href="#migrating-registry-applications_registry">Migrating Apicurio Registry client applications</a>.</p>
+<p>Verify that client applications connect to Apicurio Registry 3.x after the data migration completes. For minimal downtime migrations, verify that the load balancer routes to 3.x and update any clients that bypass the load balancer. For maintenance window migrations, update client configurations directly.</p>
 </li>
 <li>
-<p>Update configuration properties for the v3 deployment. Combine this step with client updates where possible. See <a href="#migrating-registry-configuration_registry">Updating Apicurio Registry configuration</a>.</p>
+<p>Update configuration properties for the v3 deployment. Combine this step with client updates where possible.</p>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Minimal downtime migration</dt>
 <dd>
-<p>The objective is to keep the service reachable. While data moves between versions, a reverse proxy (such as nginx) manages the cutover. See <a href="#migrating-minimal-downtime_registry">Migrating with minimal downtime</a>.</p>
+<p>The objective is to keep the service reachable. While data moves between versions, a reverse proxy (such as nginx) manages the cutover.</p>
 </dd>
 <dt class="hdlist1">Maintenance window migration</dt>
 <dd>
-<p>This approach provides the cleanest data integrity. By stopping all client applications first, you ensure that no data is in flight during the move. See <a href="#migrating-maintenance-window_registry">Migrating in a maintenance window</a>.</p>
+<p>This approach provides the cleanest data integrity. By stopping all client applications first, you ensure that no data is in flight during the move.</p>
 </dd>
 </dl>
 </div>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#migrating-registry-data_registry">Migrating Apicurio Registry data</a></p>
+</li>
+<li>
+<p><a href="#migrating-registry-applications_registry">Client application backward compatibility</a></p>
+</li>
+<li>
+<p><a href="#migrating-registry-configuration_registry">Configuration property changes</a></p>
+</li>
+<li>
+<p><a href="#migrating-minimal-downtime_registry">Migrating with minimal downtime</a></p>
+</li>
+<li>
+<p><a href="#migrating-maintenance-window_registry">Migrating within a maintenance window</a></p>
 </li>
 </ul>
 </div>
@@ -659,16 +626,17 @@ For general versioning policy, upgrade guidance within the 3.x series, and rollb
 <div class="paragraph">
 <p>During a minimal downtime migration, you temporarily run both Apicurio Registry 2.6.3 and Apicurio Registry 3.x simultaneously. Plan for the following resources:</p>
 </div>
-<div class="paragraph">
-<p>Infrastructure:</p>
-</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Infrastructure</dt>
+<dd>
 <div class="ulist">
 <ul>
 <li>
-<p>Separate database instances for v2 and v3 (or different schemas in the same database)</p>
+<p>Separate database instances for v2 and v3, or different schemas in the same database</p>
 </li>
 <li>
-<p>For KafkaSQL deployments: the same Kafka cluster with different topic names</p>
+<p>For KafkaSQL deployments, the same Kafka cluster with different topic names</p>
 </li>
 <li>
 <p>Load balancer capacity for routing traffic</p>
@@ -678,9 +646,9 @@ For general versioning policy, upgrade guidance within the 3.x series, and rollb
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>Storage requirements:</p>
-</div>
+</dd>
+<dt class="hdlist1">Storage</dt>
+<dd>
 <div class="ulist">
 <ul>
 <li>
@@ -694,9 +662,9 @@ For general versioning policy, upgrade guidance within the 3.x series, and rollb
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>Timeline:</p>
-</div>
+</dd>
+<dt class="hdlist1">Timeline</dt>
+<dd>
 <div class="ulist">
 <ul>
 <li>
@@ -710,45 +678,32 @@ For general versioning policy, upgrade guidance within the 3.x series, and rollb
 </li>
 </ul>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Prerequisites</caption>
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Requirement</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Staging environment</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A staging environment to test the complete migration workflow before production.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Load balancer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">nginx, HAProxy, or a similar tool for traffic management.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Administrative access</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Admin role credentials for export and import API endpoints and for testing admin functionality.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database or storage</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A separate database instance or schema (or a separate Kafka topic) for Apicurio Registry 3.x.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Backup</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A current backup of 2.6.3 data.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Rollback plan</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A documented procedure to revert to v2 if needed.</p></td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have a staging environment to test the complete migration workflow before production.</p>
+</li>
+<li>
+<p>You have a load balancer, such as nginx or HAProxy, for traffic management.</p>
+</li>
+<li>
+<p>You have admin role credentials for the export and import API endpoints and for testing admin functionality.</p>
+</li>
+<li>
+<p>You have a separate database instance or schema, or a separate Kafka topic, for Apicurio Registry 3.x.</p>
+</li>
+<li>
+<p>You have a current backup of 2.6.3 data.</p>
+</li>
+<li>
+<p>You have a documented rollback procedure to revert to v2 if needed.</p>
+</li>
+</ul>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -761,23 +716,24 @@ Test as much of the migration as possible in a staging environment before you mi
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<div class="title">Procedure</div>
-<p><strong>Phase 1: Preparation</strong></p>
-</div>
 <div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
+<li>
+<p><strong>Phase 1: Preparation.</strong> Prepare the migration environment:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
 <p>Deploy the load balancer.</p>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>If you do not already use a load balancer, deploy nginx or HAProxy in front of your existing 2.6.3 deployment:</p>
+<p>If you do not already use a load balancer, complete the following steps:</p>
 </div>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
 <li>
-<p>Deploy the load balancer.</p>
+<p>Deploy nginx or HAProxy in front of your existing 2.6.3 deployment.</p>
 </li>
 <li>
 <p>Configure routing to 2.6.3.</p>
@@ -791,7 +747,7 @@ Test as much of the migration as possible in a staging environment before you mi
 </ol>
 </div>
 <div class="paragraph">
-<p>See <a href="#migrating-registry-configuration_registry">Updating registry configuration</a> for load balancer configuration examples.</p>
+<p>For load balancer configuration examples, see the configuration property changes reference.</p>
 </div>
 </div>
 </div>
@@ -820,7 +776,7 @@ Test as much of the migration as possible in a staging environment before you mi
 </ul>
 </div>
 <div class="paragraph">
-<p>See <a href="#migrating-registry-configuration_registry">Updating registry configuration</a> for detailed configuration changes.</p>
+<p>For detailed configuration changes, see the configuration property changes reference.</p>
 </div>
 <div class="paragraph">
 <p><strong>Checkpoint:</strong> v2 traffic flows through the load balancer and v3 infrastructure is ready.</p>
@@ -830,11 +786,11 @@ Test as much of the migration as possible in a staging environment before you mi
 </li>
 </ol>
 </div>
-<div class="paragraph">
-<p><strong>Phase 2: Pre-migration validation</strong></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic" start="3">
+</li>
+<li>
+<p><strong>Phase 2: Pre-migration validation.</strong> Freeze writes and capture a baseline:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
 <p>Enable read-only mode.</p>
 <div class="openblock">
@@ -875,7 +831,7 @@ server {
 <p>Record the current state of your 2.6.3 deployment for comparison after migration.</p>
 </div>
 <div class="paragraph">
-<p>For the metrics capture procedure, see <a href="#migration-scripts_registry">Migration scripts reference</a>.</p>
+<p>For the metrics capture procedure, see the migration scripts reference.</p>
 </div>
 <div class="paragraph">
 <p><strong>Checkpoint:</strong> Read-only mode is active and write operations are blocked. Baseline is documented and ready for data migration.</p>
@@ -885,11 +841,11 @@ server {
 </li>
 </ol>
 </div>
-<div class="paragraph">
-<p><strong>Phase 3: Data migration</strong></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic" start="5">
+</li>
+<li>
+<p><strong>Phase 3: Data migration.</strong> Move the data to Apicurio Registry 3.x:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
 <p>Export data from 2.6.3.</p>
 <div class="openblock">
@@ -898,7 +854,7 @@ server {
 <p>Export all artifacts, versions, metadata, and rules from 2.6.3 while the registry is in read-only mode.</p>
 </div>
 <div class="paragraph">
-<p>For the export procedure, see <a href="#migrating-registry-data_registry">Migrating Apicurio Registry data</a>.</p>
+<p>For the export procedure, see the data migration procedure.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -926,7 +882,7 @@ Access the registry directly (not through the load balancer) to bypass read-only
 <p>Deploy Apicurio Registry 3.x by using the infrastructure that you prepared in Step 2. Configure the v3 deployment similarly to the previous v2 deployment. Note that various configuration parameters are renamed or changed.</p>
 </div>
 <div class="paragraph">
-<p>See <a href="#migrating-registry-configuration_registry">Updating registry configuration</a> for v3 configuration information and examples.</p>
+<p>For v3 configuration information and examples, see the configuration property changes reference.</p>
 </div>
 <div class="paragraph">
 <p><strong>Checkpoint:</strong> Apicurio Registry 3.x is deployed and healthy (empty, awaiting import).</p>
@@ -942,7 +898,7 @@ Access the registry directly (not through the load balancer) to bypass read-only
 <p>Import the exported ZIP archive into the 3.x deployment.</p>
 </div>
 <div class="paragraph">
-<p>For the import procedure, see <a href="#migrating-registry-data_registry">Migrating Apicurio Registry data</a>.</p>
+<p>For the import procedure, see the data migration procedure.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -970,7 +926,7 @@ The import adds to existing data and does not replace it. For best results, impo
 <p>Verify the Apicurio Registry 3.x deployment and confirm that the data migration succeeded.</p>
 </div>
 <div class="paragraph">
-<p>For the validation procedure, see <a href="#migrating-registry-data_registry">Migrating Apicurio Registry data</a>.</p>
+<p>For the validation procedure, see the data migration procedure.</p>
 </div>
 <div class="paragraph">
 <p>If validation fails, investigate import logs and retry if necessary. Do not proceed to the traffic switch until all checks pass.</p>
@@ -983,11 +939,11 @@ The import adds to existing data and does not replace it. For best results, impo
 </li>
 </ol>
 </div>
-<div class="paragraph">
-<p><strong>Phase 4: Traffic switch</strong></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic" start="9">
+</li>
+<li>
+<p><strong>Phase 4: Traffic switch.</strong> Route traffic to Apicurio Registry 3.x:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
 <p>Switch the load balancer to Apicurio Registry 3.x.</p>
 <div class="openblock">
@@ -1031,7 +987,7 @@ server {
 <p>Confirm that traffic flows to Apicurio Registry 3.x through the load balancer. Verify that the registry is accessible, the version is 3.x, health checks pass, and write operations are enabled.</p>
 </div>
 <div class="paragraph">
-<p>For the verification procedure, see <a href="#migration-scripts_registry">Migration scripts reference</a>.</p>
+<p>For the verification procedure, see the migration scripts reference.</p>
 </div>
 <div class="paragraph">
 <p><strong>Checkpoint:</strong> v3 is accessible, write operations work, and no errors appear in the logs.</p>
@@ -1041,11 +997,11 @@ server {
 </li>
 </ol>
 </div>
-<div class="paragraph">
-<p><strong>Phase 5: Post-migration validation</strong></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic" start="11">
+</li>
+<li>
+<p><strong>Phase 5: Post-migration validation.</strong> Validate the migrated deployment:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
 <p>Test v2 API backward compatibility.</p>
 <div class="openblock">
@@ -1054,7 +1010,7 @@ server {
 <p>Verify that existing v2 clients can access the 3.x registry through the v2 API compatibility layer.</p>
 </div>
 <div class="paragraph">
-<p>For backward compatibility details and client migration guidance, see <a href="#migrating-registry-applications_registry">Migrating Apicurio Registry client applications</a>.</p>
+<p>For backward compatibility details and client migration guidance, see the client migration information.</p>
 </div>
 <div class="paragraph">
 <p><strong>Checkpoint:</strong> v2 clients work correctly against the v3 registry.</p>
@@ -1070,7 +1026,7 @@ server {
 <p>Verify that v3-specific API features work correctly, including system endpoints, search endpoints, admin endpoints, and the Branch API.</p>
 </div>
 <div class="paragraph">
-<p>For the v3 API verification procedure, see <a href="#migration-scripts_registry">Migration scripts reference</a>.</p>
+<p>For the v3 API verification procedure, see the migration scripts reference.</p>
 </div>
 <div class="paragraph">
 <p><strong>Checkpoint:</strong> v3 Core API features work correctly.</p>
@@ -1085,8 +1041,8 @@ server {
 <div class="paragraph">
 <p>Execute production smoke tests to validate critical functionality:</p>
 </div>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
 <li>
 <p>Test critical client applications.</p>
 </li>
@@ -1112,13 +1068,9 @@ server {
 </li>
 </ol>
 </div>
-<div class="paragraph">
-<p><strong>Phase 6: Stabilization</strong></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic" start="14">
+</li>
 <li>
-<p>Monitor and observe.</p>
+<p><strong>Phase 6: Stabilization.</strong> Monitor the new deployment and keep 2.6.3 available for rollback.</p>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
@@ -1141,7 +1093,7 @@ server {
 </ul>
 </div>
 <div class="paragraph">
-<p>See <a href="#migrating-registry-applications_registry">Migrating registry client applications</a> for guidance on updating client applications.</p>
+<p>For guidance on updating client applications, see the client migration information.</p>
 </div>
 <div class="paragraph">
 <p><strong>Checkpoint:</strong> v3 is stable for 1-7 days and no rollback is needed.</p>
@@ -1149,15 +1101,8 @@ server {
 </div>
 </div>
 </li>
-</ol>
-</div>
-<div class="paragraph">
-<p><strong>Phase 7: Cleanup</strong></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic" start="15">
 <li>
-<p>Decommission 2.6.3.</p>
+<p><strong>Phase 7: Cleanup.</strong> Decommission 2.6.3.</p>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
@@ -1195,7 +1140,7 @@ server {
 <p>A key advantage of the parallel deployment approach is the ability to roll back quickly if issues arise.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Rolling back to 2.6.3</caption>
+<caption class="title">Table 1. Rolling back to 2.6.3</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 40%;">
@@ -1281,6 +1226,23 @@ server {
 </tr>
 </tbody>
 </table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#migrating-registry-data_registry">Migrating Apicurio Registry data</a></p>
+</li>
+<li>
+<p><a href="#migrating-registry-configuration_registry">Configuration property changes</a></p>
+</li>
+<li>
+<p><a href="#migrating-registry-applications_registry">Client application backward compatibility</a></p>
+</li>
+<li>
+<p><a href="#migration-scripts_registry">Migration scripts reference</a></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1304,22 +1266,22 @@ server {
 <p>Stop all client applications that connect to Apicurio Registry 2.6.3.</p>
 </li>
 <li>
-<p>Export data from Apicurio Registry 2.6.3 by using the export script. See <a href="#migration-scripts_registry">Migration scripts reference</a>.</p>
+<p>Export data from Apicurio Registry 2.6.3 by using the export script.</p>
 </li>
 <li>
 <p>Shut down Apicurio Registry 2.6.3.</p>
 </li>
 <li>
-<p>Deploy Apicurio Registry 3.x with updated configuration. See <a href="#migrating-registry-configuration_registry">Updating registry configuration</a>.</p>
+<p>Deploy Apicurio Registry 3.x with updated configuration.</p>
 </li>
 <li>
-<p>Import data into Apicurio Registry 3.x by using the import script. See <a href="#migration-scripts_registry">Migration scripts reference</a>.</p>
+<p>Import data into Apicurio Registry 3.x by using the import script.</p>
 </li>
 <li>
-<p>Validate the import by using the verification scripts. See <a href="#migration-scripts_registry">Migration scripts reference</a>.</p>
+<p>Validate the import by using the verification scripts.</p>
 </li>
 <li>
-<p>Update client application configurations to point to Apicurio Registry 3.x. See <a href="#migrating-registry-applications_registry">Migrating Apicurio Registry client applications</a>.</p>
+<p>Update client application configurations to point to Apicurio Registry 3.x.</p>
 </li>
 <li>
 <p>Start client applications.</p>
@@ -1337,6 +1299,20 @@ server {
 </li>
 <li>
 <p>Verify that no increase in error rates occurs.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#migrating-registry-configuration_registry">Configuration property changes</a></p>
+</li>
+<li>
+<p><a href="#migrating-registry-applications_registry">Client application backward compatibility</a></p>
+</li>
+<li>
+<p><a href="#migration-scripts_registry">Migration scripts reference</a></p>
 </li>
 </ul>
 </div>
@@ -1391,10 +1367,10 @@ You must use the export and import procedure for migration. Apicurio Registry 3.
 </ul>
 </div>
 <div class="paragraph">
-<div class="title">Procedure</div>
 <p>The migration scripts automate the export, import, and validation process. They support OAuth2 authentication and provide detailed error handling.</p>
 </div>
 <div class="olist arabic">
+<div class="title">Procedure</div>
 <ol class="arabic">
 <li>
 <p>Export all data from Apicurio Registry 2.6.3 by using the export script:</p>
@@ -1422,9 +1398,6 @@ You must use the export and import procedure for migration. Apicurio Registry 3.
 </li>
 <li>
 <p>Reports export duration and file details.</p>
-<div class="paragraph">
-<p>For detailed configuration options and OAuth2 authentication setup, see <a href="#migration-scripts_registry">Migration scripts reference</a>.</p>
-</div>
 </li>
 </ul>
 </div>
@@ -1455,9 +1428,6 @@ You must use the export and import procedure for migration. Apicurio Registry 3.
 </li>
 <li>
 <p>Reports global rules configuration.</p>
-<div class="paragraph">
-<p>For detailed configuration options, see <a href="#migration-scripts_registry">Migration scripts reference</a>.</p>
-</div>
 </li>
 </ul>
 </div>
@@ -1488,9 +1458,6 @@ You must use the export and import procedure for migration. Apicurio Registry 3.
 </li>
 <li>
 <p>v2 API backward compatibility check (optional).</p>
-<div class="paragraph">
-<p>For detailed configuration options, see <a href="#migration-scripts_registry">Migration scripts reference</a>.</p>
-</div>
 </li>
 </ul>
 </div>
@@ -1514,6 +1481,9 @@ You must use the export and import procedure for migration. Apicurio Registry 3.
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
+<li>
+<p><a href="#migration-scripts_registry">Migration scripts reference</a></p>
+</li>
 <li>
 <p><a href="https://access.redhat.com/documentation/en-us/red_hat_integration/2024.q2/html-single/service_registry_user_guide/index">Apicurio Registry User Guide</a></p>
 </li>
@@ -1562,7 +1532,12 @@ You must use the export and import procedure for migration. Apicurio Registry 3.
 </li>
 </ol>
 </div>
-<div id="choosing-migration-strategy_registry" class="paragraph _abstract">
+</div>
+</div>
+<div class="sect1">
+<h2 id="choosing-migration-strategy_registry"><a class="anchor" href="#choosing-migration-strategy_registry"></a>Client migration strategies</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>You can choose from two client migration strategies.</p>
 </div>
 <div class="dlist">
@@ -1696,7 +1671,7 @@ props.put(SerdeConfig.AUTH_CLIENT_SECRET, "secret");</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>For a detailed comparison of all changed properties, see <a href="#client-migration-reference_registry">Client migration configuration reference</a>.</p>
+<p>For a detailed comparison of all changed properties, see the client migration configuration reference.</p>
 </div>
 </li>
 <li>
@@ -1877,7 +1852,7 @@ RegistryClient client = RegistryClientFactory.create(options);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>For a detailed comparison of all authentication changes, see <a href="#client-migration-reference_registry">Client migration configuration reference</a>.</p>
+<p>For a detailed comparison of all authentication changes, see the client migration configuration reference.</p>
 </div>
 </li>
 </ol>
@@ -1922,7 +1897,7 @@ RegistryClient client = RegistryClientFactory.create(options);</code></pre>
 <p>The following tables summarize the configuration property changes between Apicurio Registry 2.6.3 and Apicurio Registry 3.x for SerDes applications, REST API clients, and authentication.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. SerDes configuration property changes</caption>
+<caption class="title">Table 2. SerDes configuration property changes</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1971,7 +1946,7 @@ The default ID option changed from <code>globalId</code> to <code>contentId</cod
 </table>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. REST API client authentication changes</caption>
+<caption class="title">Table 3. REST API client authentication changes</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -2038,7 +2013,7 @@ The default ID option changed from <code>globalId</code> to <code>contentId</cod
 <h2 id="migrating-registry-configuration_registry"><a class="anchor" href="#migrating-registry-configuration_registry"></a>Configuration property changes</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Configuration keys in Apicurio Registry 3.x adopt a unified <code>apicurio.</code> namespace and reorganize authentication, eventing, UI, and storage settings. The following tables map v2 properties to their v3 equivalents.</p>
+<p>Configuration keys in Apicurio Registry 3.x adopt a unified <code>apicurio.</code> namespace and reorganize authentication, eventing, UI, and storage settings. The following tables map v2 properties to their v3 equivalents, grouped by configuration area, with example migrations.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -2052,10 +2027,11 @@ Configuration property changes are extensive in 3.x. Review all sections careful
 </tr>
 </table>
 </div>
-<div id="configuring-storage_registry" class="paragraph _abstract">
+<div class="paragraph">
 <p>You must use separate database instances or schemas for v2 and v3 because the database schemas are incompatible.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
+<table id="configuring-storage_registry" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. SQL database storage properties</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2479,7 +2455,7 @@ Without snapshotting enabled, you must preserve all journal events (infinite ret
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Snapshotting is an advanced feature. Most deployments do not need snapshotting enabled. Consult the <a href="https://www.apicur.io/registry/docs/apicurio-registry/3.1.x/index.html">official Apicurio Registry documentation</a> for more information on how to configure and use the snapshotting feature.
+Snapshotting is an advanced feature. Most deployments do not need snapshotting enabled. Consult the official Apicurio Registry documentation for more information on how to configure and use the snapshotting feature.
 </td>
 </tr>
 </table>
@@ -2492,6 +2468,9 @@ Snapshotting is an advanced feature. Most deployments do not need snapshotting e
 </li>
 <li>
 <p><a href="#migrating-registry-configuration_registry">Configuration property changes</a></p>
+</li>
+<li>
+<p><a href="https://www.apicur.io/registry/docs/apicurio-registry/3.1.x/index.html">Official Apicurio Registry documentation</a></p>
 </li>
 </ul>
 </div>
@@ -2668,14 +2647,14 @@ Configure the journal topic with <code>cleanup.policy=delete</code> and infinite
 <p><a href="#migrating-registry-configuration_registry">Configuration property changes</a></p>
 </li>
 <li>
-<p><a href="#resolving-configuration-issues_registry">Resolving configuration issues</a></p>
+<p><a href="#resolving-configuration-issues_registry">Configuration troubleshooting reference</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="resolving-configuration-issues_registry"><a class="anchor" href="#resolving-configuration-issues_registry"></a>Resolving configuration issues</h2>
+<h2 id="resolving-configuration-issues_registry"><a class="anchor" href="#resolving-configuration-issues_registry"></a>Configuration troubleshooting reference</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>If you encounter configuration issues during migration, use the following guidance to diagnose and resolve common problems.</p>
@@ -3088,7 +3067,7 @@ apicurio-registry:
 <li>
 <p>Configure UI settings on the application (API) container by using <code>apicurio.ui.*</code> properties.</p>
 <div class="paragraph">
-<p>For a complete list of available properties, see <a href="#ui-configuration-properties_registry">User interface configuration properties</a>.</p>
+<p>For a complete list of available properties, see the user interface configuration properties reference.</p>
 </div>
 </li>
 <li>
@@ -3392,7 +3371,49 @@ The only required UI container property is <code>REGISTRY_API_URL</code>. Config
 </ul>
 </div>
 <div class="paragraph">
-<p>Script: apicurio-capture-metrics.sh</p>
+<p>All scripts read the following common environment variables:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. Common environment variables</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Registry base URL (for example, <code><a href="https://registry.example.com" class="bare">https://registry.example.com</a></code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to enable OAuth2 authentication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_TOKEN_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 token endpoint URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_SECRET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client secret</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SKIP_TLS_VERIFY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to skip TLS certificate verification</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>apicurio-capture-metrics.sh</strong></p>
 </div>
 <div class="paragraph">
 <p><strong>Purpose:</strong> Captures metrics from the registry before and after migration.</p>
@@ -3441,54 +3462,20 @@ export OUTPUT_FILE="registry-baseline.txt"
 </div>
 </div>
 <div class="paragraph">
-<p><strong>Environment variables:</strong></p>
+<p><strong>Script-specific environment variables:</strong></p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Variable</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Registry base URL (for example, <code><a href="https://registry.example.com" class="bare">https://registry.example.com</a></code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_API_VERSION</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">API version to use (default: <code>v2</code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to enable OAuth2 authentication</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_TOKEN_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 token endpoint URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_ID</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client ID</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_SECRET</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client secret</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OUTPUT_FILE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Output file path (default: <code>registry-baseline.txt</code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SKIP_TLS_VERIFY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to skip TLS certificate verification</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>REGISTRY_API_VERSION</code></dt>
+<dd>
+<p>API version to use (default: <code>v2</code>)</p>
+</dd>
+<dt class="hdlist1"><code>OUTPUT_FILE</code></dt>
+<dd>
+<p>Output file path (default: <code>registry-baseline.txt</code>)</p>
+</dd>
+</dl>
+</div>
 <div class="paragraph">
 <p><strong>Output:</strong></p>
 </div>
@@ -3496,7 +3483,7 @@ export OUTPUT_FILE="registry-baseline.txt"
 <p>Text file that contains artifact summary and global rules (default: <code>registry-baseline.txt</code>).</p>
 </div>
 <div class="paragraph">
-<p>Script: apicurio-export-registry-data.sh</p>
+<p><strong>apicurio-export-registry-data.sh</strong></p>
 </div>
 <div class="paragraph">
 <p><strong>Purpose:</strong> Exports all data from a 2.6.3 deployment to a ZIP file.</p>
@@ -3545,54 +3532,20 @@ export EXPORT_FILE="registry-export.zip"
 </div>
 </div>
 <div class="paragraph">
-<p><strong>Environment variables:</strong></p>
+<p><strong>Script-specific environment variables:</strong></p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Variable</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Registry base URL (for example, <code><a href="https://registry-v2.example.com" class="bare">https://registry-v2.example.com</a></code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_API_VERSION</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">API version to use (default: <code>v2</code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to enable OAuth2 authentication</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_TOKEN_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 token endpoint URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_ID</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client ID</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_SECRET</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client secret</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EXPORT_FILE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Export file path (default: <code>registry-export.zip</code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SKIP_TLS_VERIFY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to skip TLS certificate verification</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>REGISTRY_API_VERSION</code></dt>
+<dd>
+<p>API version to use (default: <code>v2</code>)</p>
+</dd>
+<dt class="hdlist1"><code>EXPORT_FILE</code></dt>
+<dd>
+<p>Export file path (default: <code>registry-export.zip</code>)</p>
+</dd>
+</dl>
+</div>
 <div class="paragraph">
 <p><strong>Output:</strong></p>
 </div>
@@ -3613,7 +3566,7 @@ export EXPORT_FILE="registry-export.zip"
 </ul>
 </div>
 <div class="paragraph">
-<p>Script: apicurio-import-registry-data.sh</p>
+<p><strong>apicurio-import-registry-data.sh</strong></p>
 </div>
 <div class="paragraph">
 <p><strong>Purpose:</strong> Imports data from a v2 export file into a Apicurio Registry 3.x deployment.</p>
@@ -3665,54 +3618,20 @@ export IMPORT_FILE="registry-export.zip"
 </div>
 </div>
 <div class="paragraph">
-<p><strong>Environment variables:</strong></p>
+<p><strong>Script-specific environment variables:</strong></p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Variable</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Registry base URL (for example, <code><a href="https://registry-v3.example.com" class="bare">https://registry-v3.example.com</a></code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_API_VERSION</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">API version to use (default: <code>v3</code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to enable OAuth2 authentication</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_TOKEN_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 token endpoint URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_ID</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client ID</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_SECRET</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client secret</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IMPORT_FILE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Import file path (default: <code>registry-export.zip</code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SKIP_TLS_VERIFY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to skip TLS certificate verification</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>REGISTRY_API_VERSION</code></dt>
+<dd>
+<p>API version to use (default: <code>v3</code>)</p>
+</dd>
+<dt class="hdlist1"><code>IMPORT_FILE</code></dt>
+<dd>
+<p>Import file path (default: <code>registry-export.zip</code>)</p>
+</dd>
+</dl>
+</div>
 <div class="paragraph">
 <p><strong>Important notes:</strong></p>
 </div>
@@ -3730,7 +3649,7 @@ export IMPORT_FILE="registry-export.zip"
 </ul>
 </div>
 <div class="paragraph">
-<p>Script: apicurio-verify-registry-version.sh</p>
+<p><strong>apicurio-verify-registry-version.sh</strong></p>
 </div>
 <div class="paragraph">
 <p><strong>Purpose:</strong> Verifies the version and health of a Apicurio Registry deployment.</p>
@@ -3775,50 +3694,16 @@ export AUTH_CLIENT_SECRET="your-secret"
 </div>
 </div>
 <div class="paragraph">
-<p><strong>Environment variables:</strong></p>
+<p><strong>Script-specific environment variables:</strong></p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Variable</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Registry base URL (for example, <code><a href="https://registry.example.com" class="bare">https://registry.example.com</a></code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_VERSION</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Registry version to test (default: <code>v3</code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to enable OAuth2 authentication</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_TOKEN_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 token endpoint URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_ID</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client ID</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_SECRET</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client secret</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SKIP_TLS_VERIFY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to skip TLS certificate verification</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>REGISTRY_VERSION</code></dt>
+<dd>
+<p>Registry version to test (default: <code>v3</code>)</p>
+</dd>
+</dl>
+</div>
 <div class="paragraph">
 <p><strong>Exit codes:</strong></p>
 </div>
@@ -3833,7 +3718,7 @@ export AUTH_CLIENT_SECRET="your-secret"
 </ul>
 </div>
 <div class="paragraph">
-<p>Script: apicurio-verify-v3-api-features.sh</p>
+<p><strong>apicurio-verify-v3-api-features.sh</strong></p>
 </div>
 <div class="paragraph">
 <p><strong>Purpose:</strong> Verifies that v3-specific API features are available and functioning correctly.</p>
@@ -3877,46 +3762,11 @@ export AUTH_CLIENT_SECRET="your-secret"
 </div>
 </div>
 <div class="paragraph">
-<p><strong>Environment variables:</strong></p>
+<p><strong>Script-specific environment variables:</strong></p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Variable</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Registry base URL (for example, <code><a href="https://registry-v3.example.com" class="bare">https://registry-v3.example.com</a></code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to enable OAuth2 authentication</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_TOKEN_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 token endpoint URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_ID</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client ID</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_SECRET</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client secret</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SKIP_TLS_VERIFY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to skip TLS certificate verification</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>None. This script uses only the common environment variables.</p>
+</div>
 <div class="paragraph">
 <p><strong>Exit codes:</strong></p>
 </div>
@@ -4014,6 +3864,12 @@ Use <code>SKIP_TLS_VERIFY=true</code> only in non-production environments.
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p><strong>Common script errors:</strong></p>
+</div>
+<div class="paragraph">
+<p>The following list maps common script error messages to checks that resolve them:</p>
+</div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">"Failed to obtain access token"</dt>
@@ -4038,8 +3894,11 @@ Use <code>SKIP_TLS_VERIFY=true</code> only in non-production environments.
 </dd>
 </dl>
 </div>
-<div class="sect2">
-<h3 id="installing-script-dependencies_registry"><a class="anchor" href="#installing-script-dependencies_registry"></a>Installing dependencies</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-script-dependencies_registry"><a class="anchor" href="#installing-script-dependencies_registry"></a>Script dependencies</h2>
+<div class="sectionbody">
 <div class="paragraph _abstract">
 <p>All migration scripts require the following tools:</p>
 </div>
@@ -4069,9 +3928,8 @@ Use <code>SKIP_TLS_VERIFY=true</code> only in non-production environments.
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="troubleshooting-migration_registry"><a class="anchor" href="#troubleshooting-migration_registry"></a>Troubleshooting migration issues</h2>
+<h2 id="troubleshooting-migration_registry"><a class="anchor" href="#troubleshooting-migration_registry"></a>Migration troubleshooting reference</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>If you encounter issues during migration, use the following guidance to diagnose and resolve common problems.</p>
@@ -4173,7 +4031,7 @@ Use <code>SKIP_TLS_VERIFY=true</code> only in non-production environments.
 <p><a href="#migrating-minimal-downtime_registry">Migrating with minimal downtime</a></p>
 </li>
 <li>
-<p><a href="#resolving-configuration-issues_registry">Resolving configuration issues</a></p>
+<p><a href="#resolving-configuration-issues_registry">Configuration troubleshooting reference</a></p>
 </li>
 <li>
 <p><a href="#migration-scripts_registry">Migration scripts reference</a></p>

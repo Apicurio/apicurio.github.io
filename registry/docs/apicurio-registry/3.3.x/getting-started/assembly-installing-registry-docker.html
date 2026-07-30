@@ -384,23 +384,14 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Install and run Apicurio Registry using Docker with the following storage options:</p>
+<p>Install and run Apicurio Registry using Docker with your choice of embedded H2, PostgreSQL, or Apache Kafka storage.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#installing-registry-h2-storage_registry">Installing Apicurio Registry with default configuration (embedded H2 database)</a></p>
-</li>
-<li>
-<p><a href="#installing-registry-sql-storage_registry">Installing Apicurio Registry with SQL database storage</a></p>
-</li>
-<li>
-<p><a href="#installing-registry-kafka-storage_registry">Installing Apicurio Registry with Apache Kafka storage</a></p>
-</li>
-</ul>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
 <p><a href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a></p>
@@ -630,12 +621,10 @@ apicurio/apicurio-registry:VERSION</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="installing-registry-sql-storage-secrets_registry"><a class="anchor" href="#installing-registry-sql-storage-secrets_registry"></a>Using file-based secrets for database credentials</h2>
+<h2 id="installing-registry-file-based-secrets_registry"><a class="anchor" href="#installing-registry-file-based-secrets_registry"></a>File-based secrets for database credentials</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Use file-based secrets for database credentials with Apicurio Registry when you use Docker Compose.
-This approach follows Docker&#8217;s recommended secret management practices. It is more secure than passing credentials as
-environment variables.</p>
+<p>Apicurio Registry supports file-based secrets, a generic <code>_FILE</code> suffix pattern that lets you provide credentials, such as database passwords, from files instead of environment variables. This approach is more secure than passing credentials directly as environment variables.</p>
 </div>
 <div class="paragraph">
 <p>Instead of passing credentials and secrets as environment variables (which can be exposed in process lists and container
@@ -651,10 +640,63 @@ FileBasedSecretsInterceptor reads the file path from these properties and loads 
 <p>To use file-based secrets for any configuration property, take any environment variable name (for example, <code>APICURIO_DATASOURCE_PASSWORD</code>), add the <code>_FILE</code> suffix (for example, <code>APICURIO_DATASOURCE_PASSWORD_FILE</code>), and set the value to a file path containing the secret. Apicurio Registry reads the file contents and uses them as the actual property value.</p>
 </div>
 <div class="paragraph">
-<p>This works for <strong>any</strong> configuration property, not only the examples listed in the following section.</p>
+<p>This works for <strong>any</strong> configuration property, not only the credential variables listed in the following reference.</p>
 </div>
 <div class="paragraph">
-<p><strong>Common file-based credential variables</strong></p>
+<p>When a <code>_FILE</code> variant is set, the registry reads the value from the specified file instead of using the direct
+environment variable. Configuration precedence: System properties (400) &gt; File-based secrets (350) &gt; Environment
+variables (300) &gt; <code>application.properties</code> (250).</p>
+</div>
+<div class="paragraph">
+<p><strong>File format</strong></p>
+</div>
+<div class="paragraph">
+<p>Secret files must contain only the credential value in plain text (UTF-8 encoding). Leading and trailing whitespace
+is automatically trimmed. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">mypassword</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Security considerations</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ensure that secret files have restrictive permissions (for example, <code>chmod 600</code>)</p>
+</li>
+<li>
+<p>Never commit secret files to version control (add them to <code>.gitignore</code>)</p>
+</li>
+<li>
+<p>The registry logs a warning if secret files are world-readable</p>
+</li>
+<li>
+<p>If a <code>_FILE</code> variable is set but the file does not exist or is not readable, the registry fails to start with a
+clear error message</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://docs.docker.com/compose/how-tos/use-secrets/">Docker Compose secrets documentation</a></p>
+</li>
+<li>
+<p><a href="#installing-registry-file-based-secrets-reference_registry">Common file-based credential variables</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-registry-file-based-secrets-reference_registry"><a class="anchor" href="#installing-registry-file-based-secrets-reference_registry"></a>Common file-based credential variables</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Reference list of the environment variables and configuration properties that support the file-based secrets <code>_FILE</code> suffix pattern in Apicurio Registry, grouped by credential type.</p>
 </div>
 <div class="paragraph">
 <p>The following list shows commonly used file-based credential environment variables and their corresponding properties:</p>
@@ -737,10 +779,23 @@ the value to a file path.</p>
 </dd>
 </dl>
 </div>
-<div class="paragraph">
-<p>When a <code>_FILE</code> variant is set, the registry reads the value from the specified file instead of using the direct
-environment variable. Configuration precedence: System properties (400) &gt; File-based secrets (350) &gt; Environment
-variables (300) &gt; <code>application.properties</code> (250).</p>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#installing-registry-file-based-secrets_registry">File-based secrets for database credentials</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-registry-sql-storage-secrets_registry"><a class="anchor" href="#installing-registry-sql-storage-secrets_registry"></a>Using file-based secrets for database credentials</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Use file-based secrets for database credentials with Apicurio Registry when you use Docker Compose.
+This approach follows Docker&#8217;s recommended secret management practices. It is more secure than passing credentials as
+environment variables.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -817,44 +872,8 @@ services:
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker compose up -d</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>File format</strong></p>
-</div>
 </li>
 </ol>
-</div>
-<div class="paragraph">
-<p>Secret files must contain only the credential value in plain text (UTF-8 encoding). Leading and trailing whitespace
-is automatically trimmed. For example:</p>
-</div>
-<div class="paragraph">
-<p>+</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">mypassword</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>+
-<strong>Security considerations</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Ensure that secret files have restrictive permissions (for example, <code>chmod 600</code>)</p>
-</li>
-<li>
-<p>Never commit secret files to version control (add them to <code>.gitignore</code>)</p>
-</li>
-<li>
-<p>The registry logs a warning if secret files are world-readable</p>
-</li>
-<li>
-<p>If a <code>_FILE</code> variable is set but the file does not exist or is not readable, the registry fails to start with a
-clear error message</p>
-</li>
-</ul>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
@@ -863,7 +882,7 @@ clear error message</p>
 <p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/distro/docker-compose/pg-secrets">PostgreSQL with file-based secrets example</a></p>
 </li>
 <li>
-<p><a href="https://docs.docker.com/compose/how-tos/use-secrets/">Docker Compose secrets documentation</a></p>
+<p><a href="#installing-registry-file-based-secrets_registry">File-based secrets for database credentials</a></p>
 </li>
 </ul>
 </div>

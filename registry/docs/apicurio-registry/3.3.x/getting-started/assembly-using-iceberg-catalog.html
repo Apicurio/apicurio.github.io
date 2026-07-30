@@ -386,39 +386,12 @@
 <div class="paragraph _abstract">
 <p>You can use Apicurio Registry as an Apache Iceberg REST Catalog to manage table metadata for your data lakehouse applications.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#registry-iceberg-catalog-overview_registry">Overview of the Apicurio Registry Iceberg REST Catalog</a></p>
-</li>
-<li>
-<p><a href="#registry-iceberg-catalog-config_registry">Apicurio Registry Iceberg REST Catalog configuration</a></p>
-</li>
-<li>
-<p><a href="#registry-iceberg-catalog-rest-api_registry">Iceberg REST API usage</a></p>
-</li>
-<li>
-<p><a href="#registry-iceberg-catalog-commit-table_registry">Table commit operations</a></p>
-</li>
-<li>
-<p><a href="#registry-iceberg-catalog-error-handling_registry">Error handling</a></p>
-</li>
-<li>
-<p><a href="#registry-iceberg-catalog-auth_registry">Authentication and authorization</a></p>
-</li>
-<li>
-<p><a href="#registry-iceberg-catalog-query-engines_registry">Query engine configuration for Apicurio Registry</a></p>
-</li>
-<li>
-<p><a href="#registry-iceberg-catalog-api-reference_registry">API reference</a></p>
-</li>
-<li>
-<p><a href="#registry-iceberg-catalog-limitations_registry">Limitations</a></p>
-</li>
-</ul>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
 <div class="ulist">
-<div class="title">Prerequisites</div>
 <ul>
 <li>
 <p>A running Apicurio Registry instance with <code>apicurio.features.experimental.enabled=true</code> and <code>apicurio.iceberg.enabled=true</code></p>
@@ -722,76 +695,25 @@ A namespace must be empty (contain no tables) before you can drop it.
 </ul>
 </div>
 <div class="paragraph">
-<div class="title">Concurrency control</div>
-<p>Apicurio Registry uses optimistic concurrency to detect conflicting commits. When a commit is processed:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The current table metadata is loaded and its version is recorded.</p>
-</li>
-<li>
-<p>All requirements are validated against the current metadata.</p>
-</li>
-<li>
-<p>All updates are applied in-memory to produce new metadata.</p>
-</li>
-<li>
-<p>The new metadata is stored as a new artifact version.</p>
-</li>
-<li>
-<p>If another commit is interleaved between steps 1 and 4, the conflict is detected and the commit fails with a <code>409 Conflict</code> response.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Concurrent writers cannot silently overwrite each other&#8217;s changes. Clients that receive a <code>409</code> response must reload the current table metadata, revalidate their changes, and retry the commit.</p>
-</div>
-<div class="paragraph">
-<p>All changes within a single commit, including the new version and any artifact-level label updates, are applied atomically within a single storage transaction. If any part of the commit fails, the entire operation is rolled back and no partial state is persisted.</p>
-</div>
-<div class="paragraph">
-<div class="title">Conflict handling and retries</div>
-<p>When a commit fails with a <code>409 Conflict</code> response, the appropriate client behavior is:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Reload the current table metadata by using the <code>LoadTable</code> endpoint.</p>
-</li>
-<li>
-<p>Revalidate the intended changes against the new metadata.</p>
-</li>
-<li>
-<p>Rebuild the commit request with updated requirements.</p>
-</li>
-<li>
-<p>Retry the commit.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Most Iceberg client libraries (such as the Apache Iceberg Java SDK) handle this retry loop automatically.</p>
-</div>
-<div class="paragraph">
-<div class="title">KafkaSQL storage considerations</div>
 <p>When Apicurio Registry is deployed with the KafkaSQL storage backend, all write operations, including commits, are serialized through a Kafka journal topic. This serialization has several implications:</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Ordering</strong>: Commits to the same table are totally ordered through Kafka partitioning. The optimistic concurrency check is always evaluated against the true latest state.</p>
-</li>
-<li>
-<p><strong>Failed commits</strong>: When a commit fails (for example, due to a concurrent write detected by the version-order check), the Kafka message remains in the journal. This behavior is expected and harmless: during journal replay (such as when a new replica starts up), the message is re-consumed, the same version-order check fails again, and the message is silently discarded because no HTTP thread is waiting for a response.</p>
-</li>
-<li>
-<p><strong>Atomicity</strong>: The version creation and any artifact-level metadata updates are performed in a single SQL transaction. If the transaction fails, no data is written and the Kafka message becomes a no-op on replay.</p>
-</li>
-</ul>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Ordering</dt>
+<dd>
+<p>Commits to the same table are totally ordered through Kafka partitioning. The optimistic concurrency check is always evaluated against the true latest state.</p>
+</dd>
+<dt class="hdlist1">Failed commits</dt>
+<dd>
+<p>When a commit fails (for example, due to a concurrent write detected by the version-order check), the Kafka message remains in the journal. This behavior is expected and harmless: during journal replay (such as when a new replica starts up), the message is re-consumed, the same version-order check fails again, and the message is silently discarded because no HTTP thread is waiting for a response.</p>
+</dd>
+<dt class="hdlist1">Atomicity</dt>
+<dd>
+<p>The version creation and any artifact-level metadata updates are performed in a single SQL transaction. If the transaction fails, no data is written and the Kafka message becomes a no-op on replay.</p>
+</dd>
+</dl>
 </div>
 <div class="paragraph">
-<div class="title">Requirements</div>
 <p>Requirements are assertions about the current state of the table. Each requirement has a <code>type</code> field that specifies the kind of assertion.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
@@ -852,7 +774,6 @@ A namespace must be empty (contain no tables) before you can drop it.
 </tbody>
 </table>
 <div class="paragraph">
-<div class="title">Updates</div>
 <p>Updates are mutations applied to the table metadata. Each update has an <code>action</code> field that specifies the type of mutation.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
@@ -1028,6 +949,9 @@ A namespace must be empty (contain no tables) before you can drop it.
   }'</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The following table lists the possible error responses for the CommitTable operation.</p>
+</div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 5. CommitTable error responses</caption>
 <colgroup>
@@ -1065,6 +989,79 @@ A namespace must be empty (contain no tables) before you can drop it.
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-iceberg-catalog-concurrency-control_registry"><a class="anchor" href="#registry-iceberg-catalog-concurrency-control_registry"></a>Optimistic concurrency control for table commits</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry uses optimistic concurrency control to detect conflicting Iceberg table commits and prevent concurrent writers from silently overwriting each other&#8217;s changes.</p>
+</div>
+<div class="paragraph">
+<p>When a commit is processed:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The current table metadata is loaded and its version is recorded.</p>
+</li>
+<li>
+<p>All requirements are validated against the current metadata.</p>
+</li>
+<li>
+<p>All updates are applied in-memory to produce new metadata.</p>
+</li>
+<li>
+<p>The new metadata is stored as a new artifact version.</p>
+</li>
+<li>
+<p>If another commit is interleaved between steps 1 and 4, the conflict is detected and the commit fails with a <code>409 Conflict</code> response.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Concurrent writers cannot silently overwrite each other&#8217;s changes. Clients that receive a <code>409</code> response must reload the current table metadata, revalidate their changes, and retry the commit.</p>
+</div>
+<div class="paragraph">
+<p>All changes within a single commit, including the new version and any artifact-level label updates, are applied atomically within a single storage transaction. If any part of the commit fails, the entire operation is rolled back and no partial state is persisted.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-iceberg-catalog-retry-commit_registry"><a class="anchor" href="#registry-iceberg-catalog-retry-commit_registry"></a>Retrying a failed commit</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When a table commit fails with a <code>409 Conflict</code> response, follow this procedure to reload the current table metadata and retry the commit.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A commit request that failed with a <code>409 Conflict</code> response.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Reload the current table metadata by using the <code>LoadTable</code> endpoint.</p>
+</li>
+<li>
+<p>Revalidate the intended changes against the new metadata.</p>
+</li>
+<li>
+<p>Rebuild the commit request with updated requirements.</p>
+</li>
+<li>
+<p>Retry the commit.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<div class="title">Results</div>
+<p>The commit request is resubmitted against the latest table metadata. Most Iceberg client libraries, such as the Apache Iceberg Java SDK, handle this retry loop automatically.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1233,9 +1230,13 @@ A namespace must be empty (contain no tables) before you can drop it.
 <div class="paragraph _abstract">
 <p>You can configure popular query engines that support the Iceberg REST Catalog specification to use Apicurio Registry as their catalog.</p>
 </div>
-<div class="paragraph">
-<div class="title">Apache Spark</div>
-<p>Configure Spark to use Apicurio Registry as the Iceberg catalog:</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-iceberg-catalog-spark-config_registry"><a class="anchor" href="#registry-iceberg-catalog-spark-config_registry"></a>Apache Spark catalog configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Configure Apache Spark to use Apicurio Registry as the Iceberg catalog.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1265,9 +1266,13 @@ CREATE TABLE apicurio.my_database.events (
 SELECT * FROM apicurio.my_database.events;</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">Trino</div>
-<p>Configure Trino to use Apicurio Registry as the Iceberg catalog by creating a catalog properties file:</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-iceberg-catalog-trino-config_registry"><a class="anchor" href="#registry-iceberg-catalog-trino-config_registry"></a>Trino catalog configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Configure Trino to use Apicurio Registry as the Iceberg catalog by creating a catalog properties file.</p>
 </div>
 <div class="listingblock">
 <div class="title">etc/catalog/apicurio.properties</div>
@@ -1295,9 +1300,13 @@ CREATE TABLE apicurio.my_database.products (
 SELECT * FROM apicurio.my_database.products;</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">DuckDB</div>
-<p>Configure DuckDB to use Apicurio Registry as the Iceberg catalog:</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-iceberg-catalog-duckdb-config_registry"><a class="anchor" href="#registry-iceberg-catalog-duckdb-config_registry"></a>DuckDB catalog configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Configure DuckDB to use Apicurio Registry as the Iceberg catalog.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1312,9 +1321,13 @@ ATTACH 'http://localhost:8080/apis/iceberg/v1' AS apicurio (TYPE ICEBERG);
 SELECT * FROM apicurio.my_database.users;</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">ClickHouse</div>
-<p>Configure ClickHouse to use Apicurio Registry as the Iceberg catalog:</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-iceberg-catalog-clickhouse-config_registry"><a class="anchor" href="#registry-iceberg-catalog-clickhouse-config_registry"></a>ClickHouse catalog configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Configure ClickHouse to use Apicurio Registry as the Iceberg catalog.</p>
 </div>
 <div class="listingblock">
 <div class="content">

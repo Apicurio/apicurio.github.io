@@ -386,31 +386,6 @@
 <div class="paragraph _abstract">
 <p>In Apicurio Registry, compatibility modes determine which changes are permitted when you upload a new version of an artifact. Because these rules vary depending on the data format (such as Avro, JSON Schema, Protobuf, OpenAPI, or XSD), each artifact type has its own specific criteria for what constitutes a compatible or incompatible change.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#registry-compatibility-overview_registry">Overview of compatibility rules</a></p>
-</li>
-<li>
-<p><a href="#registry-compatibility-mode-descriptions_registry">Compatibility mode descriptions</a></p>
-</li>
-<li>
-<p><a href="#registry-compatibility-avro_registry">Avro schema compatibility</a></p>
-</li>
-<li>
-<p><a href="#registry-compatibility-json-schema_registry">JSON Schema compatibility</a></p>
-</li>
-<li>
-<p><a href="#registry-compatibility-protobuf_registry">Protobuf schema compatibility</a></p>
-</li>
-<li>
-<p><a href="#registry-compatibility-openapi_registry">OpenAPI compatibility</a></p>
-</li>
-<li>
-<p><a href="#registry-compatibility-xsd_registry">XSD compatibility</a></p>
-</li>
-</ul>
-</div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
@@ -615,8 +590,10 @@ The following table describes common Avro schema changes and whether they mainta
 </tr>
 </tbody>
 </table>
+<div class="exampleblock">
+<div class="title">Example 1. Transitive compatibility example for Avro</div>
+<div class="content">
 <div class="paragraph">
-<div class="title">Transitive compatibility example for Avro</div>
 <p>The following example demonstrates how transitive compatibility differs from non-transitive compatibility:</p>
 </div>
 <div class="ulist">
@@ -636,6 +613,8 @@ The following table describes common Avro schema changes and whether they mainta
 <p>In the example, Version 3 is backward compatible with Version 2 because the <code>email</code> field exists in Version 2 data.
 However, Version 3 is <em>not</em> backward compatible with Version 1 because the <code>email</code> field is missing and there is no default value.
 As a result, Version 3 passes the <code>BACKWARD</code> check but fails the <code>BACKWARD_TRANSITIVE</code> check.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -859,8 +838,10 @@ Because Protobuf uses numeric field tags to identify fields on the wire, the fol
 </tr>
 </tbody>
 </table>
+<div class="exampleblock">
+<div class="title">Example 2. Reserving fields in Protobuf</div>
+<div class="content">
 <div class="paragraph">
-<div class="title">Reserving fields in Protobuf</div>
 <p>When you remove a field from a Protobuf schema, reserve both the tag number and the field name to prevent reuse:</p>
 </div>
 <div class="listingblock">
@@ -875,6 +856,8 @@ Because Protobuf uses numeric field tags to identify fields on the wire, the fol
 </div>
 <div class="paragraph">
 <p>Reserving fields is critical for maintaining forward and backward compatibility because it prevents accidental reuse of tag numbers or field names.</p>
+</div>
+</div>
 </div>
 </div>
 </div>

@@ -386,25 +386,6 @@
 <div class="paragraph _abstract">
 <p>You can use Apicurio Registry well-known endpoints to discover AI agents by skill, capability, and input or output mode. You can also orchestrate multi-agent workflows by chaining agent outputs as context for subsequent agents.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#well-known-endpoint-architecture_registry">Well-known endpoint architecture</a></p>
-</li>
-<li>
-<p><a href="#agent-discovery-patterns-overview_registry">Discovery patterns</a></p>
-</li>
-<li>
-<p><a href="#multi-agent-orchestration-patterns_registry">Multi-agent orchestration patterns</a></p>
-</li>
-<li>
-<p><a href="#agent-error-handling-and-resilience_registry">Error handling and resilience</a></p>
-</li>
-<li>
-<p><a href="#agent-catalog-design_registry">Agent catalog design</a></p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -479,8 +460,13 @@
 <div class="paragraph">
 <p>The <code>/.well-known/schemas/{type}/{version}</code> endpoint serves built-in JSON schemas that you can use for IDE autocompletion and validation of <code>PROMPT_TEMPLATE</code>, <code>MODEL_SCHEMA</code>, and <code>MCP_TOOL</code> artifacts. This endpoint requires no authentication.</p>
 </div>
-<div class="paragraph">
-<p>For detailed endpoint reference and Agent Card JSON structure, see <a href="#assembly-a2a-features_registry">[assembly-a2a-features_registry]</a>.</p>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#assembly-a2a-features_registry">[assembly-a2a-features_registry]</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -490,10 +476,11 @@
 <div class="paragraph _abstract">
 <p>Apicurio Registry indexes agent card content as structured data when you store an <code>AGENT_CARD</code> artifact. You can query agents by skill, capability, input mode, output mode, or name by using the <code>/.well-known/agents</code> endpoint.</p>
 </div>
-<div class="paragraph">
-<div class="title">Capability-based discovery</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Capability-based discovery</dt>
+<dd>
 <p>You can find agents that have specific skills by using the <code>skill</code> query parameter. Apicurio Registry indexes each skill ID from the agent card <code>skills</code> array as structured content with the key <code>agent_card:skill:&lt;id&gt;</code>.</p>
-</div>
 <div class="paragraph">
 <p>To find agents that have a specific skill, send a request with one <code>skill</code> parameter:</p>
 </div>
@@ -510,10 +497,10 @@
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/agents?skill=translation&amp;skill=sentiment-analysis"</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">Filtering by capabilities</div>
+</dd>
+<dt class="hdlist1">Filtering by capabilities</dt>
+<dd>
 <p>You can filter agents by capabilities such as streaming or push notification support. Apicurio Registry indexes each enabled capability from the agent card <code>capabilities</code> object as structured content with the key <code>agent_card:capability:&lt;name&gt;</code>.</p>
-</div>
 <div class="paragraph">
 <p>Specify capabilities in <code>name:value</code> format. For example, to find agents that support streaming:</p>
 </div>
@@ -530,10 +517,10 @@
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/agents?capability=streaming:false"</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">Input and output mode filtering</div>
+</dd>
+<dt class="hdlist1">Input and output mode filtering</dt>
+<dd>
 <p>You can match agents by the data modalities they accept or produce. Apicurio Registry indexes each mode from the agent card <code>defaultInputModes</code> and <code>defaultOutputModes</code> arrays as structured content with the keys <code>agent_card:inputmode:&lt;mode&gt;</code> and <code>agent_card:outputmode:&lt;mode&gt;</code>.</p>
-</div>
 <div class="paragraph">
 <p>To find agents that accept image input and produce text output:</p>
 </div>
@@ -542,32 +529,35 @@
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/agents?inputMode=image&amp;outputMode=text"</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">Name-based search</div>
+</dd>
+<dt class="hdlist1">Name-based search</dt>
+<dd>
 <p>You can filter agents by name by using partial matching. Apicurio Registry matches the <code>name</code> parameter against the artifact name:</p>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/agents?name=sentiment"</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">Combined filtering</div>
+</dd>
+<dt class="hdlist1">Combined filtering</dt>
+<dd>
 <p>You can combine any of the previous filters in a single request. Apicurio Registry applies all filters together and returns only agents that match all specified criteria:</p>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/agents?skill=translation&amp;inputMode=text&amp;outputMode=text&amp;capability=streaming:true&amp;limit=10"</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">MCP tool discovery</div>
+</dd>
+<dt class="hdlist1">MCP tool discovery</dt>
+<dd>
 <p>You can search for registered MCP tool definitions by name or input parameter. Apicurio Registry indexes each input parameter name from the tool <code>inputSchema.properties</code> as structured content with the key <code>mcp_tool:parameter:&lt;name&gt;</code>:</p>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/mcp-tools?name=search&amp;parameter=query"</code></pre>
 </div>
+</div>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -577,8 +567,12 @@
 <div class="paragraph _abstract">
 <p>You can orchestrate multi-agent workflows by combining Apicurio Registry discovery endpoints with A2A task execution. Apicurio Registry provides the discovery layer, and your orchestrator code coordinates the agent interactions.</p>
 </div>
-<div class="paragraph">
-<div class="title">Sequential pipeline with context chaining</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sequential-pipeline-context-chaining_registry"><a class="anchor" href="#sequential-pipeline-context-chaining_registry"></a>Sequential pipeline with context chaining</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>In a sequential pipeline, each agent receives the original message and the accumulated outputs from all previous agents. Each agent builds on the work of the agents that ran before it.</p>
 </div>
 <div class="paragraph">
@@ -632,8 +626,12 @@ context.agentOutputs.put("analysis", analysisResult);
 String prompt = context.buildPrompt("Original: {{original}}\nSentiment: {{sentiment}}");</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">Parallel fan-out</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="parallel-fan-out_registry"><a class="anchor" href="#parallel-fan-out_registry"></a>Parallel fan-out</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>In a parallel fan-out, you send the same input to multiple agents simultaneously and aggregate the results. You discover the agents by using <code>/.well-known/agents</code> with appropriate filters.</p>
 </div>
 <div class="paragraph">
@@ -655,8 +653,12 @@ String prompt = context.buildPrompt("Original: {{original}}\nSentiment: {{sentim
 <div class="paragraph">
 <p>In a typical parallel fan-out, the orchestrator discovers agents with a specific skill by querying <code>/.well-known/agents?skill=&lt;skill-id&gt;</code>, sends the same A2A task to each discovered agent in parallel, and then collects the responses to merge or compare them.</p>
 </div>
-<div class="paragraph">
-<div class="title">Conditional routing</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="conditional-routing_registry"><a class="anchor" href="#conditional-routing_registry"></a>Conditional routing</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
 <p>In conditional routing, you use agent capabilities and skills to decide which agent handles a request. You inspect agent cards to select the best match.</p>
 </div>
 <div class="paragraph">
@@ -742,8 +744,10 @@ String prompt = context.buildPrompt("Original: {{original}}\nSentiment: {{sentim
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>The following resilience strategies help you handle agent unavailability and version changes:</p>
+</div>
 <div class="dlist">
-<div class="title">Resilience strategies</div>
 <dl>
 <dt class="hdlist1">Agent health checks</dt>
 <dd>
@@ -776,8 +780,7 @@ String prompt = context.buildPrompt("Original: {{original}}\nSentiment: {{sentim
 <p>You can organize your agent cards in Apicurio Registry by using groups, naming conventions, and versioning strategies that support efficient discovery and lifecycle management.</p>
 </div>
 <div class="paragraph">
-<div class="title">Group structure</div>
-<p>Organize agent cards into groups based on your organizational needs:</p>
+<p><strong>Group structure.</strong> Organize agent cards into groups based on your organizational needs:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -793,8 +796,7 @@ String prompt = context.buildPrompt("Original: {{original}}\nSentiment: {{sentim
 </ul>
 </div>
 <div class="paragraph">
-<div class="title">Agent card naming and versioning</div>
-<p>Use descriptive artifact IDs that indicate the agent purpose, such as <code>sentiment-analyzer</code> or <code>document-translator</code>. Include the version in the agent card content to distinguish between released versions.</p>
+<p><strong>Agent card naming and versioning.</strong> Use descriptive artifact IDs that indicate the agent purpose, such as <code>sentiment-analyzer</code> or <code>document-translator</code>. Include the version in the agent card content to distinguish between released versions.</p>
 </div>
 <div class="paragraph">
 <p>Follow semantic versioning for agent cards:</p>
@@ -813,8 +815,7 @@ String prompt = context.buildPrompt("Original: {{original}}\nSentiment: {{sentim
 </ul>
 </div>
 <div class="paragraph">
-<div class="title">Agent lifecycle</div>
-<p>Manage agent cards through a defined lifecycle:</p>
+<p><strong>Agent lifecycle.</strong> Manage agent cards through a defined lifecycle:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -830,10 +831,10 @@ String prompt = context.buildPrompt("Original: {{original}}\nSentiment: {{sentim
 </ul>
 </div>
 <div class="paragraph">
-<div class="title">Structured content taxonomy</div>
 <p>Apicurio Registry automatically extracts structured content from agent cards for search indexing. The following table lists the structured content key prefixes and their sources.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Structured content taxonomy</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
