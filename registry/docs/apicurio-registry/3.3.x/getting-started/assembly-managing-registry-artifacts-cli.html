@@ -394,7 +394,7 @@
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The CLI is currently in <strong>dev-preview</strong> status and is unstable; its arguments and behavior are subject to backwards-incompatible changes. The CLI supports Linux (x86_64, bash) and macOS (Apple Silicon, zsh). Windows is not supported.</p>
+<p>The CLI is currently in <strong>dev-preview</strong> status and is unstable; its arguments and behavior are subject to backwards-incompatible changes. The CLI supports Linux (x86_64, bash), macOS (Apple Silicon, zsh), and Windows (x86_64, command prompt or PowerShell).</p>
 </div>
 </td>
 </tr>
@@ -411,7 +411,7 @@
 <p>You have installed Apicurio Registry.</p>
 </li>
 <li>
-<p>You have access to a bash shell on Linux (x86_64) or a zsh shell on macOS (Apple Silicon).</p>
+<p>You have access to a bash shell on Linux (x86_64), a zsh shell on macOS (Apple Silicon), or a command prompt or PowerShell on Windows (x86_64).</p>
 </li>
 </ul>
 </div>
@@ -427,7 +427,7 @@
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You have a Linux x86_64 system with a bash shell, or a macOS Apple Silicon system with a zsh shell.</p>
+<p>You have a Linux x86_64 system with a bash shell, a macOS Apple Silicon system with a zsh shell, or a Windows x86_64 system with a command prompt or PowerShell.</p>
 </li>
 </ul>
 </div>
@@ -435,18 +435,33 @@
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Download the .zip file for your platform, for example <code>apicurio-registry-cli-VERSION-linux-x86_64.zip</code> (Linux) or <code>apicurio-registry-cli-VERSION-osx-aarch64.zip</code> (macOS), from the <a href="https://github.com/Apicurio/apicurio-registry/releases">Apicurio Registry GitHub Releases page</a>. Alternatively, you can download the CLI from the <a href="https://search.maven.org/search?q=g:io.apicurio%20AND%20a:apicurio-registry-cli">Maven Central repository</a> by searching for <code>apicurio-registry-cli</code>.</p>
+<p>Download the .zip file for your platform, for example <code>apicurio-registry-cli-VERSION-linux-x86_64.zip</code> (Linux), <code>apicurio-registry-cli-VERSION-osx-aarch64.zip</code> (macOS), or <code>apicurio-registry-cli-VERSION-windows-x86_64.zip</code> (Windows), from the <a href="https://github.com/Apicurio/apicurio-registry/releases">Apicurio Registry GitHub Releases page</a>. Alternatively, you can download the CLI from the <a href="https://search.maven.org/search?q=g:io.apicurio%20AND%20a:apicurio-registry-cli">Maven Central repository</a> by searching for <code>apicurio-registry-cli</code>.</p>
 </li>
 <li>
 <p>Extract the downloaded file to a location of your choice:</p>
+<div class="paragraph">
+<p>On Linux and macOS:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ unzip apicurio-registry-cli-VERSION-linux-x86_64.zip -d ~/apicurio-cli</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>On Windows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>&gt; mkdir %USERPROFILE%\apicurio-cli
+&gt; tar -xf apicurio-registry-cli-VERSION-windows-x86_64.zip -C %USERPROFILE%\apicurio-cli</code></pre>
+</div>
+</div>
 </li>
 <li>
 <p>Install the CLI for the current user:</p>
+<div class="paragraph">
+<p>On Linux and macOS:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ cd ~/apicurio-cli
@@ -454,7 +469,19 @@ $ ./acr install</code></pre>
 </div>
 </div>
 <div class="paragraph">
+<p>On Windows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>&gt; cd %USERPROFILE%\apicurio-cli
+&gt; acr.cmd install</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>This command copies the CLI files to <code>$HOME/.apicurio/apicurio-registry-cli</code>, creates symbolic links in <code>$HOME/bin</code>, updates your <code>~/.bashrc</code> file (Linux) or <code>~/.zshrc</code> file (macOS), and configures shell completions.</p>
+</div>
+<div class="paragraph">
+<p>On Windows, the CLI files are copied to <code>%USERPROFILE%\.apicurio\apicurio-registry-cli</code> and the launcher is copied to <code>%USERPROFILE%\bin</code>, because creating a symbolic link there requires Developer Mode or an elevated prompt. Windows has no shell configuration file to source, so the command sets the <code>ACR_HOME</code> user environment variable and adds the <code>bin</code> directory to your user <code>Path</code> instead. Shell completions are generated for bash and zsh only.</p>
 </div>
 </li>
 <li>
@@ -474,6 +501,9 @@ $ ./acr install</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ source ~/.zshrc</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>On Windows, open a new command prompt or PowerShell window so that it picks up the updated environment variables. The installed command is <code>acr</code>, which the command prompt resolves to <code>acr.cmd</code> through <code>PATHEXT</code>.</p>
 </div>
 </li>
 <li>
@@ -614,7 +644,7 @@ $ acr context update --group my-schemas</code></pre>
 <p>You have configured a CLI context for a Apicurio Registry instance that requires authentication.</p>
 </li>
 <li>
-<p>On Linux, the <code>secret-tool</code> utility (libsecret) is available for keychain storage. On macOS, the CLI uses the built-in keychain.</p>
+<p>On Linux, the <code>secret-tool</code> utility (libsecret) is available for keychain storage. On macOS, the CLI uses the built-in keychain. On Windows, the CLI uses the built-in Credential Manager, which stores a secret of up to 2560 bytes.</p>
 </li>
 </ul>
 </div>
@@ -644,7 +674,7 @@ $ acr context update --group my-schemas</code></pre>
 </div>
 </li>
 <li>
-<p>Optional: On systems without a keychain, for example in headless environments, use the <code>--allow-unsafe-credential-storage</code> option. The CLI stores secrets in a <code>credentials.json</code> file with <code>0600</code> permissions and prints a warning. This preference persists per context.</p>
+<p>Optional: On systems without a keychain, for example in headless environments, use the <code>--allow-unsafe-credential-storage</code> option. The CLI stores secrets in a <code>credentials.json</code> file and prints a warning. The file is restricted to its owner, by <code>0600</code> permissions on Linux and macOS and by an owner-only access control list on Windows. This preference persists per context.</p>
 </li>
 <li>
 <p>To log out of the current context, run the following command. The CLI removes the stored secrets and clears the authentication settings of the context:</p>
