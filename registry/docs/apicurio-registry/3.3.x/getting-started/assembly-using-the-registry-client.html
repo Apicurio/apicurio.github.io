@@ -420,7 +420,7 @@
 <p>You can access the Apicurio Registry Java SDK by adding the correct dependency to your Apache Maven project.</p>
 </div>
 <div class="paragraph">
-<p>The Apicurio Registry client is implemented by using the HTTP client provided by the JDK. You can customize the client as needed, for example, by adding custom headers or enabling configuration options for Transport Layer Security (TLS) authentication.</p>
+<p>By default, the Apicurio Registry Java client uses a Vert.x HTTP client, and falls back to the HTTP client provided by the JDK when Vert.x is not available. You can customize the client as needed, for example, by configuring retry behavior, an HTTP proxy, or Transport Layer Security (TLS) trust options.</p>
 </div>
 <div class="paragraph">
 <p><strong>Typescript</strong></p>
@@ -500,16 +500,19 @@ are using pypi).</p>
 <p>Create the Apicurio Registry client as follows:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.vertx.core.Vertx;public class ClientExample {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.registry.client.RegistryClientFactory;
+import io.apicurio.registry.client.common.RegistryClientOptions;
+import io.apicurio.registry.rest.client.RegistryClient;
+import io.vertx.core.Vertx;
+
+public class ClientExample {
 
     public static void main(String[] args) throws Exception {
         // Create a registry client
-        String registryUrl = "https://my-registry.my-domain.com/apis/registry/v3";
         Vertx vertx = Vertx.vertx();
-        VertXRequestAdapter vertXRequestAdapter = new VertXRequestAdapter(vertx);
-        vertXRequestAdapter.setBaseUrl(REGISTRY_URL);
-
-        RegistryClient client = new RegistryClient(vertXRequestAdapter);
+        RegistryClientOptions options = RegistryClientOptions
+                .create("https://my-registry.my-domain.com", vertx);
+        RegistryClient client = RegistryClientFactory.create(options);
 
         // Use client here
 
@@ -526,7 +529,7 @@ are using pypi).</p>
 </dd>
 <dt class="hdlist1">The Vertx object</dt>
 <dd>
-<p>Create a new Vertx object (needed by the VertxRequestAdapter).</p>
+<p>Create a new Vertx object that the client uses for HTTP requests, so that you control its lifecycle.</p>
 </dd>
 <dt class="hdlist1">The registry client</dt>
 <dd>
@@ -562,76 +565,98 @@ are using pypi).</p>
 <h2 id="registry-sdk-config_registry"><a class="anchor" href="#registry-sdk-config_registry"></a>Apicurio Registry Java SDK configuration</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The Apicurio Registry Java client supports several configuration options, including client factory settings, custom headers, TLS authentication, and OpenTelemetry distributed tracing.</p>
+<p>The Apicurio Registry Java client supports several configuration options, including retry behavior, HTTP proxy settings, TLS trust options, and OpenTelemetry distributed tracing.</p>
+</div>
+<div class="paragraph">
+<p>You configure the client by calling methods on a <code>RegistryClientOptions</code> instance and passing it to <code>RegistryClientFactory.create</code>. The following methods are available:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Apicurio Registry Java client configuration options</caption>
+<caption class="title">Table 1. Apicurio Registry Java client configuration methods</caption>
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 50%;">
-<col style="width: 25%;">
+<col style="width: 40%;">
+<col style="width: 60%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Method</th>
 <th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Arguments</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Plain client</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Connects to a running Apicurio Registry with no additional configuration.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>create(registryUrl)</code>, <code>create(registryUrl, vertx)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create client options for a registry URL, optionally with an existing Vert.x instance.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Client with custom configuration</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry client that uses the configuration that you provide.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl</code>, <code>Map&lt;String Object&gt; configs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>retry()</code>, <code>retry(enabled, maxAttempts, initialDelayMs, backoffMultiplier, maxDelayMs)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable retry with exponential backoff for transient network failures.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Client with custom configuration and authentication</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Accepts a map containing custom configuration and an authentication server. You can use this option to add custom headers and authenticate requests.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUrl, Map&lt;String Object&gt; configs, Auth auth</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>proxy(host, port)</code>, <code>proxyAuth(username, password)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Route requests through an HTTP proxy.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustStoreJks(path, password)</code>, <code>trustStorePkcs12(path, password)</code>, <code>trustStorePem(path)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configure TLS trust for a registry served over HTTPS with custom certificates.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enableOpenTelemetry()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable OpenTelemetry trace context propagation.</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p><strong>Custom header configuration</strong></p>
+<p><strong>Retry configuration</strong></p>
 </div>
 <div class="paragraph">
-<p>To configure custom headers, add the <code>apicurio.registry.request.headers</code> prefix to the <code>configs</code> map key. For example, a <code>configs</code> map key of <code>apicurio.registry.request.headers.Authorization</code> with a value of <code>Basic: YWxhZGRpbjpvcGVuc2VzYW1</code> sets the <code>Authorization</code> header with the same value.</p>
+<p>Retry is disabled by default. The no-argument <code>retry()</code> method enables retry with the default settings: 3 attempts, an initial delay of 250 milliseconds, a backoff multiplier of 2.0, and a maximum delay of 10 seconds. The five-argument variant gives you full control:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">RegistryClientOptions options = RegistryClientOptions
+        .create("http://localhost:8080", vertx)
+        .retry(true, 5, 500, 2.0, 15000);
+RegistryClient client = RegistryClientFactory.create(options);</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p><strong>TLS configuration properties</strong></p>
+<p>The client retries transient network failures only, such as refused or reset connections, socket timeouts, and closed connections. HTTP error responses from the registry are not retried. The delay grows by the backoff multiplier after each attempt, up to the maximum delay. When all attempts fail, the client throws the original exception.</p>
 </div>
 <div class="paragraph">
-<p>The following properties configure Transport Layer Security (TLS) authentication for the Apicurio Registry Java client:</p>
+<p><strong>HTTP proxy configuration</strong></p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>apicurio.registry.request.ssl.truststore.location</code></p>
-</li>
-<li>
-<p><code>apicurio.registry.request.ssl.truststore.password</code></p>
-</li>
-<li>
-<p><code>apicurio.registry.request.ssl.truststore.type</code></p>
-</li>
-<li>
-<p><code>apicurio.registry.request.ssl.keystore.location</code></p>
-</li>
-<li>
-<p><code>apicurio.registry.request.ssl.keystore.password</code></p>
-</li>
-<li>
-<p><code>apicurio.registry.request.ssl.keystore.type</code></p>
-</li>
-<li>
-<p><code>apicurio.registry.request.ssl.key.password</code></p>
-</li>
-</ul>
+<div class="paragraph">
+<p>To route requests through an HTTP proxy, set the proxy host and port. For proxies that require authentication, also provide credentials:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">RegistryClientOptions options = RegistryClientOptions
+        .create("http://localhost:8080", vertx)
+        .proxy("proxy.example.com", 3128)
+        .proxyAuth("proxyuser", "proxypass");
+RegistryClient client = RegistryClientFactory.create(options);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The proxy configuration applies to registry API calls and to OAuth token endpoint calls. When you supply your own Vert.x <code>WebClient</code> with the <code>customWebClient</code> option, the client uses that <code>WebClient</code> unchanged, so you must configure the proxy on the <code>WebClient</code> yourself.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The Kafka client SerDes expose the same proxy settings as configuration properties: <code>apicurio.registry.proxy.host</code>, <code>apicurio.registry.proxy.port</code>, <code>apicurio.registry.proxy.username</code>, and <code>apicurio.registry.proxy.password</code>. For details, see <a href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>TLS configuration</strong></p>
+</div>
+<div class="paragraph">
+<p>For a registry served over HTTPS with certificates that the default Java trust store does not trust, configure a trust store with the <code>trustStoreJks</code>, <code>trustStorePkcs12</code>, or <code>trustStorePem</code> method. Methods for client certificates (mutual TLS), including <code>keystoreJks</code> and <code>keystorePkcs12</code>, are also available.</p>
 </div>
 <div class="paragraph">
 <p><strong>OpenTelemetry distributed tracing</strong></p>
