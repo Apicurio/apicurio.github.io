@@ -835,6 +835,108 @@ Some artifact types (for example, JSON Schema) allow circular dependencies, but 
 </div>
 </div>
 <div class="sect1">
+<h2 id="searching-artifacts-using-rest-api_registry"><a class="anchor" href="#searching-artifacts-using-rest-api_registry"></a>Searching for schema and API artifacts using Apicurio Registry REST API commands</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the Apicurio Registry REST API search endpoints to find artifacts, versions, and groups. Search filters match exactly by default, and you can use the <code>*</code> wildcard for pattern matching.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Search for artifacts with an exact filter value:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/apis/registry/v3/search/artifacts?artifactId=my-artifact"</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>To match patterns, include the <code>*</code> wildcard anywhere in the <code>groupId</code>, <code>artifactId</code>, or <code>labels</code> filter values:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/apis/registry/v3/search/artifacts?artifactId=my-*"
+$ curl "http://localhost:8080/apis/registry/v3/search/artifacts?labels=env*:prod*"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>*</code> character is the only supported wildcard.</p>
+</div>
+</li>
+<li>
+<p>To search by name, use an exact value or a leading or trailing <code>*</code> wildcard. The <code>name</code> filter matches against the artifact name or the artifact ID, and behaves the same on the artifact and version search endpoints:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/apis/registry/v3/search/versions?name=*payment*"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>description</code> filter is different: it always matches substrings.</p>
+</div>
+</li>
+<li>
+<p>Optional: To improve performance on large result sets, set the <code>skipCount</code> parameter to <code>true</code>. The registry then skips the expensive total count query, and the <code>count</code> field in the response is <code>0</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/apis/registry/v3/search/artifacts?limit=50&amp;skipCount=true"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>skipCount</code> parameter is available on the artifact and version search endpoints, and on the endpoints that list the artifacts of a group and the versions of an artifact.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="canonicalizing-content-using-rest-api_registry"><a class="anchor" href="#canonicalizing-content-using-rest-api_registry"></a>Canonicalizing content using the Apicurio Registry REST API</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the Apicurio Registry REST API to convert schema or API content to its canonical form without storing it. Canonical content is useful for comparing schemas independently of formatting differences.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Send the content to the canonicalization endpoint. The <code>artifactType</code> query parameter is required:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST -H "Content-Type: application/json" --data @schema.json \
+  "http://localhost:8080/apis/registry/v3/content/canonicalize?artifactType=AVRO"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The response body contains the canonicalized content. An empty request body or an unknown artifact type produces a <code>400</code> error response.</p>
+</div>
+</li>
+<li>
+<p>To retrieve the canonical form of a stored artifact version with its references resolved, use the <code>canonical</code> parameter on the version content endpoint instead:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/versions/1.0.0/content?canonical=true"</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The canonicalization endpoint operates on the content exactly as provided and does not resolve external references. To canonicalize content that uses references, store the content first and use the <code>canonical</code> parameter.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="exporting-importing-using-rest-api_registry"><a class="anchor" href="#exporting-importing-using-rest-api_registry"></a>Exporting and importing registry data using Apicurio Registry REST API commands</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">

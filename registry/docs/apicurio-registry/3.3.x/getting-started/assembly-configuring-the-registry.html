@@ -716,6 +716,96 @@ Before you configure OpenTelemetry, ensure that you have installed Apicurio Regi
 </div>
 </div>
 <div class="sect1">
+<h2 id="configuring-dynamic-log-level_registry"><a class="anchor" href="#configuring-dynamic-log-level_registry"></a>Changing the Apicurio Registry log level at runtime</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can change the log level of a running Apicurio Registry instance without restarting it by setting the dynamic <code>apicurio.log.level</code> configuration property. The setting applies to the Apicurio Registry loggers in the <code>io.apicurio</code> category.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have administrator access to the Apicurio Registry instance.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Set the log level with the admin configuration REST endpoint. Valid values are <code>TRACE</code>, <code>DEBUG</code>, <code>INFO</code>, <code>WARN</code>, <code>ERROR</code>, <code>OFF</code>, and <code>ALL</code>. The default value is <code>INFO</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X PUT -H "Content-Type: application/json" \
+  -d '{"value": "DEBUG"}' \
+  http://localhost:8080/apis/registry/v3/admin/config/properties/apicurio.log.level</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, use the CLI:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr server-config set apicurio.log.level DEBUG</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The registry applies the change within a few seconds. The value is stored in the registry storage, so it persists across restarts.</p>
+</div>
+</li>
+<li>
+<p>To revert to the original log level, remove the dynamic property. The registry restores the log level that was active at startup:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr server-config reset apicurio.log.level</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-rest-metrics-distribution_registry"><a class="anchor" href="#registry-rest-metrics-distribution_registry"></a>REST request metrics distribution configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The following properties control how Apicurio Registry publishes distribution statistics for its REST request timer metrics. Change the distribution type when your monitoring system computes percentiles poorly from histogram buckets, for example, Datadog.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 4. REST metrics distribution properties</caption>
+<colgroup>
+<col style="width: 36.3636%;">
+<col style="width: 27.2727%;">
+<col style="width: 36.3637%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.metrics.rest.distribution.type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>histogram</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Distribution type for REST request timers. The <code>histogram</code> type publishes bucket histograms with service level objective boundaries, and the <code>summary</code> type publishes pre-computed percentiles only. An invalid value prevents the application from starting.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.metrics.rest.distribution.percentiles</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.5,0.95,0.99,0.9995</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Percentiles to pre-compute. Each value must be between 0.0 and 1.0.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.metrics.rest.distribution.slo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.1,0.25,0.5,1.0,2.0,5.0,10.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Service level objective boundaries in seconds for the histogram buckets. Only used when the distribution type is <code>histogram</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
 <h2 id="configuring-liveness-readiness-probes_registry"><a class="anchor" href="#configuring-liveness-readiness-probes_registry"></a>Configuring Apicurio Registry health checks on OpenShift</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -831,7 +921,7 @@ The following environment variables are provided for reference only. The default
 </table>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 4. Environment variables for Apicurio Registry liveness probes</caption>
+<caption class="title">Table 5. Environment variables for Apicurio Registry liveness probes</caption>
 <colgroup>
 <col style="width: 29.4117%;">
 <col style="width: 29.4117%;">
@@ -886,7 +976,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 </table>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 5. Environment variables for Apicurio Registry readiness probes</caption>
+<caption class="title">Table 6. Environment variables for Apicurio Registry readiness probes</caption>
 <colgroup>
 <col style="width: 30.7692%;">
 <col style="width: 38.4615%;">
