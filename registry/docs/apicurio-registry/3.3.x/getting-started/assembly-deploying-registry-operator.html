@@ -1028,7 +1028,7 @@ KubernetesOps storage is an <strong>experimental</strong> feature. You must enab
 <p>You must have already installed the Apicurio Registry Operator. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
 </li>
 <li>
-<p>You must have access to create ConfigMaps and RBAC resources in your cluster.</p>
+<p>You must have access to create ConfigMaps in your cluster. The Apicurio Registry Operator creates the required RBAC resources automatically.</p>
 </li>
 </ul>
 </div>
@@ -1077,8 +1077,10 @@ the experimental features gate required by KubernetesOps storage.
 </div>
 </li>
 <li>
-<p>Create the required RBAC resources (ServiceAccount, Role, RoleBinding) to grant the registry read access
-to ConfigMaps. See <a href="assembly-configuring-kubernetesops-storage.html#kubernetesops-rbac-requirements_registry" class="page">RBAC requirements</a> for details.</p>
+<p>Optional: Verify that the Apicurio Registry Operator created the RBAC resources that grant the registry read access
+to ConfigMaps. The Apicurio Registry Operator automatically creates a ServiceAccount, a Role, and a RoleBinding, each named
+<code>&lt;cr-name&gt;-kubeops</code>, and sets the service account on the registry deployment. For deployments without the
+Apicurio Registry Operator, see <a href="assembly-configuring-kubernetesops-storage.html#kubernetesops-rbac-requirements_registry" class="page">RBAC requirements</a>.</p>
 </li>
 <li>
 <p>Create ConfigMaps containing your registry data. See
@@ -1508,6 +1510,81 @@ spec:
 </div>
 </div>
 <div class="sect1">
+<h2 id="configuring-autoscaling_registry"><a class="anchor" href="#configuring-autoscaling_registry"></a>Autoscaling configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure the Apicurio Registry Operator to manage a horizontal pod autoscaler (HPA) for the app and UI components. When autoscaling is enabled, the Apicurio Registry Operator creates an HPA that targets the component&#8217;s Deployment, and the static <code>replicas</code> field is ignored.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry
+spec:
+  app:
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 5
+      targetCPUUtilizationPercentage: 70</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Autoscaling fields</caption>
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 42.8571%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the Apicurio Registry Operator manages a HorizontalPodAutoscaler for the component.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>minReplicas</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum number of replicas.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxReplicas</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of replicas. Set this field when you enable autoscaling; when omitted, it falls back to the <code>minReplicas</code> value.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>minReplicas</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>targetCPUUtilizationPercentage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Target average CPU utilization percentage across all pods.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>80</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>targetMemoryUtilizationPercentage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Target average memory utilization percentage across all pods. When not set, memory-based scaling is not configured.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not set</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The autoscaling configuration is available on both <code>spec.app.autoscaling</code> and <code>spec.ui.autoscaling</code>. If you set both <code>replicas</code> and <code>autoscaling</code> on a component, the Apicurio Registry Operator reports a validation error condition and ignores the <code>replicas</code> field. The Apicurio Registry Operator also manages a PodDisruptionBudget when autoscaling is enabled with <code>maxReplicas</code> greater than 1.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="configuring-poddisruptionbudget_registry"><a class="anchor" href="#configuring-poddisruptionbudget_registry"></a>PodDisruptionBudget configuration</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -1627,6 +1704,37 @@ spec:
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-console-plugin_registry"><a class="anchor" href="#configuring-console-plugin_registry"></a>OpenShift Console plugin configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>On OpenShift, the Apicurio Registry Operator can deploy a console plugin that adds an <strong>Apicurio</strong> section to the OpenShift Console administrator perspective, with pages for listing and inspecting <code>ApicurioRegistry3</code> instances.</p>
+</div>
+<div class="paragraph">
+<p>To deploy the console plugin, both of the following conditions must be met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The top-level <code>spec.consolePlugin.enabled</code> field is set to <code>true</code> in the custom resource. The field defaults to <code>false</code>.</p>
+</li>
+<li>
+<p>The console plugin image is configured on the Apicurio Registry Operator, by using the <code>REGISTRY_CONSOLE_PLUGIN_IMAGE</code> environment variable on the operator deployment.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  consolePlugin:
+    enabled: true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Apicurio Registry Operator then creates a console plugin Deployment and Service secured with OpenShift service serving certificates, and registers a cluster-scoped <code>ConsolePlugin</code> resource named <code>&lt;cr-name&gt;-console-plugin</code>. The plugin backend forwards the logged-in user&#8217;s OpenShift bearer token to the registry API. On clusters that are not OpenShift, the console plugin is not deployed.</p>
 </div>
 </div>
 </div>

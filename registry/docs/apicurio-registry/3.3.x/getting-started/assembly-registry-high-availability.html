@@ -847,6 +847,33 @@ APICURIO_KAFKASQL_SNAPSHOTS_TOPIC_MIN_INSYNC_REPLICAS=2</code></pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="ha-kafkasql-startup-verification_registry"><a class="anchor" href="#ha-kafkasql-startup-verification_registry"></a>KafkaSQL startup verification</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>At startup, Apicurio Registry verifies the KafkaSQL topic configuration and the contents of the journal topic before it serves requests. Verification protects against accidental data loss from misconfigured topics or from data that an earlier major version wrote.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry performs the following checks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Topic configuration: every KafkaSQL topic must use the <code>delete</code> cleanup policy, and the journal and snapshots topics must use unlimited retention (<code>retention.ms=-1</code> and <code>retention.bytes=-1</code>). When a check fails, Apicurio Registry refuses to start, and the error message names the topic, the effective value, and where the value was configured.</p>
+</li>
+<li>
+<p>Journal contents: Apicurio Registry inspects recent messages in the journal topic. When the journal contains only Apicurio Registry version 2.x records, Apicurio Registry refuses to start to prevent data loss. When the journal contains a mix of version 2.x and 3.x records, Apicurio Registry logs an error and continues.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The journal inspection is bounded: Apicurio Registry captures the topic end offsets before it reads, so messages that other replicas produce concurrently do not delay startup.</p>
+</div>
+<div class="paragraph">
+<p>To relax the retention verification, for example, when you use the snapshotting feature with automatic cleanup, set <code>apicurio.kafkasql.topic-configuration-verification-override-enabled=true</code>. With this setting, Apicurio Registry does not enforce unlimited retention, so ensure that snapshots are created more frequently than messages are deleted.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="ha-kafkasql-consumer-behavior_registry"><a class="anchor" href="#ha-kafkasql-consumer-behavior_registry"></a>Consumer behavior with multiple replicas</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -903,6 +930,49 @@ which sets a prefix while still generating a unique group ID on each startup.
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ha-operator-leader-election_registry"><a class="anchor" href="#ha-operator-leader-election_registry"></a>Operator leader election</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When you run more than one replica of the Apicurio Registry Operator, Kubernetes Lease-based leader election ensures that only one replica reconciles resources at a time. Leader election is enabled by default.</p>
+</div>
+<div class="paragraph">
+<p>You can configure leader election with the following environment variables on the operator deployment:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Operator leader election environment variables</caption>
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_OPERATOR_LEADER_ELECTION_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables Lease-based leader election. When the lease namespace cannot be resolved, leader election is disabled automatically.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_OPERATOR_LEADER_ELECTION_LEASE_NAME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio-registry-operator-lease</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the Lease resource.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_OPERATOR_LEADER_ELECTION_LEASE_NAMESPACE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The operator pod namespace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Namespace of the Lease resource.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">

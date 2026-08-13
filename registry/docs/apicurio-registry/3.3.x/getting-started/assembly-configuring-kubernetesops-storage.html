@@ -397,7 +397,7 @@
 <p>You have installed Apicurio Registry on Kubernetes or OpenShift.</p>
 </li>
 <li>
-<p>You have access to create ConfigMaps and RBAC resources in your cluster.</p>
+<p>You have access to create ConfigMaps in your cluster. Deployments without the Apicurio Registry Operator also require access to create RBAC resources.</p>
 </li>
 </ul>
 </div>
@@ -1260,10 +1260,13 @@ data:
 <h2 id="kubernetesops-rbac-requirements_registry"><a class="anchor" href="#kubernetesops-rbac-requirements_registry"></a>RBAC requirements</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry requires read access to ConfigMaps in the configured namespace.</p>
+<p>Apicurio Registry requires read access to ConfigMaps in the configured namespace. When you deploy Apicurio Registry with the Apicurio Registry Operator, the Apicurio Registry Operator creates the required RBAC resources automatically. For deployments without the Apicurio Registry Operator, create the resources manually.</p>
 </div>
 <div class="paragraph">
-<p>Create the following RBAC resources:</p>
+<p>The Apicurio Registry Operator automatically creates a ServiceAccount, a Role, and a RoleBinding, each named <code>&lt;cr-name&gt;-kubeops</code>, and sets the service account on the registry deployment. The Role is created in the configured ConfigMap namespace, so cross-namespace configurations work without manual steps.</p>
+</div>
+<div class="paragraph">
+<p>For deployments without the Apicurio Registry Operator, create the following RBAC resources:</p>
 </div>
 <div class="listingblock">
 <div class="content">
