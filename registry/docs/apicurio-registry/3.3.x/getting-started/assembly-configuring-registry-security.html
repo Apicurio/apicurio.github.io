@@ -384,7 +384,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can configure security options for Apicurio Registry, including authentication in Keycloak, Microsoft Azure Active Directory, or Dex, and role-based authorization.</p>
+<p>You can configure security options for Apicurio Registry, including authentication in Keycloak, Microsoft Azure Active Directory, or Dex, proxy header and Kubernetes-native authentication, and role-based authorization.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -836,6 +836,11 @@ You must register your Apicurio Registry application host as a <strong>Redirect 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_ROLES_ROLE_CLAIM_PATH</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The name of the claim in which Azure AD stores roles.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>roles</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_UI_AUTH_OIDC_LOAD_USER_INFO</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the web console loads user details from the OIDC userinfo endpoint. The default is <code>true</code>. You must set this variable to <code>false</code> for Azure AD, where the userinfo endpoint has incompatible audience requirements and the call fails after login.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -1881,7 +1886,7 @@ Even with <code>client_credentials</code> working, the tokens <strong>do not inc
 <h2 id="registry-security-settings_registry"><a class="anchor" href="#registry-security-settings_registry"></a>Apicurio Registry authentication and authorization configuration options</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry provides authentication options for OpenID Connect with Keycloak and HTTP basic authentication.</p>
+<p>Apicurio Registry provides the following authentication options: OpenID Connect with an identity provider such as Keycloak, HTTP basic authentication, proxy header authentication, and Kubernetes-native authentication.</p>
 </div>
 <div class="paragraph">
 <p>Apicurio Registry provides authorization options for role-based and content-based approaches:</p>
@@ -1903,7 +1908,7 @@ Even with <code>client_credentials</code> working, the tokens <strong>do not inc
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-All authentication and authorization options in Apicurio Registry are disabled by default. Before enabling any of these options, you must first set the <code>QUARKUS_OIDC_TENANT_ENABLED</code> option to <code>true</code>.
+All authentication and authorization options in Apicurio Registry are disabled by default. Before enabling the OpenID Connect or HTTP basic options, you must first set the <code>QUARKUS_OIDC_TENANT_ENABLED</code> option to <code>true</code>. Proxy header and Kubernetes-native authentication do not require OpenID Connect.
 </td>
 </tr>
 </table>
@@ -1919,6 +1924,15 @@ All authentication and authorization options in Apicurio Registry are disabled b
 </li>
 <li>
 <p><a href="#registry-security-authn-http_registry">Apicurio Registry authentication by using HTTP basic</a></p>
+</li>
+<li>
+<p><a href="#registry-security-authn-chain_registry">Apicurio Registry authentication mechanism chain</a></p>
+</li>
+<li>
+<p><a href="#registry-security-proxy-header_registry">Configuring Apicurio Registry proxy header authentication</a></p>
+</li>
+<li>
+<p><a href="#registry-security-kubernetes-auth_registry">Configuring Apicurio Registry Kubernetes-native authentication</a></p>
 </li>
 <li>
 <p><a href="#registry-security-rbac-enabled_registry">Apicurio Registry role-based authorization</a></p>
@@ -2076,13 +2090,283 @@ All authentication and authorization options in Apicurio Registry are disabled b
 </div>
 </div>
 <div class="sect1">
+<h2 id="registry-security-authn-chain_registry"><a class="anchor" href="#registry-security-authn-chain_registry"></a>Apicurio Registry authentication mechanism chain</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry evaluates its enabled authentication mechanisms as an ordered chain. You can control the order with a configuration property, and combine mechanisms so that different clients authenticate in different ways against the same registry instance.</p>
+</div>
+<div class="paragraph">
+<p>The <code>apicurio.authn.mechanism.priority</code> property holds a comma-separated, ordered list of mechanism names. The default value is <code>basic,proxy-header,oidc</code>. The chain is built once at startup, and only mechanisms that are also enabled join the chain. Unknown names are skipped with a warning.</p>
+</div>
+<div class="paragraph">
+<p>For each request, Apicurio Registry tries the mechanisms in order, and the first mechanism that produces an identity wins. A mechanism that does not apply to the request, for example because the expected header or bearer token is absent, passes the request to the next mechanism. When no mechanism produces an identity, the request is anonymous. The authentication challenge in <code>401</code> responses comes from the last mechanism in the chain.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 15. Authentication mechanisms</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Mechanism</th>
+<th class="tableblock halign-left valign-top">Enabled by</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basic</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.http.auth.basic=true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Native HTTP basic authentication. This mechanism is distinct from the <code>apicurio.authn.basic-client-credentials.enabled</code> option, which exchanges basic credentials for an OpenID Connect token and is handled by the <code>oidc</code> mechanism.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>proxy-header</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.authn.proxy-header.enabled=true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authentication based on identity headers set by a trusted reverse proxy.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>oidc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.oidc.tenant-enabled=true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenID Connect bearer token authentication with an identity provider such as Keycloak.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.authn.kubernetes.enabled=true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes-native authentication by using the TokenReview API. This mechanism is not part of the default priority list; you must add it explicitly.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The following example configures proxy header authentication for requests coming through a reverse proxy, with OpenID Connect as the fallback for all other requests:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.authn.proxy-header.enabled=true
+quarkus.oidc.tenant-enabled=true
+apicurio.authn.mechanism.priority=proxy-header,oidc</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You cannot enable OpenID Connect and Kubernetes-native authentication at the same time. Both use bearer tokens, and Apicurio Registry fails at startup with an error when both are enabled. If no authentication mechanism is enabled, Apicurio Registry does not enforce authentication or authorization.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-security-proxy-header_registry"><a class="anchor" href="#registry-security-proxy-header_registry"></a>Configuring Apicurio Registry proxy header authentication</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure Apicurio Registry to authenticate requests based on identity headers set by a reverse proxy. The proxy authenticates users, and forwards the user name, email, and groups to Apicurio Registry in HTTP headers.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Proxy header authentication is only safe when Apicurio Registry is reachable exclusively through a trusted proxy. The proxy must remove the identity headers from all incoming client requests and set them itself after authenticating the user. If clients can reach Apicurio Registry directly, or if the proxy forwards client-supplied identity headers, clients can impersonate any user.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>A reverse proxy authenticates users in front of Apicurio Registry and sets the identity headers.</p>
+</li>
+<li>
+<p>Network isolation blocks direct client access to Apicurio Registry.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Configure Apicurio Registry with the following environment variables:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">QUARKUS_OIDC_TENANT_ENABLED=false
+APICURIO_AUTHN_PROXY_HEADER_ENABLED=true
+QUARKUS_HTTP_PROXY_TRUSTED_PROXIES=my-proxy-host</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>QUARKUS_HTTP_PROXY_TRUSTED_PROXIES</code> value identifies the proxies that Apicurio Registry trusts.</p>
+</div>
+</li>
+<li>
+<p>Optional: Customize the header names. By default, Apicurio Registry reads the user name from <code>X-Forwarded-User</code>, the email address from <code>X-Forwarded-Email</code>, and the groups from <code>X-Forwarded-Groups</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">APICURIO_AUTHN_PROXY_HEADER_USERNAME=X-Forwarded-User
+APICURIO_AUTHN_PROXY_HEADER_EMAIL=X-Forwarded-Email
+APICURIO_AUTHN_PROXY_HEADER_GROUPS=X-Forwarded-Groups</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The user name header is required for the mechanism to apply; the email and groups headers are optional. The groups header contains a comma-separated list.</p>
+</div>
+</li>
+<li>
+<p>If you enable role-based authorization, ensure that the groups header contains the role names that Apicurio Registry expects. The groups become the roles of the authenticated identity, so the values must match the configured role names, which are <code>sr-admin</code>, <code>sr-developer</code>, and <code>sr-readonly</code> by default.</p>
+</li>
+<li>
+<p>Optional: To skip authorization checks in Apicurio Registry for requests that the proxy authenticated, set <code>APICURIO_AUTHN_PROXY_HEADER_TRUST_PROXY_AUTHORIZATION=true</code>. Use this option when the proxy or an external policy engine performs authorization. Apicurio Registry then trusts the proxy completely for requests that carry the identity headers.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>A request that includes the user name header is authenticated as that user. A request without the header receives a <code>401</code> response with the <code>WWW-Authenticate: Proxy authentication required</code> challenge, unless another enabled mechanism authenticates it.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/distro/docker-compose/in-memory-with-envoy-opa">Reference deployment with Envoy and Open Policy Agent</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-security-kubernetes-auth_registry"><a class="anchor" href="#registry-security-kubernetes-auth_registry"></a>Configuring Apicurio Registry Kubernetes-native authentication</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure Apicurio Registry to authenticate clients by validating their Kubernetes service account tokens with the Kubernetes TokenReview API. Clients send their service account token as a bearer token, and no external identity provider is required.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Kubernetes-native authentication is an <strong>experimental</strong> feature. You must enable the experimental features gate (<code>APICURIO_FEATURES_EXPERIMENTAL_ENABLED=true</code>) to use it; otherwise, the application fails at startup. You cannot enable Kubernetes-native authentication and OpenID Connect at the same time, because both use bearer tokens.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When you deploy Apicurio Registry with the Operator, you can configure this feature with the <code>spec.app.auth.kubernetesAuth</code> fields of the <code>ApicurioRegistry3</code> custom resource: <code>enabled</code>, <code>apiAudiences</code>, <code>cacheExpiration</code>, and <code>groupMapping</code> with <code>adminGroups</code>, <code>developerGroups</code>, and <code>readOnlyGroups</code>. The Operator adds the <code>kubernetes</code> mechanism to the priority list and sets the role source automatically.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is deployed on a Kubernetes cluster.</p>
+</li>
+<li>
+<p>You have permission to create cluster role bindings.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Grant the Apicurio Registry service account permission to call the TokenReview API by binding it to the <code>system:auth-delegator</code> cluster role:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: apicurio-registry-token-review
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+  - kind: ServiceAccount
+    name: apicurio-registry
+    namespace: my-namespace</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Configure Apicurio Registry with the following environment variables. The <code>kubernetes</code> mechanism is not part of the default priority list, so you must add it:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">APICURIO_FEATURES_EXPERIMENTAL_ENABLED=true
+APICURIO_AUTHN_KUBERNETES_ENABLED=true
+APICURIO_AUTHN_MECHANISM_PRIORITY=kubernetes,basic,proxy-header</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Optional: Restrict which tokens are accepted by configuring the expected API audiences as a comma-separated list. When the value is empty, the audience is not validated:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">APICURIO_AUTHN_KUBERNETES_API_AUDIENCES=https://kubernetes.default.svc</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>To enable role-based authorization, map Kubernetes groups to Apicurio Registry roles. The groups of the authenticated service account or user are matched against the comma-separated mapping lists:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">APICURIO_AUTH_ROLE_BASED_AUTHORIZATION=true
+APICURIO_AUTH_ROLE_SOURCE=kubernetes
+APICURIO_AUTH_ROLE_SOURCE_KUBERNETES_GROUP_MAPPING_ADMIN=cluster-admins
+APICURIO_AUTH_ROLE_SOURCE_KUBERNETES_GROUP_MAPPING_DEVELOPER=developers
+APICURIO_AUTH_ROLE_SOURCE_KUBERNETES_GROUP_MAPPING_READONLY=viewers</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Optional: Adjust how long TokenReview results are cached, in minutes. The default is <code>5</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">APICURIO_AUTHN_KUBERNETES_CACHE_EXPIRATION=5</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>A request that sends a valid service account token as a bearer token is authenticated, and receives the Apicurio Registry role that the group mapping assigns to its Kubernetes groups.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="registry-security-rbac-enabled_registry"><a class="anchor" href="#registry-security-rbac-enabled_registry"></a>Apicurio Registry role-based authorization</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>You can set the following options to <code>true</code> to enable role-based authorization in Apicurio Registry:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 15. Configuration for Apicurio Registry role-based authorization</caption>
+<caption class="title">Table 16. Configuration for Apicurio Registry role-based authorization</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 40%;">
@@ -2138,7 +2422,7 @@ All authentication and authorization options in Apicurio Registry are disabled b
 <p>To use roles assigned in Keycloak, set the following environment variables:</p>
 </div>
 <table id="registry-security-rbac-keycloak-settings_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 16. Configuration for Apicurio Registry role-based authorization by using Keycloak</caption>
+<caption class="title">Table 17. Configuration for Apicurio Registry role-based authorization by using Keycloak</caption>
 <colgroup>
 <col style="width: 35.2941%;">
 <col style="width: 35.2941%;">
@@ -2185,7 +2469,7 @@ All authentication and authorization options in Apicurio Registry are disabled b
 of the following user roles in Keycloak. However, you can configure different user role names by using the environment variables shown in the preceding table.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 17. Apicurio Registry roles for authentication and authorization</caption>
+<caption class="title">Table 18. Apicurio Registry roles for authentication and authorization</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 16.6666%;">
@@ -2235,7 +2519,7 @@ of the following user roles in Keycloak. However, you can configure different us
 <p>To use roles managed internally by Apicurio Registry, set the following environment variable:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 18. Configuration for Apicurio Registry role-based authorization by using internal role mappings</caption>
+<caption class="title">Table 19. Configuration for Apicurio Registry role-based authorization by using internal role mappings</caption>
 <colgroup>
 <col style="width: 35.2941%;">
 <col style="width: 35.2941%;">
@@ -2276,7 +2560,7 @@ users can grant access to other users.</p>
 <p>Because Apicurio Registry has no default admin users, you can configure an alternative way to identify admins. Configure the admin-override feature by using the following environment variables:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 19. Configuration for Apicurio Registry admin-override</caption>
+<caption class="title">Table 20. Configuration for Apicurio Registry admin-override</caption>
 <colgroup>
 <col style="width: 35.2941%;">
 <col style="width: 35.2941%;">
@@ -2344,7 +2628,7 @@ REST API (or associated UI) to grant roles to additional users (including additi
 <p>You can set the following options to <code>true</code> to enable owner-only authorization for updates to artifacts or artifact groups in Apicurio Registry:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 20. Configuration for owner-only authorization</caption>
+<caption class="title">Table 21. Configuration for owner-only authorization</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 40%;">
@@ -2398,7 +2682,7 @@ REST API (or associated UI) to grant roles to additional users (including additi
 <p>To enable authenticated read access, you must first enable role-based authorization, and then ensure that the following options are set to <code>true</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 21. Configuration for authenticated read access</caption>
+<caption class="title">Table 22. Configuration for authenticated read access</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 40%;">
@@ -2450,7 +2734,7 @@ supports an anonymous read-only access option.</p>
 calls to the REST API, set the following options to <code>true</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 22. Configuration for anonymous read-only access</caption>
+<caption class="title">Table 23. Configuration for anonymous read-only access</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 40%;">
@@ -2613,7 +2897,7 @@ No 'Access-Control-Allow-Origin' header is present on the requested resource.</p
 The default settings from <code>application.properties</code> are:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 23. Default Apicurio Registry CORS configuration properties</caption>
+<caption class="title">Table 24. Default Apicurio Registry CORS configuration properties</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -2658,7 +2942,7 @@ You must add your application&#8217;s origin to the allowed list.</p>
 Environment variables are the recommended approach because they let you configure Apicurio Registry without modifying configuration files.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 24. Apicurio Registry CORS environment variables</caption>
+<caption class="title">Table 25. Apicurio Registry CORS environment variables</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 41.6666%;">
@@ -2993,7 +3277,7 @@ This automatic CORS detection works whether your networking layer uses Kubernete
 <p>Use the following table to match common CORS error messages to their cause and fix.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 25. Common CORS errors and fixes</caption>
+<caption class="title">Table 26. Common CORS errors and fixes</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 30%;">
