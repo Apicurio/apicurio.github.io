@@ -978,7 +978,9 @@ The <code>latest</code> tag refers to the most recent stable release. For develo
 </tbody>
 </table>
 <div class="paragraph">
-<div class="title">TLS properties (outbound to Apicurio Registry only)</div>
+<p><strong>TLS properties (outbound to Apicurio Registry only)</strong></p>
+</div>
+<div class="paragraph">
 <p>These properties apply to the MCP server&#8217;s TLS connection to Apicurio Registry. They do not control the inbound HTTPS listener. Use Quarkus HTTP SSL settings (<code>quarkus.http.ssl.*</code>) for inbound TLS.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -1234,39 +1236,46 @@ QUARKUS_HTTP_CORS_ORIGINS=http://localhost:6274</code></pre>
 </li>
 <li>
 <p>Verify that operations respect Apicurio Registry roles: a token with <code>sr-readonly</code> cannot create artifacts or groups.</p>
-</li>
-</ol>
-</div>
 <div class="paragraph">
 <p>For a complete local example, see the <code>examples/mcp-keycloak</code> directory in the Apicurio Registry repository.</p>
 </div>
-<div class="sect2">
-<h3 id="_http_mode_without_token_forwarding"><a class="anchor" href="#_http_mode_without_token_forwarding"></a>HTTP mode without token forwarding</h3>
-<div class="paragraph">
-<p>HTTP mode forwards each caller&#8217;s bearer token to Apicurio Registry by default, so per-user RBAC applies. Set <code>apicurio.mcp.http.forward-token=false</code> to turn that off.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-http-mode-without-token-forwarding_registry"><a class="anchor" href="#mcp-http-mode-without-token-forwarding_registry"></a>MCP HTTP mode without token forwarding</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>By default, HTTP mode forwards each caller&#8217;s bearer token to Apicurio Registry, so role-based access control applies per user. You can disable token forwarding so that all callers act as one shared service account, for example, in shared deployments where OIDC only controls access to the MCP endpoint.</p>
 </div>
 <div class="paragraph">
-<p>With forwarding disabled, callers still authenticate to the MCP server with OIDC (same Keycloak realm and HTTP auth settings as above). MCP tool calls use the shared <code>apicurio.mcp.auth.*</code> service account against Apicurio Registry, not the caller&#8217;s token.</p>
+<p>To disable token forwarding, set <code>apicurio.mcp.http.forward-token=false</code>. Callers still authenticate to the MCP server with OIDC, by using the same Keycloak realm and HTTP authentication settings as with token forwarding enabled. MCP tool calls then use the shared <code>apicurio.mcp.auth.*</code> service account against Apicurio Registry, not the caller&#8217;s token.</p>
 </div>
 <div class="paragraph">
-<p>This fits shared HTTP MCP setups where OIDC only needs to control access to the MCP endpoint, and every caller can act as the same service account in Apicurio Registry.</p>
-</div>
-<div class="paragraph">
-<p>You need:</p>
+<p>Disabled token forwarding requires the following configuration:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>apicurio.mcp.http.enabled=true</code> and the Quarkus MCP HTTP / OIDC settings from the procedure above</p>
+<p><code>apicurio.mcp.http.enabled=true</code>, together with the Quarkus MCP HTTP and OIDC settings that HTTP transport requires</p>
 </li>
 <li>
 <p><code>apicurio.mcp.http.forward-token=false</code></p>
 </li>
 <li>
-<p><code>apicurio.mcp.auth.*</code> client credentials (token endpoint, client ID, and client secret), as in stdio mode when Apicurio Registry is secured</p>
+<p><code>apicurio.mcp.auth.*</code> client credentials (token endpoint, client ID, and client secret), the same as in stdio mode when Apicurio Registry is secured</p>
 </li>
 </ul>
 </div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#configuring-mcp-server-http-oauth_registry">Configuring MCP server HTTP transport with OAuth</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
