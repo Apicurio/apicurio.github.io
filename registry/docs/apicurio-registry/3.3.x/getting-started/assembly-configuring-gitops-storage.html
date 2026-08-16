@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Configuring Apicurio Registry with GitOps storage :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-configuring-gitops-storage.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.3.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-compatibility-modes.html">Apicurio Registry schema compatibility modes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-gitops-storage.html">Configuring Apicurio Registry with GitOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-secured-kafka.html">Deploying Apicurio Registry with a secured Kafka instance</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Versioning and support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-versioning-support-policy.html">Versioning and support policy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-events.html">Apicurio Registry change events and the outbox pattern</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using an SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Usage Telemetry and Lifecycle Governance</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-usage-telemetry.html">Usage Telemetry and API Lifecycle Governance</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-registry-quickstart.html">Agent registry quick start</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A protocol features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP tool definition features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-server-integration.html">MCP server integration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Best Practices Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-schema-lifecycle-best-practices.html">Schema lifecycle best practices</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.3.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.2.x/index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Installation</li>
+    <li><a href="assembly-configuring-gitops-storage.html">Configuring Apicurio Registry with GitOps storage</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.3.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-configuring-gitops-storage.html">3.3.x</a>
+    <a class="version is-missing" href="../../3.2.x/index.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Configuring Apicurio Registry with GitOps storage</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Configure Apicurio Registry to use a Git repository as the source of registry data. With GitOps storage, you manage schemas and API designs declaratively in Git, and all changes flow through Git commits instead of REST API calls.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>You have a way to run the Apicurio Registry container image, for example Docker, Podman, or a Kubernetes cluster.</p>
+</li>
+<li>
+<p>You have a Git repository for registry data.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="gitops-storage-overview_registry"><a class="anchor" href="#gitops-storage-overview_registry"></a>Overview of GitOps storage</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>GitOps storage is a read-only storage variant that loads registry data from a Git repository. You declare the desired state of the registry in files, and the registry serves that state, so all changes flow through your Git workflow with reviews, history, and rollbacks.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+GitOps storage is an <strong>experimental</strong> feature. You must enable the experimental features gate (<code>APICURIO_FEATURES_EXPERIMENTAL_ENABLED=true</code>) to use it. The data format (<code>*-v0</code>) might change in future releases.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Architecture</strong></p>
+</div>
+<div class="paragraph">
+<p>GitOps storage uses a polling-based architecture with blue-green database switching:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The registry reads a local Git clone on a mounted volume. The registry never fetches from remote repositories itself; a sync container or an external process updates the clone.</p>
+</li>
+<li>
+<p>The registry periodically checks the current commit of the clone. A debounce mechanism absorbs rapid sequences of pushes before a load starts.</p>
+</li>
+<li>
+<p>When the commit changes, the registry loads all data into an inactive in-memory database and validates it.</p>
+</li>
+<li>
+<p>After a successful load, the active and inactive databases switch atomically. If the load fails, the registry keeps serving the last successfully loaded data.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Data flows in one direction only: from Git to the registry. REST API calls that would modify data are rejected with an HTTP <code>409</code> response. The registry requires no external database, because data is loaded into in-memory storage from Git.</p>
+</div>
+<div class="paragraph">
+<p><strong>Relationship of repositories and registry instances</strong></p>
+</div>
+<div class="paragraph">
+<p>One repository can serve multiple registry instances, and one registry instance can aggregate multiple repositories. Each metadata file can declare which registry instances load it, and the registry loads only the data that references its own identifier.</p>
+</div>
+<div class="paragraph">
+<p><strong>When to use GitOps storage</strong></p>
+</div>
+<div class="paragraph">
+<p>GitOps storage is a good fit when:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You want schema and API changes to go through pull requests, reviews, and CI checks</p>
+</li>
+<li>
+<p>You need a read-only registry where all changes flow through a Git workflow</p>
+</li>
+<li>
+<p>You want to avoid operating an external database</p>
+</li>
+<li>
+<p>You already manage configuration as code and want registry content to follow the same model</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry-gitops-example">Example GitOps repository</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="gitops-repository-data-format_registry"><a class="anchor" href="#gitops-repository-data-format_registry"></a>GitOps repository data format</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>A GitOps repository contains metadata files that describe registry content, and plain schema files that hold the content itself. This section describes the file types, their discovery, and their fields.</p>
+</div>
+<div class="paragraph">
+<p>No fixed directory structure is required. The registry discovers metadata files anywhere in the repository by file name suffix. By default, files ending in <code>.registry</code> or <code>.ar</code>, combined with the <code>.yaml</code>, <code>.yml</code>, or <code>.json</code> extensions, are treated as metadata files, for example <code>order-event.registry.yaml</code>. You can change the suffixes with the <code>apicurio.polling-storage.file-suffixes</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Each metadata file declares its kind with a <code>$type</code> discriminator:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Metadata file types</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Purpose and main fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry-v0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Registry configuration. Fields: <code>registryId</code>, <code>globalRules</code> (list of <code>ruleType</code> and <code>config</code> pairs), and <code>properties</code>. The <code>registryId</code> value must match the <code>apicurio.polling-storage.id</code> property of the registry instance.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>group-v0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An artifact group. Fields: <code>registryIds</code> (list), <code>groupId</code>, <code>description</code>, <code>rules</code>, and <code>createdOn</code>. Every group that an artifact references must be declared by a <code>group-v0</code> file; the registry does not create groups automatically.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifact-v0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An artifact with its versions declared inline. Fields: <code>registryIds</code>, <code>groupId</code>, <code>artifactId</code>, <code>artifactType</code>, <code>name</code>, <code>description</code>, <code>createdOn</code>, <code>rules</code>, <code>validatedUpTo</code>, and <code>versions</code>. Each version has <code>version</code>, <code>state</code>, and <code>content</code>, where <code>content</code> is a relative path to a schema file.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content-v0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional content metadata, for explicit content identifiers and references.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The following example declares a registry configuration, a group, and an artifact. All three files are required: a load that references an undeclared group fails, and the registry does not become ready.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">$type: registry-v0
+registryId: main
+globalRules:
+  - ruleType: VALIDITY
+    config: FULL</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">$type: group-v0
+groupId: my-schemas</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">$type: artifact-v0
+groupId: my-schemas
+artifactId: order-event
+artifactType: AVRO
+versions:
+  - version: "1.0.0"
+    state: ENABLED
+    content: order-event-1.0.0.avsc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Content files are plain schema files that metadata files reference by a path relative to the directory of the metadata file. The artifact type comes from the <code>artifactType</code> field of the artifact metadata, or from automatic content detection when you omit the field. The file extension determines only the media type that the registry stores with the content:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Content file extensions and stored media types</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Extension</th>
+<th class="tableblock halign-left valign-top">Stored media type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.yaml</code>, <code>.yml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">YAML</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.xml</code>, <code>.xsd</code>, <code>.wsdl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">XML</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.proto</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protobuf</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.graphql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GraphQL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.thrift</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Thrift</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All other extensions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The following additional rules apply:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If <code>registryIds</code> is omitted or empty on a group or artifact, any registry instance loads it.</p>
+</li>
+<li>
+<p>Timestamps such as <code>createdOn</code> are optional. When omitted, the Git commit time is used. Supported formats are ISO 8601, with or without a time zone or as a date only, and Unix milliseconds.</p>
+</li>
+<li>
+<p>The optional <code>validatedUpTo</code> field on an artifact controls rule validation during a load. When unset, only the latest version is validated, against all preceding versions. When set to a version identifier, versions up to and including that version are not re-validated. When the value matches no version, all versions are validated.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-gitops-storage-single-repository_registry"><a class="anchor" href="#configuring-gitops-storage-single-repository_registry"></a>Configuring GitOps storage with a single repository</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure Apicurio Registry to load its data from a single Git repository that is available as a local clone on a mounted volume.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have a Git repository that contains a registry configuration file (<code>registry-v0</code>) and registry content.</p>
+</li>
+<li>
+<p>You have a local clone of the repository, or a sync container that maintains one.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In your repository, verify that a registry configuration file exists and that its <code>registryId</code> value matches the registry instance identifier that you configure in the next step. The default identifier is <code>main</code>.</p>
+</li>
+<li>
+<p>Configure the registry with the following environment variables:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">APICURIO_STORAGE_KIND=gitops
+APICURIO_FEATURES_EXPERIMENTAL_ENABLED=true
+APICURIO_POLLING_STORAGE_ID=main</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Mount the local clone of the repository into the registry container at <code>/repos/default</code>. A read-only mount is sufficient for serving content, because the registry does not write to the repository. If you use dry-run validation, mount the workspace writable instead, because the registry writes validation request files under the workspace directory. The mount path is the workspace directory (<code>apicurio.gitops.workspace</code>, default <code>/repos</code>) combined with the repository directory name (<code>apicurio.gitops.repo.dir</code>, default <code>default</code>).</p>
+<div class="paragraph">
+<p>For example, with Docker Compose:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">volumes:
+  - ./example-repo:/repos/default:ro</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Optional: To read from a branch other than <code>main</code>, set the <code>APICURIO_GITOPS_REPO_BRANCH</code> environment variable. If the configured branch does not exist in the clone, the registry falls back to <code>HEAD</code>.</p>
+</li>
+<li>
+<p>Start the registry.</p>
+</li>
+<li>
+<p>Verify the synchronization status:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl http://localhost:8080/apis/registry/v3/admin/gitops/status</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The registry reports not ready on its readiness probe until the first load succeeds. After the first successful load, it stays ready even if a later load fails, and it keeps serving the last successfully loaded data. With the default poll and debounce settings, expect a new commit to become visible after roughly 20 to 30 seconds.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/gitops">GitOps Docker Compose examples</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-gitops-sync-container_registry"><a class="anchor" href="#configuring-gitops-sync-container_registry"></a>Configuring the GitOps sync container</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The registry reads only local Git clones and never contacts remote repositories. You can run the GitOps sync container next to the registry to keep a local clone up to date with a remote repository, or to accept pushes directly.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have configured the registry for GitOps storage.</p>
+</li>
+<li>
+<p>For pull mode, you have the URL of a remote Git repository.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Run the <code>quay.io/apicurio/apicurio-registry-gitops-sync</code> container so that it shares a volume with the registry. Mount the shared volume at <code>/repos</code> in both containers, read-only in the registry container.</p>
+</li>
+<li>
+<p>For pull mode, which is the default, set the remote repository URL:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">APICURIO_GITOPS_REPO_URL=https://github.com/my-org/my-registry-data.git</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The sync container clones the repository and then updates it every 30 seconds. You can change the interval with the <code>APICURIO_GITOPS_PULL_INTERVAL</code> environment variable.</p>
+</div>
+</li>
+<li>
+<p>Optional: For SSH remotes, provide the private key and the known hosts file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">APICURIO_GITOPS_PULL_SSH_KEYS=/etc/gitops/ssh/id_ed25519
+APICURIO_GITOPS_PULL_SSH_KNOWN_HOSTS=/etc/gitops/ssh/known_hosts</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Optional: Adjust the security level with the <code>APICURIO_GITOPS_SECURITY</code> environment variable. The default level, <code>strict</code>, rejects loose key file permissions, and fails at startup when an SSH remote is configured without any SSH keys. When you provide keys without a known hosts file, the container accepts a host key on first connection. The <code>dev</code> level relaxes host key checking for development. Plaintext <code>http://</code> remote URLs are rejected at both levels.</p>
+</li>
+<li>
+<p>Optional: To accept Git pushes instead of pulling from a remote, set <code>APICURIO_GITOPS_MODE=push</code>. The sync container runs a restricted SSH server for the <code>git</code> user on port <code>2222</code>. Configure the authorized client keys and the host key:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">APICURIO_GITOPS_PUSH_SSH_AUTHORIZED_KEYS=/etc/gitops/ssh/authorized_keys
+APICURIO_GITOPS_PUSH_SSH_HOST_KEY=/etc/gitops/ssh/host_key</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Clients then push to the container directly:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ git push ssh://git@registry-host:2222/repos/default</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In push mode, any authorized push user can access all Git repositories on the shared volume.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Optional: When you configure multiple repositories, set the mode per repository with <code>APICURIO_GITOPS_REPOS_N_MODE</code>, which overrides the global <code>APICURIO_GITOPS_MODE</code> setting.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-gitops-multiple-repositories_registry"><a class="anchor" href="#configuring-gitops-multiple-repositories_registry"></a>Configuring multiple GitOps repositories</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure one registry instance to aggregate data from multiple Git repositories, for example one repository per team. The registry detects conflicting artifact definitions across repositories and rejects them.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have configured the registry for GitOps storage.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Configure the repositories on the registry with indexed environment variables. Indexes must start at 0 and be consecutive:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">APICURIO_GITOPS_REPOS_0_DIR=platform
+APICURIO_GITOPS_REPOS_1_DIR=fulfillment
+APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Optional: Assign an identifier for status reporting with <code>APICURIO_GITOPS_REPOS_N_ID</code>. The default identifier is the directory name.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do not combine the single-repository variables (<code>APICURIO_GITOPS_REPO_DIR</code>, <code>APICURIO_GITOPS_REPO_BRANCH</code>) with indexed variables. The registry rejects mixed configuration, index gaps, duplicate repository identifiers, and duplicate directory and branch combinations at startup.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>If you use the sync container, configure the remote URL for each repository with <code>APICURIO_GITOPS_REPOS_N_URL</code>, and optionally per-repository SSH keys with <code>APICURIO_GITOPS_REPOS_N_SSH_KEYS</code>.</p>
+</li>
+<li>
+<p>Ensure that each artifact is defined in exactly one repository. If the same <code>groupId</code> and <code>artifactId</code> combination is defined in more than one repository, the registry reports all conflicts and rejects the entire load.</p>
+</li>
+<li>
+<p>Verify the aggregated state:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl http://localhost:8080/apis/registry/v3/admin/gitops/status</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>sources</code> field maps each repository identifier to the currently loaded commit.</p>
+</div>
+<div class="paragraph">
+<p>By default, the registry labels each loaded group and artifact with the identifier of its source repository, using the <code>system:source</code> label key. You can change or disable this with the <code>apicurio.polling-storage.source-label-key</code> property.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="validating-gitops-changes_registry"><a class="anchor" href="#validating-gitops-changes_registry"></a>Validating repository changes before merging</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can validate a Git reference, such as a pull request branch, against the full registry validation pipeline without affecting the data that the registry serves. This enables CI checks that reject invalid schema changes before they merge.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Validation is enabled on the registry (<code>apicurio.gitops.validate.enabled</code>, default <code>true</code>). When validation is disabled, the validation endpoints return an HTTP <code>503</code> response.</p>
+</li>
+<li>
+<p>The sync container is running, because it fetches the reference to validate.</p>
+</li>
+<li>
+<p>The workspace volume is writable by the registry, because the registry writes validation request files under the workspace directory.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create a validation task for the reference:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST -H "Content-Type: application/json" \
+  -d '{"type": "pull", "repoId": "platform", "ref": "refs/pull/42/head"}' \
+  http://localhost:8080/apis/registry/v3/admin/gitops/validate</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>repoId</code> value must match the directory name of a configured repository; identifiers that you assign with <code>APICURIO_GITOPS_REPOS_N_ID</code> are not recognized by the sync container. An unknown value fails the created task instead of rejecting the request. The response contains a <code>taskId</code>.</p>
+</div>
+</li>
+<li>
+<p>Poll the task until it completes:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl http://localhost:8080/apis/registry/v3/admin/gitops/validate/<em>TASK_ID</em></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The task moves through the states <code>pending</code>, <code>submitted</code>, <code>fetching</code>, and <code>validating</code> to <code>completed</code> or <code>failed</code>.</p>
+</div>
+</li>
+<li>
+<p>Check the outcome of a completed task in the <code>result</code> field, which is <code>success</code> or <code>failure</code>. A successful task reports group, artifact, and version counts. A failed validation reports structured errors with a <code>detail</code> message and, where available, the <code>source</code> repository and the <code>context</code> file path.</p>
+</li>
+<li>
+<p>Optional: Delete a task that you no longer need:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/gitops/validate/<em>TASK_ID</em></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Tasks are removed automatically after a time to live, which is one hour by default. To limit disk usage, at most five tasks hold disk resources at the same time by default; further requests are queued.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry-gitops-example">Example GitOps repository with a CI validation workflow</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="gitops-storage-configuration-properties_registry"><a class="anchor" href="#gitops-storage-configuration-properties_registry"></a>GitOps storage configuration properties</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The following tables describe the configuration properties of the registry for GitOps storage, and the environment variables of the GitOps sync container.</p>
+</div>
+<div class="paragraph">
+<p>All GitOps storage properties are experimental and require <code>apicurio.features.experimental.enabled=true</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Registry configuration properties</caption>
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property (environment variable)</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.storage.kind</code> (<code>APICURIO_STORAGE_KIND</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>gitops</code> to enable GitOps storage.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.workspace</code> (<code>APICURIO_GITOPS_WORKSPACE</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/repos</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Base directory where Git repositories are mounted. Repository directories are resolved relative to this path.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.repo.dir</code> (<code>APICURIO_GITOPS_REPO_DIR</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Directory name of the Git repository, relative to the workspace. Single-repository configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.repo.branch</code> (<code>APICURIO_GITOPS_REPO_BRANCH</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Branch to read from. Single-repository configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.repos.N.dir</code> (<code>APICURIO_GITOPS_REPOS_N_DIR</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Directory name for repository <code>N</code>. Multi-repository configuration; indexes must start at 0 and be consecutive.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.repos.N.branch</code> (<code>APICURIO_GITOPS_REPOS_N_BRANCH</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Branch for repository <code>N</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.repos.N.id</code> (<code>APICURIO_GITOPS_REPOS_N_ID</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Directory name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifier for repository <code>N</code>, used in status reporting and source labels.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.validate.enabled</code> (<code>APICURIO_GITOPS_VALIDATE_ENABLED</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable the dry-run validation endpoints. When disabled, the validation endpoints return an HTTP <code>503</code> response.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.validate.task.ttl.seconds</code> (<code>APICURIO_GITOPS_VALIDATE_TASK_TTL_SECONDS</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3600</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time to live for validation tasks. Tasks are removed automatically after this period.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.validate.max-tasks</code> (<code>APICURIO_GITOPS_VALIDATE_MAX_TASKS</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of validation tasks that hold disk resources at the same time. Further requests are queued.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.id</code> (<code>APICURIO_POLLING_STORAGE_ID</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifier of this registry instance. Only data referencing this identifier is loaded. Must match the <code>registryId</code> value in the registry configuration file.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.deterministic-ids-enabled</code> (<code>APICURIO_POLLING_STORAGE_DETERMINISTIC_IDS_ENABLED</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generate content and global identifiers deterministically from content hashes and coordinates when they are not specified in the data.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.poll-period</code> (<code>APICURIO_POLLING_STORAGE_POLL_PERIOD</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PT10S</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum period between checks of the data source.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.debounce.quiet-period</code> (<code>APICURIO_POLLING_STORAGE_DEBOUNCE_QUIET_PERIOD</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PT3S</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wait until no new changes arrive for this duration before loading. <code>PT0S</code> disables debouncing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.debounce.max-wait-period</code> (<code>APICURIO_POLLING_STORAGE_DEBOUNCE_MAX_WAIT_PERIOD</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PT90S</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum time to wait for changes to settle before a load is forced. <code>PT0S</code> means no maximum.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.file-suffixes</code> (<code>APICURIO_POLLING_STORAGE_FILE_SUFFIXES</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry,ar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Suffixes that identify metadata files, combined with the <code>.yaml</code>, <code>.yml</code>, and <code>.json</code> extensions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.require-registry-config</code> (<code>APICURIO_POLLING_STORAGE_REQUIRE_REGISTRY_CONFIG</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reject a load when no registry configuration file matches the configured registry identifier. This guards against accidental data loss from force pushes or empty branches.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.source-label-key</code> (<code>APICURIO_POLLING_STORAGE_SOURCE_LABEL_KEY</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>system:source</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Label key used to tag loaded groups and artifacts with the identifier of their source repository. An empty value disables source labels.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Sync container environment variables</caption>
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_MODE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pull</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global synchronization mode: <code>pull</code> or <code>push</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_REPO_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remote repository URL for pull mode. Single-repository configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_REPOS_N_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remote repository URL for repository <code>N</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_REPOS_N_MODE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global mode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Per-repository mode override: <code>pull</code> or <code>push</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_REPOS_N_SSH_KEYS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Per-repository SSH private keys, added alongside the global keys.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_PULL_INTERVAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interval between remote updates, in seconds.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_PULL_DEPTH</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clone depth. <code>0</code> means a full clone.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_PULL_SSH_KEYS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to one or more SSH private keys for pull mode, comma-separated. The keys are tried in order.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_PULL_SSH_KNOWN_HOSTS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to a known hosts file for pull mode.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_PUSH_PORT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2222</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSH server port for push mode.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_PUSH_SSH_AUTHORIZED_KEYS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the authorized keys file for push mode.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_PUSH_SSH_HOST_KEY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the SSH host key for push mode.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_SECURITY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>strict</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Security level: <code>strict</code> or <code>dev</code>. Plaintext <code>http://</code> URLs are rejected at both levels.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_VALIDATE_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable the validation watch loop in the sync container.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_VALIDATE_POLL_INTERVAL_SECONDS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interval at which the sync container checks for validation requests.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_VALIDATE_CLEANUP_AGE_SECONDS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>7200</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Age after which stale validation checkouts are removed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_GITOPS_VALIDATE_FETCH_TIMEOUT_SECONDS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>120</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Timeout for fetching a Git reference during validation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="gitops-management-api_registry"><a class="anchor" href="#gitops-management-api_registry"></a>GitOps management API</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The registry provides administrative REST endpoints for GitOps storage under the <code>/apis/registry/v3/admin/gitops</code> path. The endpoints return an HTTP <code>409</code> response when a different storage variant is active.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. GitOps management endpoints</caption>
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/admin/gitops/status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Return the synchronization status.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/admin/gitops/sync</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Trigger an immediate synchronization. Returns an HTTP <code>204</code> response.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/admin/gitops/validate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create a dry-run validation task for a Git reference.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/admin/gitops/validate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List validation tasks.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/admin/gitops/validate/{taskId}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Return the status and results of a validation task.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/admin/gitops/validate/{taskId}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DELETE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete a validation task and clean up its files.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The status response contains the following fields:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. GitOps status fields</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>syncState</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Current state: <code>INITIALIZING</code>, <code>IDLE</code>, <code>LOADING</code>, <code>SWITCHING</code>, or <code>ERROR</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lastSuccessfulSync</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Timestamp of the last successful load.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lastSyncAttempt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Timestamp of the last poll attempt, successful or not.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groupCount</code>, <code>artifactCount</code>, <code>versionCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Counts of the currently loaded data.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>errors</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Structured load errors. Each error has a <code>detail</code> message and, where available, a <code>source</code> repository identifier and a <code>context</code> file path.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sources</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map of repository identifiers to the abbreviated commit currently loaded from each repository.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>If a load fails because of a data error, for example malformed metadata, a missing content file, or a rule violation, the registry does not retry the same commit. Push a new commit that fixes the problem to trigger a fresh load. Transient errors are retried on the next poll.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-intro-to-registry-rules.html">Introduction to Apicurio Registry rules</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/distro/gitops">GitOps sync container README</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.3.x/getting-started/assembly-configuring-gitops-storage.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
