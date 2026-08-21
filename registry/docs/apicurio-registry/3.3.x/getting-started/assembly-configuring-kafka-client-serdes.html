@@ -1298,6 +1298,15 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 <p>You can set the Avro encoding by configuring the <code>apicurio.registry.avro.encoding</code> property with a value of <code>JSON</code> or <code>BINARY</code>. The default is <code>BINARY</code>.</p>
 </div>
 <div class="paragraph">
+<p><strong>Avro writer schema validation</strong></p>
+</div>
+<div class="paragraph">
+<p>Before writing a record, the Avro serializer verifies that the schema resolved from Apicurio Registry structurally matches the schema of the record being serialized. The schemas are compared by Avro parsing canonical form, so differences in properties that do not affect the binary encoding, such as <code>connect.*</code> metadata added by Kafka Connect, are tolerated. A structural mismatch, for example a stale latest artifact version when <code>apicurio.registry.find-latest</code> is enabled without <code>apicurio.registry.auto-register</code>, would otherwise silently write field values under the wrong fields. When a mismatch is detected, serialization fails with a descriptive error. Validation applies when the serialized object carries its own schema, as Avro generic and specific containers do, or when the resolved schema is a record and the configured datum provider can derive the object&#8217;s schema, as with the reflect provider. Plain Java collections without an attached schema are not validated.</p>
+</div>
+<div class="paragraph">
+<p>You can disable this validation by setting the <code>apicurio.registry.avro.validate-writer-schema</code> property to <code>false</code>. The default is <code>true</code>.</p>
+</div>
+<div class="paragraph">
 <p><strong>Avro deserializer configuration</strong></p>
 </div>
 <div class="paragraph">
