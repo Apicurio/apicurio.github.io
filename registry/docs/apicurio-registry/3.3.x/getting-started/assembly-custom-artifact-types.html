@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Apicurio Registry concepts and glossary :: Apicurio Registry</title>
-    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-registry-concepts-glossary.html">
+    <title>Configuring custom artifact types :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-custom-artifact-types.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
     <link rel="stylesheet" href="../../../assets/css/site.css">
@@ -77,7 +77,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -155,7 +155,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="assembly-custom-artifact-types.html">Configuring custom artifact types</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -367,15 +367,15 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
-    <li>Introduction</li>
-    <li><a href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a></li>
+    <li>Configuration</li>
+    <li><a href="assembly-custom-artifact-types.html">Configuring custom artifact types</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">3.3.x</button>
   <div class="version-menu">
-    <a class="version is-current" href="assembly-registry-concepts-glossary.html">3.3.x</a>
-    <a class="version" href="../../3.2.x/getting-started/assembly-registry-concepts-glossary.html">3.2.x</a>
+    <a class="version is-current" href="assembly-custom-artifact-types.html">3.3.x</a>
+    <a class="version is-missing" href="../../3.2.x/index.html">3.2.x</a>
     <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
     <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
     <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
@@ -389,292 +389,259 @@
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Apicurio Registry concepts and glossary</h1>
+<h1 class="page">Configuring custom artifact types</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can use these definitions to understand the core concepts of Apicurio Registry.</p>
+<p>In addition to the built-in artifact types, Apicurio Registry can be configured at deployment time with custom artifact types. The behavior of a custom type (content detection, validation, compatibility checking, canonicalization, dereferencing) is provided either by webhooks or by Java classes. This chapter describes the configuration file and how to add Java providers to the container image without rebuilding Apicurio Registry.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="concept-group_registry"><a class="anchor" href="#concept-group_registry"></a>Group</h2>
+<h2 id="custom-artifact-types-config_registry"><a class="anchor" href="#custom-artifact-types-config_registry"></a>Artifact type configuration file</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>A <strong>group</strong> is a named namespace for organizing related artifacts.</p>
+<p>The list of artifact types supported by a Apicurio Registry instance is read from a JSON file at startup. The file is configured with the <code>apicurio.artifact-types.config-file</code> property (environment variable <code>APICURIO_ARTIFACT_TYPES_CONFIG_FILE</code>). When the file does not exist, only the built-in artifact types are available.</p>
 </div>
-<div class="paragraph">
-<p>Every artifact belongs to a group.
-If you do not specify a group when creating an artifact, Apicurio Registry places it in the <code>default</code> group.
-Groups can carry their own metadata (description, labels) and can have group-level rules that apply to all artifacts within the group.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="concept-artifact_registry"><a class="anchor" href="#concept-artifact_registry"></a>Artifact</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>An <strong>artifact</strong> is a named schema or API definition within a group, uniquely identified by the combination of <code>groupId</code> and <code>artifactId</code>.</p>
-</div>
-<div class="paragraph">
-<p>An artifact acts as a container for zero or more artifact versions.
-Examples of artifacts include an Avro schema, a Protobuf definition, an OpenAPI specification, or an AsyncAPI definition.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="concept-artifact-version_registry"><a class="anchor" href="#concept-artifact-version_registry"></a>Artifact version</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>An <strong>artifact version</strong> is an immutable snapshot of an artifact&#8217;s content.</p>
-</div>
-<div class="paragraph">
-<p>Each version is identified within its artifact by a <code>version</code> string and is also assigned a globally unique numeric <code>globalId</code>.
-After you create a version, you cannot change its content.
-Versions have a lifecycle state and can carry user-defined metadata and labels.</p>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="#concept-version-state_registry">Version state</a></p>
-</li>
-</ul>
+<div class="listingblock">
+<div class="title">Example configuration file</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "includeStandardArtifactTypes": true,
+  "artifactTypes": [
+    {
+      "artifactType": "MARKDOWN",
+      "name": "Markdown",
+      "description": "Markdown documents with a level-1 title and level-2 sections.",
+      "contentTypes": ["text/markdown", "text/plain"],
+      "contentAccepter": {
+        "type": "java",
+        "classname": "io.apicurio.registry.examples.customtypes.MarkdownContentAccepter"
+      },
+      "contentValidator": {
+        "type": "java",
+        "classname": "io.apicurio.registry.examples.customtypes.MarkdownContentValidator"
+      },
+      "compatibilityChecker": {
+        "type": "webhook",
+        "url": "https://markdown-service.example.com/compatibility",
+        "headers": { "Authorization": "Bearer YOUR_SECRET_TOKEN" }
+      }
+    }
+  ]
+}</code></pre>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="concept-content_registry"><a class="anchor" href="#concept-content_registry"></a>Content</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p><strong>Content</strong> is the actual schema or API payload stored in the registry (for example, an Avro JSON schema, a Protobuf <code>.proto</code> definition, or an OpenAPI YAML specification).</p>
-</div>
-<div class="paragraph">
-<p>Content is deduplicated: if two artifact versions have identical content, they share the same <code>contentId</code>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="concept-global-id_registry"><a class="anchor" href="#concept-global-id_registry"></a>Global ID</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>A <strong>global ID</strong> is a globally unique numeric identifier for each artifact version in the registry.</p>
-</div>
-<div class="paragraph">
-<p>Apicurio Registry auto-generates the global ID when you create a version. You can use the global ID to retrieve a specific version directly, regardless of group or artifact.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="concept-content-id_registry"><a class="anchor" href="#concept-content-id_registry"></a>Content ID</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>A <strong>content ID</strong> is a unique numeric identifier for a piece of content.</p>
-</div>
-<div class="paragraph">
-<p>Because content is deduplicated, multiple artifact versions with identical content share the same <code>contentId</code>.
-This is useful when different artifacts or versions reference the same schema payload.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="concept-branch_registry"><a class="anchor" href="#concept-branch_registry"></a>Branch</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>A <strong>branch</strong> is a named, ordered sequence of artifact versions within an artifact.</p>
-</div>
-<div class="paragraph">
-<p>Branches track parallel evolution paths for an artifact.
-For example, an artifact might have a <code>latest</code> branch (the default) and a <code>1.x</code> branch for maintenance releases.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="concept-artifact-reference_registry"><a class="anchor" href="#concept-artifact-reference_registry"></a>Artifact reference</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>An <strong>artifact reference</strong> is a reference from one artifact to another.</p>
-</div>
-<div class="paragraph">
-<p>References model relationships such as <code>$ref</code> in JSON Schema, <code>import</code> in Protobuf, or type references in Avro.
-When an artifact version contains references, Apicurio Registry stores them to support referential integrity validation.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="concept-labels_registry"><a class="anchor" href="#concept-labels_registry"></a>Labels</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p><strong>Labels</strong> are user-defined key-value string pairs that you can attach to groups, artifacts, or artifact versions.</p>
-</div>
-<div class="paragraph">
-<p>You can use labels for organization, categorization, and filtering when searching.</p>
-</div>
-<div class="admonitionblock note">
-<table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Top-level properties</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
 <tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-When searching by label using <code>key:value</code> syntax, the REST API splits on the last colon (<code>:</code>). Label values containing colons cannot be matched via <code>key:value</code> query syntax, but remain matchable using key-only queries.
-</td>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>includeStandardArtifactTypes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the built-in artifact types (AVRO, JSON, OPENAPI, &#8230;&#8203;) remain available. When <code>false</code>, only the types listed in <code>artifactTypes</code> are supported.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifactTypes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The list of custom artifact types.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Artifact type properties</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifactType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The identifier of the type, used in the REST API and the UI (for example <code>MARKDOWN</code>). Must be unique.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code>, <code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Display name and description of the type.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentTypes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The content types (media types) accepted for this artifact type.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentAccepter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provider that decides whether a piece of content belongs to this type. Used to detect the artifact type when a client does not specify one.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentValidator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provider that backs the <code>VALIDITY</code> rule (<code>SYNTAX_ONLY</code> and <code>FULL</code> levels).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compatibilityChecker</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provider that backs the <code>COMPATIBILITY</code> rule (<code>BACKWARD</code>, <code>FORWARD</code>, <code>FULL</code> and their transitive variants).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentCanonicalizer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provider that produces the canonical form of the content, used to recognize equivalent content (for example canonical search and de-duplication).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentDereferencer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provider that inlines or rewrites references to other artifacts when content is retrieved with <code>references=DEREFERENCE</code> or <code>references=REWRITE</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>referenceFinder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provider that finds external references in the content. Used by the Maven plug-in to register references automatically.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Every provider property is optional. When a provider is not configured, the corresponding feature is a no-op for the type (for example, the artifact type is never auto-detected and every content is considered valid and compatible).</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Provider types</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Provider</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{"type": "java", "classname": "&#8230;&#8203;"}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A Java class implementing the corresponding interface of the <code>io.apicurio:apicurio-registry-schema-util-common</code> module (<code>io.apicurio.registry.content.ContentAccepter</code>, <code>io.apicurio.registry.rules.validity.ContentValidator</code>, <code>io.apicurio.registry.rules.compatibility.CompatibilityChecker</code>, <code>io.apicurio.registry.content.canon.ContentCanonicalizer</code>, <code>io.apicurio.registry.content.dereference.ContentDereferencer</code>, <code>io.apicurio.registry.content.refs.ReferenceFinder</code>). The class must have a public no-argument constructor and must be available on the class path of Apicurio Registry, see <a href="#custom-artifact-types-mutable-image_registry">Adding Java providers with the mutable container image</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{"type": "webhook", "url": "&#8230;&#8203;", "headers": {&#8230;&#8203;}}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An HTTP endpoint that Apicurio Registry calls with a JSON request describing the operation (content, resolved references, rule level) and that returns a JSON response. The optional <code>headers</code> are sent with every request, for example for authentication. Webhooks work with the standard container image but add a network round trip to every operation.</p></td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="concept-rule_registry"><a class="anchor" href="#concept-rule_registry"></a>Rule</h2>
+<h2 id="custom-artifact-types-mutable-image_registry"><a class="anchor" href="#custom-artifact-types-mutable-image_registry"></a>Adding Java providers with the mutable container image</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>A <strong>rule</strong> is a validation constraint that Apicurio Registry applies when you add new content.</p>
-</div>
-<div class="paragraph">
-<p>Rules operate at three levels:</p>
+<p>The standard Apicurio Registry container image is a Quarkus <em>fast-jar</em>: its class path is indexed when the image is built, so a jar copied into the image is not visible to the application. Every release is therefore also published as a <code>VERSION-mutable</code> image, a Quarkus <em>mutable-jar</em> that can be <em>re-augmented</em> to include additional jars. Build a derived image that copies your provider jar into the providers directory and runs the re-augmentation once, at image build time.</p>
 </div>
 <div class="ulist">
+<div class="title">Prerequisites</div>
 <ul>
 <li>
-<p><strong>Global rules</strong> apply to all artifacts in the registry.</p>
+<p>A jar containing your provider classes, compiled against the <code>io.apicurio:apicurio-registry-schema-util-common</code> module of the same Apicurio Registry minor version. The jar must not bundle the Apicurio Registry or Quarkus classes; other dependencies must either be already present in the image or be copied into the providers directory as well.</p>
 </li>
 <li>
-<p><strong>Group rules</strong> apply to all artifacts within a specific group.</p>
-</li>
-<li>
-<p><strong>Artifact rules</strong> apply to a specific artifact.</p>
+<p>An artifact type configuration file, see <a href="#custom-artifact-types-config_registry">Artifact type configuration file</a>.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>When you configure a rule at multiple levels, the most specific level takes precedence (artifact &gt; group &gt; global).</p>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create a <code>Dockerfile</code> that derives from the mutable image:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-dockerfile hljs" data-lang="dockerfile">FROM apicurio/apicurio-registry:latest-release-mutable
+
+COPY --chown=1001:0 my-artifact-type.jar /deployments/quarkus-app/providers/
+COPY --chown=1001:0 artifact-types.json /deployments/artifact-types.json
+
+RUN /deployments/build.sh --prune
+
+ENV APICURIO_ARTIFACT_TYPES_CONFIG_FILE=/deployments/artifact-types.json</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>The available rule types are:</p>
+<p><code>/deployments/build.sh</code> re-augments the application with the jars found in <code>/deployments/quarkus-app/providers</code> and adds only the regenerated class-path index (a few MB) to the derived image. The <code>--prune</code> option removes the <code>lib/deployment</code> directory (the Quarkus deployment jars) from the file system of the derived image afterwards; omit it if you want to re-augment the derived image again later.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Validity rule</strong>: validates that the content is syntactically and semantically correct for its artifact type.</p>
 </li>
 <li>
-<p><strong>Compatibility rule</strong>: validates that new content is compatible with previous versions according to a specified compatibility level.</p>
-</li>
-<li>
-<p><strong>Integrity rule</strong>: validates referential integrity of artifact references.</p>
-</li>
-</ul>
+<p>Build and run the image:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ docker build -t my-registry .
+$ docker run -it -p 8080:8080 my-registry</code></pre>
 </div>
+</div>
+</li>
+<li>
+<p>Verify that the custom type is available:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl http://localhost:8080/apis/registry/v3/admin/config/artifactTypes</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Re-augmentation takes about ten seconds and requires roughly 1 GB of memory during the image build (tune it with the <code>JAVA_OPTS_APPEND</code> environment variable). It must be repeated, by rebuilding the derived image, whenever the provider jars change. The startup time and runtime behavior of Apicurio Registry are not affected.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Trade-offs</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top">Standard image</th>
+<th class="tableblock halign-left valign-top"><code>-mutable</code> image</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Packaging</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quarkus fast-jar (<code>/deployments</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quarkus mutable-jar (<code>/deployments/quarkus-app</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">About 47 MB (150 jars) of additional files in <code>lib/deployment</code> (roughly 100 MB of image size with the current image layering). A derived image adds only a few MB; <code>build.sh --prune</code> removes the deployment jars from the file system but, as with any container image, does not shrink the layers inherited from the base image.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java providers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not supported (use webhooks)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supported through <code>/deployments/build.sh</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runtime behavior</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identical</p></td>
+</tr>
+</tbody>
+</table>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="assembly-rule-reference.html" class="page">Apicurio Registry content rule reference</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="concept-version-state_registry"><a class="anchor" href="#concept-version-state_registry"></a>Version state</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>The <strong>version state</strong> represents the lifecycle state of an artifact version.</p>
-</div>
-<div class="paragraph">
-<p>The possible states are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ENABLED</code>: the version is fully available. You can retrieve content and metadata normally.</p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/custom-artifact-types">Custom artifact types example</a> (a complete <code>MARKDOWN</code> artifact type with Java providers)</p>
 </li>
 <li>
-<p><code>DEPRECATED</code>: the version is still available, but Apicurio Registry returns a warning header to signal that consumers must migrate to a newer version.</p>
+<p><a href="https://quarkus.io/guides/reaugmentation">Quarkus re-augmentation guide</a></p>
 </li>
 <li>
-<p><code>DISABLED</code>: the version metadata is visible, but you cannot fetch the version content.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>You can transition between any of these three states.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="concept-artifact-type_registry"><a class="anchor" href="#concept-artifact-type_registry"></a>Artifact type</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>The <strong>artifact type</strong> identifies the format or schema language of an artifact&#8217;s content.</p>
-</div>
-<div class="paragraph">
-<p>Apicurio Registry uses the artifact type to parse, validate, and check compatibility of the content.
-Supported artifact types include:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>AVRO</code>: Apache Avro schema</p>
-</li>
-<li>
-<p><code>PROTOBUF</code>: Google Protocol Buffers definition</p>
-</li>
-<li>
-<p><code>JSON</code>: JSON Schema</p>
-</li>
-<li>
-<p><code>OPENAPI</code>: OpenAPI specification</p>
-</li>
-<li>
-<p><code>ASYNCAPI</code>: AsyncAPI specification</p>
-</li>
-<li>
-<p><code>GRAPHQL</code>: GraphQL schema definition</p>
-</li>
-<li>
-<p><code>KCONNECT</code>: Apache Kafka Connect schema</p>
-</li>
-<li>
-<p><code>THRIFT</code>: Apache Thrift interface definition language</p>
-</li>
-<li>
-<p><code>WSDL</code>: Web Services Description Language definition</p>
-</li>
-<li>
-<p><code>XSD</code>: XML Schema Definition</p>
-</li>
-<li>
-<p><code>XML</code>: XML document</p>
-</li>
-<li>
-<p><code>AGENT_CARD</code>: AI Agent Card (A2A protocol)</p>
-</li>
-<li>
-<p><code>ICEBERG_TABLE</code>: Apache Iceberg table metadata</p>
-</li>
-<li>
-<p><code>ICEBERG_VIEW</code>: Apache Iceberg view metadata</p>
-</li>
-<li>
-<p><code>OPENRPC</code>: OpenRPC specification for JSON-RPC APIs</p>
-</li>
-<li>
-<p><code>MCP_TOOL</code>: MCP tool definitions (Model Context Protocol)</p>
-</li>
-<li>
-<p><code>MODEL_SCHEMA</code>: AI/ML model input/output schema definitions</p>
-</li>
-<li>
-<p><code>PROMPT_TEMPLATE</code>: LLM prompt templates with variable schemas</p>
-</li>
-</ul>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="assembly-artifact-reference.html" class="page">Apicurio Registry artifact reference</a></p>
+<p><a href="#assembly-artifact-reference.adoc" class="page unresolved">assembly-artifact-reference.adoc</a></p>
 </li>
 </ul>
 </div>
@@ -692,7 +659,7 @@ Supported artifact types include:</p>
 </footer>
 <script src="../../../assets/js/site.js"></script>
 <script src="../../../assets/js/vendor/lunr.js"></script>
-<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.3.x/getting-started/assembly-registry-concepts-glossary.html"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.3.x/getting-started/assembly-custom-artifact-types.html"></script>
 <script async src="../../../assets/../search-index.js"></script>
 <script async src="../../../assets/js/vendor/highlight.js"></script>
   </body>
