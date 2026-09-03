@@ -252,6 +252,9 @@
     <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-ai-catalog-ard.html">AI Catalog and ARD discovery</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a>
   </li>
 </ul>
@@ -426,11 +429,6 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns the agent card for this Apicurio Registry instance. Use this endpoint for standard A2A protocol discovery.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/a2a</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the agent card for this Apicurio Registry instance. As the canonical A2A v1.0 discovery endpoint, it returns the same response as <code>/.well-known/agent.json</code>.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/agent-card.json</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns the agent card for this Apicurio Registry instance. This alias exists for compatibility with IBM watsonx Orchestrate, which discovers agents at this path by default. It returns the same response as <code>/.well-known/agent.json</code>.</p></td>
@@ -460,10 +458,20 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns the JSON schema for a specific LLM artifact type. Supported types are <code>prompt-template</code>, <code>model-schema</code>, and <code>mcp-tool</code>, each with version <code>v1</code>.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/ai-catalog.json</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns an AI Catalog document (see <a href="assembly-ai-catalog-ard.html" class="page">AI Catalog and ARD discovery</a>) projecting registered <code>AGENT_CARD</code> and <code>MCP_TOOL</code> artifacts.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/ard.json</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the same document as <code>/.well-known/ai-catalog.json</code>, at the path mandated by the ARD (Agentic Resource Discovery) specification.</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>The <code>/.well-known/agent.json</code> and <code>/.well-known/a2a</code> endpoints return the Apicurio Registry instance agent card, which represents the registry itself as an A2A agent. These endpoints require no authentication.</p>
+<p>The <code>/.well-known/agent.json</code> endpoint returns the Apicurio Registry instance agent card, which represents the registry itself as an A2A agent. This endpoint requires no authentication.</p>
 </div>
 <div class="paragraph">
 <p>The <code>/.well-known/agents</code> and <code>/.well-known/agents/{groupId}/{artifactId}</code> endpoints operate on agent cards that you store in Apicurio Registry as <code>AGENT_CARD</code> artifacts. These endpoints require read-level authorization.</p>
@@ -473,6 +481,9 @@
 </div>
 <div class="paragraph">
 <p>The <code>/.well-known/schemas/{type}/{version}</code> endpoint serves built-in JSON schemas that you can use for IDE autocompletion and validation of <code>PROMPT_TEMPLATE</code>, <code>MODEL_SCHEMA</code>, and <code>MCP_TOOL</code> artifacts. This endpoint requires no authentication.</p>
+</div>
+<div class="paragraph">
+<p>The <code>/.well-known/ai-catalog.json</code> and <code>/.well-known/ard.json</code> endpoints require no authentication for public entries; visibility labels apply the same way as for <code>/.well-known/agents</code>. See <a href="assembly-ai-catalog-ard.html" class="page">AI Catalog and ARD discovery</a> for the full ARD search API.</p>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>

@@ -252,6 +252,9 @@
     <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-ai-catalog-ard.html">AI Catalog and ARD discovery</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a>
   </li>
 </ul>
@@ -717,118 +720,10 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="a2a-discovery-endpoints_registry"><a class="anchor" href="#a2a-discovery-endpoints_registry"></a>Agent discovery and entitlement endpoints</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>Apicurio Registry provides a three-tier agent discovery model for enterprise agent catalogs, based on the <a href="https://github.com/a2aproject/A2A/discussions/741">A2A community proposal</a>.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">GET /.well-known/agents/public</dt>
-<dd>
-<p>Returns agents explicitly marked as public. No authentication required.</p>
-<div class="paragraph">
-<p>Only Agent Card artifacts labeled with <code>apicurio.agent.visibility=public</code> are returned.</p>
-</div>
-<div class="paragraph">
-<p><strong>Query parameters</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>offset</code> (integer) - Pagination offset (default: 0)</p>
-</li>
-<li>
-<p><code>limit</code> (integer) - Pagination limit (default: 20)</p>
-<div class="listingblock">
-<div class="title">Example request</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/.well-known/agents/public"</code></pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1">GET /.well-known/agents/entitled</dt>
-<dd>
-<p>Returns agents the authenticated caller is entitled to access, filtered by visibility:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>public</code> agents are always included</p>
-</li>
-<li>
-<p><code>entitled</code> agents (default) are included for any authenticated user</p>
-</li>
-<li>
-<p><code>private</code> agents are included only for the artifact owner or admins</p>
-<div class="paragraph">
-<p><strong>Query parameters</strong></p>
-</div>
-</li>
-<li>
-<p><code>offset</code> (integer) - Pagination offset (default: 0)</p>
-</li>
-<li>
-<p><code>limit</code> (integer) - Pagination limit (default: 20)</p>
-<div class="listingblock">
-<div class="title">Example request</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -H "Authorization: Bearer &lt;token&gt;" \
-  "http://localhost:8080/.well-known/agents/entitled"</code></pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1">POST /.well-known/agents/search</dt>
-<dd>
-<p>Advanced agent search with combined text query and structured filters. Respects the caller&#8217;s entitlements when entitlement filtering is enabled.</p>
-<div class="listingblock">
-<div class="title">Example request body</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "query": "customer support",
-  "filters": {
-    "capabilities": { "streaming": true },
-    "skills": ["ticket-creation"],
-    "labels": { "department": "engineering" },
-    "inputModes": ["text"],
-    "outputModes": ["text"],
-    "protocolBindings": ["http+json"]
-  },
-  "limit": 20,
-  "offset": 0
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>All filter fields are optional. When multiple filters are specified, results must match all of them.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The <code>query</code> field matches artifact metadata name and artifact ID, not Agent Card JSON content. Full-text content search is planned for a future release.
-</td>
-</tr>
-</table>
-</div>
-</dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="a2a-visibility-model_registry"><a class="anchor" href="#a2a-visibility-model_registry"></a>Agent visibility model</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Agent Cards support three visibility levels, controlled by the <code>apicurio.agent.visibility</code> artifact label.</p>
+<p>Agent Cards support three visibility levels, controlled by the <code>apicurio.agent.visibility</code> artifact label. Visibility is enforced by <code>GET /.well-known/agents</code> (and by the ARD-shaped <code>GET /ard/agents</code> and <code>POST /ard/search</code>, described in <a href="assembly-ai-catalog-ard.html" class="page">AI Catalog and ARD discovery</a>) whenever authentication is enabled.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 3. Agent visibility levels</caption>
@@ -845,7 +740,7 @@ The <code>query</code> field matches artifact metadata name and artifact ID, not
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>public</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Visible to everyone, including unauthenticated clients via <code>/.well-known/agents/public</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Visible to everyone, including unauthenticated clients</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>entitled</code></p></td>
@@ -899,16 +794,6 @@ The <code>query</code> field matches artifact metadata name and artifact ID, not
 </tr>
 </thead>
 <tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.public-discovery.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable the public (unauthenticated) agent discovery endpoint</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.entitlements.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable entitlement-based agent filtering</p></td>
-</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.default-visibility</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>entitled</code></p></td>
