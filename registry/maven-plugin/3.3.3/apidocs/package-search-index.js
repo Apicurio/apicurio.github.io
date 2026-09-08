@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"io.apicurio.registry.maven"},{"l":"io.apicurio.registry.maven.refs"}];updateSearchResults();
