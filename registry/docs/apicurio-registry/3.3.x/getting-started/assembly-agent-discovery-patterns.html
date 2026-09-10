@@ -407,9 +407,10 @@
 <p>Apicurio Registry exposes well-known endpoints for agent discovery, MCP tool discovery, and JSON schema retrieval. Each endpoint serves a specific role in the A2A and MCP ecosystems.</p>
 </div>
 <div class="paragraph">
-<p>The following table lists all available well-known endpoints.</p>
+<p>The following table lists the available well-known endpoints.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Well-known endpoints</caption>
 <colgroup>
 <col style="width: 37.5%;">
 <col style="width: 12.5%;">
@@ -454,6 +455,11 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns a specific registered MCP tool definition by group ID and artifact ID. Accepts an optional <code>version</code> query parameter that defaults to the latest version.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the registered MCP tool definitions whose <code>inputSchema</code> accepts every property that the specified tool declares in its <code>outputSchema</code>. Accepts an optional <code>version</code> query parameter and supports pagination with <code>offset</code> and <code>limit</code> parameters.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/schemas/{type}/{version}</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns the JSON schema for a specific LLM artifact type. Supported types are <code>prompt-template</code>, <code>model-schema</code>, and <code>mcp-tool</code>, each with version <code>v1</code>.</p></td>
@@ -474,22 +480,22 @@
 <p>The <code>/.well-known/agent.json</code> endpoint returns the Apicurio Registry instance agent card, which represents the registry itself as an A2A agent. This endpoint requires no authentication.</p>
 </div>
 <div class="paragraph">
-<p>The <code>/.well-known/agents</code> and <code>/.well-known/agents/{groupId}/{artifactId}</code> endpoints operate on agent cards that you store in Apicurio Registry as <code>AGENT_CARD</code> artifacts. These endpoints require read-level authorization.</p>
+<p>The <code>/.well-known/agents</code> and <code>/.well-known/agents/{groupId}/{artifactId}</code> endpoints operate on agent cards that you store in Apicurio Registry as <code>AGENT_CARD</code> artifacts. The search endpoint requires no authentication. When OIDC or basic authentication is enabled, the search endpoint returns only the agent cards that the caller has permission to view, based on the <code>apicurio.agent.visibility</code> label. The <code>/.well-known/agents/{groupId}/{artifactId}</code> endpoint requires read-level authorization.</p>
 </div>
 <div class="paragraph">
-<p>The <code>/.well-known/mcp-tools</code> and <code>/.well-known/mcp-tools/{groupId}/{artifactId}</code> endpoints operate on MCP tool definitions that you store in Apicurio Registry as <code>MCP_TOOL</code> artifacts. These endpoints require read-level authorization and are available only when MCP tools support is enabled.</p>
+<p>The <code>/.well-known/mcp-tools</code>, <code>/.well-known/mcp-tools/{groupId}/{artifactId}</code>, and <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoints operate on MCP tool definitions that you store in Apicurio Registry as <code>MCP_TOOL</code> artifacts. These endpoints require read-level authorization and are available only when MCP tools support is enabled.</p>
 </div>
 <div class="paragraph">
 <p>The <code>/.well-known/schemas/{type}/{version}</code> endpoint serves built-in JSON schemas that you can use for IDE autocompletion and validation of <code>PROMPT_TEMPLATE</code>, <code>MODEL_SCHEMA</code>, and <code>MCP_TOOL</code> artifacts. This endpoint requires no authentication.</p>
 </div>
 <div class="paragraph">
-<p>The <code>/.well-known/ai-catalog.json</code> and <code>/.well-known/ard.json</code> endpoints require no authentication for public entries; visibility labels apply the same way as for <code>/.well-known/agents</code>. See <a href="assembly-ai-catalog-ard.html" class="page">AI Catalog and ARD discovery</a> for the full ARD search API.</p>
+<p>The <code>/.well-known/ai-catalog.json</code> and <code>/.well-known/ard.json</code> endpoints require read-level authorization when authentication is enabled. Anonymous clients can read them only if anonymous read access is enabled. Apicurio Registry filters agent card entries by the same visibility labels as <code>/.well-known/agents</code>. See <a href="assembly-ai-catalog-ard.html" class="page">AI Catalog and ARD discovery</a> for the full ARD search API.</p>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="#assembly-a2a-features_registry">[assembly-a2a-features_registry]</a></p>
+<p><a href="assembly-a2a-features.html" class="page">A2A protocol features</a></p>
 </li>
 </ul>
 </div>
@@ -557,7 +563,7 @@
 </dd>
 <dt class="hdlist1">Name-based search</dt>
 <dd>
-<p>You can filter agents by name by using partial matching. Apicurio Registry matches the <code>name</code> parameter against the artifact name:</p>
+<p>You can filter agents by name by using partial matching. Apicurio Registry matches the <code>name</code> parameter against the artifact name or artifact ID. A value without <code><strong></code> matches anywhere, and you can use <code></strong></code> as a prefix or suffix wildcard:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/agents?name=sentiment"</code></pre>
@@ -601,7 +607,7 @@
 <p>In a sequential pipeline, each agent receives the original message and the accumulated outputs from all previous agents. Each agent builds on the work of the agents that ran before it.</p>
 </div>
 <div class="paragraph">
-<p>Use a sequential pipeline when:</p>
+<p>Use a sequential pipeline in the following situations:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -636,7 +642,7 @@
 </ol>
 </div>
 <div class="paragraph">
-<p>Each step stores its output under a context key. Subsequent steps reference previous outputs by using <code>\{{variable}}</code> template placeholders. A <code>WorkflowContext</code> object tracks the original message and all agent outputs:</p>
+<p>Each step stores its output under a context key. Subsequent steps reference previous outputs by using <code>{{variable}}</code> template placeholders. A <code>WorkflowContext</code> object tracks the original message and all agent outputs:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -660,7 +666,7 @@ String prompt = context.buildPrompt("Original: {{original}}\nSentiment: {{sentim
 <p>In a parallel fan-out, you send the same input to multiple agents simultaneously and aggregate the results. You discover the agents by using <code>/.well-known/agents</code> with appropriate filters.</p>
 </div>
 <div class="paragraph">
-<p>Use parallel fan-out when:</p>
+<p>Use parallel fan-out in the following situations:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -687,7 +693,7 @@ String prompt = context.buildPrompt("Original: {{original}}\nSentiment: {{sentim
 <p>In conditional routing, you use agent capabilities and skills to decide which agent handles a request. You inspect agent cards to select the best match.</p>
 </div>
 <div class="paragraph">
-<p>Use conditional routing when:</p>
+<p>Use conditional routing in the following situations:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -714,6 +720,7 @@ String prompt = context.buildPrompt("Original: {{original}}\nSentiment: {{sentim
 <p>When you build multi-agent workflows, you must handle agent unavailability, version changes, and unexpected errors. The following table lists common error scenarios and recommended handling strategies.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Error scenarios and handling</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 16.6666%;">
@@ -859,7 +866,7 @@ String prompt = context.buildPrompt("Original: {{original}}\nSentiment: {{sentim
 <p>Apicurio Registry automatically extracts structured content from agent cards for search indexing. The following table lists the structured content key prefixes and their sources.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Structured content taxonomy</caption>
+<caption class="title">Table 3. Structured content taxonomy</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
