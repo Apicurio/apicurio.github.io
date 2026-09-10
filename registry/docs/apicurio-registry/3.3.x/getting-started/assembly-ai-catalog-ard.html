@@ -396,7 +396,8 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry can publish a spec-compliant AI Catalog document and expose the ARD (Agentic Resource Discovery) search API, so registered <code>AGENT_CARD</code> and <code>MCP_TOOL</code> artifacts are discoverable by any AI Catalog- or ARD-aware client, not just Apicurio Registry&#8217;s own well-known endpoints.</p>
+<p>With AI Catalog and Agentic Resource Discovery (ARD), you can discover registered <code>AGENT_CARD</code> and <code>MCP_TOOL</code> artifacts by using compatible clients.
+Apicurio Registry publishes an AI Catalog document and provides an ARD search API in addition to its existing discovery endpoints.</p>
 </div>
 </div>
 </div>
@@ -404,22 +405,38 @@
 <h2 id="ai-catalog-ard-overview_registry"><a class="anchor" href="#ai-catalog-ard-overview_registry"></a>AI Catalog and ARD overview</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p><a href="https://ai-catalog.io/">AI Catalog</a> and <a href="https://agenticresourcediscovery.org/">ARD</a> are two related, community-driven discovery standards for agentic AI artifacts (A2A agent cards, MCP servers, and others), maintained by a Linux Foundation working group.</p>
+<p>AI Catalog and Agentic Resource Discovery (ARD) are related standards for discovering agentic AI artifacts, including Agent2Agent (A2A) agent cards and Model Context Protocol (MCP) servers.
+A Linux Foundation working group maintains these community standards.</p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">AI Catalog</dt>
 <dd>
-<p>A static, artifact-agnostic JSON envelope, typically served at <code>/.well-known/ai-catalog.json</code>. It lists entries that identify an artifact by IANA media type and either link to it (<code>url</code>) or embed it (<code>data</code>).</p>
+<p>A static JSON envelope that supports multiple artifact types, typically served at <code>/.well-known/ai-catalog.json</code>.
+Each entry identifies an artifact by its Internet Assigned Numbers Authority (IANA) media type and either links to it (<code>url</code>) or embeds it (<code>data</code>).</p>
 </dd>
 <dt class="hdlist1">ARD</dt>
 <dd>
-<p>Builds on AI Catalog by adding a domain-anchored identifier scheme (<code>urn:air:&lt;publisher&gt;:&lt;namespace&gt;:&lt;name&gt;</code>), a mandatory <code>POST /search</code> REST API for dynamic discovery, and optional <code>GET /agents</code> and <code>POST /explore</code> endpoints. ARD&#8217;s normative publish/consume path is <code>/.well-known/ard.json</code>.</p>
+<p>A discovery standard that extends AI Catalog with a domain-based identifier scheme (<code>urn:air:&lt;publisher&gt;:&lt;namespace&gt;:&lt;name&gt;</code>) and a required <code>POST /search</code> REST API for dynamic discovery.
+It also defines optional <code>GET /agents</code> and <code>POST /explore</code> endpoints.
+The standard path for publishing and retrieving an ARD catalog is <code>/.well-known/ard.json</code>.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry projects its existing <code>AGENT_CARD</code> and <code>MCP_TOOL</code> artifacts into both formats as a read-only view over existing storage — no schema migration, no new artifact types.</p>
+<p>Apicurio Registry provides a read-only view of existing <code>AGENT_CARD</code> and <code>MCP_TOOL</code> artifacts in both formats.
+This view requires no schema migration or additional artifact types.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://ai-catalog.io/">AI Catalog specification</a></p>
+</li>
+<li>
+<p><a href="https://agenticresourcediscovery.org/">ARD specification</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -427,9 +444,11 @@
 <h2 id="ai-catalog-ard-configuration_registry"><a class="anchor" href="#ai-catalog-ard-configuration_registry"></a>AI Catalog and ARD configuration properties</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Both features are disabled by default and independently feature-gated.</p>
+<p>AI Catalog publishing and ARD search are disabled by default.
+You can enable each feature independently with its configuration property.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. AI Catalog and ARD configuration properties</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 16.6666%;">
@@ -446,12 +465,12 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable the <code>/.well-known/ai-catalog.json</code> and <code>/.well-known/ard.json</code> endpoints</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether to enable the <code>/.well-known/ai-catalog.json</code> and <code>/.well-known/ard.json</code> endpoints</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.publisher-domain</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>derived from request host</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>&lt;publisher&gt;</code> segment used when building <code>urn:air:</code> identifiers. When not configured, it is derived from the incoming request&#8217;s host and port.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Derived from request host</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>&lt;publisher&gt;</code> segment in <code>urn:air:</code> identifiers. If you do not configure this property, Apicurio Registry derives the value from the host and port of the incoming request.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.host-name</code></p></td>
@@ -466,12 +485,12 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ard.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable the <code>POST /ard/search</code>, <code>GET /ard/agents</code>, and <code>POST /ard/explore</code> endpoints</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether to enable the <code>POST /ard/search</code>, <code>GET /ard/agents</code>, and <code>POST /ard/explore</code> endpoints</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ard.federation.default</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Default ARD federation mode advertised by this registry. Only <code>none</code> (no federation) is currently implemented; other values are accepted for forward compatibility but do not change behavior.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default ARD federation mode that Apicurio Registry advertises. The implementation supports only <code>none</code> (no federation). It accepts other values for compatibility with future versions, but these values do not change the behavior.</p></td>
 </tr>
 </tbody>
 </table>
@@ -485,13 +504,17 @@
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">GET /.well-known/ai-catalog.json</dt>
+<dt class="hdlist1"><code>GET /.well-known/ai-catalog.json</code></dt>
 <dd>
-<p>Returns the AI Catalog document. This is the predecessor path, retained for AI-Catalog-only consumers.</p>
+<p>Returns the AI Catalog document.
+This earlier path remains available for clients that support only AI Catalog.</p>
 </dd>
-<dt class="hdlist1">GET /.well-known/ard.json</dt>
+<dt class="hdlist1"><code>GET /.well-known/ard.json</code></dt>
 <dd>
-<p>Returns the identical document. This is the path a strictly-conformant ARD crawler resolves per the ARD specification; a consumer that only fetches <code>ard.json</code> is fully conformant, so publish here if you can serve only one path.</p>
+<p>Returns the same AI Catalog document.
+An ARD crawler retrieves the document from this path as required by the ARD specification.
+A client conforms to the specification even if it retrieves only <code>ard.json</code>.
+If you can serve only one path, use this path.</p>
 </dd>
 </dl>
 </div>
@@ -525,11 +548,26 @@
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Every entry&#8217;s <code>identifier</code> follows the <code>urn:air:&lt;publisher&gt;:&lt;namespace&gt;:&lt;name&gt;</code> form. Entries backed by <code>AGENT_CARD</code> artifacts use <code>application/a2a-agent-card+json</code>; entries backed by <code>MCP_TOOL</code> artifacts use <code>application/mcp-server-card+json</code>. When <code>apicurio.ard.enabled=true</code>, the catalog also includes a self-describing entry of type <code>application/ai-registry+json</code> pointing at this registry&#8217;s own <code>/.well-known/ard/search</code> endpoint, so a crawler that only ingests the static catalog can still discover the live search API, per the ARD specification.</p>
-</div>
-<div class="paragraph">
-<p>Only artifacts visible under the caller&#8217;s visibility (<code>public</code>/<code>entitled</code>/<code>private</code>, the same model used by <code>/.well-known/agents</code>) are included.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Artifact entries</dt>
+<dd>
+<p>Each entry has an <code>identifier</code> in the <code>urn:air:&lt;publisher&gt;:&lt;namespace&gt;:&lt;name&gt;</code> form.
+Entries for <code>AGENT_CARD</code> artifacts use <code>application/a2a-agent-card+json</code>.
+Entries for <code>MCP_TOOL</code> artifacts use <code>application/mcp-server-card+json</code>.</p>
+</dd>
+<dt class="hdlist1">Registry entry</dt>
+<dd>
+<p>When <code>apicurio.ard.enabled=true</code>, the catalog also includes an entry of type <code>application/ai-registry+json</code> that identifies the registry.
+This entry points to the <code>/.well-known/ard/search</code> endpoint.
+A crawler that retrieves only the static catalog can discover the search API from this entry, as defined by the ARD specification.</p>
+</dd>
+<dt class="hdlist1">Artifact visibility</dt>
+<dd>
+<p>The catalog includes only artifacts that the caller can access.
+It uses the same <code>public</code>, <code>entitled</code>, and <code>private</code> visibility model as <code>/.well-known/agents</code>.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -537,13 +575,15 @@
 <h2 id="ard-search-api_registry"><a class="anchor" href="#ard-search-api_registry"></a>ARD search API</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>When <code>apicurio.ard.enabled=true</code>, Apicurio Registry exposes the ARD REST search surface, mirrored under both <code>/.well-known/ard/<strong></code> and <code>/apis/registry/v3/well-known/ard/</strong></code>.</p>
+<p>When <code>apicurio.ard.enabled=true</code>, Apicurio Registry provides ARD REST search endpoints under both <code>/.well-known/ard/<strong></code> and <code>/apis/registry/v3/well-known/ard/</strong></code>.</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">POST /ard/search</dt>
+<dt class="hdlist1"><code>POST /ard/search</code></dt>
 <dd>
-<p>The ARD-mandated search endpoint. Accepts a <code>query</code> object with a required <code>text</code> field and an optional structured <code>filter</code> (supported keys: <code>type</code>, <code>tags</code>, <code>capabilities</code>, <code>publisher</code>). Values within a filter key are OR-ed together; different keys are AND-ed.</p>
+<p>The required ARD search endpoint accepts a <code>query</code> object with a required <code>text</code> field and an optional structured <code>filter</code>.
+The supported filter keys are <code>type</code>, <code>tags</code>, <code>capabilities</code>, and <code>publisher</code>.
+Values within a filter key use the OR operator; different keys use the AND operator.</p>
 <div class="listingblock">
 <div class="title">Example request</div>
 <div class="content">
@@ -583,15 +623,21 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Because only entries satisfying every requested criterion are returned at all, every result&#8217;s <code>score</code> is a deterministic <code>100</code> in this release — there is no fuzzy or semantic ranking yet. Only <code>federation: none</code> semantics are implemented; other <code>federation</code> values are accepted for forward compatibility but do not change behavior.
+The search returns only entries that match every requested criterion, and each result has a <code>score</code> of <code>100</code>.
+The implementation does not support fuzzy or semantic ranking.
+It supports only <code>federation: none</code> semantics and accepts other <code>federation</code> values for compatibility with future versions without changing the behavior.
 </td>
 </tr>
 </table>
 </div>
 </dd>
-<dt class="hdlist1">GET /ard/agents</dt>
+<dt class="hdlist1"><code>GET /ard/agents</code></dt>
 <dd>
-<p>Optional, deterministic browsing endpoint. Accepts a <code>filter</code> query parameter using the form <code>key=value[ AND key=value]*</code> (supported keys: <code>type</code>, <code>tags</code>, <code>capabilities</code>, <code>publisher</code>), plus <code>orderBy</code>, <code>pageSize</code>, and <code>pageToken</code>. Returns an AI Catalog document; when more results remain, <code>nextPageToken</code> is populated so you can request the next page.</p>
+<p>The optional, deterministic browsing endpoint accepts a <code>filter</code> query parameter in the form <code>key=value[ AND key=value]*</code>.
+The supported filter keys are <code>type</code>, <code>tags</code>, <code>capabilities</code>, and <code>publisher</code>.
+The endpoint also accepts <code>orderBy</code>, <code>pageSize</code>, and <code>pageToken</code> parameters.
+It returns an AI Catalog document.
+When more results remain, the response includes a <code>nextPageToken</code> value that you can use to request the next page.</p>
 <div class="listingblock">
 <div class="title">Example request</div>
 <div class="content">
@@ -601,9 +647,11 @@ Because only entries satisfying every requested criterion are returned at all, e
 </div>
 </div>
 </dd>
-<dt class="hdlist1">POST /ard/explore</dt>
+<dt class="hdlist1"><code>POST /ard/explore</code></dt>
 <dd>
-<p>Optional facet-aggregation endpoint. Accepts the same <code>query</code> as <code>POST /search</code> plus a required <code>resultType.facets</code> array naming the fields to aggregate (supported: <code>type</code>, <code>publisher</code>). Returns bucketed counts, not ranked entries.</p>
+<p>The optional facet aggregation endpoint accepts the same <code>query</code> as <code>POST /search</code> and a required <code>resultType.facets</code> array that names the fields to aggregate.
+The supported fields are <code>type</code> and <code>publisher</code>.
+The endpoint returns counts grouped by field value instead of ranked entries.</p>
 <div class="listingblock">
 <div class="title">Example request</div>
 <div class="content">
@@ -625,33 +673,31 @@ Because only entries satisfying every requested criterion are returned at all, e
 <h2 id="ai-catalog-ard-scope_registry"><a class="anchor" href="#ai-catalog-ard-scope_registry"></a>Scope and limitations</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This implementation is a read-only projection over existing artifacts, consistent with Apicurio Registry&#8217;s role as a metadata store and governance tool, not a runtime platform.</p>
+<p>AI Catalog and ARD provide a read-only view of existing artifacts in Apicurio Registry, which stores and governs metadata.
+They do not provide a runtime platform for those artifacts.</p>
+</div>
+<div class="paragraph">
+<p>The implementation has the following limitations:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>No Trust Manifest support (optional in the specification; not yet implemented).</p>
+<p>It does not support Trust Manifest, which is optional in the specification.</p>
 </li>
 <li>
-<p>No federation — Apicurio Registry always searches only its own index (<code>federation: none</code>).</p>
+<p>It searches only the local Apicurio Registry index (<code>federation: none</code>).</p>
 </li>
 <li>
-<p>No catalog importer — Apicurio Registry does not crawl external <code>ai-catalog.json</code>/<code>ard.json</code> documents to register their entries as artifacts.</p>
+<p>It does not import entries from external <code>ai-catalog.json</code> or <code>ard.json</code> documents as artifacts.</p>
 </li>
 <li>
-<p>Relevance ranking is not yet semantic; <code>score</code> is always <code>100</code> for matching results. Full-text search (tracked separately) is expected to enable real relevance scoring in a future release.</p>
+<p>It returns a <code>score</code> of <code>100</code> for matching results without semantic relevance ranking.</p>
 </li>
 </ul>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
-<li>
-<p><a href="https://ai-catalog.io/">AI Catalog specification</a></p>
-</li>
-<li>
-<p><a href="https://agenticresourcediscovery.org/">ARD specification</a></p>
-</li>
 <li>
 <p><a href="assembly-a2a-features.html" class="page">A2A protocol features</a></p>
 </li>
