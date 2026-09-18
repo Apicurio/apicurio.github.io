@@ -401,6 +401,90 @@
 </div>
 </div>
 <div class="sect1">
+<h2 id="navigating-registry-dashboard_registry"><a class="anchor" href="#navigating-registry-dashboard_registry"></a>Navigating the Apicurio Registry dashboard</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the Apicurio Registry dashboard to view registry totals, find recently modified artifacts, and open common tasks.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have access to the web console of a running Apicurio Registry instance.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the Apicurio Registry web console, click the <strong>Dashboard</strong> tab.</p>
+<div class="paragraph">
+<p>The web console also opens the dashboard when you open the root URL of the web console or click the Apicurio Registry logo in the masthead.</p>
+</div>
+</li>
+<li>
+<p>Review the <strong>Groups</strong>, <strong>Artifacts</strong>, and <strong>Versions</strong> cards to view the totals for your registry.</p>
+<div class="paragraph">
+<p>Click a card to open the <strong>Search</strong> tab with the corresponding resource type selected.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When usage telemetry is enabled and you are an administrator, the dashboard also displays a <strong>Schema Usage</strong> card with the number of active, stale, and dead schema versions.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>To open a recently modified artifact, click its name in <strong>Recent Artifacts</strong>.</p>
+<div class="paragraph">
+<p>The list contains up to 10 artifacts, ordered by modification time with the most recent first.</p>
+</div>
+</li>
+<li>
+<p>In <strong>Quick Actions</strong>, click one of the following actions:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Create Artifact</strong>: Opens the <strong>Create Artifact</strong> wizard. This action requires permission to create artifacts and a web console with write operations enabled.</p>
+</li>
+<li>
+<p><strong>Search Registry</strong>: Opens the <strong>Search</strong> tab.</p>
+</li>
+<li>
+<p><strong>Explore Groups</strong>: Opens the <strong>Explore</strong> tab, where you can browse groups and their artifacts.</p>
+</li>
+<li>
+<p><strong>Settings</strong>: Opens the registry settings. This action requires administrator access and a web console with the settings feature enabled.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#adding-artifacts-using-console_registry">Adding artifacts using the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="#configuring-settings-using-console_registry">Configuring Apicurio Registry settings using the web console</a></p>
+</li>
+<li>
+<p><a href="assembly-usage-telemetry.html" class="page">Usage Telemetry and API Lifecycle Governance</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="configuring-registry-ui_registry"><a class="anchor" href="#configuring-registry-ui_registry"></a>Configuring the Apicurio Registry web console</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -484,7 +568,17 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>On the <strong>Explore</strong> tab, browse the list of artifacts stored in Apicurio Registry, or enter a search string to find an artifact. You can select from the list to search by specific criteria such as name, group, labels, or global ID. When you filter by artifact type or by version state, you select the value from a list instead of typing it.</p>
+<p>In the Apicurio Registry web console, find the artifact by using one of the following tabs:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Explore</strong>: Browse the list of groups, click a group, and then click an artifact in the <strong>Artifacts in group</strong> list.</p>
+</li>
+<li>
+<p><strong>Search</strong>: Select <strong>Artifacts</strong> from the <strong>Search for</strong> menu to browse artifacts. You can filter the results by criteria such as <strong>Name</strong>, <strong>Group</strong>, <strong>Labels</strong>, or <strong>Global Id</strong>. When you filter by <strong>Type</strong>, select the value from a list instead of typing it. The <strong>State</strong> filter is available when you select <strong>Versions</strong> from <strong>Search for</strong>. For this filter, you also select the value from a list.</p>
+</li>
+<li>
+<p><strong>Dashboard</strong>: Click an artifact in the <strong>Recent Artifacts</strong> list.</p>
 <div class="imageblock">
 <div class="content">
 <img src="../assets-images/images/getting-started/registry-web-console.png" alt="Artifacts in Registry web console">
@@ -492,18 +586,27 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 <div class="title">Figure 1. Artifacts in Apicurio Registry web console</div>
 </div>
 </li>
+</ul>
+</div>
+</li>
 <li>
-<p>Click an artifact to view the following details:</p>
+<p>Click the artifact to view the following details:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Overview</strong>: Displays artifact metadata such as artifact ID, name, description, labels, and so on. Also displays rules for validity and compatibility that you can configure for artifact content.</p>
+<p><strong>Overview</strong>: Displays artifact metadata and the <strong>Versions in artifact</strong> list. The list is empty if the artifact has no versions.</p>
 </li>
 <li>
-<p><strong>Versions</strong>: Displays a list of all artifact versions. The tab is empty unless you uploaded a version when you created the artifact.</p>
+<p><strong>Rules</strong>: Displays the content rules that you can configure for the artifact.</p>
 </li>
 <li>
 <p><strong>Branches</strong>: Displays a list of branches for the artifact. The tab displays at least the <code>latest</code> branch and might display other generated branches depending on your configuration.</p>
+</li>
+<li>
+<p><strong>Contract</strong>: Displays the data contract metadata, quality score, contract rules, and audit log for the artifact.</p>
+</li>
+<li>
+<p><strong>Usage</strong>: Displays which client applications fetch each version of the artifact. The tab displays data only to administrators, and only when usage telemetry is enabled.</p>
 <div class="imageblock">
 <div class="content">
 <img src="../assets-images/images/getting-started/registry-web-console-artifact.png" alt="Artifacts in Registry web console">
@@ -515,14 +618,14 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 </div>
 </li>
 <li>
-<p>Click the <strong>Versions</strong> tab to view a list of all artifact versions. Then click one of the versions in the list, or click <strong>View Version</strong> from the Action menu for a version. You can then view the following artifact version details:</p>
+<p>On the artifact&#8217;s <strong>Overview</strong> tab, click a version in the <strong>Versions in artifact</strong> list, or select <strong>View version</strong> from the Action menu (three vertical dots) for that version. You can then view the following artifact version details:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Overview</strong>: Displays artifact version metadata such as version name, description, global ID, content ID, labels, and so on. Also displays any comments created for the artifact version.</p>
+<p><strong>Overview</strong>: Displays artifact version metadata such as version name, description, status, global ID, content ID, and labels. Also displays any comments created for the artifact version.</p>
 </li>
 <li>
-<p><strong>Documentation</strong> (OpenAPI and AsyncAPI only): Displays automatically generated REST API documentation.</p>
+<p><strong>Documentation</strong>: Displays a visualization for supported artifact types. For OpenAPI and AsyncAPI, it displays API documentation. For JSON Schema, it displays schema properties and a generated example. The tab is also available for the <code>AGENT_CARD</code>, <code>MCP_TOOL</code>, <code>MODEL_SCHEMA</code>, and <code>PROMPT_TEMPLATE</code> artifact types, and is hidden for disabled versions.</p>
 </li>
 <li>
 <p><strong>Content</strong>: Displays a read-only view of the full artifact version content. For JSON content, you can click <strong>JSON</strong> or <strong>YAML</strong> to display your preferred format.</p>
@@ -554,7 +657,277 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 <p><a href="#configuring-rules-using-console_registry">Configuring content rules using the Apicurio Registry web console</a></p>
 </li>
 <li>
+<p><a href="#comparing-artifact-versions-using-console_registry">Comparing artifact versions using the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="#changing-version-state-using-console_registry">Changing an artifact version state using the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="#viewing-json-schema-using-console_registry">Viewing a JSON Schema visualization using the Apicurio Registry web console</a></p>
+</li>
+<li>
 <p><a href="assembly-rule-reference.html">Apicurio Registry rule reference</a></p>
+</li>
+<li>
+<p><a href="assembly-data-contracts.html" class="page">Apicurio Registry data contracts</a></p>
+</li>
+<li>
+<p><a href="assembly-usage-telemetry.html" class="page">Usage Telemetry and API Lifecycle Governance</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="comparing-artifact-versions-using-console_registry"><a class="anchor" href="#comparing-artifact-versions-using-console_registry"></a>Comparing artifact versions using the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can compare the content of two versions of the same artifact to review schema or API changes.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have access to the web console of a running Apicurio Registry instance.</p>
+</li>
+<li>
+<p>You have an artifact with at least two versions whose content you can retrieve. The web console cannot load the content of a disabled version. If you select one, the <strong>Compare Versions</strong> dialog displays an error.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>On the <strong>Explore</strong> tab, open the group that contains the artifact.</p>
+</li>
+<li>
+<p>Click the artifact to open its details.</p>
+</li>
+<li>
+<p>On the <strong>Overview</strong> tab, select the check boxes for two versions in the <strong>Versions in artifact</strong> list.</p>
+<div class="paragraph">
+<p>After you select two versions, the web console disables the remaining check boxes and enables the <strong>Compare</strong> button. The button label shows the selection count, for example, <strong>Compare (2/2)</strong>. You can select versions on different pages of the list. The selection persists until you clear a check box or click <strong>Clear selection</strong>.</p>
+</div>
+</li>
+<li>
+<p>Click <strong>Compare</strong> to open the <strong>Compare Versions</strong> dialog.</p>
+<div class="paragraph">
+<p>The comparison displays the older version on the left and the newer version on the right, based on creation time. The comparison is read-only.</p>
+</div>
+</li>
+<li>
+<p>Optional: Click <strong>Inline</strong> to display the changes in a single view.</p>
+</li>
+<li>
+<p>Optional: Click <strong>Wrap text</strong> to wrap long lines.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Verify that the <strong>Older</strong> and <strong>Newer</strong> labels identify the versions that you selected.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="artifact-version-states-using-console_registry"><a class="anchor" href="#artifact-version-states-using-console_registry"></a>Artifact version states in the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Each artifact version has a state that identifies its lifecycle stage. The web console displays only the state changes available for the selected version.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Version states and available changes in the web console</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 50%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">State</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Available new states</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Draft</strong> (<code>DRAFT</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A version for preparing content before publication. By default, Apicurio Registry does not apply content rules to a draft until you publish it. You create draft versions on the <strong>Drafts</strong> tab, which the web console displays only when draft content mutability is enabled and you have the developer or administrator role, or by selecting <strong>Create draft from&#8230;&#8203;</strong> on a version page.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Enabled</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Enabled</strong> (<code>ENABLED</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An active version whose content applications can retrieve. New versions start in this state unless you create them as drafts. The <strong>Versions in artifact</strong> list displays no badge for enabled versions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Deprecated</strong>, <strong>Disabled</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Deprecated</strong> (<code>DEPRECATED</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A version that applications can still retrieve but that you intend to retire. Apicurio Registry adds an <code>X-Registry-Deprecated</code> header to REST API responses that return the content, to signal that applications must migrate to a newer version.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Enabled</strong>, <strong>Disabled</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Disabled</strong> (<code>DISABLED</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A version whose content requests return <code>404 Not Found</code>. Its metadata remains available, and you can change its state again. Requests for the <code>latest</code> version skip disabled versions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Enabled</strong>, <strong>Deprecated</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Sunset</strong> (<code>SUNSET</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A version that has reached the end of its deprecation period. You can set this state only by using the REST API. The web console displays a <strong>Sunset</strong> badge for the version, but the <strong>Change version state</strong> dialog displays the current state as <strong>Unknown</strong>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Enabled</strong>, <strong>Deprecated</strong>, <strong>Disabled</strong></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>You can create a version in the <code>DRAFT</code> state, but you cannot change an existing version back to <code>DRAFT</code> after publication.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#changing-version-state-using-console_registry">Changing an artifact version state using the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="assembly-schema-lifecycle-best-practices.html" class="page">Schema lifecycle best practices</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="changing-version-state-using-console_registry"><a class="anchor" href="#changing-version-state-using-console_registry"></a>Changing an artifact version state using the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can change an artifact version&#8217;s state to publish a draft, deprecate a version, or disable access to its content.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have access to the web console of a running Apicurio Registry instance, and the web console is not in read-only mode.</p>
+</li>
+<li>
+<p>If authentication is enabled, you have the developer or administrator role. If artifact owner-only authorization is enabled, you are the owner of the artifact or an administrator.</p>
+</li>
+<li>
+<p>You have confirmed that applications no longer need to retrieve the version&#8217;s content if you plan to disable it.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>On the <strong>Explore</strong> tab, open the group that contains the artifact.</p>
+</li>
+<li>
+<p>Click the artifact to open its details.</p>
+</li>
+<li>
+<p>On the <strong>Overview</strong> tab, click the version in the <strong>Versions in artifact</strong> list.</p>
+</li>
+<li>
+<p>On the version&#8217;s <strong>Overview</strong> tab, click <strong>Change</strong> next to <strong>Status</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Change version state</strong> dialog, select a value from the <strong>New state</strong> list.</p>
+<div class="paragraph">
+<p>For a draft version, the only available value is <strong>Enabled</strong>. For other versions, select one of the available <strong>Enabled</strong>, <strong>Disabled</strong>, or <strong>Deprecated</strong> values.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can publish a draft by selecting <strong>Finalize draft</strong> from the Action menu (three vertical dots) in the version page header, or edit its content by clicking <strong>Edit draft</strong>.</p>
+</div>
+</li>
+<li>
+<p>Click <strong>Change state</strong>.</p>
+<div class="paragraph">
+<p>When you publish a draft, Apicurio Registry applies the configured content rules. If the content violates a rule, the web console displays the <strong>Invalid Content Error</strong> dialog with the rule violations, and the version remains a draft.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Verify that <strong>Status</strong> on the version&#8217;s <strong>Overview</strong> tab displays the selected state. In the <strong>Versions in artifact</strong> list, the version displays a <strong>Deprecated</strong> or <strong>Disabled</strong> badge, or no badge if you enabled the version.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#artifact-version-states-using-console_registry">Artifact version states in the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="#configuring-rules-using-console_registry">Configuring content rules using the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="assembly-schema-lifecycle-best-practices.html" class="page">Schema lifecycle best practices</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="viewing-json-schema-using-console_registry"><a class="anchor" href="#viewing-json-schema-using-console_registry"></a>Viewing a JSON Schema visualization using the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can view the properties, constraints, and generated example for a JSON Schema in the web console to review its structure without reading the source content.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have access to the web console of a running Apicurio Registry instance.</p>
+</li>
+<li>
+<p>You have stored a JSON Schema artifact with at least one version in Apicurio Registry. The <strong>Documentation</strong> tab is not available for disabled versions.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>On the <strong>Explore</strong> tab, open the group that contains the JSON Schema artifact.</p>
+</li>
+<li>
+<p>Click the artifact to open its details.</p>
+</li>
+<li>
+<p>On the <strong>Overview</strong> tab, click the version in the <strong>Versions in artifact</strong> list.</p>
+</li>
+<li>
+<p>Click the <strong>Documentation</strong> tab.</p>
+<div class="paragraph">
+<p>The left panel displays the schema title, root type, description, and the <strong>Schema</strong> row with the <code>$schema</code> value, followed by a <strong>Properties</strong> section. Each property displays its name, a type badge, and a <strong>required</strong> marker when the schema requires the property. The property also displays its description, constraints such as <code>minLength</code>, <code>maxLength</code>, <code>min</code>, <code>max</code>, <code>pattern</code>, and <code>format</code>, enumerated values, and the default value, when the schema defines them.</p>
+</div>
+</li>
+<li>
+<p>Optional: Click <strong>Show properties</strong> to expand a nested object or array item, or click <strong>Hide properties</strong> to collapse it.</p>
+<div class="paragraph">
+<p>The web console expands top-level properties by default. The web console lists alternatives that the schema defines with <code>oneOf</code>, <code>anyOf</code>, or <code>allOf</code> under <strong>One of</strong>, <strong>Any of</strong>, or <strong>All of</strong>.</p>
+</div>
+</li>
+<li>
+<p>Review the <strong>Generated Example</strong> panel to see sample JSON content based on the schema.</p>
+<div class="paragraph">
+<p>The web console generates the example from the default values, examples, constants, enumerated values, types, and formats that the schema defines. The generated example is read-only. Viewing it does not change the stored schema.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#browsing-artifacts-using-console_registry">Viewing artifacts using the Apicurio Registry web console</a></p>
 </li>
 </ul>
 </div>
@@ -584,7 +957,7 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>On the <strong>Explore</strong> tab, click <strong>Create artifact</strong>, and complete the <strong>Create artifact</strong> wizard:</p>
+<p>On the <strong>Explore</strong> tab, click the group in which you want to create the artifact, and then click <strong>Create artifact</strong> next to <strong>Artifacts in group</strong>. Alternatively, on the <strong>Dashboard</strong> tab, click <strong>Create Artifact</strong> in <strong>Quick Actions</strong>. Complete the <strong>Create Artifact</strong> wizard:</p>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -607,7 +980,7 @@ You can create rules first and add content later.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Group ID &amp; Artifact ID</strong>: Use the default empty settings to automatically generate an artifact ID and add the artifact to the <code>default</code> artifact group. Alternatively, you can enter an optional artifact group or artifact ID.</p>
+<p><strong>Group ID &amp; Artifact ID</strong>: Use the default empty settings to automatically generate an artifact ID and add the artifact to the <code>default</code> artifact group. Alternatively, you can enter an optional artifact group or artifact ID. When you start from a group page, the <strong>Group Id</strong> field is fixed to that group.</p>
 </li>
 <li>
 <p><strong>Type</strong>: Use the default <strong>Auto-Detect</strong> setting to automatically detect the artifact type (not allowed if creating an empty artifact), or select the artifact type from the list, for example, <strong>Avro Schema</strong> or <strong>OpenAPI</strong>. You must manually select the <strong>Kafka Connect Schema</strong> artifact type, which cannot be automatically detected.</p>
@@ -691,10 +1064,10 @@ You can create rules first and add content later.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Overview</strong>: Displays artifact metadata such as artifact ID, name, description, labels, and so on. Also displays rules for validity and compatibility that you can configure for artifact content.</p>
+<p><strong>Overview</strong>: Displays artifact metadata and the <strong>Versions in artifact</strong> list. The list is empty if the artifact has no versions.</p>
 </li>
 <li>
-<p><strong>Versions</strong>: Displays a list of all artifact versions. The tab is empty unless you uploaded a version when you created the artifact.</p>
+<p><strong>Rules</strong>: Displays the content rules that you can configure for the artifact.</p>
 </li>
 <li>
 <p><strong>Branches</strong>: Displays a list of branches for the artifact. The tab displays at least the <code>latest</code> branch and might display other generated branches depending on your configuration.</p>
@@ -731,10 +1104,10 @@ You can create rules first and add content later.</p>
 </div>
 </li>
 <li>
-<p>To save the artifact contents to a local file, for example, <code>my-protobuf-schema.proto</code> or <code>my-openapi.json</code>, click <strong>Download</strong> at the end of the page.</p>
+<p>To save the content of a version to a local file, for example, <code>my-protobuf-schema.proto</code> or <code>my-openapi.json</code>, click the version in the <strong>Versions in artifact</strong> list, and then click <strong>Download</strong> in the version page header.</p>
 </li>
 <li>
-<p>To add a new artifact version, switch to the <strong>Versions</strong> tab and then click <strong>Create version</strong> in the toolbar.  From there, provide the following information:</p>
+<p>To add an artifact version, on the artifact&#8217;s <strong>Overview</strong> tab, click <strong>Create version</strong> next to <strong>Versions in artifact</strong>. Specify the following information:</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -949,13 +1322,13 @@ Deleting a group permanently removes the group and all of its artifacts, includi
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>On the <strong>Explore</strong> tab, select <strong>Groups</strong> from the "Search for" menu to browse the list of groups stored in Apicurio Registry, or enter a search string to find the group that you want to delete.</p>
+<p>On the <strong>Explore</strong> tab, browse the list of groups stored in Apicurio Registry, or enter a filter string to find the group that you want to delete.</p>
 </li>
 <li>
 <p>Click the group to view its details.</p>
 </li>
 <li>
-<p>In the page header, click <strong>Delete</strong>.</p>
+<p>In the page header, click <strong>Delete group</strong>.</p>
 </li>
 <li>
 <p>Confirm the deletion when prompted.</p>
@@ -986,13 +1359,10 @@ Deleting an artifact permanently removes the artifact and all of its versions.
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>On the <strong>Explore</strong> tab, browse the list of artifacts stored in Apicurio Registry, or enter a search string to find the artifact that you want to delete.</p>
+<p>On the <strong>Explore</strong> tab, click the group that contains the artifact, and then click the artifact that you want to delete. Alternatively, find the artifact on the <strong>Search</strong> tab.</p>
 </li>
 <li>
-<p>Click the artifact to view its details.</p>
-</li>
-<li>
-<p>In the page header, click <strong>Delete</strong>.</p>
+<p>In the page header, click <strong>Delete artifact</strong>.</p>
 </li>
 <li>
 <p>Confirm the deletion when prompted.</p>
@@ -1023,16 +1393,10 @@ Deleting an artifact version is permanent and cannot be undone. If you delete th
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>On the <strong>Explore</strong> tab, browse the list of artifacts stored in Apicurio Registry, or enter a search string to find the artifact that contains the version you want to delete.</p>
+<p>On the <strong>Explore</strong> tab, click the group that contains the artifact, and then click the artifact that contains the version you want to delete. Alternatively, find the artifact on the <strong>Search</strong> tab.</p>
 </li>
 <li>
-<p>Click the artifact to view its details.</p>
-</li>
-<li>
-<p>Click the <strong>Versions</strong> tab to view a list of all artifact versions.</p>
-</li>
-<li>
-<p>Find the version that you want to delete, and select <strong>Delete version</strong> from the Action menu (three vertical dots) for that version.</p>
+<p>On the <strong>Overview</strong> tab, find the version in the <strong>Versions in artifact</strong> list, and select <strong>Delete version</strong> from the Action menu (three vertical dots) for that version.</p>
 </li>
 <li>
 <p>Confirm the deletion when prompted.</p>
@@ -1089,10 +1453,10 @@ Deleting an artifact version is permanent and cannot be undone. If you delete th
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>On the <strong>Explore</strong> tab, browse the list of groups in Apicurio Registry by selecting <strong>Groups</strong> from the "Search for" menu.</p>
+<p>On the <strong>Explore</strong> tab, browse the list of groups in Apicurio Registry.</p>
 </li>
 <li>
-<p>Click a group to view its details and content rules.</p>
+<p>Click a group to view its details, and then click the <strong>Rules</strong> tab.</p>
 </li>
 <li>
 <p>In <strong>Group-specific rules</strong>, click <strong>Enable</strong> to configure a validity, compatibility, or integrity rule for all artifact content in the group, and select the appropriate rule configuration from the list. For example, for <strong>Validity rule</strong>, select <strong>Full</strong>.</p>
@@ -1111,10 +1475,10 @@ Deleting an artifact version is permanent and cannot be undone. If you delete th
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>On the <strong>Explore</strong> tab, browse the list of artifacts in Apicurio Registry by selecting <strong>Artifacts</strong> from the "Search for" menu.</p>
+<p>On the <strong>Search</strong> tab, browse the list of artifacts in Apicurio Registry by selecting <strong>Artifacts</strong> from the <strong>Search for</strong> menu.</p>
 </li>
 <li>
-<p>Click an artifact from the list to view its details and content rules.</p>
+<p>Click an artifact from the list to view its details, and then click the <strong>Rules</strong> tab.</p>
 </li>
 <li>
 <p>In <strong>Artifact-specific rules</strong>, click <strong>Enable</strong> to configure a validity, compatibility, or integrity rule for artifact content, and select the appropriate rule configuration from the list. For example, for <strong>Validity rule</strong>, select <strong>Full</strong>.</p>
@@ -1216,16 +1580,13 @@ Apicurio Registry displays the <strong>Artifact owner-only authorization</strong
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>On the <strong>Explore</strong> tab, browse the list of artifacts stored in Apicurio Registry, or enter a search string to find the artifact. You can select from the list to search by criteria such as name, group, labels, or global ID.</p>
+<p>On the <strong>Explore</strong> tab, click the group that contains the artifact, and then click the artifact that you want to reassign. Alternatively, find the artifact on the <strong>Search</strong> tab by using a filter such as <strong>Name</strong>, <strong>Group</strong>, <strong>Labels</strong>, or <strong>Global Id</strong>.</p>
 </li>
 <li>
-<p>Click the artifact that you want to reassign.</p>
+<p>On the <strong>Overview</strong> tab, click the pencil icon next to the <strong>Owner</strong> field in the <strong>Artifact metadata</strong> panel.</p>
 </li>
 <li>
-<p>In the <strong>Overview</strong> section, click the pencil icon next to the <strong>Owner</strong> field.</p>
-</li>
-<li>
-<p>In the <strong>New owner</strong> field, select or enter an account name.</p>
+<p>In the <strong>New owner</strong> field, enter the user name of the new owner.</p>
 </li>
 <li>
 <p>Click <strong>Change owner</strong>.</p>
@@ -1237,6 +1598,70 @@ Apicurio Registry displays the <strong>Artifact owner-only authorization</strong
 <ul>
 <li>
 <p><a href="assembly-configuring-the-registry.html" class="page">Configuring your Apicurio Registry deployment</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="changing-group-owner-using-console_registry"><a class="anchor" href="#changing-group-owner-using-console_registry"></a>Changing a group owner using the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can transfer ownership of a group to another user account when responsibility for the group changes. Changing a group owner does not change the owners of artifacts in that group.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have a running Apicurio Registry instance with authentication enabled and write operations enabled in the web console and storage.</p>
+</li>
+<li>
+<p>You have a group other than <code>default</code> with an assigned owner. The web console does not provide an owner field for the <code>default</code> group.</p>
+</li>
+<li>
+<p>You have logged in to the web console as the current group owner with write access or as an administrator.</p>
+</li>
+<li>
+<p>You have the user name of the account that you want to assign as the group owner.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>On the <strong>Explore</strong> tab, click the group that you want to reassign.</p>
+<div class="paragraph">
+<p>Alternatively, on the <strong>Search</strong> tab, select <strong>Groups</strong> from the <strong>Search for</strong> menu, find the group, and then click it.</p>
+</div>
+</li>
+<li>
+<p>On the <strong>Overview</strong> tab, click the pencil icon next to <strong>Owner</strong> in the <strong>Group metadata</strong> panel.</p>
+</li>
+<li>
+<p>In the <strong>Change owner</strong> dialog, enter the user name of the new owner in the <strong>New owner</strong> field.</p>
+</li>
+<li>
+<p>Click <strong>Change owner</strong>.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Verify that <strong>Owner</strong> in the <strong>Group metadata</strong> panel displays the new user name.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#changing-artifact-owner-using-console_registry">Changing an artifact owner using the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="#configuring-settings-using-console_registry">Configuring Apicurio Registry settings using the web console</a></p>
 </li>
 </ul>
 </div>
@@ -1284,7 +1709,7 @@ Apicurio Registry displays authentication and authorization settings in the web 
 <li>
 <p>Select the settings that you want to configure for Apicurio Registry:</p>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Authentication settings</caption>
+<caption class="title">Table 2. Authentication settings</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -1305,7 +1730,7 @@ Not selected by default.</p></td>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Authorization settings</caption>
+<caption class="title">Table 3. Authorization settings</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -1336,7 +1761,7 @@ Not selected by default.</p></td>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Compatibility settings</caption>
+<caption class="title">Table 4. Compatibility settings</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -1363,7 +1788,7 @@ Not selected by default.</p></td>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Web console settings</caption>
+<caption class="title">Table 5. Web console settings</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -1382,7 +1807,7 @@ Not selected by default.</p></td>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Semantic versioning settings</caption>
+<caption class="title">Table 6. Semantic versioning settings</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -1405,7 +1830,7 @@ Not selected by default.</p></td>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Additional properties</caption>
+<caption class="title">Table 7. Additional properties</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -1488,13 +1913,17 @@ Not selected by default.</p></td>
 <p>In the web console for the source Apicurio Registry instance, view the <strong>Explore</strong> tab.</p>
 </li>
 <li>
-<p>Click the additional actions icon (three vertical dots) next to <strong>Create artifact</strong> in the toolbar, and select <strong>Export all (as .ZIP)</strong> to export the data for this Apicurio Registry instance to a <code>.zip</code> download file.</p>
+<p>Click the <strong>Admin actions</strong> icon (three vertical dots) next to <strong>Create group</strong> in the toolbar, and select <strong>Export all (as .ZIP)</strong> to export the data for this Apicurio Registry instance to a <code>.zip</code> download file.</p>
+<div class="paragraph">
+<p>The <strong>Admin actions</strong> menu is available only to administrators.
+When the web console is in read-only mode (<code>apicurio.ui.features.read-only.enabled=true</code>), the menu offers only <strong>Export all (as .ZIP)</strong>.</p>
+</div>
 </li>
 <li>
 <p>In the web console for the target Apicurio Registry instance, view the <strong>Explore</strong> tab.</p>
 </li>
 <li>
-<p>Click the additional actions icon (three vertical dots) next to <strong>Create artifact</strong> in the toolbar, and select <strong>Import from .ZIP</strong>.</p>
+<p>Click the <strong>Admin actions</strong> icon (three vertical dots) next to <strong>Create group</strong> in the toolbar, and select <strong>Import from .ZIP</strong>.</p>
 </li>
 <li>
 <p>Drag and drop or browse to the <code>.zip</code> download file that you exported earlier.</p>
