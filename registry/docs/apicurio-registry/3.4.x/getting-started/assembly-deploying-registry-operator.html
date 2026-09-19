@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Deploying Apicurio Registry using the Operator :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.4.x/getting-started/assembly-deploying-registry-operator.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.4.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-compatibility-modes.html">Apicurio Registry schema compatibility modes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-gitops-storage.html">Configuring Apicurio Registry with GitOps storage</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-secured-kafka.html">Deploying Apicurio Registry with a secured Kafka instance</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-sizing-guide.html">Apicurio Registry capacity planning and sizing guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Versioning and support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-versioning-support-policy.html">Versioning and support policy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-custom-artifact-types.html">Configuring custom artifact types</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-events.html">Apicurio Registry change events and the outbox pattern</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using an SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Usage Telemetry and Lifecycle Governance</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-usage-telemetry.html">Usage Telemetry and API Lifecycle Governance</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-registry-quickstart.html">Agent registry quick start</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A protocol features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP tool definition features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-server-integration.html">MCP server integration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-ai-catalog-ard.html">AI Catalog and ARD discovery</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Best Practices Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-schema-lifecycle-best-practices.html">Schema lifecycle best practices</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.4.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.4.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.3.x/index.html">3.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.2.x/index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Installation</li>
+    <li><a href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.4.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-deploying-registry-operator.html">3.4.x</a>
+    <a class="version" href="../../3.3.x/getting-started/assembly-deploying-registry-operator.html">3.3.x</a>
+    <a class="version" href="../../3.2.x/getting-started/assembly-deploying-registry-operator.html">3.2.x</a>
+    <a class="version" href="../../3.1.x/getting-started/assembly-deploying-registry-operator.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Deploying Apicurio Registry using the Operator</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Deploy and configure Apicurio Registry instances by using the Apicurio Registry Operator on
+Kubernetes.</p>
+</div>
+<div class="paragraph">
+<p><strong>Prerequisites</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="operator-overview_registry"><a class="anchor" href="#operator-overview_registry"></a>Apicurio Registry Operator deployment overview</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The Apicurio Registry Operator installs the <code>ApicurioRegistry3</code> custom resource definition (CRD). You use the <code>ApicurioRegistry3</code> CR to deploy and manage Apicurio Registry instances on Kubernetes. The custom resource enables you to declaratively configure all aspects of your Apicurio Registry deployment,
+including storage, authentication, networking, and component-specific settings.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Additional <code>ApicurioRegistry3</code> custom resource examples are available in the Apicurio Registry upstream repository.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>ApicurioRegistry3</code> custom resource is organized into two main components:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>spec.app</code> - Configures the Apicurio Registry backend (REST API) component</p>
+</li>
+<li>
+<p><code>spec.ui</code> - Configures the Apicurio Registry web console component</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each component can be independently configured with its own settings for replicas, ingress, environment variables,
+and pod specifications.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/3.3.0/operator/controller/src/test/resources/k8s/examples">Apicurio Registry upstream repository</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="operator-storage-options_registry"><a class="anchor" href="#operator-storage-options_registry"></a>Storage options</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry supports the following storage options:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Embedded H2 database</strong> (default) - When you do not specify a storage type, Apicurio Registry uses SQL storage with an embedded H2 database. Suitable for development and testing only. Apicurio Registry stores all data in memory and loses it when the pod restarts.</p>
+</li>
+<li>
+<p><strong>PostgreSQL</strong> - Stores data in a PostgreSQL database. Suitable for production deployments.</p>
+</li>
+<li>
+<p><strong>MySQL</strong> - Stores data in a MySQL database. Suitable for production deployments.</p>
+</li>
+<li>
+<p><strong>KafkaSQL</strong> - Stores data in Apache Kafka topics, with an embedded H2 database as a local SQL store that Apicurio Registry rebuilds from the Kafka journal on each startup. Suitable for production deployments when you configure persistent Kafka storage.</p>
+</li>
+<li>
+<p><strong>KubernetesOps</strong> - Read-only storage that loads registry data from Kubernetes ConfigMaps. Suitable for
+Kubernetes-native and GitOps workflows. This is an experimental feature.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The default embedded H2 configuration is not suitable for production environments. Configure a storage type (<code>postgresql</code>, <code>mysql</code>, <code>kafkasql</code>, or <code>kubernetesops</code>) for production use.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-registry-inmemory_registry"><a class="anchor" href="#deploying-registry-inmemory_registry"></a>Deploying Apicurio Registry with default configuration (embedded H2 database)</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can deploy a basic Apicurio Registry instance by using the default storage configuration (SQL with an embedded H2 database). You do not need to specify a storage type in the CR. When omitted, Apicurio Registry defaults to an embedded H2 database. This configuration is suitable for development and testing environments only.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have cluster administrator access to an Kubernetes cluster.</p>
+</li>
+<li>
+<p>You must have already installed the Apicurio Registry Operator. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the Kubernetes web console, log in using an account with cluster administrator privileges.</p>
+</li>
+<li>
+<p>Change to the namespace in which the Apicurio Registry Operator is installed. For example, from the
+<strong>Project</strong> drop-down, select <code>my-project</code>.</p>
+</li>
+<li>
+<p>Click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry3</strong> &gt; <strong>Create ApicurioRegistry3</strong>.</p>
+</li>
+<li>
+<p>Paste in the following custom resource definition:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry
+spec:
+  app:
+    ingress:
+      host: registry.example.com
+  ui:
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Replace the <code>host</code> values with appropriate hostnames for your environment. Currently, Apicurio Registry Operator only creates simple HTTP Ingresses. To enable TLS, you must create your own Ingress or Route resources with TLS configuration.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Click <strong>Create</strong> and wait for the Apicurio Registry deployment to be created.</p>
+</li>
+<li>
+<p>Click <strong>Networking</strong> &gt; <strong>Ingresses</strong> (or <strong>Routes</strong>) to access the route for the Apicurio Registry web console.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Access the Apicurio Registry web console using the configured hostname and verify that the UI loads successfully.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-registry-postgresql_registry"><a class="anchor" href="#deploying-registry-postgresql_registry"></a>Deploying Apicurio Registry with PostgreSQL storage</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Deploy Apicurio Registry with PostgreSQL database storage. This configuration is suitable
+for production environments.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have cluster administrator access to an Kubernetes cluster.</p>
+</li>
+<li>
+<p>You must have already installed the Apicurio Registry Operator. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
+</li>
+<li>
+<p>You must have a PostgreSQL database available with a database created for Apicurio Registry.</p>
+</li>
+<li>
+<p>You must have created a Kubernetes Secret containing the PostgreSQL database password.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create a Secret containing the database password:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: postgresql-credentials
+type: Opaque
+stringData:
+  password: your-database-password</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In the Kubernetes web console, click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry3</strong> &gt;
+<strong>Create ApicurioRegistry3</strong>.</p>
+</li>
+<li>
+<p>Paste in the following custom resource definition, adjusting the values for your environment:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry-postgresql
+spec:
+  app:
+    storage:
+      type: postgresql
+      sql:
+        dataSource:
+          url: jdbc:postgresql://postgresql.my-project.svc:5432/registry
+          username: registry_user
+          password:
+            name: postgresql-credentials
+            key: password
+    ingress:
+      host: registry.example.com
+  ui:
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Update the <code>url</code> to match your PostgreSQL service name, namespace, port, and database name. Update the
+<code>username</code> to match your database user.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Click <strong>Create</strong> and wait for the Apicurio Registry deployment to be created.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Access the Apicurio Registry web console and create a test artifact to verify that data is being persisted to
+the database.</p>
+</li>
+<li>
+<p>Restart the Apicurio Registry pod and verify that the artifact still exists, confirming that data is persisted.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-installing-registry-storage-openshift.html#installing-postgresql-operatorhub_registry" class="page">Installing a PostgreSQL database from the OpenShift OperatorHub</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-registry-mysql_registry"><a class="anchor" href="#deploying-registry-mysql_registry"></a>Deploying Apicurio Registry with MySQL storage</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Deploy Apicurio Registry with MySQL database storage. This configuration is suitable
+for production environments.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have cluster administrator access to an Kubernetes cluster.</p>
+</li>
+<li>
+<p>You must have already installed the Apicurio Registry Operator. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
+</li>
+<li>
+<p>You must have a MySQL database available with a database created for Apicurio Registry.</p>
+</li>
+<li>
+<p>You must have created a Kubernetes Secret containing the MySQL database password.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create a Secret containing the database password:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-credentials
+type: Opaque
+stringData:
+  password: your-database-password</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In the Kubernetes web console, click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry3</strong> &gt;
+<strong>Create ApicurioRegistry3</strong>.</p>
+</li>
+<li>
+<p>Paste in the following custom resource definition, adjusting the values for your environment:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry-mysql
+spec:
+  app:
+    storage:
+      type: mysql
+      sql:
+        dataSource:
+          url: jdbc:mysql://mysql.my-project.svc:3306/registry
+          username: registry_user
+          password:
+            name: mysql-credentials
+            key: password
+    ingress:
+      host: registry.example.com
+  ui:
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Update the <code>url</code> to match your MySQL service name, namespace, port, and database name. Update the
+<code>username</code> to match your database user.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Click <strong>Create</strong> and wait for the Apicurio Registry deployment to be created.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Access the Apicurio Registry web console and create a test artifact to verify that data is being persisted to
+the database.</p>
+</li>
+<li>
+<p>Restart the Apicurio Registry pod and verify that the artifact still exists, confirming that data is persisted.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-registry-kafkasql_registry"><a class="anchor" href="#deploying-registry-kafkasql_registry"></a>Deploying Apicurio Registry with KafkaSQL storage</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can deploy Apicurio Registry with KafkaSQL storage. KafkaSQL uses Apache Kafka as the primary
+data store, with an embedded H2 database as a local SQL store that Apicurio Registry rebuilds from the Kafka journal on each startup. This configuration is suitable for production environments
+when you configure persistent Kafka storage.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have cluster administrator access to an Kubernetes cluster.</p>
+</li>
+<li>
+<p>You must have already installed the Apicurio Registry Operator. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
+</li>
+<li>
+<p>You must have a Kafka cluster available. For OpenShift, see <a href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Obtain the Kafka bootstrap servers address from your Kafka cluster. For example, with Strimzi:
+<code>my-cluster-kafka-bootstrap.my-project.svc:9092</code></p>
+</li>
+<li>
+<p>In the Kubernetes web console, click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry3</strong> &gt;
+<strong>Create ApicurioRegistry3</strong>.</p>
+</li>
+<li>
+<p>Paste in the following custom resource definition, adjusting the <code>bootstrapServers</code> value:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry-kafkasql
+spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        bootstrapServers: my-cluster-kafka-bootstrap.my-project.svc:9092
+    ingress:
+      host: registry.example.com
+  ui:
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Click <strong>Create</strong> and wait for the Apicurio Registry deployment to be created.</p>
+</li>
+<li>
+<p>If using Strimzi, configure the Kafka topic that Apicurio Registry uses (named <code>kafkasql-journal</code> by default)
+with delete cleanup policy and infinite retention:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: kafkasql-journal
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  partitions: 3
+  replicas: 3
+  config:
+    cleanup.policy: delete
+    retention.ms: -1
+    retention.bytes: -1</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+You must configure the Kafka topic used by Apicurio Registry with <code>cleanup.policy: delete</code> and infinite retention
+(<code>retention.ms: -1</code> and <code>retention.bytes: -1</code>), otherwise data loss might occur.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Access the Apicurio Registry web console and create a test artifact to verify that data is being persisted to Kafka.</p>
+</li>
+<li>
+<p>Restart the Apicurio Registry pod and verify that the artifact still exists after the cache is rebuilt from Kafka.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-installing-registry-storage-openshift.html#setting-up-kafka-streams-storage_registry" class="page">Configuring Apicurio Registry with Kafka storage on OpenShift</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-kafkasql-tls_registry"><a class="anchor" href="#configuring-kafkasql-tls_registry"></a>KafkaSQL TLS configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When your Kafka cluster requires TLS encryption, you can configure Apicurio Registry to connect securely.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry-kafkasql-tls
+spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        bootstrapServers: my-cluster-kafka-bootstrap.my-project.svc:9093
+        tls:
+          truststoreSecretRef:
+            name: kafka-cluster-ca-cert
+            key: ca.p12
+          truststorePasswordSecretRef:
+            name: kafka-cluster-ca-cert
+            key: ca.password
+    ingress:
+      host: registry.example.com</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The Secret containing the Kafka cluster CA certificate must be in PKCS12 format.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-kafkasql-sasl_registry"><a class="anchor" href="#configuring-kafkasql-sasl_registry"></a>KafkaSQL SASL authentication configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When your Kafka cluster requires SASL authentication (such as SCRAM-SHA-512), the recommended approach is to use
+the Strimzi Kafka Access Operator (available starting with Apicurio Registry version 3.2.0), which automatically provides
+all connection details in a single Kubernetes Secret.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry-kafkasql-sasl
+spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        kafkaAccessSecretName: my-kafka-access
+    ingress:
+      host: registry.example.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For OAuth (OAUTHBEARER) authentication, use the <code>auth</code> section instead:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry-kafkasql-oauth
+spec:
+  app:
+    storage:
+      type: kafkasql
+      kafkasql:
+        bootstrapServers: my-cluster-kafka-bootstrap.my-project.svc:9093
+        tls:
+          truststoreSecretRef:
+            name: kafka-cluster-ca-cert
+          truststorePasswordSecretRef:
+            name: kafka-cluster-ca-cert
+        auth:
+          enabled: true
+          mechanism: OAUTHBEARER
+          clientIdRef:
+            name: kafka-oauth-credentials
+            key: clientId
+          clientSecretRef:
+            name: kafka-oauth-credentials
+            key: clientSecret
+          tokenEndpoint: https://identity-server.example.com/token
+          loginHandlerClass: io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler
+    ingress:
+      host: registry.example.com</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-registry-kubernetesops_registry"><a class="anchor" href="#deploying-registry-kubernetesops_registry"></a>Deploying Apicurio Registry with KubernetesOps storage</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Deploy Apicurio Registry with KubernetesOps storage. KubernetesOps is a read-only storage
+variant that loads registry data from Kubernetes ConfigMaps, enabling Kubernetes-native and GitOps workflows for
+managing schemas and APIs.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+KubernetesOps storage is an <strong>experimental</strong> feature. You must enable the experimental features gate to use it.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have cluster administrator access to an Kubernetes cluster.</p>
+</li>
+<li>
+<p>You must have already installed the Apicurio Registry Operator. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
+</li>
+<li>
+<p>You must have access to create ConfigMaps in your cluster. The Apicurio Registry Operator creates the required RBAC resources automatically.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the Kubernetes web console, click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry3</strong> &gt;
+<strong>Create ApicurioRegistry3</strong>.</p>
+</li>
+<li>
+<p>Paste in the following custom resource definition, adjusting the values for your environment:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry-kubernetesops
+spec:
+  app:
+    storage:
+      type: kubernetesops
+      kubernetesops:
+        registryId: my-registry
+        namespace: apicurio
+    ingress:
+      host: registry.example.com
+  ui:
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Replace <code>registryId</code> with a unique identifier for your registry instance, and
+<code>namespace</code> with the namespace containing your ConfigMaps. The operator automatically enables
+the experimental features gate required by KubernetesOps storage.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Optional: Verify that the Apicurio Registry Operator created the RBAC resources that grant the registry read access
+to ConfigMaps. The Apicurio Registry Operator automatically creates a ServiceAccount, a Role, and a RoleBinding, each named
+<code>&lt;cr-name&gt;-kubeops</code>, and sets the service account on the registry deployment. For deployments without the
+Apicurio Registry Operator, see <a href="assembly-configuring-kubernetesops-storage.html#kubernetesops-rbac-requirements_registry" class="page">RBAC requirements</a>.</p>
+</li>
+<li>
+<p>Create ConfigMaps containing your registry data. See
+<a href="assembly-configuring-kubernetesops-storage.html#kubernetesops-configmap-format_registry" class="page">ConfigMap data format</a> for the required format.</p>
+</li>
+<li>
+<p>Click <strong>Create</strong> and wait for the Apicurio Registry deployment to be created.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Access the Apicurio Registry web console and verify that artifacts from your ConfigMaps are visible.</p>
+</li>
+<li>
+<p>Note that KubernetesOps storage is read-only. You cannot create, update, or delete artifacts through the
+REST API or web console.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-configuring-kubernetesops-storage.html" class="page">Configuring Apicurio Registry with KubernetesOps storage</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-registry-authentication_registry"><a class="anchor" href="#configuring-registry-authentication_registry"></a>Configuring authentication and authorization</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Configure Apicurio Registry with OIDC authentication and role-based authorization by using
+an identity provider such as Keycloak.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have cluster administrator access to an Kubernetes cluster.</p>
+</li>
+<li>
+<p>You must have already deployed Apicurio Registry. See <a href="#deploying-registry-inmemory_registry">Deploying Apicurio Registry with default configuration (embedded H2 database)</a>.</p>
+</li>
+<li>
+<p>You must have an OIDC identity provider configured with appropriate clients for Apicurio Registry.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Configure two clients in your identity provider:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Backend API client (for example, <code>registry-client-api</code>) - Used by the Apicurio Registry backend (REST API) component.</p>
+</li>
+<li>
+<p>UI client (for example, <code>registry-client-ui</code>) - Used by the Apicurio Registry web console component.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Update your <code>ApicurioRegistry3</code> custom resource to enable authentication:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry
+spec:
+  app:
+    auth:
+      enabled: true
+      appClientId: registry-client-api
+      uiClientId: registry-client-ui
+      authServerUrl: https://keycloak.example.com/realms/registry
+      redirectUri: https://registry-ui.example.com
+      logoutUrl: https://registry-ui.example.com
+    ingress:
+      host: registry.example.com
+  ui:
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>To enable role-based authorization, add the <code>authz</code> configuration:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    auth:
+      enabled: true
+      appClientId: registry-client-api
+      uiClientId: registry-client-ui
+      authServerUrl: https://keycloak.example.com/realms/registry
+      redirectUri: https://registry-ui.example.com
+      logoutUrl: https://registry-ui.example.com
+      authz:
+        enabled: true
+        ownerOnlyEnabled: true
+        roles:
+          source: token
+          admin: sr-admin
+          developer: sr-developer
+          readOnly: sr-readonly
+    ingress:
+      host: registry.example.com</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>To enable admin override functionality:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    auth:
+      authz:
+        enabled: true
+        ownerOnlyEnabled: true
+        adminOverride:
+          enabled: true
+          from: token
+          type: role
+          role: sr-admin</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>To allow anonymous read-only access:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    auth:
+      enabled: true
+      anonymousReadsEnabled: true
+      appClientId: registry-client-api
+      # ... other auth settings</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Access the Apicurio Registry web console and verify that you are redirected to the identity provider login page.</p>
+</li>
+<li>
+<p>Log in with different users having different roles and verify that authorization is enforced correctly.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-configuring-registry-security.html" class="page">Configuring Apicurio Registry security options</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-basic-auth-credentials_registry"><a class="anchor" href="#configuring-basic-auth-credentials_registry"></a>Basic authentication for client credentials</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>To enable HTTP basic authentication for client credentials flow (useful for service accounts), add the <code>basicAuth</code> configuration to your <code>ApicurioRegistry3</code> custom resource.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    auth:
+      enabled: true
+      appClientId: registry-client-api
+      authServerUrl: https://keycloak.example.com/realms/registry
+      basicAuth:
+        enabled: true
+        cacheExpiration: 25m</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-tls-oidc_registry"><a class="anchor" href="#configuring-tls-oidc_registry"></a>TLS configuration for OIDC connections</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When your identity provider uses custom certificates, configure TLS verification in your <code>ApicurioRegistry3</code> custom resource.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    auth:
+      enabled: true
+      appClientId: registry-client-api
+      authServerUrl: https://keycloak.example.com/realms/registry
+      tls:
+        tlsVerificationType: all
+        truststoreSecretRef:
+          name: keycloak-ca-cert
+          key: ca.p12
+        truststorePasswordSecretRef:
+          name: keycloak-ca-cert
+          key: ca.password</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Set <code>tlsVerificationType</code> to <code>none</code> to disable TLS verification (not recommended for production).
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-ingress-hostname_registry"><a class="anchor" href="#configuring-ingress-hostname_registry"></a>Ingress hostname and class configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can specify the Ingress hostname and IngressClass for each component.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry
+spec:
+  app:
+    ingress:
+      host: registry-api.example.com
+      ingressClassName: nginx
+      annotations:
+        nginx.org/proxy-connect-timeout: "30s"
+  ui:
+    ingress:
+      host: registry-ui.example.com
+      ingressClassName: nginx
+      annotations:
+        nginx.org/proxy-connect-timeout: "30s"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="disabling-operator-ingress_registry"><a class="anchor" href="#disabling-operator-ingress_registry"></a>Operator-managed Ingress configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>To manage Ingress resources manually, disable the operator-managed Ingress.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    ingress:
+      enabled: false
+  ui:
+    ingress:
+      enabled: false</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When Ingress is disabled, you must create your own Ingress or Route resources to expose the Apicurio Registry
+services.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-networkpolicy_registry"><a class="anchor" href="#configuring-networkpolicy_registry"></a>NetworkPolicy configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The operator creates NetworkPolicy resources by default. To manage NetworkPolicy manually, disable the operator-managed NetworkPolicy.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    networkPolicy:
+      enabled: false
+  ui:
+    networkPolicy:
+      enabled: false</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="enabling-resource-deletion_registry"><a class="anchor" href="#enabling-resource-deletion_registry"></a>Resource deletion configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>By default, artifacts and groups in Apicurio Registry are immutable and cannot be deleted. To enable deletion, set the <code>resourceDeleteEnabled</code> feature flag.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry
+spec:
+  app:
+    features:
+      resourceDeleteEnabled: true</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="enabling-version-mutability_registry"><a class="anchor" href="#enabling-version-mutability_registry"></a>Artifact version mutability configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>By default, artifact versions are immutable once created. To allow draft versions to be mutable, set the <code>versionMutabilityEnabled</code> feature flag.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    features:
+      versionMutabilityEnabled: true</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Enabling version mutability also unlocks Studio functionality in the Apicurio Registry UI.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="disabling-ui-component_registry"><a class="anchor" href="#disabling-ui-component_registry"></a>UI component configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>If you only need the REST API and do not want to deploy the UI, disable the UI component.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry
+spec:
+  app:
+    ingress:
+      host: registry.example.com
+  ui:
+    enabled: false</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-ui-env-vars_registry"><a class="anchor" href="#configuring-ui-env-vars_registry"></a>UI environment variable configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure the UI with environment variables in the <code>ApicurioRegistry3</code> custom resource.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  ui:
+    env:
+      - name: REGISTRY_API_URL
+        value: https://registry.example.com/apis/registry/v3
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-replicas_registry"><a class="anchor" href="#configuring-replicas_registry"></a>Replica configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure the number of replicas for each component.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry
+spec:
+  app:
+    replicas: 3
+    ingress:
+      host: registry.example.com
+  ui:
+    replicas: 2
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-autoscaling_registry"><a class="anchor" href="#configuring-autoscaling_registry"></a>Autoscaling configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can configure the Apicurio Registry Operator to manage a horizontal pod autoscaler (HPA) for the app and UI components. When autoscaling is enabled, the Apicurio Registry Operator creates an HPA that targets the component&#8217;s Deployment, and the static <code>replicas</code> field is ignored.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry
+spec:
+  app:
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 5
+      targetCPUUtilizationPercentage: 70</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Autoscaling fields</caption>
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 42.8571%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the Apicurio Registry Operator manages a HorizontalPodAutoscaler for the component.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>minReplicas</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum number of replicas.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxReplicas</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of replicas. Set this field when you enable autoscaling; when omitted, it falls back to the <code>minReplicas</code> value.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>minReplicas</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>targetCPUUtilizationPercentage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Target average CPU utilization percentage across all pods.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>80</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>targetMemoryUtilizationPercentage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Target average memory utilization percentage across all pods. When not set, memory-based scaling is not configured.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not set</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The autoscaling configuration is available on both <code>spec.app.autoscaling</code> and <code>spec.ui.autoscaling</code>. If you set both <code>replicas</code> and <code>autoscaling</code> on a component, the Apicurio Registry Operator reports a validation error condition and ignores the <code>replicas</code> field. The Apicurio Registry Operator also manages a PodDisruptionBudget when autoscaling is enabled with <code>maxReplicas</code> greater than 1.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-poddisruptionbudget_registry"><a class="anchor" href="#configuring-poddisruptionbudget_registry"></a>PodDisruptionBudget configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The operator creates PodDisruptionBudget resources by default. To manage PodDisruptionBudget manually, disable the operator-managed PodDisruptionBudget.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    podDisruptionBudget:
+      enabled: false
+  ui:
+    podDisruptionBudget:
+      enabled: false</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-env-vars_registry"><a class="anchor" href="#configuring-env-vars_registry"></a>Environment variable configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can add custom environment variables to Apicurio Registry components.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    env:
+      - name: QUARKUS_LOG_LEVEL
+        value: DEBUG
+      - name: CUSTOM_CONFIG
+        valueFrom:
+          configMapKeyRef:
+            name: my-config
+            key: custom.value</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<strong>Order of evaluation:</strong> The environment variables defined in the <code>env</code> field override any environment variables set by the operator. This enables you to customize configuration and provide workarounds while still benefiting from operator-managed settings. Do not use the custom PodTemplateSpec method to set environment variables.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-podtemplatespec_registry"><a class="anchor" href="#using-podtemplatespec_registry"></a>PodTemplateSpec advanced customization</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>For advanced pod configuration, you can provide a custom PodTemplateSpec.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    podTemplateSpec:
+      metadata:
+        labels:
+          custom-label: custom-value
+        annotations:
+          custom-annotation: custom-value
+      spec:
+        containers:
+          - name: apicurio-registry-app
+            resources:
+              requests:
+                memory: "512Mi"
+                cpu: "500m"
+              limits:
+                memory: "1Gi"
+                cpu: "1000m"
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - apicurio-registry
+                  topologyKey: kubernetes.io/hostname</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To customize the component container (for example, to set resource requests/limits), you must specify the container name as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>apicurio-registry-app</code> for the Apicurio Registry backend (REST API) component.</p>
+</li>
+<li>
+<p><code>apicurio-registry-ui</code> for the Apicurio Registry web console component.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also add additional containers to the pod if needed.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<strong>Order of evaluation:</strong> The operator first extends the provided PodTemplateSpec with default values and then applies additional configuration based on other fields in the <code>ApicurioRegistry3</code> CR. Therefore, other configuration fields might override settings in the PodTemplateSpec.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-console-plugin_registry"><a class="anchor" href="#configuring-console-plugin_registry"></a>OpenShift Console plugin configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>On OpenShift, the Apicurio Registry Operator can deploy a console plugin that adds an <strong>Apicurio</strong> section to the OpenShift Console administrator perspective, with pages for listing and inspecting <code>ApicurioRegistry3</code> instances.</p>
+</div>
+<div class="paragraph">
+<p>To deploy the console plugin, both of the following conditions must be met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The top-level <code>spec.consolePlugin.enabled</code> field is set to <code>true</code> in the custom resource. The field defaults to <code>false</code>.</p>
+</li>
+<li>
+<p>The console plugin image is configured on the Apicurio Registry Operator, by using the <code>REGISTRY_CONSOLE_PLUGIN_IMAGE</code> environment variable on the operator deployment.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  consolePlugin:
+    enabled: true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Apicurio Registry Operator then creates a console plugin Deployment and Service secured with OpenShift service serving certificates, and registers a cluster-scoped <code>ConsolePlugin</code> resource named <code>&lt;cr-namespace&gt;-&lt;cr-name&gt;-console-plugin</code>. The namespace is included because <code>ConsolePlugin</code> is cluster-scoped, so the name must stay unique across CRs that share the same name in different namespaces. The plugin backend forwards the logged-in user&#8217;s OpenShift bearer token to the registry API. On clusters that are not OpenShift, the console plugin is not deployed.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-app-tls_registry"><a class="anchor" href="#configuring-app-tls_registry"></a>Application TLS configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>To configure TLS certificates for the Apicurio Registry application, provide keystore references in the <code>ApicurioRegistry3</code> custom resource.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    tls:
+      keystoreSecretRef:
+        name: registry-tls
+        key: keystore.p12
+      keystorePasswordSecretRef:
+        name: registry-tls
+        key: keystore.password</code></pre>
+</div>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-operator-config-reference.html" class="page">Apicurio Registry Operator configuration reference</a></p>
+</li>
+<li>
+<p><a href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.4.x/getting-started/assembly-deploying-registry-operator.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>

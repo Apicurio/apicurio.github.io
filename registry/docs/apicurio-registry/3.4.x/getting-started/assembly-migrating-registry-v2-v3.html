@@ -1,0 +1,4087 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.4.x/getting-started/assembly-migrating-registry-v2-v3.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.4.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-compatibility-modes.html">Apicurio Registry schema compatibility modes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-gitops-storage.html">Configuring Apicurio Registry with GitOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-secured-kafka.html">Deploying Apicurio Registry with a secured Kafka instance</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-sizing-guide.html">Apicurio Registry capacity planning and sizing guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Versioning and support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-versioning-support-policy.html">Versioning and support policy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-custom-artifact-types.html">Configuring custom artifact types</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-events.html">Apicurio Registry change events and the outbox pattern</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using an SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Usage Telemetry and Lifecycle Governance</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-usage-telemetry.html">Usage Telemetry and API Lifecycle Governance</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-registry-quickstart.html">Agent registry quick start</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A protocol features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP tool definition features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-server-integration.html">MCP server integration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-ai-catalog-ard.html">AI Catalog and ARD discovery</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Best Practices Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-schema-lifecycle-best-practices.html">Schema lifecycle best practices</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.4.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.4.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.3.x/index.html">3.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.2.x/index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Migration</li>
+    <li><a href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.4.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-migrating-registry-v2-v3.html">3.4.x</a>
+    <a class="version" href="../../3.3.x/getting-started/assembly-migrating-registry-v2-v3.html">3.3.x</a>
+    <a class="version" href="../../3.2.x/getting-started/assembly-migrating-registry-v2-v3.html">3.2.x</a>
+    <a class="version" href="../../3.1.x/getting-started/assembly-migrating-registry-v2-v3.html">3.1.x</a>
+    <a class="version" href="../../3.0.x/getting-started/assembly-migrating-registry-v2-v3.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can migrate from Apicurio Registry 2.6.3 to Apicurio Registry 3.x by deploying a new 3.x instance, exporting and importing your persisted data, and updating your client applications.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry 3.x includes breaking changes that require a new deployment, data migration, and client application updates. There is no in-place upgrade path from v2 to v3.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For general versioning policy, upgrade guidance within the 3.x series, and rollback procedures, see the versioning and support policy documentation in Additional resources.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#versioning-support-policy_registry">[versioning-support-policy_registry]</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-migration-overview_registry"><a class="anchor" href="#registry-migration-overview_registry"></a>Changes in Apicurio Registry 3.x</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry 3.x introduces a redesigned data model, a reworked REST API, and a refreshed SDK ecosystem. These changes require you to deploy a new 3.x instance, migrate your persisted content, and update your client applications and automation.</p>
+</div>
+<div class="paragraph">
+<p>When you migrate to version 3.x, consider the following changes:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Updated data model and governance</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Apicurio Registry 3.x separates artifact metadata from version metadata and introduces first-class support for empty artifacts (artifacts without versions). You can prepare governance metadata, rules, and branch structures before you add the first version. Additional highlights include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You manage artifact metadata independently from version metadata.</p>
+</li>
+<li>
+<p>Groups and artifacts support custom labels for improved categorization.</p>
+</li>
+<li>
+<p>You can create and manage custom branches. The system manages the <code>latest</code> branch automatically.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Core v3 REST API</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>The v3 REST API focuses on consistency and discoverability:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Group management covers descriptions, owners, labels, and hierarchical rules.</p>
+</li>
+<li>
+<p>New search endpoints at <code>/search/groups</code> and <code>/search/versions</code> expand discovery.</p>
+</li>
+<li>
+<p>Version-focused endpoints streamline content management and require explicit <code>Content-Type</code> headers.</p>
+</li>
+<li>
+<p>A <code>dryRun</code> query parameter on artifact and version creation endpoints replaces the former <code>/test</code> endpoints. When <code>dryRun=true</code>, the API validates the request and returns a response without committing changes.</p>
+</li>
+<li>
+<p>A dedicated Branch API enables multitrack artifact development.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Re-engineered Kafka storage</dt>
+<dd>
+<p>The KafkaSQL storage implementation optimizes stability and maintainability. The redesigned architecture reduces startup times for large installations.</p>
+</dd>
+<dt class="hdlist1">Architectural changes in v3</dt>
+<dd>
+<p>KafkaSQL storage uses a true event journaling pattern that requires a different Kafka topic than v2, with different configuration settings. The v3 journal format is incompatible with v2.</p>
+</dd>
+<dt class="hdlist1">Separate UI container</dt>
+<dd>
+<p>You deploy the user interface as a separate container, which provides more deployment flexibility and enables independent scaling of UI and API components.</p>
+</dd>
+<dt class="hdlist1">Generated SDKs powered by Kiota</dt>
+<dd>
+<p>Apicurio Registry 3.x ships Kiota-generated SDKs that mirror the REST API structure across languages. Updated libraries for Java, TypeScript, Python, and Go provide lightweight, type-safe clients with minimal dependencies and consistent naming.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="migration-planning_registry"><a class="anchor" href="#migration-planning_registry"></a>Migration planning</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can choose from two migration approaches depending on your architecture and availability requirements. Review both approaches and select the one that best fits your environment.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Minimal downtime migration</th>
+<th class="tableblock halign-left valign-top">Maintenance window migration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Primary method</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parallel environments with reverse proxy or load balancer routing</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sequential process</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Complexity</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>High</strong>: Requires configuration for dual-routing and traffic management.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Low</strong>: Straightforward, linear execution steps.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Read downtime</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10-30 seconds (switchover latency)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1-2 hours (full duration of maintenance)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Write downtime</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30-45 minutes (final sync and import phase)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1-2 hours (full duration of maintenance)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Infrastructure</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Requires Nginx or HAProxy and dual running instances.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Single target environment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Best for</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">High-availability production environments.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Development, staging, or systems with flexible SLAs.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Regardless of the migration path you choose, you must:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Test the data migration in a staging environment before you migrate production. A dry run helps you estimate timing for export and import phases.</p>
+</li>
+<li>
+<p>Verify that client applications connect to Apicurio Registry 3.x after the data migration completes. For minimal downtime migrations, verify that the load balancer routes to 3.x and update any clients that bypass the load balancer. For maintenance window migrations, update client configurations directly.</p>
+</li>
+<li>
+<p>Update configuration properties for the v3 deployment. Combine this step with client updates where possible.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Minimal downtime migration</dt>
+<dd>
+<p>The objective is to keep the service reachable. While data moves between versions, a reverse proxy (such as nginx) manages the cutover.</p>
+</dd>
+<dt class="hdlist1">Maintenance window migration</dt>
+<dd>
+<p>This approach provides the cleanest data integrity. By stopping all client applications first, you ensure that no data is in flight during the move.</p>
+</dd>
+</dl>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#migrating-registry-data_registry">Migrating Apicurio Registry data</a></p>
+</li>
+<li>
+<p><a href="#migrating-registry-applications_registry">Client application backward compatibility</a></p>
+</li>
+<li>
+<p><a href="#migrating-registry-configuration_registry">Configuration property changes</a></p>
+</li>
+<li>
+<p><a href="#migrating-minimal-downtime_registry">Migrating with minimal downtime</a></p>
+</li>
+<li>
+<p><a href="#migrating-maintenance-window_registry">Migrating within a maintenance window</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="migrating-minimal-downtime_registry"><a class="anchor" href="#migrating-minimal-downtime_registry"></a>Migrating with minimal downtime</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can migrate from Apicurio Registry 2.6.3 to 3.x with minimal downtime by using a load balancer to manage traffic routing. This phase-based workflow minimizes read-operation downtime and controls write operations during data export.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>┌────────────────────────────────────────────────────────────────┐
+│                     Client Applications                        │
+└───────────────────────────┬────────────────────────────────────┘
+                            │
+                            ↓
+                    ┌───────────────┐
+                    │ Load Balancer │  (such as nginx or HAProxy)
+                    └───────┬───────┘
+                            │
+        ┌───────────────────┼───────────────────┐
+        │                   │                   │
+        ↓                   ↓                   ↓
+┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+│  Registry 2.x │   │  Registry 2.x │   │  Registry 3.x │
+│   + Storage   │   │   + Storage   │   │   + Storage   │
+└───────────────┘   └───────────────┘   └───────────────┘
+    (read/write)        (read-only)         (read/write)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>During a minimal downtime migration, you temporarily run both Apicurio Registry 2.6.3 and Apicurio Registry 3.x simultaneously. Plan for the following resources:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Infrastructure</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Separate database instances for v2 and v3, or different schemas in the same database</p>
+</li>
+<li>
+<p>For KafkaSQL deployments, the same Kafka cluster with different topic names</p>
+</li>
+<li>
+<p>Load balancer capacity for routing traffic</p>
+</li>
+<li>
+<p>Network connectivity between all components</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Storage</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>v2 database or storage: existing size</p>
+</li>
+<li>
+<p>v3 database or storage: approximately the same size as v2 (plan for 110% of the v2 size)</p>
+</li>
+<li>
+<p>Export file storage: approximately 10-20% of the database size (compressed)</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Timeline</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Keep v2 running for 1-7 days after migration for rollback capability</p>
+</li>
+<li>
+<p>Total parallel operation period: 1-7 days</p>
+</li>
+<li>
+<p>Budget for staging environment testing before production migration</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have a staging environment to test the complete migration workflow before production.</p>
+</li>
+<li>
+<p>You have a load balancer, such as nginx or HAProxy, for traffic management.</p>
+</li>
+<li>
+<p>You have admin role credentials for the export and import API endpoints and for testing admin functionality.</p>
+</li>
+<li>
+<p>You have a separate database instance or schema, or a separate Kafka topic, for Apicurio Registry 3.x.</p>
+</li>
+<li>
+<p>You have a current backup of 2.6.3 data.</p>
+</li>
+<li>
+<p>You have a documented rollback procedure to revert to v2 if needed.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Test as much of the migration as possible in a staging environment before you migrate in production.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p><strong>Phase 1: Preparation.</strong> Prepare the migration environment:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Deploy the load balancer.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>If you do not already use a load balancer, complete the following steps:</p>
+</div>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>Deploy nginx or HAProxy in front of your existing 2.6.3 deployment.</p>
+</li>
+<li>
+<p>Configure routing to 2.6.3.</p>
+</li>
+<li>
+<p>Update client applications to connect through the load balancer.</p>
+</li>
+<li>
+<p>Validate that all traffic flows correctly.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For load balancer configuration examples, see the configuration property changes reference.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Prepare the Apicurio Registry 3.x infrastructure.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Deploy the infrastructure for Apicurio Registry 3.x without starting the registry application:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>For SQL storage:</strong> Deploy a separate database instance or create a separate schema.</p>
+</li>
+<li>
+<p><strong>For KafkaSQL storage:</strong> Use the same Kafka cluster but configure a different topic name.</p>
+</li>
+<li>
+<p>Prepare TLS certificates. You can reuse 2.6.3 certificates.</p>
+</li>
+<li>
+<p>Configure the OAuth2/OIDC authentication provider.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For detailed configuration changes, see the configuration property changes reference.</p>
+</div>
+<div class="paragraph">
+<p><strong>Checkpoint:</strong> v2 traffic flows through the load balancer and v3 infrastructure is ready.</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><strong>Phase 2: Pre-migration validation.</strong> Freeze writes and capture a baseline:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Enable read-only mode.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Configure the load balancer to block write operations while it allows read operations. This prevents data changes during export.</p>
+</div>
+<div class="paragraph">
+<p>Update your load balancer configuration to block POST, PUT, PATCH, and DELETE methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-nginx hljs" data-lang="nginx"># nginx read-only configuration
+server {
+    location / {
+        if ($request_method !~ ^(GET|HEAD|OPTIONS)$) {
+            return 405 "Registry temporarily in read-only mode for migration";
+        }
+        proxy_pass http://registry-v2:8080;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Reload the load balancer configuration and verify that read-only mode works correctly.</p>
+</div>
+<div class="paragraph">
+<p><strong>Impact:</strong> Read operations (schema lookups) continue normally. Write operations (new schemas, updates) return HTTP 405. Kafka producers with auto-registration enabled cannot register new schemas.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Capture baseline metrics.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Record the current state of your 2.6.3 deployment for comparison after migration.</p>
+</div>
+<div class="paragraph">
+<p>For the metrics capture procedure, see the migration scripts reference.</p>
+</div>
+<div class="paragraph">
+<p><strong>Checkpoint:</strong> Read-only mode is active and write operations are blocked. Baseline is documented and ready for data migration.</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><strong>Phase 3: Data migration.</strong> Move the data to Apicurio Registry 3.x:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Export data from 2.6.3.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Export all artifacts, versions, metadata, and rules from 2.6.3 while the registry is in read-only mode.</p>
+</div>
+<div class="paragraph">
+<p>For the export procedure, see the data migration procedure.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Access the registry directly (not through the load balancer) to bypass read-only restrictions on admin endpoints if needed.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Checkpoint:</strong> Export is complete and the data snapshot is captured.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Deploy Apicurio Registry 3.x.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Deploy Apicurio Registry 3.x by using the infrastructure that you prepared in Step 2. Configure the v3 deployment similarly to the previous v2 deployment. Note that various configuration parameters are renamed or changed.</p>
+</div>
+<div class="paragraph">
+<p>For v3 configuration information and examples, see the configuration property changes reference.</p>
+</div>
+<div class="paragraph">
+<p><strong>Checkpoint:</strong> Apicurio Registry 3.x is deployed and healthy (empty, awaiting import).</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Import data into Apicurio Registry 3.x.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Import the exported ZIP archive into the 3.x deployment.</p>
+</div>
+<div class="paragraph">
+<p>For the import procedure, see the data migration procedure.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The import adds to existing data and does not replace it. For best results, import into an empty v3 registry.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Checkpoint:</strong> Import is complete and ready for validation.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Validate the import.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Verify the Apicurio Registry 3.x deployment and confirm that the data migration succeeded.</p>
+</div>
+<div class="paragraph">
+<p>For the validation procedure, see the data migration procedure.</p>
+</div>
+<div class="paragraph">
+<p>If validation fails, investigate import logs and retry if necessary. Do not proceed to the traffic switch until all checks pass.</p>
+</div>
+<div class="paragraph">
+<p><strong>Checkpoint:</strong> v3 has all data, data metrics match v2, and the deployment is ready for traffic switch.</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><strong>Phase 4: Traffic switch.</strong> Route traffic to Apicurio Registry 3.x:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Switch the load balancer to Apicurio Registry 3.x.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Update the load balancer configuration to route to Apicurio Registry 3.x and enable read and write operations. The following example shows an nginx configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-nginx hljs" data-lang="nginx"># nginx v3 configuration (read/write enabled)
+upstream registry {
+    server registry-v3:8080;
+}
+
+server {
+    location / {
+        # All methods allowed
+        proxy_pass http://registry;
+        proxy_set_header Host $host;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Reload the load balancer.</p>
+</div>
+<div class="paragraph">
+<p><strong>Service interruption:</strong> This operation can cause 10-30 seconds of brief service interruption during the reload. If your load balancer supports graceful reloads (for example, <code>nginx -s reload</code>), the interruption is minimal.</p>
+</div>
+<div class="paragraph">
+<p><strong>Checkpoint:</strong> All traffic routes to v3 and write operations are resumed.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Verify traffic to the v3 deployment.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Confirm that traffic flows to Apicurio Registry 3.x through the load balancer. Verify that the registry is accessible, the version is 3.x, health checks pass, and write operations are enabled.</p>
+</div>
+<div class="paragraph">
+<p>For the verification procedure, see the migration scripts reference.</p>
+</div>
+<div class="paragraph">
+<p><strong>Checkpoint:</strong> v3 is accessible, write operations work, and no errors appear in the logs.</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><strong>Phase 5: Post-migration validation.</strong> Validate the migrated deployment:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Test v2 API backward compatibility.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Verify that existing v2 clients can access the 3.x registry through the v2 API compatibility layer.</p>
+</div>
+<div class="paragraph">
+<p>For backward compatibility details and client migration guidance, see the client migration information.</p>
+</div>
+<div class="paragraph">
+<p><strong>Checkpoint:</strong> v2 clients work correctly against the v3 registry.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Test v3 Core API functionality.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Verify that v3-specific API features work correctly, including system endpoints, search endpoints, admin endpoints, and the Branch API.</p>
+</div>
+<div class="paragraph">
+<p>For the v3 API verification procedure, see the migration scripts reference.</p>
+</div>
+<div class="paragraph">
+<p><strong>Checkpoint:</strong> v3 Core API features work correctly.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Run smoke tests.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Execute production smoke tests to validate critical functionality:</p>
+</div>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>Test critical client applications.</p>
+</li>
+<li>
+<p>Verify that Kafka SerDes applications work (if applicable).</p>
+</li>
+<li>
+<p>Check authentication and authorization.</p>
+</li>
+<li>
+<p>Monitor error rates and performance metrics.</p>
+</li>
+<li>
+<p>Validate that no increase in 4xx/5xx errors occurs.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><strong>Checkpoint:</strong> All smoke tests passed and production traffic is stable.</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><strong>Phase 6: Stabilization.</strong> Monitor the new deployment and keep 2.6.3 available for rollback.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Keep 2.6.3 running but not serving traffic for rollback capability:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Monitor Apicurio Registry 3.x for 24-48 hours minimum.</p>
+</li>
+<li>
+<p>Watch for error rates, performance issues, or unexpected behavior.</p>
+</li>
+<li>
+<p>Prepare for immediate rollback if critical issues arise by switching the load balancer back to v2.</p>
+</li>
+<li>
+<p>Begin planning gradual client application migration to v3 SDKs.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For guidance on updating client applications, see the client migration information.</p>
+</div>
+<div class="paragraph">
+<p><strong>Checkpoint:</strong> v3 is stable for 1-7 days and no rollback is needed.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Phase 7: Cleanup.</strong> Decommission 2.6.3.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>After 1-7 days of successful operation on Apicurio Registry 3.x, decommission v2 infrastructure.</p>
+</div>
+<div class="paragraph">
+<p>Update documentation to reflect v3 as the production registry.</p>
+</div>
+<div class="paragraph">
+<p><strong>Checkpoint:</strong> Migration is complete and v2 is decommissioned.</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<div class="title">Verification</div>
+<p>After you complete all phases, verify the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>All client applications connect to Apicurio Registry 3.x successfully.</p>
+</li>
+<li>
+<p>No increase in error rates compared to the v2 baseline.</p>
+</li>
+<li>
+<p>Artifact counts and global rules match the pre-migration baseline.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A key advantage of the parallel deployment approach is the ability to roll back quickly if issues arise.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Rolling back to 2.6.3</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Scenario</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Considerations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Immediate rollback (within hours of migration)</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Switch load balancer traffic back to 2.6.3.</p>
+</li>
+<li>
+<p>Investigate issues with the 3.x deployment.</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Recovery time: 30-60 seconds.</p>
+</li>
+<li>
+<p>Minimal operational impact.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delayed rollback (days after migration)</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Assess data that was created in 3.x since migration.</p>
+</li>
+<li>
+<p>Decide on a rollback approach.</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Options include:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Accepting data loss and rolling back to v2.</p>
+</li>
+<li>
+<p>Fixing issues and remaining on v3 (preferred).</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Preventing rollback scenarios</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Test the migration thoroughly in a staging environment.</p>
+</li>
+<li>
+<p>Validate data integrity before you switch production traffic.</p>
+</li>
+<li>
+<p>Run comprehensive smoke tests after migration.</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reduces the likelihood that a rollback is required.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#migrating-registry-data_registry">Migrating Apicurio Registry data</a></p>
+</li>
+<li>
+<p><a href="#migrating-registry-configuration_registry">Configuration property changes</a></p>
+</li>
+<li>
+<p><a href="#migrating-registry-applications_registry">Client application backward compatibility</a></p>
+</li>
+<li>
+<p><a href="#migration-scripts_registry">Migration scripts reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="migrating-maintenance-window_registry"><a class="anchor" href="#migrating-maintenance-window_registry"></a>Migrating within a maintenance window</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>For environments where downtime is acceptable, you can follow this simpler sequential process to migrate from Apicurio Registry 2.6.3 to 3.x.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You performed a dry run migration in a staging environment to estimate the timing of the data export and import phases accurately.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Stop all client applications that connect to Apicurio Registry 2.6.3.</p>
+</li>
+<li>
+<p>Export data from Apicurio Registry 2.6.3 by using the export script.</p>
+</li>
+<li>
+<p>Shut down Apicurio Registry 2.6.3.</p>
+</li>
+<li>
+<p>Deploy Apicurio Registry 3.x with updated configuration.</p>
+</li>
+<li>
+<p>Import data into Apicurio Registry 3.x by using the import script.</p>
+</li>
+<li>
+<p>Validate the import by using the verification scripts.</p>
+</li>
+<li>
+<p>Update client application configurations to point to Apicurio Registry 3.x.</p>
+</li>
+<li>
+<p>Start client applications.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Verify that all client applications connect to Apicurio Registry 3.x successfully.</p>
+</li>
+<li>
+<p>Verify that artifact counts match the pre-migration baseline.</p>
+</li>
+<li>
+<p>Verify that no increase in error rates occurs.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#migrating-registry-configuration_registry">Configuration property changes</a></p>
+</li>
+<li>
+<p><a href="#migrating-registry-applications_registry">Client application backward compatibility</a></p>
+</li>
+<li>
+<p><a href="#migration-scripts_registry">Migration scripts reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="migrating-registry-data_registry"><a class="anchor" href="#migrating-registry-data_registry"></a>Migrating Apicurio Registry data</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the export and import APIs to migrate persisted content from Apicurio Registry 2.6.3 to a new Apicurio Registry 3.x deployment. The APIs preserve artifact identifiers, metadata, and references, which ensures that downstream Kafka payloads remain compatible.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You must use the export and import procedure for migration. Apicurio Registry 3.x cannot directly read 2.6.3 storage because the underlying data structures changed significantly:
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>SQL storage:</strong> The v3 database schema is completely redesigned and incompatible with v2. The data model changes (separate artifact and version metadata, new branch support) require a different table structure.</p>
+</li>
+<li>
+<p><strong>KafkaSQL storage:</strong> The v3 Kafka journal topic uses a new event journaling format that is incompatible with v2. You cannot reuse the v2 topic.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Export data from v2 and import it into v3 by using the export and import APIs. The import process automatically transforms the data to the v3 format.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry 3.x accepts the export archive that is generated from a 2.6.3 instance. Capture the archive from your existing deployment, provision the 3.x environment, and import the archive into the new cluster.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The source Apicurio Registry 2.6.3 server and the destination 3.x server are both running.</p>
+</li>
+<li>
+<p>You have administrative credentials that allow access to the <code>/apis/registry/v2/admin/export</code> and <code>/apis/registry/v3/admin/import</code> endpoints.</p>
+</li>
+<li>
+<p>If you use OAuth2 authentication, you have valid client credentials with the admin role (for example, <code>sr-admin</code>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The migration scripts automate the export, import, and validation process. They support OAuth2 authentication and provide detailed error handling.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Export all data from Apicurio Registry 2.6.3 by using the export script:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./apicurio-export-registry-data.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The script performs the following actions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Connects to your 2.6.3 deployment.</p>
+</li>
+<li>
+<p>Exports all artifacts, versions, metadata, and rules.</p>
+</li>
+<li>
+<p>Saves the data to a ZIP file (default: <code>registry-export.zip</code>).</p>
+</li>
+<li>
+<p>Validates the export file format and size.</p>
+</li>
+<li>
+<p>Reports export duration and file details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Import the export archive into Apicurio Registry 3.x by using the import script:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./apicurio-import-registry-data.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The script performs the following actions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Validates that the import ZIP file exists and is valid.</p>
+</li>
+<li>
+<p>Checks Apicurio Registry 3.x accessibility and version.</p>
+</li>
+<li>
+<p>Imports all data from the export file.</p>
+</li>
+<li>
+<p>Verifies artifact counts before and after import.</p>
+</li>
+<li>
+<p>Reports global rules configuration.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Validate the imported data by using the verification script:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./apicurio-verify-registry-version.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The script performs the following validation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Health endpoint verification.</p>
+</li>
+<li>
+<p>System information and version check.</p>
+</li>
+<li>
+<p>Artifact count comparison.</p>
+</li>
+<li>
+<p>Global rules validation.</p>
+</li>
+<li>
+<p>v2 API backward compatibility check (optional).</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Verify that artifact counts in v3 match the v2 baseline.</p>
+</li>
+<li>
+<p>Verify that global rules are configured correctly in v3.</p>
+</li>
+<li>
+<p>Verify that sample artifacts contain the expected content and metadata.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#migration-scripts_registry">Migration scripts reference</a></p>
+</li>
+<li>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_integration/2024.q2/html-single/service_registry_user_guide/index">Apicurio Registry User Guide</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="migrating-registry-applications_registry"><a class="anchor" href="#migrating-registry-applications_registry"></a>Client application backward compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry 3.x maintains backward compatibility with v2 client libraries and SerDes. You can continue to use v2 clients with a v3 registry during your migration period, which allows you to update clients gradually.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry 3.x provides the following backward compatibility for existing v2 clients:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>v2 REST API:</strong> remains available at <code>/apis/registry/v2</code>.</p>
+</li>
+<li>
+<p><strong>v2 SerDes libraries:</strong> continue to work with the v3 registry.</p>
+</li>
+<li>
+<p><strong>v3 SerDes:</strong> can consume v2 client Kafka messages with proper configuration.</p>
+</li>
+<li>
+<p><strong>No immediate client updates required:</strong> you can update clients gradually during the migration period.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This backward compatibility enables you to:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Migrate the registry to v3 first.</p>
+</li>
+<li>
+<p>Test with existing v2 clients.</p>
+</li>
+<li>
+<p>Gradually update clients to v3 libraries over time.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="choosing-migration-strategy_registry"><a class="anchor" href="#choosing-migration-strategy_registry"></a>Client migration strategies</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can choose from two client migration strategies.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Gradual migration</dt>
+<dd>
+<p>Migrate the registry first, then update clients incrementally. Deploy Apicurio Registry 3.x, verify that v2 clients continue to work, update high-priority clients to v3 SerDes or SDKs, gradually migrate remaining clients, and deprecate v2 API access after you update all clients. This approach provides lower risk because clients continue to work during migration, a flexible timeline for client updates, and easier rollback if issues occur.</p>
+</dd>
+<dt class="hdlist1">Big-bang migration</dt>
+<dd>
+<p>Update all clients and the registry simultaneously. Prepare all client updates in advance, deploy Apicurio Registry 3.x, deploy updated client applications, and verify that all integrations work. This approach provides a clean cutover to v3 with no mixed v2/v3 client environment, but requires higher complexity and coordination and is more difficult to troubleshoot if issues arise.</p>
+</dd>
+</dl>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#migrating-kafka-serdes_registry">Migrating Kafka SerDes applications</a></p>
+</li>
+<li>
+<p><a href="#migrating-rest-api-clients_registry">Migrating REST API and SDK client applications</a></p>
+</li>
+<li>
+<p><a href="#client-migration-reference_registry">Client migration configuration reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="migrating-kafka-serdes_registry"><a class="anchor" href="#migrating-kafka-serdes_registry"></a>Migrating Kafka SerDes applications</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can update your Kafka SerDes applications from Apicurio Registry 2.6.3 to 3.x by updating Maven dependencies, reconfiguring SerDes properties, and updating TLS settings.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have existing Kafka SerDes applications that use Apicurio Registry 2.6.3 libraries.</p>
+</li>
+<li>
+<p>You have access to the source code and build configuration for each application.</p>
+</li>
+<li>
+<p>You installed the required dependencies for running migration scripts. See <a href="#installing-script-dependencies_registry">Installing dependencies</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Update your Maven dependency coordinates from v2 to v3.</p>
+<div class="paragraph">
+<p>Replace the v2 SerDes dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+    &lt;artifactId&gt;apicurio-registry-serdes-avro-serde&lt;/artifactId&gt;
+    &lt;version&gt;2.6.13.Final&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the v3 SerDes dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+    &lt;artifactId&gt;apicurio-registry-avro-serde-kafka&lt;/artifactId&gt;
+    &lt;version&gt;3.3.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Artifact IDs changed in v3. The v2 artifact ID is <code>apicurio-registry-serdes-avro-serde</code>, while v3 uses <code>apicurio-registry-avro-serde-kafka</code>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Update your SerDes configuration properties for v3.</p>
+<div class="paragraph">
+<p>Replace the v2 configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Properties props = new Properties();
+
+// v2 SerDes configuration
+props.put(SerdeConfig.REGISTRY_URL, "https://registry-v2.example.com/apis/registry/v2");
+props.put(SerdeConfig.AUTO_REGISTER_ARTIFACT, Boolean.TRUE);
+props.put(SerdeConfig.ENABLE_HEADERS, false);
+props.put(SerdeConfig.ENABLE_CONFLUENT_ID_HANDLER, true);
+props.put(SerdeConfig.USE_ID, IdOption.contentId.name());
+
+// v2 OAuth2 configuration
+props.put(SerdeConfig.AUTH_SERVICE_URL, "https://keycloak.example.com");
+props.put(SerdeConfig.AUTH_REALM, "registry");
+props.put(SerdeConfig.AUTH_CLIENT_ID, "kafka-client");
+props.put(SerdeConfig.AUTH_CLIENT_SECRET, "secret");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the v3 configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Properties props = new Properties();
+
+// v3 SerDes configuration
+props.put(SerdeConfig.REGISTRY_URL, "https://registry-v3.example.com/apis/registry/v3");
+props.put(SerdeConfig.AUTO_REGISTER_ARTIFACT, Boolean.TRUE);
+
+// v3 OAuth2 configuration (simplified)
+props.put(SerdeConfig.AUTH_TOKEN_ENDPOINT, "https://keycloak.example.com/realms/registry/protocol/openid-connect/token");
+props.put(SerdeConfig.AUTH_CLIENT_ID, "kafka-client");
+props.put(SerdeConfig.AUTH_CLIENT_SECRET, "secret");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a detailed comparison of all changed properties, see the client migration configuration reference.</p>
+</div>
+</li>
+<li>
+<p>Update your TLS configuration.</p>
+<div class="paragraph">
+<p>Replace the v2 system-property-based TLS configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// v2 SerDes clients use system properties for TLS configuration
+System.setProperty("javax.net.ssl.trustStore", "/path/to/truststore.jks");
+System.setProperty("javax.net.ssl.trustStorePassword", "password");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the v3 SerdeConfig-based configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// v3 SerDes clients use SerdeConfig properties for TLS configuration
+Properties props = new Properties();
+
+// Configure trust store for Registry HTTPS connections
+props.put(SerdeConfig.TLS_TRUSTSTORE_LOCATION, "/path/to/truststore.jks");
+props.put(SerdeConfig.TLS_TRUSTSTORE_PASSWORD, "password");
+props.put(SerdeConfig.TLS_TRUSTSTORE_TYPE, "JKS");
+
+// System properties for OAuth2 Keycloak connections
+System.setProperty("javax.net.ssl.trustStore", "/path/to/truststore.jks");
+System.setProperty("javax.net.ssl.trustStorePassword", "password");</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+v3 SerDes requires both SerdeConfig TLS properties (for Registry SDK connections) and system properties (for OAuth2 Keycloak connections). This differs from v2, which uses only system properties.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Verify that v3 consumers read messages that v2 producers produced.</p>
+</li>
+<li>
+<p>Verify that v2 consumers read messages that v3 producers produced.</p>
+</li>
+<li>
+<p>Verify that mixed-environment deployments (v2 and v3 clients) operate without data loss.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#client-migration-reference_registry">Client migration configuration reference</a></p>
+</li>
+<li>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_integration/2024.q2/html-single/service_registry_user_guide/index">Apicurio Registry User Guide</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="migrating-rest-api-clients_registry"><a class="anchor" href="#migrating-rest-api-clients_registry"></a>Migrating REST API and SDK client applications</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can update applications that use the Apicurio Registry REST API directly by updating SDK dependencies, reconfiguring TLS settings, and updating OAuth2/OIDC authentication.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have existing applications that use the Apicurio Registry 2.6.3 REST API or Java SDK.</p>
+</li>
+<li>
+<p>You have access to the source code or deployment configuration for each application.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This procedure covers the legacy <code>apicurio-registry-client</code> (2.6.13.Final) product client. If your application instead uses the Kiota-generated <code>client-v2</code> module (Maven artifact <code>apicurio-registry-v2-java-sdk</code>, class <code>RegistryV2ClientFactory</code>), see the <a href="https://github.com/Apicurio/apicurio-registry/blob/main/java-sdk/MIGRATING_FROM_V2.md">Java SDK v2 to v3 migration guide</a> instead.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Update your SDK Maven dependency coordinates from v2 to v3.</p>
+<div class="paragraph">
+<p>Replace the v2 SDK dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+    &lt;artifactId&gt;apicurio-registry-client&lt;/artifactId&gt;
+    &lt;version&gt;2.6.13.Final&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the v3 SDK dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+    &lt;artifactId&gt;apicurio-registry-java-sdk&lt;/artifactId&gt;
+    &lt;version&gt;3.3.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Update your TLS configuration.</p>
+<div class="paragraph">
+<p>Replace the v2 system-property-based TLS configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// v2 clients use system properties
+System.setProperty("javax.net.ssl.trustStore", "/path/to/truststore.jks");
+System.setProperty("javax.net.ssl.trustStorePassword", "password");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the v3 <code>RegistryClientOptions</code>-based configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// v3 clients use RegistryClientOptions
+RegistryClientOptions options = RegistryClientOptions.builder()
+    .trustStore(new File("/path/to/truststore.jks"))
+    .trustStorePassword("password")
+    .build();
+
+props.put(SerdeConfig.REGISTRY_CLIENT_OPTIONS, options);</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Update your OAuth2/OIDC authentication configuration.</p>
+<div class="paragraph">
+<p>Replace the v2 authentication setup:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.rest.client.auth.OidcAuth;
+import io.apicurio.rest.client.spi.ApicurioHttpClientFactory;
+
+String authServerUrl = "https://keycloak.example.com/realms/registry";
+ApicurioHttpClient httpClient = ApicurioHttpClientFactory.create(authServerUrl,
+    new AuthErrorHandler());
+Auth auth = new OidcAuth(httpClient, clientId, clientSecret, null, null);
+RegistryClient client = RegistryClientFactory.create(registryUrl, Collections.emptyMap(), auth);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the v3 authentication setup:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.registry.client.RegistryClientFactory;
+import io.apicurio.registry.client.RegistryClientOptions;
+
+String tokenEndpoint = "https://keycloak.example.com/realms/registry/protocol/openid-connect/token";
+RegistryClientOptions options = RegistryClientOptions.create(registryUrl)
+    .oauth2(tokenEndpoint, clientId, clientSecret, null);
+RegistryClient client = RegistryClientFactory.create(options);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a detailed comparison of all authentication changes, see the client migration configuration reference.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Verify that REST API calls to v3 endpoints return expected results.</p>
+</li>
+<li>
+<p>Verify that authenticated requests succeed with the new OAuth2 configuration.</p>
+</li>
+<li>
+<p>Verify that v2 API backward compatibility endpoints respond correctly.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#client-migration-reference_registry">Client migration configuration reference</a></p>
+</li>
+<li>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_integration/2024.q2/html-single/service_registry_user_guide/index">Apicurio Registry User Guide</a></p>
+</li>
+<li>
+<p><a href="https://docs.redhat.com/en/documentation/red_hat_build_of_apicurio_registry/3.1/html/apicurio_registry_user_guide/configuring-kafka-client-serdes_registry">Kafka SerDes Configuration Guide</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/openapi/kiota/">Kiota SDK Documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="client-migration-reference_registry"><a class="anchor" href="#client-migration-reference_registry"></a>Client migration configuration reference</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The following tables summarize the configuration property changes between Apicurio Registry 2.6.3 and Apicurio Registry 3.x for SerDes applications, REST API clients, and authentication.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. SerDes configuration property changes</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Registry 2.x</th>
+<th class="tableblock halign-left valign-top">Registry 3.x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 endpoint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_SERVICE_URL</code> + <code>AUTH_REALM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_TOKEN_ENDPOINT</code> (full URL)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID handler</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ID_HANDLER</code> (optional default "8 byte handler")</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ID_HANDLER</code> (optional default "4 byte handler")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Confluent ID handler</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ENABLE_CONFLUENT_ID_HANDLER</code> (optional convenience property)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Removed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content ID usage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>USE_ID</code> with <code>IdOption</code> (default "globalId")</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>USE_ID</code> with <code>IdOption</code> (default "contentId")</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The default ID option changed from <code>globalId</code> to <code>contentId</code> in v3. Both v2 and v3 SerDes can read messages that use either ID type, which ensures compatibility during migration. If your v2 applications explicitly set <code>USE_ID=contentId</code>, you can remove this configuration in v3 because it is now the default.
+</td>
+</tr>
+</table>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. REST API client authentication changes</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Aspect</th>
+<th class="tableblock halign-left valign-top">Registry 2.x</th>
+<th class="tableblock halign-left valign-top">Registry 3.x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configuration approach</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Separate <code>Auth</code> object with <code>OidcAuth</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fluent builder with <code>RegistryClientOptions</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 endpoint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full auth server URL with realm path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full OIDC token endpoint URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Factory method</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RegistryClientFactory.create(url, map, auth)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RegistryClientFactory.create(options)</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>With proper configuration, Apicurio Registry 3.x SerDes reads messages that v2 SerDes serialized:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>v3 consumers</strong> read messages that v2 producers produce.</p>
+</li>
+<li>
+<p><strong>v2 consumers</strong> read messages that v3 producers produce.</p>
+</li>
+<li>
+<p><strong>Mixed environment</strong> (v2 and v3 clients) is fully supported.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This compatibility helps you avoid data loss during migration.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_integration/2024.q2/html-single/service_registry_user_guide/index">Apicurio Registry User Guide</a></p>
+</li>
+<li>
+<p><a href="https://docs.redhat.com/en/documentation/red_hat_build_of_apicurio_registry/3.1/html/apicurio_registry_user_guide/configuring-kafka-client-serdes_registry">Kafka SerDes Configuration Guide</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="migrating-registry-configuration_registry"><a class="anchor" href="#migrating-registry-configuration_registry"></a>Configuration property changes</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Configuration keys in Apicurio Registry 3.x adopt a unified <code>apicurio.</code> namespace and reorganize authentication, eventing, UI, and storage settings. The following tables map v2 properties to their v3 equivalents, grouped by configuration area, with example migrations.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Configuration property changes are extensive in 3.x. Review all sections carefully and test in a staging environment before you migrate production deployments.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You must use separate database instances or schemas for v2 and v3 because the database schemas are incompatible.</p>
+</div>
+<table id="configuring-storage_registry" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. SQL database storage properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Registry 2.x property</th>
+<th class="tableblock halign-left valign-top">Registry 3.x property</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_DATASOURCE_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_DATASOURCE_URL</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_DATASOURCE_USERNAME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_DATASOURCE_USERNAME</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_DATASOURCE_PASSWORD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_DATASOURCE_PASSWORD</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_DATASOURCE_DB_KIND</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not required (auto-detected from URL)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_SQL_INIT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_SQL_INIT</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not applicable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_STORAGE_KIND=sql</code> (required)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not applicable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_STORAGE_SQL_KIND</code> (PostgreSQL, MySQL, H2)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Example migration:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Registry 2.x SQL configuration
+REGISTRY_DATASOURCE_URL=jdbc:postgresql://postgres:5432/registry
+REGISTRY_DATASOURCE_USERNAME=apicurio
+REGISTRY_DATASOURCE_PASSWORD=password123
+QUARKUS_DATASOURCE_DB_KIND=postgresql
+
+# Registry 3.x SQL configuration
+APICURIO_STORAGE_KIND=sql
+APICURIO_STORAGE_SQL_KIND=postgresql
+APICURIO_DATASOURCE_URL=jdbc:postgresql://postgres:5432/registry_v3
+APICURIO_DATASOURCE_USERNAME=apicurio
+APICURIO_DATASOURCE_PASSWORD=password123</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Use separate database instances or different database names for v2 and v3. The v3 database schema is incompatible with v2.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You must use a different Kafka topic for v3 than v2 because the journal formats are incompatible.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. KafkaSQL storage properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Registry 2.x property</th>
+<th class="tableblock halign-left valign-top">Registry 3.x property</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KAFKA_BOOTSTRAP_SERVERS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_KAFKASQL_BOOTSTRAP_SERVERS</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_KAFKASQL_TOPIC</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_KAFKASQL_TOPIC</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_KAFKASQL_CONSUMER_GROUP_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not applicable. Remove this property. In v3, the consumer group ID is always auto-generated. Use
+<code>APICURIO_KAFKASQL_CONSUMER_GROUP_PREFIX</code> to set a recognizable prefix if needed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not applicable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_STORAGE_KIND=kafkasql</code> (required)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Example migration:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Registry 2.x KafkaSQL configuration
+KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+REGISTRY_KAFKASQL_TOPIC=kafkasql-journal-v2
+REGISTRY_KAFKASQL_CONSUMER_GROUP_ID=registry-v2-consumer
+
+# Registry 3.x KafkaSQL configuration
+APICURIO_STORAGE_KIND=kafkasql
+APICURIO_KAFKASQL_BOOTSTRAP_SERVERS=kafka:9092
+APICURIO_KAFKASQL_TOPIC=kafkasql-journal-v3</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Use a different topic name for v3 (<code>kafkasql-journal-v3</code>) than v2 (<code>kafkasql-journal-v2</code>). The v3 journal format is incompatible with v2.
+</td>
+</tr>
+</table>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Authentication and authorization properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Registry 2.x property</th>
+<th class="tableblock halign-left valign-top">Registry 3.x property</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_TENANT_ENABLED</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use <code>QUARKUS_OIDC_AUTH_SERVER_URL</code> with full realm path</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_REALM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Included in <code>QUARKUS_OIDC_AUTH_SERVER_URL</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KEYCLOAK_API_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_CLIENT_ID</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ROLE_BASED_AUTHZ_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ROLE-BASED-AUTHORIZATION</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_ROLES_ADMIN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ROLES_ADMIN</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_ROLES_DEVELOPER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ROLES_DEVELOPER</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_ROLES_READONLY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTH_ROLES_READONLY</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_TLS_VERIFICATION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OIDC_TLS_VERIFICATION</code> (same)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Example migration with Keycloak:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Registry 2.x authentication
+AUTH_ENABLED=true
+KEYCLOAK_URL=https://keycloak:8443
+KEYCLOAK_REALM=registry
+KEYCLOAK_API_CLIENT_ID=registry-api
+ROLE_BASED_AUTHZ_ENABLED=true
+REGISTRY_AUTH_ROLES_ADMIN=sr-admin
+REGISTRY_AUTH_ROLES_DEVELOPER=sr-developer
+REGISTRY_AUTH_ROLES_READONLY=sr-readonly
+
+# Registry 3.x authentication
+QUARKUS_OIDC_TENANT_ENABLED=true
+QUARKUS_OIDC_AUTH_SERVER_URL=https://keycloak:8443/realms/registry
+QUARKUS_OIDC_CLIENT_ID=registry-api
+APICURIO_AUTH_ROLE-BASED-AUTHORIZATION=true
+APICURIO_AUTH_ROLES_ADMIN=sr-admin
+APICURIO_AUTH_ROLES_DEVELOPER=sr-developer
+APICURIO_AUTH_ROLES_READONLY=sr-readonly</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The <code>QUARKUS_OIDC_AUTH_SERVER_URL</code> property in v3 requires the full realm path (for example, <code><a href="https://keycloak.example.com/realms/registry" class="bare">https://keycloak.example.com/realms/registry</a></code>). In v2, you specified the realm by using a separate property.
+</td>
+</tr>
+</table>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. API and deletion properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Registry 2.x property</th>
+<th class="tableblock halign-left valign-top">Registry 3.x property</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_REST_ARTIFACT_DELETION_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_REST_DELETION_ARTIFACT_ENABLED</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not available</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_REST_DELETION_ARTIFACT-VERSION_ENABLED</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not available</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_REST_DELETION_GROUP_ENABLED</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_UI_FEATURES_READONLY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_UI_FEATURES_READ-ONLY_ENABLED</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CORS_ALLOWED_ORIGINS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_CORS_ORIGINS</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Example migration:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Registry 2.x API configuration
+REGISTRY_REST_ARTIFACT_DELETION_ENABLED=true
+REGISTRY_UI_FEATURES_READONLY=false
+CORS_ALLOWED_ORIGINS=*
+
+# Registry 3.x API configuration
+APICURIO_REST_DELETION_ARTIFACT_ENABLED=true
+APICURIO_REST_DELETION_ARTIFACT-VERSION_ENABLED=true
+APICURIO_REST_DELETION_GROUP_ENABLED=true
+APICURIO_UI_FEATURES_READ-ONLY_ENABLED=false
+QUARKUS_HTTP_CORS_ORIGINS=*</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>TLS configuration remains unchanged between v2 and v3 for server-side settings.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. TLS/HTTPS properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Registry 2.x property</th>
+<th class="tableblock halign-left valign-top">Registry 3.x property</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_SSL_PORT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_SSL_PORT</code> (same)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_FILE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_FILE</code> (same)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_PASSWORD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_PASSWORD</code> (same)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_INSECURE_REQUESTS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_INSECURE_REQUESTS</code> (same)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Example (same for v2 and v3):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># TLS configuration (unchanged)
+QUARKUS_HTTP_SSL_PORT=8443
+QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_FILE=/certs/registry-keystore.p12
+QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_PASSWORD=password123
+QUARKUS_HTTP_INSECURE_REQUESTS=disabled</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+TLS configuration is identical for v2 and v3. If the hostname and routes remain the same, reuse the same certificates.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_integration/2024.q2/html-single/service_registry_user_guide/index">Apicurio Registry User Guide</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="kafkasql-architecture_registry"><a class="anchor" href="#kafkasql-architecture_registry"></a>KafkaSQL storage changes in Apicurio Registry 3.x</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry 3.x completely re-engineers the KafkaSQL storage implementation with significant architectural improvements. If you use KafkaSQL storage, understand these changes before you configure the v3 journal topic.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry 3.x introduces a fundamentally different KafkaSQL implementation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>True journaling approach:</strong> The new implementation uses a true event journaling pattern.</p>
+</li>
+<li>
+<p><strong>No log compaction:</strong> Unlike v2, the v3 implementation does not rely on Kafka log compaction.</p>
+</li>
+<li>
+<p><strong>Immutable event log:</strong> All registry operations are stored as immutable events in the journal topic.</p>
+</li>
+<li>
+<p><strong>Improved consistency:</strong> Better handling of concurrent operations and edge cases.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry 3.x KafkaSQL includes an optional snapshotting feature for advanced use cases.</p>
+</div>
+<div class="paragraph">
+<p>Snapshotting creates periodic database snapshots of the registry state, which provides the following benefits:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Faster startup times:</strong> The registry loads from the snapshot instead of replaying the entire journal.</p>
+</li>
+<li>
+<p><strong>Backup capability:</strong> Use snapshots for disaster recovery.</p>
+</li>
+<li>
+<p><strong>Optional journal cleanup:</strong> When snapshotting is enabled, you can configure finite retention to remove older journal events.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>When to use snapshotting:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Large registries with many artifacts (thousands or more).</p>
+</li>
+<li>
+<p>Long-running deployments with growing journal topics.</p>
+</li>
+<li>
+<p>Situations that need faster registry startup and recovery times.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Without snapshotting enabled, you must preserve all journal events (infinite retention). If you enable snapshotting and want to use finite retention, set <code>apicurio.kafkasql.topic-configuration-verification-override-enabled=true</code> and ensure that snapshots are created more frequently than messages are deleted.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Snapshotting is an advanced feature. Most deployments do not need snapshotting enabled. Consult the official Apicurio Registry documentation for more information on how to configure and use the snapshotting feature.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#configuring-kafkasql-topic_registry">Configuring the KafkaSQL journal topic</a></p>
+</li>
+<li>
+<p><a href="#migrating-registry-configuration_registry">Configuration property changes</a></p>
+</li>
+<li>
+<p><a href="https://www.apicur.io/registry/docs/apicurio-registry/3.1.x/index.html">Official Apicurio Registry documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-kafkasql-topic_registry"><a class="anchor" href="#configuring-kafkasql-topic_registry"></a>Configuring the KafkaSQL journal topic</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can create and configure the v3 KafkaSQL journal topic with the correct cleanup policy and retention settings.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have access to Kafka administrative tools (<code>kafka-topics.sh</code>).</p>
+</li>
+<li>
+<p>You understand the KafkaSQL architectural changes in v3. See <a href="#kafkasql-architecture_registry">KafkaSQL storage changes</a>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create the v3 KafkaSQL journal topic with the correct settings.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kafka-topics.sh --bootstrap-server kafka:9092 --create \
+  --topic kafkasql-journal-v3 \
+  --partitions 1 \
+  --replication-factor 3 \
+  --config cleanup.policy=delete \
+  --config retention.ms=-1 \
+  --config retention.bytes=-1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The partition count is configurable. All journal messages use a global partition key for ordering, so a single partition is sufficient. Adjust based on your Kafka cluster configuration.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Configure the journal topic with <code>cleanup.policy=delete</code> and infinite retention (<code>retention.ms=-1</code>). Do not use log compaction. You must preserve all journal events for proper registry operation.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Verify the topic configuration.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kafka-topics.sh --bootstrap-server kafka:9092 --describe \
+  --topic kafkasql-journal-v3
+
+# Expected output:
+#   cleanup.policy=delete
+#   retention.ms=-1
+#   retention.bytes=-1</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Verify that the topic uses <code>cleanup.policy=delete</code> (not <code>compact</code>).</p>
+</li>
+<li>
+<p>Verify that <code>retention.ms=-1</code> and <code>retention.bytes=-1</code> are set for infinite retention.</p>
+</li>
+<li>
+<p>Verify that the topic is accessible from the Apicurio Registry 3.x deployment.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#kafkasql-architecture_registry">KafkaSQL storage changes in Apicurio Registry 3.x</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="verifying-migration-configuration_registry"><a class="anchor" href="#verifying-migration-configuration_registry"></a>Verifying migration configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can verify your v3 configuration by following this checklist to ensure that all properties are correctly updated before you switch production traffic.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Inventory all configuration files, including deployment manifests, <code>application.properties</code>, and environment variables.</p>
+</li>
+<li>
+<p>Create a mapping spreadsheet that documents v2 properties and their v3 equivalents.</p>
+</li>
+<li>
+<p>Update configuration for v3 deployment:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Storage: Change the database name or topic name.</p>
+</li>
+<li>
+<p>Authentication: Update to the full realm URL format.</p>
+</li>
+<li>
+<p>Properties: Apply the <code>apicurio.*</code> namespace.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Deploy v3 to a staging environment with updated configuration.</p>
+</li>
+<li>
+<p>Monitor startup logs for configuration errors or warnings.</p>
+</li>
+<li>
+<p>Test all functionality:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Storage connectivity.</p>
+</li>
+<li>
+<p>Authentication and authorization.</p>
+</li>
+<li>
+<p>API operations (create, read, update, delete).</p>
+</li>
+<li>
+<p>UI access.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Document any custom or undocumented properties for future reference.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Verify that Apicurio Registry 3.x starts without configuration errors.</p>
+</li>
+<li>
+<p>Verify that all API endpoints respond correctly.</p>
+</li>
+<li>
+<p>Verify that authentication and authorization work as expected.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#migrating-registry-configuration_registry">Configuration property changes</a></p>
+</li>
+<li>
+<p><a href="#resolving-configuration-issues_registry">Configuration troubleshooting reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resolving-configuration-issues_registry"><a class="anchor" href="#resolving-configuration-issues_registry"></a>Configuration troubleshooting reference</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>If you encounter configuration issues during migration, use the following guidance to diagnose and resolve common problems.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">v3 fails to start with "Storage not configured"</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p><strong>Symptoms:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Registry pod or container fails to start.</p>
+</li>
+<li>
+<p>Logs show: <code>Storage kind not configured</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Cause:</strong> Missing <code>APICURIO_STORAGE_KIND</code> property.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solution:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># For SQL storage
+APICURIO_STORAGE_KIND=sql
+APICURIO_STORAGE_SQL_KIND=postgresql
+
+# For KafkaSQL storage
+APICURIO_STORAGE_KIND=kafkasql</code></pre>
+</div>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">v3 authentication fails with "User is not authenticated"</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p><strong>Symptoms:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>All API requests return 401 Unauthorized.</p>
+</li>
+<li>
+<p>Valid access tokens are rejected.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Cause:</strong> Incorrect OAuth2/OIDC configuration, typically a missing realm path.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solution:</strong></p>
+</div>
+<div class="paragraph">
+<p>Verify that <code>QUARKUS_OIDC_AUTH_SERVER_URL</code> includes the full realm path:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Wrong (v2 style)
+QUARKUS_OIDC_AUTH_SERVER_URL=https://keycloak:8443
+
+# Correct (v3 requires realm path)
+QUARKUS_OIDC_AUTH_SERVER_URL=https://keycloak:8443/realms/registry</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verify that Keycloak is accessible from the registry container:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -k https://keycloak:8443/realms/registry/.well-known/openid-configuration</code></pre>
+</div>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Database connection fails</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p><strong>Symptoms:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Registry fails to start.</p>
+</li>
+<li>
+<p>Logs show JDBC connection errors.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Cause:</strong> Using old <code>REGISTRY_DATASOURCE_*</code> or <code>QUARKUS_DATASOURCE_*</code> properties.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solution:</strong></p>
+</div>
+<div class="paragraph">
+<p>Update to v3 datasource properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Remove these v2 properties
+# REGISTRY_DATASOURCE_URL=...
+# REGISTRY_DATASOURCE_USERNAME=...
+
+# Use v3 properties
+APICURIO_DATASOURCE_URL=jdbc:postgresql://postgres:5432/registry_v3
+APICURIO_DATASOURCE_USERNAME=apicurio
+APICURIO_DATASOURCE_PASSWORD=password123</code></pre>
+</div>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">CORS errors in browser when accessing UI</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p><strong>Symptoms:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>UI loads but API calls fail.</p>
+</li>
+<li>
+<p>Browser console shows CORS errors.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Cause:</strong> CORS property name changed in v3.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solution:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Wrong (v2 property name)
+CORS_ALLOWED_ORIGINS=*
+
+# Correct (v3 property name)
+QUARKUS_HTTP_CORS_ORIGINS=*</code></pre>
+</div>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Role-based authorization does not work</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p><strong>Symptoms:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Users can access the registry but cannot perform admin operations.</p>
+</li>
+<li>
+<p>No 403 Forbidden errors, but operations fail silently.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Cause:</strong> Role configuration properties not updated to the v3 namespace.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solution:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Update all role properties
+APICURIO_AUTH_ROLE-BASED-AUTHORIZATION=true
+APICURIO_AUTH_ROLES_ADMIN=sr-admin
+APICURIO_AUTH_ROLES_DEVELOPER=sr-developer
+APICURIO_AUTH_ROLES_READONLY=sr-readonly</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verify that the user has correct roles in Keycloak and the token includes expected roles:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Decode JWT token to check roles
+echo $ACCESS_TOKEN | cut -d. -f2 | base64 -d | jq .realm_access.roles</code></pre>
+</div>
+</div>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#migrating-registry-configuration_registry">Configuration property changes</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="user-interface_registry"><a class="anchor" href="#user-interface_registry"></a>User interface architecture changes</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry 3.x introduces a significant architectural change to the user interface. You deploy the UI as a separate container, which provides more deployment flexibility but requires additional configuration considerations during migration.</p>
+</div>
+<div class="paragraph">
+<p>In Apicurio Registry 2.6.3, the UI is built into the main <code>apicurio-registry</code> container as a single monolithic application. Apicurio Registry 3.x separates the UI into its own container:</p>
+</div>
+<div class="paragraph">
+<p><strong>Registry 2.x architecture:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>┌─────────────────────────────┐
+│  apicurio-registry-sql:2.x  │
+│  ┌───────────┬────────────┐ │
+│  │    UI     │    API     │ │
+│  └───────────┴────────────┘ │
+└─────────────────────────────┘</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Registry 3.x architecture:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>┌────────────────────┐    ┌────────────────────┐
+│ apicurio-registry  │    │ apicurio-registry  │
+│       -ui:3.x      │    │       :3.x         │
+│                    │    │                    │
+│   UI (Frontend)    │───▶│   API (Backend)    │
+└────────────────────┘    └────────────────────┘</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Implications for migration:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You deploy and manage two containers instead of one.</p>
+</li>
+<li>
+<p>Additional networking configuration is required.</p>
+</li>
+<li>
+<p>You have more flexible deployment options.</p>
+</li>
+<li>
+<p>You can scale UI and API components independently.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry 3.1.0 introduces integrated Designer functionality, which replaces the standalone Apicurio Studio project.</p>
+</div>
+<div class="paragraph">
+<p>Designer provides visual editing capabilities for OpenAPI and AsyncAPI specifications directly within the Apicurio Registry UI. This functionality previously existed as a separate project (Apicurio Studio) but is now fully integrated into Apicurio Registry.</p>
+</div>
+<div class="paragraph">
+<p><strong>Key features:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Visual editor for OpenAPI 3.x specifications.</p>
+</li>
+<li>
+<p>Visual editor for AsyncAPI specifications.</p>
+</li>
+<li>
+<p>Draft artifact version state for work-in-progress designs.</p>
+</li>
+<li>
+<p>Direct integration with Apicurio Registry storage.</p>
+</li>
+<li>
+<p>No separate deployment required.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#deploying-registry-ui_registry">Deploying the Apicurio Registry user interface</a></p>
+</li>
+<li>
+<p><a href="#ui-configuration-properties_registry">User interface configuration properties</a></p>
+</li>
+<li>
+<p><a href="https://www.apicur.io/blog/2025/10/23/studio-fully-deprecated">Apicurio Studio Deprecation Announcement</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-registry-ui_registry"><a class="anchor" href="#deploying-registry-ui_registry"></a>Deploying the Apicurio Registry user interface</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can deploy the Apicurio Registry 3.x user interface by choosing a deployment topology, deploying the UI container, and optionally enabling Designer functionality.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You deployed Apicurio Registry 3.x (the backend API container).</p>
+</li>
+<li>
+<p>You have access to your container orchestration platform (Docker Compose, Kubernetes, or OpenShift).</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Choose a deployment topology.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p><strong>Option 1: Separate subdomains</strong></p>
+</div>
+<div class="paragraph">
+<p>Deploy the UI and API to separate subdomains:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># UI accessible at: https://registry-ui.example.com
+apicurio-registry-ui:
+  image: apicurio/apicurio-registry-ui:3.3.0
+  ports:
+    - "443:8443"
+  environment:
+    - REGISTRY_API_URL=https://registry-api.example.com/apis/registry/v3
+
+# API accessible at: https://registry-api.example.com
+apicurio-registry:
+  image: apicurio/apicurio-registry:3.3.0
+  ports:
+    - "443:8443"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Benefits: clean separation of concerns, independent DNS, easier independent scaling.</p>
+</div>
+<div class="paragraph">
+<p><strong>Option 2: Co-located with reverse proxy</strong></p>
+</div>
+<div class="paragraph">
+<p>Use a reverse proxy (nginx, HAProxy) to serve both the UI and API from the same domain:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">services:
+  apicurio-registry:
+    image: apicurio/apicurio-registry:3.3.0
+    environment:
+      - apicurio.app.context-path=/app/
+      - QUARKUS_HTTP_CORS_ORIGINS=*
+
+  apicurio-registry-ui:
+    image: apicurio/apicurio-registry-ui:3.3.0
+    environment:
+      - REGISTRY_CONTEXT_PATH=/ui/
+      - REGISTRY_API_URL=/app/apis/registry/v3
+      - REGISTRY_DOCS_URL=/ui/docs/
+      - REGISTRY_EDITORS_URL=/ui/editors/
+
+  nginx:
+    image: nginx
+    ports:
+      - "443:8443"
+    # nginx.conf routes:
+    #   /ui/* → apicurio-registry-ui
+    #   /app/* → apicurio-registry</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Benefits: single domain for users, simpler certificate management, avoids CORS complexity.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Deploy the UI container with the <code>REGISTRY_API_URL</code> environment variable pointing to your backend API.</p>
+</li>
+<li>
+<p>Configure UI settings on the application (API) container by using <code>apicurio.ui.*</code> properties.</p>
+<div class="paragraph">
+<p>For a complete list of available properties, see the user interface configuration properties reference.</p>
+</div>
+</li>
+<li>
+<p>Optional: Enable Designer functionality.</p>
+<div class="paragraph">
+<p>Designer functionality requires you to enable content mutability for artifact versions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.rest.mutability.artifact-version-content.enabled=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When enabled, users with the developer or admin role can create draft versions, edit draft content by using the visual editor, save changes iteratively, and finalize drafts to create immutable versions.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Verify that the UI loads and displays the registry dashboard.</p>
+</li>
+<li>
+<p>Verify that the UI connects to the backend API and displays artifacts.</p>
+</li>
+<li>
+<p>If Designer is enabled, verify that you can create and edit draft versions.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#ui-configuration-properties_registry">User interface configuration properties</a></p>
+</li>
+<li>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_integration/2024.q2/html-single/service_registry_user_guide/index">Apicurio Registry User Guide</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ui-configuration-properties_registry"><a class="anchor" href="#ui-configuration-properties_registry"></a>User interface configuration properties</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The following tables list the configuration properties for the Apicurio Registry 3.x user interface. Configure most settings on the application (API) container. The UI container environment variables override application settings when set.</p>
+</div>
+<div class="paragraph">
+<p>Configure the following properties on the <code>apicurio-registry</code> (API) container:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. Application container properties</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 50%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.contextPath</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Context path of the UI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.navPrefixPath</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Navigation prefix for all UI paths</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.docsUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL of the documentation component</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/docs/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.editorsUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL of the editors component (Designer)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/editors/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.auth.oidc.redirect-uri</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2/OIDC redirect URI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.auth.oidc.client-id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2/OIDC client ID for UI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio-registry-ui</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.auth.oidc.logout-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2/OIDC logout URL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>f5</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.auth.oidc.scope</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2/OIDC scope</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openid profile email</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.features.read-only.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable read-only mode for the UI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.features.breadcrumbs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Show breadcrumbs in the UI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.features.settings</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Show the Settings tab in the UI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Example application container configuration:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.ui.contextPath=/
+apicurio.ui.editorsUrl=/editors/
+apicurio.ui.auth.oidc.client-id=registry-ui-client
+apicurio.ui.auth.oidc.scope=openid profile email
+apicurio.ui.features.read-only.enabled=false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The UI container environment variables override application configuration. You typically do not need to set these variables.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. UI container environment variables</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_API_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required:</strong> URL to the backend API (for example, <code><a href="http://registry-api:8080/apis/registry/v3" class="bare">http://registry-api:8080/apis/registry/v3</a></code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_CONTEXT_PATH</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Override for the UI context path</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_NAV_PREFIX_PATH</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Override for the navigation prefix path</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_DOCS_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Override for the documentation URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_EDITORS_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Override for the editors (Designer) URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Override for the OAuth2/OIDC auth server URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_AUTH_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Override for the OAuth2/OIDC client ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_FEATURE_READ_ONLY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Override for read-only mode (<code>true</code> or <code>false</code>)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The only required UI container property is <code>REGISTRY_API_URL</code>. Configure all other UI settings on the application container by using <code>apicurio.ui.*</code> properties.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_integration/2024.q2/html-single/service_registry_user_guide/index">Apicurio Registry User Guide</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="migration-scripts_registry"><a class="anchor" href="#migration-scripts_registry"></a>Migration scripts reference</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The migration scripts automate key steps in the workflow. All scripts support interactive and automated modes through environment variables, with OAuth2 authentication support.</p>
+</div>
+<div class="paragraph">
+<p>The migration scripts are production-ready tools that handle the most critical and error-prone aspects of migration:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>apicurio-capture-metrics.sh:</strong> Captures metrics before and after migration for comparison.</p>
+</li>
+<li>
+<p><strong>apicurio-export-registry-data.sh:</strong> Exports all data from 2.6.3.</p>
+</li>
+<li>
+<p><strong>apicurio-import-registry-data.sh:</strong> Imports data into Apicurio Registry 3.x.</p>
+</li>
+<li>
+<p><strong>apicurio-verify-registry-version.sh:</strong> Verifies registry version and health.</p>
+</li>
+<li>
+<p><strong>apicurio-verify-v3-api-features.sh:</strong> Tests v3-specific API features.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Find all scripts in the Apicurio Registry GitHub repository under <a href="https://github.com/Apicurio/apicurio-registry/tree/3.2.x/docs/scripts">docs/scripts/</a>.</p>
+</div>
+<div class="paragraph">
+<p>All migration scripts share the following common features:</p>
+</div>
+<div class="paragraph">
+<p><strong>Interactive and automated modes:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Interactive mode: Scripts prompt for required inputs with sensible defaults.</p>
+</li>
+<li>
+<p>Automated mode: Set environment variables to skip prompts (useful for CI/CD).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>OAuth2 authentication support:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Client credentials grant type.</p>
+</li>
+<li>
+<p>Configurable token endpoint and client credentials.</p>
+</li>
+<li>
+<p>Optional: Run without authentication for testing environments.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>TLS/HTTPS support:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Works with trusted certificates by default.</p>
+</li>
+<li>
+<p>Option to skip TLS verification for development and testing (<code>SKIP_TLS_VERIFY=true</code>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Clear output and error handling:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Color-coded output (info, success, warning, error).</p>
+</li>
+<li>
+<p>Detailed progress indicators.</p>
+</li>
+<li>
+<p>Clear exit codes for automation (0 = success, 1 = failure).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>All scripts read the following common environment variables:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. Common environment variables</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REGISTRY_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Registry base URL (for example, <code><a href="https://registry.example.com" class="bare">https://registry.example.com</a></code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to enable OAuth2 authentication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_TOKEN_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 token endpoint URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTH_CLIENT_SECRET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 client secret</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SKIP_TLS_VERIFY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to skip TLS certificate verification</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>apicurio-capture-metrics.sh</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>Purpose:</strong> Captures metrics from the registry before and after migration.</p>
+</div>
+<div class="paragraph">
+<p><strong>What it captures:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Total artifact count.</p>
+</li>
+<li>
+<p>Sample of up to 5 artifacts with full metadata.</p>
+</li>
+<li>
+<p>Global rule configurations.</p>
+</li>
+<li>
+<p>Output saved to a text file for post-migration comparison.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Usage (interactive):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./apicurio-capture-metrics.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Usage (automated):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export REGISTRY_URL="https://registry.example.com"
+export REGISTRY_API_VERSION="v2"
+export AUTH_ENABLED="true"
+export AUTH_TOKEN_URL="https://keycloak.example.com/realms/registry/protocol/openid-connect/token"
+export AUTH_CLIENT_ID="admin-client"
+export AUTH_CLIENT_SECRET="your-secret"
+export OUTPUT_FILE="registry-baseline.txt"
+
+./apicurio-capture-metrics.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Script-specific environment variables:</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>REGISTRY_API_VERSION</code></dt>
+<dd>
+<p>API version to use (default: <code>v2</code>)</p>
+</dd>
+<dt class="hdlist1"><code>OUTPUT_FILE</code></dt>
+<dd>
+<p>Output file path (default: <code>registry-baseline.txt</code>)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong>Output:</strong></p>
+</div>
+<div class="paragraph">
+<p>Text file that contains artifact summary and global rules (default: <code>registry-baseline.txt</code>).</p>
+</div>
+<div class="paragraph">
+<p><strong>apicurio-export-registry-data.sh</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>Purpose:</strong> Exports all data from a 2.6.3 deployment to a ZIP file.</p>
+</div>
+<div class="paragraph">
+<p><strong>What it exports:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>All artifacts and versions.</p>
+</li>
+<li>
+<p>Artifact metadata (labels, properties, descriptions).</p>
+</li>
+<li>
+<p>Global and artifact-specific rules.</p>
+</li>
+<li>
+<p>Artifact references.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Usage (interactive):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./apicurio-export-registry-data.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Usage (automated):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export REGISTRY_URL="https://registry-v2.example.com"
+export REGISTRY_API_VERSION="v2"
+export AUTH_ENABLED="true"
+export AUTH_TOKEN_URL="https://keycloak.example.com/realms/registry/protocol/openid-connect/token"
+export AUTH_CLIENT_ID="admin-client"
+export AUTH_CLIENT_SECRET="your-secret"
+export EXPORT_FILE="registry-export.zip"
+
+./apicurio-export-registry-data.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Script-specific environment variables:</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>REGISTRY_API_VERSION</code></dt>
+<dd>
+<p>API version to use (default: <code>v2</code>)</p>
+</dd>
+<dt class="hdlist1"><code>EXPORT_FILE</code></dt>
+<dd>
+<p>Export file path (default: <code>registry-export.zip</code>)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong>Output:</strong></p>
+</div>
+<div class="paragraph">
+<p>ZIP file that contains the complete registry export (default: <code>registry-export.zip</code>).</p>
+</div>
+<div class="paragraph">
+<p><strong>Important notes:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Run this script while the registry is in read-only mode to maintain data consistency.</p>
+</li>
+<li>
+<p>The export file size varies depending on registry size.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>apicurio-import-registry-data.sh</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>Purpose:</strong> Imports data from a v2 export file into a Apicurio Registry 3.x deployment.</p>
+</div>
+<div class="paragraph">
+<p><strong>What it does:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Validates the import ZIP file.</p>
+</li>
+<li>
+<p>Checks Apicurio Registry 3.x accessibility and version.</p>
+</li>
+<li>
+<p>Imports all data from the export file.</p>
+</li>
+<li>
+<p>Verifies the artifact count after import.</p>
+</li>
+<li>
+<p>Reports global rules configuration.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Usage (interactive):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./apicurio-import-registry-data.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Usage (automated):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export REGISTRY_URL="https://registry-v3.example.com"
+export REGISTRY_API_VERSION="v3"
+export AUTH_ENABLED="true"
+export AUTH_TOKEN_URL="https://keycloak.example.com/realms/registry/protocol/openid-connect/token"
+export AUTH_CLIENT_ID="admin-client"
+export AUTH_CLIENT_SECRET="your-secret"
+export IMPORT_FILE="registry-export.zip"
+
+./apicurio-import-registry-data.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Script-specific environment variables:</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>REGISTRY_API_VERSION</code></dt>
+<dd>
+<p>API version to use (default: <code>v3</code>)</p>
+</dd>
+<dt class="hdlist1"><code>IMPORT_FILE</code></dt>
+<dd>
+<p>Import file path (default: <code>registry-export.zip</code>)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong>Important notes:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The import adds to existing data and does not replace it.</p>
+</li>
+<li>
+<p>The script warns if the registry already contains artifacts.</p>
+</li>
+<li>
+<p>Import into an empty v3 registry for best results.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>apicurio-verify-registry-version.sh</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>Purpose:</strong> Verifies the version and health of a Apicurio Registry deployment.</p>
+</div>
+<div class="paragraph">
+<p><strong>What it checks:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Health endpoint (200 OK).</p>
+</li>
+<li>
+<p>System information retrieval.</p>
+</li>
+<li>
+<p>Version verification (2.x or 3.x).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Usage (interactive):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./apicurio-verify-registry-version.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Usage (automated):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export REGISTRY_URL="https://registry.example.com"
+export REGISTRY_VERSION="v3"
+export AUTH_ENABLED="true"
+export AUTH_TOKEN_URL="https://keycloak.example.com/realms/registry/protocol/openid-connect/token"
+export AUTH_CLIENT_ID="admin-client"
+export AUTH_CLIENT_SECRET="your-secret"
+
+./apicurio-verify-registry-version.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Script-specific environment variables:</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>REGISTRY_VERSION</code></dt>
+<dd>
+<p>Registry version to test (default: <code>v3</code>)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong>Exit codes:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>0</code>: All checks passed.</p>
+</li>
+<li>
+<p><code>1</code>: One or more checks failed.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>apicurio-verify-v3-api-features.sh</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>Purpose:</strong> Verifies that v3-specific API features are available and functioning correctly.</p>
+</div>
+<div class="paragraph">
+<p><strong>What it tests:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>v3 system endpoints (<code>/system/info</code>, <code>/system/limits</code>).</p>
+</li>
+<li>
+<p>v3 search endpoints (<code>/search/groups</code>, <code>/search/versions</code>).</p>
+</li>
+<li>
+<p>Admin endpoints.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Usage (interactive):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./apicurio-verify-v3-api-features.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Usage (automated):</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export REGISTRY_URL="https://registry-v3.example.com"
+export AUTH_ENABLED="true"
+export AUTH_TOKEN_URL="https://keycloak.example.com/realms/registry/protocol/openid-connect/token"
+export AUTH_CLIENT_ID="admin-client"
+export AUTH_CLIENT_SECRET="your-secret"
+
+./apicurio-verify-v3-api-features.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Script-specific environment variables:</strong></p>
+</div>
+<div class="paragraph">
+<p>None. This script uses only the common environment variables.</p>
+</div>
+<div class="paragraph">
+<p><strong>Exit codes:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>0</code>: All feature tests passed.</p>
+</li>
+<li>
+<p><code>1</code>: One or more feature tests failed.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>All scripts support OAuth2 authentication by using the client credentials grant type.</p>
+</div>
+<div class="paragraph">
+<p><strong>Interactive mode (prompts):</strong></p>
+</div>
+<div class="paragraph">
+<p>If environment variables are not set, scripts prompt for the following information:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Auth token endpoint URL.</p>
+</li>
+<li>
+<p>Client ID.</p>
+</li>
+<li>
+<p>Client secret (hidden input).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Automated mode (environment variables):</strong></p>
+</div>
+<div class="paragraph">
+<p>For automation, set the following environment variables:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export AUTH_ENABLED="true"
+export AUTH_TOKEN_URL="https://keycloak.example.com/realms/registry/protocol/openid-connect/token"
+export AUTH_CLIENT_ID="admin-client"
+export AUTH_CLIENT_SECRET="your-secret"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Unauthenticated deployments:</strong></p>
+</div>
+<div class="paragraph">
+<p>If your Apicurio Registry does not use authentication:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export AUTH_ENABLED="false"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, press Enter when prompted for authentication.</p>
+</div>
+<div class="paragraph">
+<p><strong>Production (trusted certificates):</strong></p>
+</div>
+<div class="paragraph">
+<p>The scripts use trusted certificates by default. To configure this explicitly:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export SKIP_TLS_VERIFY="false"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Development (self-signed certificates):</strong></p>
+</div>
+<div class="paragraph">
+<p>For testing with self-signed certificates:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export SKIP_TLS_VERIFY="true"</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Use <code>SKIP_TLS_VERIFY=true</code> only in non-production environments.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Common script errors:</strong></p>
+</div>
+<div class="paragraph">
+<p>The following list maps common script error messages to checks that resolve them:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">"Failed to obtain access token"</dt>
+<dd>
+<p>Verify that <code>AUTH_TOKEN_URL</code> is correct. Check that client credentials are valid. Confirm that the client has appropriate roles (for example, <code>sr-admin</code>). Test manually with curl.</p>
+</dd>
+<dt class="hdlist1">"Registry is not accessible"</dt>
+<dd>
+<p>Verify that <code>REGISTRY_URL</code> is correct. Check network connectivity. Confirm that the registry is running and healthy. Verify firewall and security group rules.</p>
+</dd>
+<dt class="hdlist1">"Export file is too small"</dt>
+<dd>
+<p>Check that authentication is working. Verify admin permissions. Review registry logs for errors. Confirm that the export endpoint is accessible.</p>
+</dd>
+<dt class="hdlist1">"Import failed"</dt>
+<dd>
+<p>Verify that the export file is a valid ZIP: <code>unzip -t registry-export.zip</code>. Check that registry v3 has sufficient storage. Review registry v3 logs for errors. Confirm that registry v3 is healthy before import.</p>
+</dd>
+<dt class="hdlist1">"Artifact count mismatch"</dt>
+<dd>
+<p>Wait a few seconds after import (processing delay). Check import logs for errors. Verify export file integrity. Consider re-exporting and re-importing.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-script-dependencies_registry"><a class="anchor" href="#installing-script-dependencies_registry"></a>Script dependencies</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>All migration scripts require the following tools:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>bash</code> (version 4.0 or later).</p>
+</li>
+<li>
+<p><code>curl</code>.</p>
+</li>
+<li>
+<p><code>jq</code> (for JSON parsing).</p>
+</li>
+<li>
+<p><code>unzip</code> (optional, for ZIP validation).</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_integration/2024.q2/html-single/service_registry_user_guide/index">Apicurio Registry User Guide</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="troubleshooting-migration_registry"><a class="anchor" href="#troubleshooting-migration_registry"></a>Migration troubleshooting reference</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>If you encounter issues during migration, use the following guidance to diagnose and resolve common problems.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Export fails</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Verify that the authentication credentials are valid.</p>
+</li>
+<li>
+<p>Verify that 2.6.3 is accessible.</p>
+</li>
+<li>
+<p>Review registry logs for errors.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Import fails</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Verify that the export file is a valid ZIP format.</p>
+</li>
+<li>
+<p>Verify that Apicurio Registry 3.x has sufficient storage.</p>
+</li>
+<li>
+<p>Review registry v3 logs for specific errors.</p>
+</li>
+<li>
+<p>If a partial import occurred, drop the v3 database (or Kafka topic) and retry.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Baseline metrics mismatch</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Review import logs for skipped artifacts.</p>
+</li>
+<li>
+<p>Check for import errors or warnings.</p>
+</li>
+<li>
+<p>Verify export file integrity.</p>
+</li>
+<li>
+<p>Consider re-exporting and re-importing.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Rollback needed</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Switch load balancer traffic back to 2.6.3.</p>
+</li>
+<li>
+<p>Investigate v3 issues.</p>
+<div class="paragraph">
+<p>Recovery time is 30-60 seconds. Your v2 data remains unchanged because the export operation is read-only.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#migrating-minimal-downtime_registry">Migrating with minimal downtime</a></p>
+</li>
+<li>
+<p><a href="#resolving-configuration-issues_registry">Configuration troubleshooting reference</a></p>
+</li>
+<li>
+<p><a href="#migration-scripts_registry">Migration scripts reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.4.x/getting-started/assembly-migrating-registry-v2-v3.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>

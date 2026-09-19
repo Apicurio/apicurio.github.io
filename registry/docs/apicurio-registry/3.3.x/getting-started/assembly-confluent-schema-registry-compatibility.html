@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Confluent Schema Registry compatibility API :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.4.x/getting-started/assembly-confluent-schema-registry-compatibility.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.3.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-compatibility-modes.html">Apicurio Registry schema compatibility modes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-gitops-storage.html">Configuring Apicurio Registry with GitOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-secured-kafka.html">Deploying Apicurio Registry with a secured Kafka instance</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-sizing-guide.html">Apicurio Registry capacity planning and sizing guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Versioning and support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-versioning-support-policy.html">Versioning and support policy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-custom-artifact-types.html">Configuring custom artifact types</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-events.html">Apicurio Registry change events and the outbox pattern</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using an SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Usage Telemetry and Lifecycle Governance</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-usage-telemetry.html">Usage Telemetry and API Lifecycle Governance</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-registry-quickstart.html">Agent registry quick start</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A protocol features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP tool definition features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-server-integration.html">MCP server integration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-ai-catalog-ard.html">AI Catalog and ARD discovery</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Best Practices Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-schema-lifecycle-best-practices.html">Schema lifecycle best practices</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.3.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../3.4.x/index.html">3.4.x</a>
+        </li>
+        <li class="version is-current">
+          <a href="../index.html">3.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.2.x/index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../3.4.x/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Confluent Schema Registry Compatibility</li>
+    <li><a href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.3.x</button>
+  <div class="version-menu">
+    <a class="version" href="../../3.4.x/getting-started/assembly-confluent-schema-registry-compatibility.html">3.4.x</a>
+    <a class="version is-current" href="assembly-confluent-schema-registry-compatibility.html">3.3.x</a>
+    <a class="version" href="../../3.2.x/getting-started/assembly-confluent-schema-registry-compatibility.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Confluent Schema Registry compatibility API</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry provides a compatibility API layer so that applications with Confluent Schema Registry clients can work with Apicurio Registry. Review the supported features, behavioral differences, unsupported features, and migration considerations.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ccompat-overview_registry"><a class="anchor" href="#ccompat-overview_registry"></a>Overview of the compatibility API</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry implements the Confluent Schema Registry REST API to provide drop-in compatibility for applications and tools designed for Confluent Schema Registry.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Supported API versions</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Version</th>
+<th class="tableblock halign-left valign-top">Endpoint</th>
+<th class="tableblock halign-left valign-top">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">v7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/ccompat/v7</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">v8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/ccompat/v8</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully supported</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Applications that use Confluent Schema Registry client libraries can use Apicurio Registry as a replacement by changing the schema registry URL to point to the appropriate Apicurio Registry ccompat endpoint.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example configuration</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Confluent client configuration pointing to Apicurio Registry
+schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ccompat-supported-features_registry"><a class="anchor" href="#ccompat-supported-features_registry"></a>Supported features</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry fully supports the following Confluent Schema Registry features:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Fully supported API endpoints</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Schemas API</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full support for schema management including <code>GET /schemas</code>, <code>GET /schemas/ids/{id}</code>, <code>GET /schemas/types</code>, <code>GET /schemas/ids/{id}/subjects</code>, <code>GET /schemas/ids/{id}/versions</code>, and <code>GET /schemas/ids/{id}/schema</code>. Includes pagination with <code>offset</code> and <code>limit</code> parameters.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Subjects API</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Complete create, retrieve, update, and delete operations for subjects including listing, registration, lookup by content (<code>POST /subjects/{subject}</code>), lookup by version (<code>POST /subjects/{subject}/versions/2024.Q2</code>), and deletion. Supports pagination with <code>offset</code>, <code>limit</code>, <code>deleted</code>, and <code>deletedOnly</code> parameters.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Compatibility API</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schema compatibility checking against specific versions or all versions. Supports <code>verbose</code> and <code>normalize</code> parameters. Defaults to <code>BACKWARD</code> compatibility when you do not configure an explicit rule, matching the Confluent behavior.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Config API</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global and subject-level compatibility configuration. Supports <code>GET</code>, <code>PUT</code>, and <code>DELETE</code> operations, including <code>defaultToGlobal</code> parameter for subject config. The <code>PUT</code> response includes <code>compatibility</code> and <code>normalize</code> fields.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Mode API</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global and subject-level mode management (<code>READWRITE</code>, <code>READONLY</code>, <code>READONLY_OVERRIDE</code>, <code>IMPORT</code>). Supports <code>force</code> parameter for mode changes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Contexts API</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the default context for Confluent client compatibility.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Supported schema types</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Schema type</th>
+<th class="tableblock halign-left valign-top">Support status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apache Avro</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON Schema</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Google Protobuf</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully supported</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. v8-specific features</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>X-Confluent-Accept-Unknown-Properties header</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When set to <code>true</code>, the API ignores unknown JSON properties in request bodies. This provides forward compatibility for clients that send newer API requests.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Enhanced pagination</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full pagination support on schemas and subjects endpoints.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Schema ID mapping</strong></p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry uses two internal ID types: <code>globalId</code> (unique per artifact version) and <code>contentId</code> (unique per content hash). Confluent Schema Registry uses a single incrementing schema ID.</p>
+</div>
+<div class="paragraph">
+<p>The <code>apicurio.ccompat.legacy-id-mode.enabled</code> configuration property controls the mapping between Confluent schema IDs and Apicurio Registry internal IDs:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Schema ID mode</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Mode</th>
+<th class="tableblock halign-left valign-top">Config value</th>
+<th class="tableblock halign-left valign-top">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content ID mode (default)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Confluent <code>id</code> maps to Apicurio Registry <code>contentId</code>. Registering the same schema content under different subjects returns the same ID, matching the Confluent behavior.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Legacy ID mode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Confluent <code>id</code> maps to Apicurio Registry <code>globalId</code>. Each version registration gets a unique ID regardless of content.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For most use cases, use the default content ID mode, because it matches the Confluent behavior where identical schemas share the same ID across subjects.</p>
+</div>
+<div class="paragraph">
+<p><strong>Configuration properties</strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Confluent compatibility API configuration</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ccompat.legacy-id-mode.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use <code>globalId</code> instead of <code>contentId</code> for Confluent schema IDs.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ccompat.use-canonical-hash</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Always use canonical hash for schema content comparison.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ccompat.max-subjects</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of subjects returned by the <code>/subjects</code> endpoint.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ccompat.group-concat.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable Apicurio Registry group support by concatenating group ID and artifact ID into the subject name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ccompat.group-concat.separator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Separator character used when you enable group concatenation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ccompat-behavioral-differences_registry"><a class="anchor" href="#ccompat-behavioral-differences_registry"></a>Behavioral differences from Confluent</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Although the ccompat API provides broad compatibility, some behavioral differences exist when you migrate from Confluent Schema Registry.</p>
+</div>
+<div class="paragraph">
+<p><strong>Avro schema formatting</strong></p>
+</div>
+<div class="paragraph">
+<p>The ccompat API normalizes returned Avro schemas to compact single-line JSON, matching the Confluent behavior. This normalization has the following effects:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The API returns pretty-printed Avro schemas submitted during registration in compact form.</p>
+</li>
+<li>
+<p>The API simplifies Avro primitive type wrappers (for example, <code>{"type": "string"}</code> becomes <code>"string"</code>).</p>
+</li>
+<li>
+<p>Field ordering follows the Avro canonical form.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This normalization applies only to ccompat API responses (<code>/apis/ccompat/*</code>). The native Apicurio Registry v3 API returns schemas in their original submitted format.</p>
+</div>
+<div class="paragraph">
+<p><strong>Default compatibility level</strong></p>
+</div>
+<div class="paragraph">
+<p>When you do not configure an explicit compatibility rule at the artifact, group, or global level, the ccompat compatibility check endpoint (<code>POST /compatibility/subjects/{subject}/versions/2024.Q2</code>) defaults to <code>BACKWARD</code> compatibility. This matches the default behavior of Confluent Schema Registry.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This default only applies to the compatibility <em>check</em> endpoint. Schema registration does not enforce this default unless you explicitly configure a compatibility rule by using <code>PUT /config</code> or <code>PUT /config/{subject}</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Config response format</strong></p>
+</div>
+<div class="paragraph">
+<p>The <code>PUT /config</code> and <code>PUT /config/{subject}</code> endpoints return a response with the following fields:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "compatibility": "BACKWARD",
+  "normalize": false
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>GET /config</code> endpoint returns the following response:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "compatibilityLevel": "BACKWARD"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The field name differs between the update response (<code>compatibility</code>) and the get response (<code>compatibilityLevel</code>). This matches the Confluent API behavior.</p>
+</div>
+<div class="paragraph">
+<p><strong>Error responses</strong></p>
+</div>
+<div class="paragraph">
+<p>Error responses use Confluent-compatible error codes and message formats:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Error codes</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 50%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Error code</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+<th class="tableblock halign-left valign-top">HTTP status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">40401</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Subject not found</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">404</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">40402</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version not found</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">404</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">40403</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schema not found</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">404</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">40408</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Subject-level compatibility not configured</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">404</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">42201</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Invalid schema</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">422</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">42203</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Invalid compatibility level</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">422</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">42206</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schema has existing references</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">422</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Sorted results</strong></p>
+</div>
+<div class="paragraph">
+<p>List endpoints (<code>GET /subjects</code>, <code>GET /schemas/ids/{id}/subjects</code>, <code>GET /schemas/ids/{id}/versions</code>) return results in sorted order (alphabetical for subjects, numerical for versions).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ccompat-unsupported-features_registry"><a class="anchor" href="#ccompat-unsupported-features_registry"></a>Unsupported features</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry does not support the following Confluent Schema Registry features. Applications that rely on these features must use alternative approaches.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Unsupported features</caption>
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Behavior</th>
+<th class="tableblock halign-left valign-top">Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Schema Linking / Exporters</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /exporters</code> returns an empty list. All other exporter operations return an error.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use Apicurio Registry native import/export functions or external replication tools.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>KEKs (Key Encryption Keys)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Endpoints not present (404 error).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Implement encryption at the application layer or use external key management.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>DEKs (Data Encryption Keys)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Endpoints not present (404 error).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Implement encryption at the application layer or use external key management.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Cluster Metadata API</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Endpoints <code>/v1/metadata/id</code> and <code>/v1/metadata/config</code> not present.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use Apicurio Registry system API for registry information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Data Contracts - Rules Enforcement</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ccompat API accepts <code>metadata</code> and <code>ruleSet</code> fields in requests but does not enforce or store them. The API does not execute schema rules.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use Apicurio Registry native Data Contracts feature (<code>apicurio.contracts.enabled=true</code>) for contract metadata and rulesets.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Schema Linking / Exporters</strong></p>
+</div>
+<div class="paragraph">
+<p>Confluent Schema Linking uses schema exporters to replicate schemas between Schema Registry clusters. This is an enterprise feature that requires cluster-to-cluster replication infrastructure.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry provides alternative approaches for schema replication:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Import/Export API</strong>: Use the Apicurio Registry admin API to export all registry content to a ZIP file and import it into another instance.</p>
+</li>
+<li>
+<p><strong>Kafka-based storage</strong>: Use Kafka storage to store schemas in a Kafka topic that you can replicate by using the native replication features of Kafka.</p>
+</li>
+<li>
+<p><strong>GitOps workflows</strong>: Store schemas in Git and use CI/CD pipelines to synchronize across environments.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Data Contracts</strong></p>
+</div>
+<div class="paragraph">
+<p>Confluent Data Contracts provide the following governance features:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Metadata</strong>: Key-value pairs attached to schemas (owner, email, tags)</p>
+</li>
+<li>
+<p><strong>RuleSets</strong>: Validation and transformation rules that use Common Expression Language (CEL) or JSONata</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry accepts these fields in ccompat API requests for client compatibility but does not process or store them through the ccompat layer. Instead, Apicurio Registry provides its own native Data Contracts feature with more capabilities:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Contract Metadata</strong>: Standardized metadata (status, owner, domain, classification, stage) managed through the <code>contract/metadata</code> REST API</p>
+</li>
+<li>
+<p><strong>Contract Rulesets</strong>: Domain and migration rules at both artifact and version level, managed through the <code>contract/ruleset</code> REST API</p>
+</li>
+<li>
+<p><strong>Content Rules</strong>: Validity, compatibility, and integrity rule configuration</p>
+</li>
+<li>
+<p><strong>Groups</strong>: Artifact organization by group for governance</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-data-contracts.html" class="page">Data Contracts</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ccompat-migration-considerations_registry"><a class="anchor" href="#ccompat-migration-considerations_registry"></a>Migration considerations</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When you migrate from Confluent Schema Registry to Apicurio Registry, consider the following areas:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. Migration checklist</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Area</th>
+<th class="tableblock halign-left valign-top">Consideration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Basic operations</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schema registration, retrieval, and compatibility checks work identically. No changes required.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Client configuration</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update <code>schema.registry.url</code> to point to the Apicurio Registry ccompat endpoint.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Schema types</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry fully supports Avro, JSON Schema, and Protobuf.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Schema IDs</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry uses <code>contentId</code> by default (the same schema content produces the same ID across subjects). Set <code>apicurio.ccompat.legacy-id-mode.enabled=true</code> if your application depends on unique IDs per registration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Avro schema formatting</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Avro schemas are returned in compact JSON through ccompat endpoints. If your application compares schema strings directly, be aware of formatting differences.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Default compatibility</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The compatibility check endpoint defaults to <code>BACKWARD</code> when you do not configure a rule, matching Confluent. Set an explicit global compatibility level by using <code>PUT /config</code> if you need a different default.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Config response parsing</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>PUT /config</code> response uses the field name <code>compatibility</code> (not <code>compatibilityLevel</code>). Update client code that parses this response.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Authentication</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry supports OpenID Connect (OIDC) authentication. Update client security configuration as needed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Exporters / Schema Linking</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not supported. Use Apicurio Registry import/export API or Kafka topic replication.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Data Contracts</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Metadata and rules from the ccompat API are not enforced. Use Apicurio Registry native Data Contracts feature for contract metadata and rulesets.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Encryption (KEK/DEK)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not supported. Implement encryption at the application layer.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">Example: Migrating a Kafka producer</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Before: Confluent Schema Registry
+Properties props = new Properties();
+props.put("schema.registry.url", "http://confluent-registry:8081");
+
+// After: Apicurio Registry (using ccompat API)
+Properties props = new Properties();
+props.put("schema.registry.url", "http://apicurio-registry:8080/apis/ccompat/v7");</code></pre>
+</div>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+</li>
+<li>
+<p><a href="https://docs.confluent.io/platform/current/schema-registry/develop/api.html">Confluent Schema Registry API Reference</a></p>
+</li>
+<li>
+<p><a href="https://docs.confluent.io/platform/current/schema-registry/fundamentals/data-contracts.html">Confluent Data Contracts Documentation</a></p>
+</li>
+<li>
+<p><a href="https://docs.confluent.io/platform/current/schema-registry/schema-linking-cp.html">Confluent Schema Linking Documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.3.x/getting-started/assembly-confluent-schema-registry-compatibility.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>

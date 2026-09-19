@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Managing Apicurio Registry content using the command-line interface :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.4.x/getting-started/assembly-managing-registry-artifacts-cli.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.3.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-compatibility-modes.html">Apicurio Registry schema compatibility modes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-gitops-storage.html">Configuring Apicurio Registry with GitOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-secured-kafka.html">Deploying Apicurio Registry with a secured Kafka instance</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-sizing-guide.html">Apicurio Registry capacity planning and sizing guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Versioning and support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-versioning-support-policy.html">Versioning and support policy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-custom-artifact-types.html">Configuring custom artifact types</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-events.html">Apicurio Registry change events and the outbox pattern</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using an SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Usage Telemetry and Lifecycle Governance</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-usage-telemetry.html">Usage Telemetry and API Lifecycle Governance</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-registry-quickstart.html">Agent registry quick start</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A protocol features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP tool definition features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-server-integration.html">MCP server integration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-ai-catalog-ard.html">AI Catalog and ARD discovery</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Best Practices Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-schema-lifecycle-best-practices.html">Schema lifecycle best practices</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.3.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../3.4.x/index.html">3.4.x</a>
+        </li>
+        <li class="version is-current">
+          <a href="../index.html">3.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.2.x/index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../3.4.x/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Client applications</li>
+    <li><a href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.3.x</button>
+  <div class="version-menu">
+    <a class="version" href="../../3.4.x/getting-started/assembly-managing-registry-artifacts-cli.html">3.4.x</a>
+    <a class="version is-current" href="assembly-managing-registry-artifacts-cli.html">3.3.x</a>
+    <a class="version" href="../../3.2.x/getting-started/assembly-managing-registry-artifacts-cli.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Managing Apicurio Registry content using the command-line interface</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the Apicurio Registry command-line interface (CLI) to manage Apicurio Registry content from the command line. The CLI provides commands for managing CLI contexts, authentication, groups, artifacts, artifact versions, rules, role mappings, and export and import of registry data.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The CLI is currently in <strong>dev-preview</strong> status and is unstable; its arguments and behavior are subject to backwards-incompatible changes. The CLI supports Linux (x86_64, bash), macOS (Apple Silicon, zsh), and Windows (x86_64, command prompt or PowerShell).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>You have installed Apicurio Registry.</p>
+</li>
+<li>
+<p>You have access to a bash shell on Linux (x86_64), a zsh shell on macOS (Apple Silicon), or a command prompt or PowerShell on Windows (x86_64).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-registry-cli_registry"><a class="anchor" href="#installing-registry-cli_registry"></a>Installing the Apicurio Registry CLI</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can install the Apicurio Registry CLI to interact with Apicurio Registry from the command line. The CLI is distributed as a native executable in a platform-specific .zip file, so it does not require a Java runtime.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have a Linux x86_64 system with a bash shell, a macOS Apple Silicon system with a zsh shell, or a Windows x86_64 system with a command prompt or PowerShell.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Download the .zip file for your platform, for example <code>apicurio-registry-cli-VERSION-linux-x86_64.zip</code> (Linux), <code>apicurio-registry-cli-VERSION-osx-aarch64.zip</code> (macOS), or <code>apicurio-registry-cli-VERSION-windows-x86_64.zip</code> (Windows), from the <a href="https://github.com/Apicurio/apicurio-registry/releases">Apicurio Registry GitHub Releases page</a>. Alternatively, you can download the CLI from the <a href="https://search.maven.org/search?q=g:io.apicurio%20AND%20a:apicurio-registry-cli">Maven Central repository</a> by searching for <code>apicurio-registry-cli</code>.</p>
+</li>
+<li>
+<p>Extract the downloaded file to a location of your choice:</p>
+<div class="paragraph">
+<p>On Linux and macOS:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ unzip apicurio-registry-cli-VERSION-linux-x86_64.zip -d ~/apicurio-cli</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On Windows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>&gt; mkdir %USERPROFILE%\apicurio-cli
+&gt; tar -xf apicurio-registry-cli-VERSION-windows-x86_64.zip -C %USERPROFILE%\apicurio-cli</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Install the CLI for the current user:</p>
+<div class="paragraph">
+<p>On Linux and macOS:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ cd ~/apicurio-cli
+$ ./acr install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On Windows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>&gt; cd %USERPROFILE%\apicurio-cli
+&gt; acr.cmd install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command copies the CLI files to <code>$HOME/.apicurio/apicurio-registry-cli</code>, creates symbolic links in <code>$HOME/bin</code>, updates your <code>~/.bashrc</code> file (Linux) or <code>~/.zshrc</code> file (macOS), and configures shell completions.</p>
+</div>
+<div class="paragraph">
+<p>On Windows, the CLI files are copied to <code>%USERPROFILE%\.apicurio\apicurio-registry-cli</code> and the launcher is copied to <code>%USERPROFILE%\bin</code>, because creating a symbolic link there requires Developer Mode or an elevated prompt. Windows has no shell configuration file to source, so the command sets the <code>ACR_HOME</code> user environment variable and adds the <code>bin</code> directory to your user <code>Path</code> instead. Shell completions are generated for bash and zsh only.</p>
+</div>
+</li>
+<li>
+<p>Reload your shell configuration:</p>
+<div class="paragraph">
+<p>On Linux:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ source ~/.bashrc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On macOS:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ source ~/.zshrc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On Windows, open a new command prompt or PowerShell window so that it picks up the updated environment variables. The installed command is <code>acr</code>, which the command prompt resolves to <code>acr.cmd</code> through <code>PATHEXT</code>.</p>
+</div>
+</li>
+<li>
+<p>Verify the installation:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr --help</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To update an installed CLI to a newer version, use the <code>acr update</code> command. The CLI checks for updates once per day. To disable the update check, run <code>acr config set update.check-enabled=false</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/cli">CLI README</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-registry-cli-contexts_registry"><a class="anchor" href="#configuring-registry-cli-contexts_registry"></a>Configuring Apicurio Registry CLI contexts</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>An Apicurio Registry CLI context stores the registry URL, optional default group and artifact identifiers, and authentication settings for one Apicurio Registry instance. You can create many contexts and switch between them as needed, similar to how you use contexts in Kubernetes.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create a new context for your Apicurio Registry instance:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr context create <em>CONTEXT_NAME</em> <em>REGISTRY_URL</em></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr context create dev http://localhost:8080</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The CLI automatically switches to the newly created context.</p>
+</div>
+<div class="paragraph">
+<p>Optional: Set default group and artifact identifiers for the context by using the <code>--group</code> (<code>-g</code>) and <code>--artifact</code> (<code>-a</code>) options. Commands that accept these identifiers use the context defaults when you omit the corresponding option.</p>
+</div>
+</li>
+<li>
+<p>List all configured contexts:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr context</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code>Current context is 'dev'.
+ID    Registry URL           Group ID    Artifact ID
+----  ---------------------  ----------  -----------
+dev*  http://localhost:8080  my-schemas</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The asterisk (*) indicates the current active context.</p>
+</div>
+</li>
+<li>
+<p>Optional: Create additional contexts without switching to them:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr context create prod http://registry.example.com --no-switch-current</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Switch to a different context:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr context use <em>CONTEXT_NAME</em></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Update an existing context. If you omit the context name, the CLI updates the current context:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr context update prod --registry-url http://registry.internal.example.com
+$ acr context update --group my-schemas</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Delete a context that you no longer need:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr context delete <em>CONTEXT_NAME</em></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Optional: To delete all contexts, use the <code>--all</code> option.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="authenticating-registry-cli_registry"><a class="anchor" href="#authenticating-registry-cli_registry"></a>Authenticating the Apicurio Registry CLI</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can log in to the Apicurio Registry instance of your current CLI context by using basic authentication or OAuth2 client credentials. The CLI stores secrets in the operating system keychain, and stores non-secret authentication settings in the context.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have configured a CLI context for a Apicurio Registry instance that requires authentication.</p>
+</li>
+<li>
+<p>On Linux, the <code>secret-tool</code> utility (libsecret) is available for keychain storage. On macOS, the CLI uses the built-in keychain. On Windows, the CLI uses the built-in Credential Manager, which stores a secret of up to 2560 bytes.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>To log in with basic authentication, provide a user name. The CLI prompts for the password:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr login --username my-user</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, provide the password with the <code>--password</code> (<code>-p</code>) option.</p>
+</div>
+</li>
+<li>
+<p>To log in with OAuth2 client credentials, provide the token endpoint and client ID. The CLI prompts for the client secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr login --token-endpoint https://auth.example.com/realms/registry/protocol/openid-connect/token --client-id registry-client</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Optional: Provide an OAuth2 scope with the <code>--scope</code> option.</p>
+</div>
+</li>
+<li>
+<p>Optional: On systems without a keychain, for example in headless environments, use the <code>--allow-unsafe-credential-storage</code> option. The CLI stores secrets in a <code>credentials.json</code> file and prints a warning. The file is restricted to its owner, by <code>0600</code> permissions on Linux and macOS and by an owner-only access control list on Windows. This preference persists per context.</p>
+</li>
+<li>
+<p>To log out of the current context, run the following command. The CLI removes the stored secrets and clears the authentication settings of the context:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr logout</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Authentication is configured per context. Secret values are stored in the operating system keychain or in the <code>credentials.json</code> file, never in the <code>config.json</code> configuration file.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="managing-groups-using-registry-cli_registry"><a class="anchor" href="#managing-groups-using-registry-cli_registry"></a>Managing groups using the CLI</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the CLI to create, list, update, and delete artifact groups in Apicurio Registry. Groups offer a way to organize related artifacts.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have configured at least one CLI context.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>List all groups in the registry:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Optional: Use pagination options for large result sets:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group --page 1 --size 50</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a new group:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group create <em>GROUP_ID</em></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Optional: Include a description and labels:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group create my-schemas --description "Production schemas" --label env=prod --label team=platform</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The group ID <code>default</code> is reserved. You cannot create or update the <code>default</code> group.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Get details for a specific group:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group get <em>GROUP_ID</em></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group get my-schemas</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Update a group description:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group update my-schemas --description "Updated description"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Optional: Add or update labels:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group update my-schemas --set-label env=staging --set-label owner=alice</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Optional: Delete labels:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group update my-schemas --delete-label env</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Delete a group:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group delete <em>GROUP_ID</em></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You must configure Apicurio Registry with <code>apicurio.rest.deletion.group.enabled=true</code> to allow group deletions.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Optional: To delete a group that has artifacts, use the <code>--force</code> option:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group delete my-schemas --force</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Using <code>--force</code> deletes the group and all artifacts it contains. Use this option with caution.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="managing-artifacts-using-registry-cli_registry"><a class="anchor" href="#managing-artifacts-using-registry-cli_registry"></a>Managing artifacts using the CLI</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the CLI to create, list, get, update, and delete artifacts in Apicurio Registry. When you omit the group option, the CLI uses the default group of the current context, or the <code>default</code> group.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have configured at least one CLI context.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>List the artifacts in a group:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr artifact --group my-schemas</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a new artifact from a file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr artifact create my-artifact --group my-schemas --type AVRO --file schema.avsc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>--type</code> option accepts the following values: <code>AVRO</code>, <code>PROTOBUF</code>, <code>JSON</code>, <code>OPENAPI</code>, <code>ASYNCAPI</code>, <code>GRAPHQL</code>, <code>KCONNECT</code>, <code>WSDL</code>, <code>XSD</code>, and <code>XML</code>. To read content from standard input, use <code>--file -</code>.</p>
+</div>
+<div class="paragraph">
+<p>Optional: Provide metadata with the <code>--name</code>, <code>--description</code>, and <code>--label</code> options, and set the identifier of the first version with the <code>--version</code> option.</p>
+</div>
+</li>
+<li>
+<p>Get the metadata of an artifact:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr artifact get my-artifact --group my-schemas</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To retrieve the content of the latest version instead of the metadata, use the <code>--content</code> (<code>-c</code>) option. The <code>--content</code> and <code>--output-type</code> options are mutually exclusive.</p>
+</div>
+</li>
+<li>
+<p>Update the metadata of an artifact:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr artifact update my-artifact --group my-schemas --description "Order event schema"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Optional: Manage labels with the <code>--set-label</code> and <code>--delete-label</code> options.</p>
+</div>
+</li>
+<li>
+<p>Delete an artifact:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr artifact delete my-artifact --group my-schemas</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You must configure Apicurio Registry with <code>apicurio.rest.deletion.artifact.enabled=true</code> to allow artifact deletions.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="managing-artifact-versions-using-registry-cli_registry"><a class="anchor" href="#managing-artifact-versions-using-registry-cli_registry"></a>Managing artifact versions using the CLI</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the CLI to list, create, get, update, and delete the versions of an artifact, including draft versions. When you omit the artifact option, the CLI uses the default artifact of the current context.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have configured at least one CLI context.</p>
+</li>
+<li>
+<p>The artifact exists in the registry.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>List the versions of an artifact:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr artifact version --group my-schemas --artifact my-artifact</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a new version from a file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr artifact version create 2.0.0 --file schema-v2.avsc --group my-schemas --artifact my-artifact</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you omit the version identifier, the server generates one. To create the version in the <code>DRAFT</code> state, use the <code>--draft</code> option.</p>
+</div>
+</li>
+<li>
+<p>Get a version. The version expression is an explicit version identifier, such as <code>2.0.0</code>, or a branch expression, such as <code>branch=latest</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr artifact version get 2.0.0 --group my-schemas --artifact my-artifact</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To retrieve the version content instead of the metadata, use the <code>--content</code> (<code>-c</code>) option.</p>
+</div>
+</li>
+<li>
+<p>Update the metadata or state of a version:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr artifact version update 2.0.0 --group my-schemas --artifact my-artifact --state DEPRECATED</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>--state</code> option accepts the following values: <code>ENABLED</code>, <code>DISABLED</code>, <code>DEPRECATED</code>, and <code>DRAFT</code>. To update the content of a version, use the <code>--file</code> option. Content updates are only possible for versions in the <code>DRAFT</code> state.</p>
+</div>
+</li>
+<li>
+<p>Delete a version:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr artifact version delete 2.0.0 --group my-schemas --artifact my-artifact</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You must configure Apicurio Registry with <code>apicurio.rest.deletion.artifact-version.enabled=true</code> to allow version deletions.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="managing-rules-using-registry-cli_registry"><a class="anchor" href="#managing-rules-using-registry-cli_registry"></a>Managing rules using the CLI</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the CLI to manage content rules at the global, group, and artifact levels. Rules at a more specific level override rules at a broader level.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have configured at least one CLI context.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Manage global rules with the <code>acr rule</code> commands:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr rule create VALIDITY --config FULL
+$ acr rule
+$ acr rule get VALIDITY
+$ acr rule update VALIDITY --config SYNTAX_ONLY
+$ acr rule delete VALIDITY</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Manage the rules of a group with the <code>acr group rule</code> commands:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group rule create COMPATIBILITY --config BACKWARD --group my-schemas</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Manage the rules of an artifact with the <code>acr artifact rule</code> commands:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr artifact rule create INTEGRITY --config FULL --group my-schemas --artifact my-artifact</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Optional: Delete all rules at a level by using the <code>--all</code> option:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr rule delete --all</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the valid rule types and configuration values, see the rule types table in the CLI reference section.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="managing-role-mappings-using-registry-cli_registry"><a class="anchor" href="#managing-role-mappings-using-registry-cli_registry"></a>Managing role mappings using the CLI</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the CLI to assign Apicurio Registry roles to principals, such as user accounts or service accounts, when role-based authorization is enabled on the registry.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have configured a CLI context for a Apicurio Registry instance with role-based authorization enabled.</p>
+</li>
+<li>
+<p>You are authenticated as a user with permission to manage role mappings.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create a role mapping for a principal. The role is one of <code>ADMIN</code>, <code>DEVELOPER</code>, or <code>READ_ONLY</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr role create service-account-my-app DEVELOPER</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Optional: Provide a display name with the <code>--name</code> option.</p>
+</div>
+</li>
+<li>
+<p>List all role mappings:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr role</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Get the role mapping of a principal:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr role get service-account-my-app</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Update the role of a principal:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr role update service-account-my-app --role ADMIN</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Delete a role mapping:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr role delete service-account-my-app</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="exporting-importing-registry-data-using-registry-cli_registry"><a class="anchor" href="#exporting-importing-registry-data-using-registry-cli_registry"></a>Exporting and importing data using the CLI</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the CLI to export Apicurio Registry data to a .zip file and to import previously exported data into a registry instance.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have configured at least one CLI context.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Export all registry data to a .zip file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr admin export --file registry-export.zip</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Optional: Export the data of a single group by using the <code>--group</code> option:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr admin export --file group-export.zip --group my-schemas</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Import registry data from a .zip file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr admin import --file registry-export.zip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Optional: To import into a registry that already contains data, use the <code>--no-require-empty</code> option. To let the server generate new global and content identifiers instead of preserving the exported ones, use the <code>--no-preserve-ids</code> option.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-cli-output-formats_registry"><a class="anchor" href="#registry-cli-output-formats_registry"></a>CLI output formats and pagination</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The CLI supports different output formats, pagination, ordering, and column selection options for managing command output.</p>
+</div>
+<div class="paragraph">
+<p>The CLI supports the following output formats:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>table</code> (default) - Human-readable tabular format</p>
+</li>
+<li>
+<p><code>json</code> - Machine-readable JSON format</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To specify the output format, use the <code>--output-type</code> or <code>-o</code> option:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group --output-type json
+$ acr group get my-schemas -o json</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>acr content</code> command is an exception: its output types are <code>raw</code> (default) and <code>json</code>.</p>
+</div>
+<div class="paragraph">
+<p>In JSON mode, the CLI writes only data to standard output and diverts status messages to standard error, which makes the output suitable for scripting.</p>
+</div>
+<div class="paragraph">
+<p>For commands that return lists, you can use pagination options:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>--page</code> - The page number, starting from 1 (default: 1)</p>
+</li>
+<li>
+<p><code>--size</code> - The number of items per page (default: 10)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group --page 2 --size 25</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>List commands also support ordering with the <code>--order-by</code> and <code>--order</code> options. The default sort order is ascending (<code>Asc</code>), and the default sort field depends on the command.</p>
+</div>
+<div class="paragraph">
+<p><strong>Selecting columns</strong></p>
+</div>
+<div class="paragraph">
+<p>For commands that list results in a table (for example <code>acr artifact</code>, <code>acr group</code>, and the <code>acr search</code> commands), you can choose which columns to show by using the <code>--columns</code> option. It takes a comma-separated list of column names, matched case-insensitively:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr artifact --columns groupId,artifactId,name
+$ acr artifact version --columns version,state,createdOn</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An unknown column name produces an error that lists the valid columns. This option only affects <code>table</code> output, and is available on commands that list multiple records rather than commands that show details of a single record.</p>
+</div>
+<div class="paragraph">
+<p><strong>Verbose output</strong></p>
+</div>
+<div class="paragraph">
+<p>To enable verbose output for debugging, use the <code>--verbose</code> option. This option has no short form.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-cli-reference_registry"><a class="anchor" href="#registry-cli-reference_registry"></a>CLI reference</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The following tables describe CLI global options, exit codes, available commands, rule types, and CLI configuration properties.</p>
+</div>
+<div class="paragraph">
+<p>The following options are available for most CLI commands:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Global options</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--verbose</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable verbose output for debugging. This option has no short form.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--help</code>, <code>-h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Display help information for the command.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--output-type</code>, <code>-o</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the output format. Valid values are <code>table</code> (default) and <code>json</code>. The <code>acr content</code> command uses <code>raw</code> (default) and <code>json</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The CLI uses the following exit codes:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Exit codes</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Code</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Successful execution.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application error.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Input validation error.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry server error.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The following commands are available. Running a parent command, such as <code>acr group</code>, without a subcommand lists the corresponding records.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Command summary</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Command</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr context</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List contexts. Subcommands: <code>create</code>, <code>update</code>, <code>use</code>, <code>delete</code>. Aliases: <code>contexts</code>, <code>ctx</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List CLI configuration properties. Subcommands: <code>get</code>, <code>set</code>, <code>delete</code>. Alias: <code>cfg</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr login</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Log in to the current context by using basic authentication or OAuth2 client credentials.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr logout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Log out of the current context and remove stored credentials.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr group</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List groups. Subcommands: <code>create</code>, <code>get</code>, <code>update</code>, <code>delete</code>. Alias: <code>groups</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr group rule</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List the rules of a group. Subcommands: <code>create</code>, <code>get</code>, <code>update</code>, <code>delete</code>. Alias: <code>rules</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr artifact</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List the artifacts of a group. Subcommands: <code>create</code>, <code>get</code>, <code>update</code>, <code>delete</code>. Alias: <code>artifacts</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr artifact rule</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List the rules of an artifact. Subcommands: <code>create</code>, <code>get</code>, <code>update</code>, <code>delete</code>. Alias: <code>rules</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr artifact version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List the versions of an artifact. Subcommands: <code>create</code>, <code>get</code>, <code>update</code>, <code>delete</code>. Alias: <code>versions</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr artifact version comment</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Work with version comments. Subcommands: <code>list</code>, <code>create</code>, <code>update</code>, <code>delete</code>. Alias: <code>comments</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr reference list</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List the outbound references of a version. Use the <code>--inbound</code> option to list inbound references instead. Aliases: <code>references</code>, <code>ref</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr rule</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List global rules. Subcommands: <code>create</code>, <code>get</code>, <code>update</code>, <code>delete</code>. Alias: <code>rules</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr role</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List role mappings. Subcommands: <code>create</code>, <code>get</code>, <code>update</code>, <code>delete</code>. Alias: <code>roles</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr search group</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Search groups by identifier, description, or labels. Alias: <code>groups</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr search artifact</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Search artifacts by name, description, group, type, labels, or identifiers. Alias: <code>artifacts</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr search version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Search versions, with additional version and state filters. Alias: <code>versions</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr search content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Search artifacts by content from a file or standard input. Supports canonical content matching with the <code>--canonical</code> option. Alias: <code>contents</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Retrieve content by global ID, content ID, or SHA-256 hash.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr server-config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List the dynamic configuration properties of the Apicurio Registry server. Subcommands: <code>get</code>, <code>set</code>, <code>reset</code>. Alias: <code>server-configs</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr admin export</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Export registry data to a .zip file, optionally limited to one group.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr admin import</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Import registry data from a .zip file.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr install</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Install the CLI for the current user.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr update</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update the CLI to a newer version.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Display CLI version information and, if the server is reachable, server version information.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The rule commands accept the following rule types and configuration values:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Rule types and configuration values</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Rule type</th>
+<th class="tableblock halign-left valign-top">Configuration values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VALIDITY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NONE</code>, <code>SYNTAX_ONLY</code>, <code>FULL</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>COMPATIBILITY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NONE</code>, <code>BACKWARD</code>, <code>BACKWARD_TRANSITIVE</code>, <code>FORWARD</code>, <code>FORWARD_TRANSITIVE</code>, <code>FULL</code>, <code>FULL_TRANSITIVE</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INTEGRITY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NONE</code>, <code>REFS_EXIST</code>, <code>ALL_REFS_MAPPED</code>, <code>NO_DUPLICATES</code>, <code>NO_CIRCULAR_REFERENCES</code>, <code>FULL</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>You can adjust the behavior of the CLI itself with the <code>acr config set</code> command. The following CLI configuration properties are available:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. CLI configuration properties</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>update.check-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check for CLI updates once per day.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>update.timeout-seconds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Timeout for update operations, in seconds.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>update.skip-checksum-verification</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Skip checksum verification when updating the CLI.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a></p>
+</li>
+<li>
+<p><a href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using a Java client</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/cli">CLI README</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.3.x/getting-started/assembly-managing-registry-artifacts-cli.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
