@@ -941,7 +941,7 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 <p>Required <code>name</code> field (non-empty string)</p>
 </li>
 <li>
-<p>Required <code>inputSchema</code> field (object with <code>type</code> = <code>"object"</code> per spec docs guidance)</p>
+<p>Required <code>inputSchema</code> field (object with <code>type</code> = <code>"object"</code> per spec docs guidance) that is a valid JSON Schema document</p>
 </li>
 <li>
 <p>Optional <code>title</code> and <code>description</code> must be strings if present</p>
@@ -957,6 +957,21 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>At the <code>FULL</code> level, Apicurio Registry validates <code>inputSchema</code> against the meta-schema of the JSON Schema dialect that its <code>$schema</code> keyword declares. When <code>inputSchema</code> does not declare <code>$schema</code>, Apicurio Registry uses JSON Schema 2020-12, which is the default dialect in the MCP specification. Apicurio Registry supports JSON Schema draft-04, draft-06, draft-07, 2019-09, and 2020-12. A <code>$schema</code> value that is not a string, or that declares any other dialect, is reported as a rule violation, and the schema is not validated against a different dialect.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If you already use the <code>FULL</code> validity level for MCP tool definitions, Apicurio Registry now rejects a tool definition whose <code>inputSchema</code> is not a valid JSON Schema document, for example a property that declares <code>"type": "strng"</code>. Rules are applied when content is submitted, so versions that are already stored are not revalidated.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
