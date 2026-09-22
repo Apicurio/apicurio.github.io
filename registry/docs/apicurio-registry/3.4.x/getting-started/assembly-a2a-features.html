@@ -957,6 +957,163 @@ When neither OIDC nor basic authentication is configured, Apicurio Registry skip
 </div>
 </div>
 <div class="sect1">
+<h2 id="a2a-openapi-agent-card_registry"><a class="anchor" href="#a2a-openapi-agent-card_registry"></a>Auto-generating Agent Cards from OpenAPI specifications</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>If you already document your API with OpenAPI, you can embed Agent Card metadata directly in your OpenAPI specification&#8217;s <code>info</code> block using the <code>x-agent-card</code> vendor extension, instead of authoring and maintaining a separate <code>AGENT_CARD</code> artifact by hand. Apicurio Registry detects the extension, assembles a valid Agent Card from it, and stores it as a companion artifact.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Enabling OpenAPI-to-Agent-Card auto-generation</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.openapi-integration.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auto-generate a companion AGENT_CARD artifact from the <code>x-agent-card</code> OpenAPI vendor extension</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.openapi-integration.sync-on-update.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update the generated Agent Card whenever its source OpenAPI artifact is updated</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>apicurio.a2a.openapi-integration.enabled</code> is an experimental property. You must also set <code>apicurio.features.experimental.enabled=true</code> to use it.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Example <code>x-agent-card</code> extension</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">openapi: "3.0.0"
+info:
+  title: Weather API
+  description: Retrieves weather forecasts by city
+  version: "1.0.0"
+  x-agent-card:
+    capabilities: {}
+    skills:
+      - id: get-weather
+        name: Get Weather
+        description: Retrieve the current weather for a city
+        tags: [weather]
+    defaultInputModes: [text]
+    defaultOutputModes: [text]
+servers:
+  - url: https://weather.example.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When Apicurio Registry publishes an OPENAPI artifact version with an <code>x-agent-card</code> extension under <code>info</code>, it:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Derives any of <code>name</code>, <code>description</code>, and <code>version</code> that the extension does not explicitly set, from the OpenAPI document&#8217;s own <code>info.title</code>, <code>info.description</code>, and <code>info.version</code>.</p>
+</li>
+<li>
+<p>Derives <code>supportedInterfaces</code> from <code>servers[]</code> only when omitted, expanding server variables using their string defaults and using <code>http+json</code> as the binding. Explicit malformed values are rejected rather than replaced. Relative URLs require explicit absolute <code>supportedInterfaces</code>; the registry does not guess a base URL. Publishers must ensure the advertised endpoint actually implements A2A; OpenAPI alone does not establish this.</p>
+</li>
+<li>
+<p>Validates the assembled Agent Card against the same A2A v1.0 schema used for <code>AGENT_CARD</code> artifacts. If the assembled card is not valid, the OpenAPI write itself is rejected (HTTP 400) with a <code>RuleViolationException</code>, and nothing is persisted.</p>
+</li>
+<li>
+<p>Creates or updates <code>&lt;artifactId&gt;-agent-card</code> in the same group, checking companion ownership and applying its configured rules. Companion failure is logged and leaves the successful source write intact; rejected companion content is never persisted.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Ordinary DRAFT creates/edits do not generate published companions. Transitioning a draft to a published state validates and generates from its edited content. Dry-run requests do not write companions. Published updates re-read the source tip, and conditional target-version writes prevent a concurrent manual version from being superseded.</p>
+</div>
+<div class="paragraph">
+<p>Required Agent Card fields with no OpenAPI equivalent — <code>capabilities</code>, <code>skills</code>, <code>defaultInputModes</code>, and <code>defaultOutputModes</code> — must always be supplied explicitly in the extension.</p>
+</div>
+<div class="paragraph">
+<div class="title">Provenance and sync labels</div>
+<p>The companion artifact and its source OpenAPI artifact are marked with <code>apicurio.a2a.openapi-agent-card.*</code> labels:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Label</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.openapi-agent-card.generated</code> (on the companion)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> if this artifact was generated by this feature</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.openapi-agent-card.source-group-id</code> / <code>.source-artifact-id</code> (on the companion)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifies the source OpenAPI artifact this companion was generated from</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.openapi-agent-card.generated-hash</code> (on each generated companion version)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Canonical hash committed with that generated content. Missing or mismatched provenance stops automatic synchronization.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.openapi-agent-card.source-global-id</code> (on each generated companion version)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The exact source version; deletion/recreation of the source does not silently adopt the old companion.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.openapi-agent-card.artifact-id</code> (on the source OpenAPI artifact)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The artifact ID of its generated companion Agent Card</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>If you edit the generated Agent Card artifact directly, Apicurio Registry detects this the next time the source OpenAPI artifact changes (the companion&#8217;s latest version content no longer matches its recorded generated hash) and skips the sync rather than overwriting your edit, logging a warning instead.</p>
+</div>
+<div class="paragraph">
+<p>If an artifact already exists with the same name as the companion (<code>&lt;artifactId&gt;-agent-card</code>) but was not generated by this feature, Apicurio Registry leaves it untouched and logs a warning rather than overwriting it.</p>
+</div>
+<div class="paragraph">
+<p>Labels are editable provenance/navigation hints, never authorization grants. Owner-only access is checked independently on the companion. Generation provenance is stored atomically with each version; failure updating the source navigation link can be repaired on a subsequent unchanged-content synchronization. A manually edited version without generation provenance is preserved. Regeneration after manual changes requires an explicit user decision, not deletion of its hash label.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Known limitations</div>
+<ul>
+<li>
+<p>REST publication paths trigger generation: first published version, new published version, <code>ifExists=UPDATE</code>/<code>FIND_OR_CREATE_VERSION</code>, and publication of an edited draft. KafkaSQL REST requests journal both writes; replay itself does not generate an extra companion. Confluent-compatible APIs and read-only GitOps/KubernetesOps imports do not trigger generation.</p>
+</li>
+<li>
+<p>Source and companion are separate artifacts, not one transaction. Companion errors leave the source intact; repeated optimistic conflicts are bounded and logged. A later publication retries from current source content.</p>
+</li>
+<li>
+<p>Deleting the source OpenAPI artifact does not delete its generated companion Agent Card.</p>
+</li>
+<li>
+<p>AsyncAPI does not currently support the <code>x-agent-card</code> extension.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="a2a-validation-rules_registry"><a class="anchor" href="#a2a-validation-rules_registry"></a>Agent Card validation rules</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -1250,7 +1407,7 @@ metadata:
 <p>You can chain context across multiple agents in a pipeline. The <code>a2a-real-world-integration</code> example in the Apicurio Registry repository demonstrates this pattern.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Context chaining pipeline</caption>
+<caption class="title">Table 7. Context chaining pipeline</caption>
 <colgroup>
 <col style="width: 14.2857%;">
 <col style="width: 42.8571%;">
