@@ -49,6 +49,8 @@ quarkus.http.auth.form.enabled=true
 apicurio.authn.mechanism.priority=form
 ```
 
+> **Warning:** Form auth with session cookies reintroduces CSRF exposure for state-changing requests. Production deployments must configure CSRF protection and Secure/HttpOnly cookies.
+
 Next, you must configure a backing Quarkus `IdentityProvider` so the registry knows how to verify the credentials. For example, to use embedded properties-based users for a quick development setup:
 
 ```properties
@@ -57,7 +59,7 @@ quarkus.security.users.embedded.users.alice=alice123
 quarkus.security.users.embedded.roles.alice=sr-admin
 ```
 
-*(Note: You can also back this with a JDBC or LDAP realm for production environments).*
+*(Note: Storing plaintext passwords like `alice123` is strictly for development and testing—never use embedded plaintext credentials in production. In production environments, back this with an external Identity Provider, LDAP, or a secure JDBC realm, and ensure proper cookie security and CSRF protection are configured).*
 
 ## Conclusion
 
