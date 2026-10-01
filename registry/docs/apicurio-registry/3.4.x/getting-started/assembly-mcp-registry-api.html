@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Exporting Apicurio Registry Kafka topic data :: Apicurio Registry</title>
-    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.4.x/getting-started/guide-exporting-registry-kafka-topic-data.html">
+    <title>MCP Registry API (Developer Preview) :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.4.x/getting-started/assembly-mcp-registry-api.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
     <link rel="stylesheet" href="../../../assets/css/site.css">
@@ -227,7 +227,7 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Troubleshooting</span>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
   </li>
 </ul>
@@ -248,7 +248,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-mcp-server-integration.html">MCP server integration</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="assembly-mcp-registry-api.html">MCP Registry API (Developer Preview)</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -376,19 +376,19 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Apicurio Registry</a></li>
-    <li>Troubleshooting</li>
-    <li><a href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a></li>
+    <li>AI Agent Integration</li>
+    <li><a href="assembly-mcp-registry-api.html">MCP Registry API (Developer Preview)</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">3.4.x</button>
   <div class="version-menu">
-    <a class="version is-current" href="guide-exporting-registry-kafka-topic-data.html">3.4.x</a>
-    <a class="version" href="../../3.3.x/getting-started/guide-exporting-registry-kafka-topic-data.html">3.3.x</a>
-    <a class="version" href="../../3.2.x/getting-started/guide-exporting-registry-kafka-topic-data.html">3.2.x</a>
-    <a class="version" href="../../3.1.x/getting-started/guide-exporting-registry-kafka-topic-data.html">3.1.x</a>
-    <a class="version" href="../../3.0.x/getting-started/guide-exporting-registry-kafka-topic-data.html">3.0.x</a>
-    <a class="version" href="../../2.6.x/getting-started/guide-exporting-registry-kafka-topic-data.html">2.6.x</a>
+    <a class="version is-current" href="assembly-mcp-registry-api.html">3.4.x</a>
+    <a class="version is-missing" href="../../3.3.x/index.html">3.3.x</a>
+    <a class="version is-missing" href="../../3.2.x/index.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
     <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
     <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
     <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
@@ -399,254 +399,120 @@
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Exporting Apicurio Registry Kafka topic data</h1>
+<h1 class="page">MCP Registry API (Developer Preview)</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph _abstract">
-<p>One of the supported Apicurio Registry storage options is Apache Kafka, which uses a Kafka topic named <code>kafkasql-journal</code> to store data.
-If you encounter a problem when using this storage option and want to report it to Apicurio Registry developers, you might need to provide an export of the data present in the <code>kafkasql-journal</code> topic for analysis.
-You can create such a topic export by using the <code>kcat</code> tool (formerly known as <code>kafkacat</code>).</p>
+<div class="paragraph">
+<p>Apicurio Registry exposes an experimental MCP Registry API at
+<code>/apis/mcp-registry/v0.1</code>. This is separate from the <code>mcp/</code> server module,
+which exposes Registry operations as MCP tools.</p>
+</div>
+<div class="paragraph">
+<p>This Developer Preview targets {registry} 3.4.0. The internal Java package and
+specification directory use <code>v0</code> for the facade generation; the published upstream
+wire contract is explicitly <code>v0.1</code>. They are not separate served API versions.</p>
+</div>
+<div class="paragraph">
+<p>Enable both configuration properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.features.experimental.enabled=true
+apicurio.mcp-registry.enabled=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Publish a server definition with <code>POST /apis/mcp-registry/v0.1/publish</code>.
+The reverse-DNS name <code>io.github.example/weather</code> maps to group
+<code>io.github.example</code> and artifact ID <code>weather</code>, with type <code>MCP_SERVER</code>.
+Publishing validates the original JSON against the pinned upstream 2025-12-11
+server schema and applies configured Registry rules. A compatibility rule can
+protect existing package installation and remote connection choices across versions.
+Package version and hash upgrades are allowed; removing or changing an existing
+connection or its configuration is considered backward-incompatible.</p>
+</div>
+<div class="paragraph">
+<p>Read the published version using the standard URL-encoded <code>serverName</code> path segment:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">curl 'http://localhost:8080/apis/mcp-registry/v0.1/servers/io.github.example%2Fweather/versions/1.0.0'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Single-version responses and list entries separate the server definition from
+registry-owned metadata:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "server": {
+    "name": "io.github.example/weather",
+    "version": "1.0.0",
+    "description": "Weather forecasts"
+  },
+  "_meta": {
+    "io.modelcontextprotocol.registry/official": {
+      "status": "active",
+      "isLatest": true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>List all published server versions using <code>GET /apis/mcp-registry/v0.1/servers</code>.
+Use <code>version=latest</code> to select only the latest version of each server.
+<code>search</code> matches names or descriptions. <code>updated_since</code> accepts RFC 3339 timestamps
+and uses the returned version&#8217;s modification timestamp, including status changes.
+Incremental listing includes deleted records; other reads exclude them unless
+<code>include_deleted=true</code>. Version lists are newest-first. Reuse <code>metadata.nextCursor</code>
+with the same filters. Both explicit and default limits respect
+<code>apicurio.mcp-registry.max-page-size</code>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<h2 id="_mutation_behavior_and_operational_considerations"><a class="anchor" href="#_mutation_behavior_and_operational_considerations"></a>Mutation behavior and operational considerations</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>Kafka has been installed and is running in your environment.</p>
+<p>Draft artifact versions are not published MCP records and are excluded from MCP reads.</p>
 </li>
 <li>
-<p>You have deployed Apicurio Registry with data stored in the <code>kafkasql-journal</code> topic.</p>
+<p>Version and server-wide status updates persist status messages and update selected
+versions atomically. Server-wide updates return <code>updatedCount</code> and the updated <code>servers</code>.</p>
 </li>
 <li>
-<p>The <code>kafkasql-journal</code> topic is still present.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="setting-up-kcat-work-pod_registry"><a class="anchor" href="#setting-up-kcat-work-pod_registry"></a>Setting up kcat on a Kubernetes work pod</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>You can build the <code>kcat</code> executable from source on an ephemeral work pod so that the topic export includes JSON output with base64 encoded keys and values.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>If you do not require JSON support, you can use the following commands to install <code>kcat</code> using <code>dnf</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install -y "dnf-command(copr)"
-dnf copr enable bvn13/kcat
-dnf update
-dnf install -y kafkacat</code></pre>
-</div>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>Your environment is Kubernetes.</p>
+<p>DELETE is a soft deletion: it returns HTTP 200 with status <code>deleted</code> and retains
+content/history. Use <code>include_deleted=true</code> to inspect it or PATCH status to restore
+it. Permanent deletion is only available through the native v3 API, subject to
+<code>apicurio.rest.deletion.artifact-version.enabled</code>; MCP does not bypass that gate.</p>
 </li>
 <li>
-<p>You have logged in to the cluster using the <code>kubectl</code> command line interface.</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Select a namespace where an ephemeral work pod will be started. This can be the same or a different namespace from where the Kafka cluster is deployed:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl config set-context --current --namespace=default</code></pre>
-</div>
-</div>
+<p>Optional PUT returns
+HTTP 501 as permitted by the upstream API; publish a new immutable version instead.</p>
 </li>
 <li>
-<p>Create an ephemeral work pod using the latest Fedora image, and connect to the pod using your terminal:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl run work-pod -it --rm --image=fedora --restart=Never</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If you keep the <code>--rm</code> flag, the work pod will be deleted when you disconnect from the remote terminal.</p>
-</div>
+<p>Input manifests are limited to 1 MiB. Validation uses the bundled schema without
+fetching the publisher&#8217;s <code>$schema</code> URL.</p>
 </li>
 <li>
-<p>You can install <code>kcat</code> using the <code>dnf</code> package manager. However, that version does not have JSON support enabled.
-Because you want to export the topic data in a JSON format with additional metadata, you must build the <code>kcat</code> executable from source.</p>
-<div class="paragraph">
-<p>In addition, while the <code>kcat</code> project is widely used for this use case, the project appears to be hibernated, and you require an additional feature for the <code>kafkasql-journal</code> topic export to work properly.
-This feature is support for base64 encoded keys and values, and is important because the topic includes raw binary data, which might not be correctly encoded in the JSON output. Therefore, you must build <code>kcat</code> from source that includes base64 support, which has not been merged into the main project yet. For the relevant project links, see the additional resources.</p>
-</div>
-<div class="paragraph">
-<p>Install <code>git</code>, and check out the <code>kcat</code> repository:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install -y git
-git clone https://github.com/edenhill/kcat.git
-git remote add jjlin https://github.com/jjlin/kcat.git
-cd kcat
-git checkout jjlin/base64</code></pre>
-</div>
-</div>
+<p>Filtered lists scan and resolve server versions before pagination. The page-size
+limit bounds responses and storage batches, not total scanning work or memory.
+Offset cursors do not provide snapshot consistency across concurrent writes.</p>
 </li>
 <li>
-<p>Install the dependencies and build <code>kcat</code>:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install -y gcc librdkafka-devel yajl-devel
-./configure
-make</code></pre>
-</div>
-</div>
+<p>GitOps/KubernetesOps support reads from imported branch metadata and reject writes
+with HTTP 501.</p>
 </li>
 <li>
-<p>Copy the executable to <code>/usr/bin</code> so that it is available in <code>$PATH</code>:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cp kcat /usr/bin</code></pre>
-</div>
-</div>
+<p>Registering a server manifest does not contact the server or import its tools.</p>
 </li>
 <li>
-<p>Configure environment variables that will be used in subsequent examples:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export KAFKA_BOOTSTRAP_SERVER="my-kafka-cluster-kafka-bootstrap.default.svc:9092"</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="https://github.com/edenhill/kcat/issues/424">kcat project hibernation discussion</a></p>
-</li>
-<li>
-<p><a href="https://github.com/edenhill/kcat/pull/206">kcat support for base64 encoded keys and values</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="kcat-usage-examples_registry"><a class="anchor" href="#kcat-usage-examples_registry"></a>Examples of using kcat</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>The following examples show how to use <code>kcat</code> to list topics and create topic exports.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>List Kafka topics:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcat -b $KAFKA_BOOTSTRAP_SERVER -L | grep "topic " | sed 's#\([^"]*"\)\([^"]*\)\(".*\)#\2#'</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>sed</code> command filters out extra information in this example.</p>
-</div>
-</li>
-<li>
-<p>Export data from the <code>kafkasql-journal</code> topic in JSON format, with envelope, and base64 encoded keys and values:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcat -b $KAFKA_BOOTSTRAP_SERVER -C -t kafkasql-journal -S base64 -Z -D \\n -e -J \
-  &gt; kafkasql-journal.topicdump</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Create an export file for each listed topic by combining the preceding commands:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir dump
-for t in $(kcat -b $KAFKA_BOOTSTRAP_SERVER -L | grep "topic " | sed 's#\([^"]*"\)\([^"]*\)\(".*\)#\2#'); do \
-  kcat -b $KAFKA_BOOTSTRAP_SERVER -C -t $t -S base64 -Z -D \\n -e -J &gt; dump/$t.topicdump; \
-done</code></pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="copying-topic-export-files_registry"><a class="anchor" href="#copying-topic-export-files_registry"></a>Copying topic export files from the work pod</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>After the topic export files have been created, you can copy the files from the work pod to your local machine.</p>
-</div>
-<div class="ulist">
-<div class="title">Procedure</div>
-<ul>
-<li>
-<p>Run the following command on your local machine:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl cp work-pod:/kcat/dump .</code></pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="importing-kafkasql-journal-topic-data_registry"><a class="anchor" href="#importing-kafkasql-journal-topic-data_registry"></a>Importing the kafkasql-journal topic data</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>You can import <code>kafkasql-journal</code> topic data that has been created with <code>kcat</code> by using an application from the Apicurio Registry examples repository.</p>
-</div>
-<div class="ulist">
-<div class="title">Procedure</div>
-<ul>
-<li>
-<p>Clone the examples repository, build the import tool, and run it against your topic dump file:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone https://github.com/Apicurio/apicurio-registry.git
-cd examples/tools/kafkasql-topic-import
-mvn clean install
-export VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-java -jar target/apicurio-registry-tools-kafkasql-topic-import-$VERSION-jar-with-dependencies.jar -b &lt;optional-kafka-bootstrap-server-url&gt; -f &lt;path-to-topic-dump-file&gt;</code></pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="ulist _additional-resources">
-<div class="title">Additional resources</div>
-<ul>
-<li>
-<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/tools/kafkasql-topic-import">kafkasql-topic-import tool in the Apicurio Registry examples repository</a></p>
-</li>
-<li>
-<p><a href="https://github.com/edenhill/kcat">kcat repository</a></p>
-</li>
-<li>
-<p><a href="https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md">librdkafka configuration reference</a></p>
+<p>Status messages are descriptive, user-editable version metadata. They are not
+authorization or approval state; the lifecycle status is derived from version state.</p>
 </li>
 </ul>
 </div>
@@ -664,7 +530,7 @@ java -jar target/apicurio-registry-tools-kafkasql-topic-import-$VERSION-jar-with
 </footer>
 <script src="../../../assets/js/site.js"></script>
 <script src="../../../assets/js/vendor/lunr.js"></script>
-<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.4.x/getting-started/guide-exporting-registry-kafka-topic-data.html"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.4.x/getting-started/assembly-mcp-registry-api.html"></script>
 <script async src="../../../assets/../search-index.js"></script>
 <script async src="../../../assets/js/vendor/highlight.js"></script>
   </body>
