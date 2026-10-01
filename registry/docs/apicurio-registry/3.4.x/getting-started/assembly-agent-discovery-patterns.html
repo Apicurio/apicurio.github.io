@@ -461,7 +461,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the registered MCP tool definitions whose <code>inputSchema</code> accepts every property that the specified tool declares in its <code>outputSchema</code>. Accepts an optional <code>version</code> query parameter and supports pagination with <code>offset</code> and <code>limit</code> parameters.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the registered MCP tool definitions that can receive the structured output of the specified tool as their input. Accepts an optional <code>version</code> query parameter and supports pagination with <code>offset</code> and <code>limit</code> parameters.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/schemas/{type}/{version}</code></p></td>
@@ -488,6 +488,40 @@
 </div>
 <div class="paragraph">
 <p>The <code>/.well-known/mcp-tools</code>, <code>/.well-known/mcp-tools/{groupId}/{artifactId}</code>, and <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoints operate on MCP tool definitions that you store in Apicurio Registry as <code>MCP_TOOL</code> artifacts. These endpoints require read-level authorization and are available only when MCP tools support is enabled.</p>
+</div>
+<div class="paragraph">
+<p>The <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoint compares the <code>outputSchema</code> of the specified tool with the <code>inputSchema</code> of each candidate tool, as if the whole output object were passed to the candidate. A candidate is returned only when the comparison proves that it accepts every output that the <code>outputSchema</code> permits:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Every input that the candidate requires is also required by the <code>outputSchema</code>.</p>
+</li>
+<li>
+<p>The type of each property in the output is accepted by the candidate.</p>
+</li>
+<li>
+<p>Any property that the output can contain, but that the candidate does not declare, is allowed by the <code>additionalProperties</code> of the candidate.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>An <code>outputSchema</code> that declares no <code>type</code> permits values other than objects, because <code>properties</code>, <code>required</code>, and <code>additionalProperties</code> apply only to objects. No candidate whose <code>inputSchema</code> declares a <code>type</code> is returned for such a tool, since it would reject those values.</p>
+</div>
+<div class="paragraph">
+<p>The comparison evaluates <code>type</code>, <code>properties</code>, <code>required</code>, and <code>additionalProperties</code> on each schema, and <code>type</code> on each property. Annotations such as <code>title</code>, <code>description</code>, <code>default</code>, <code>examples</code>, and <code>$comment</code> do not affect the result. A candidate is not returned when either schema uses any other keyword, such as <code>enum</code>, <code>format</code>, or <code>$ref</code>, gives <code>type</code> as an array, nests object or array structure inside a property, or declares a <code>$schema</code> dialect other than JSON Schema draft-04, draft-06, draft-07, 2019-09, or 2020-12. A schema that does not declare <code>$schema</code> is treated as JSON Schema 2020-12, which is the default dialect in the MCP specification. A candidate is also not returned when the result depends on the specified tool producing only the properties that it declares, which can happen only when its <code>outputSchema</code> declares properties and does not set <code>additionalProperties</code>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoint now returns a different set of tools than earlier versions of Apicurio Registry, which returned any candidate whose <code>inputSchema</code> declared every property in the <code>outputSchema</code> of the specified tool. A candidate that ignores part of the output is now returned. A candidate is no longer returned when it requires an input that the <code>outputSchema</code> does not require, or when the comparison cannot evaluate part of either schema.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The <code>/.well-known/schemas/{type}/{version}</code> endpoint serves built-in JSON schemas that you can use for IDE autocompletion and validation of <code>PROMPT_TEMPLATE</code>, <code>MODEL_SCHEMA</code>, and <code>MCP_TOOL</code> artifacts. This endpoint requires no authentication.</p>
