@@ -1647,9 +1647,9 @@ KubernetesOps storage is read-only. All changes must be made by creating or upda
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>tlsVerificationType</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TLS verification type: <code>all</code>, <code>none</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLS verification type. <code>required</code> validates the certificate chain and verifies the hostname. <code>certificate-validation</code> validates the certificate chain and, when a custom truststore is configured, skips hostname verification. Without a custom truststore, hostname verification stays enabled. <code>none</code> disables certificate and hostname verification.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>all</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>required</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>truststoreSecretRef</code></p></td>
@@ -1674,7 +1674,7 @@ KubernetesOps storage is read-only. All changes must be made by creating or upda
   app:
     auth:
       tls:
-        tlsVerificationType: all
+        tlsVerificationType: required
         truststoreSecretRef:
           name: keycloak-ca-cert
           key: ca.p12

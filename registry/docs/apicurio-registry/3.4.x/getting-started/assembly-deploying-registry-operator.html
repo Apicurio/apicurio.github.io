@@ -1311,7 +1311,7 @@ spec:
       appClientId: registry-client-api
       authServerUrl: https://keycloak.example.com/realms/registry
       tls:
-        tlsVerificationType: all
+        tlsVerificationType: required
         truststoreSecretRef:
           name: keycloak-ca-cert
           key: ca.p12
@@ -1327,7 +1327,7 @@ spec:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Set <code>tlsVerificationType</code> to <code>none</code> to disable TLS verification (not recommended for production).
+Set <code>tlsVerificationType</code> to <code>certificate-validation</code> to validate the certificate chain without verifying the hostname (requires a custom truststore), or to <code>none</code> to disable TLS verification (not recommended for production).
 </td>
 </tr>
 </table>
