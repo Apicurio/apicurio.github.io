@@ -560,6 +560,71 @@ $ ./acr install</code></pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="installing-registry-cli-system-wide_registry"><a class="anchor" href="#installing-registry-cli-system-wide_registry"></a>Installing the CLI for all users</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can install the CLI in shared system directories on Linux or macOS with the <code>--global</code> option.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have downloaded and extracted the CLI distribution for your platform.</p>
+</li>
+<li>
+<p>You have permission to run commands with <code>sudo</code>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the extracted distribution directory, install the CLI:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ sudo ./acr install --global</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The installer copies the CLI to <code>/usr/local/lib/apicurio-registry-cli</code> and creates the <code>acr</code> and <code>acr_env</code> symbolic links in <code>/usr/local/bin</code>. It does not change individual shell profiles.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>A global installation shares one <code>config.json</code> file. Separate configuration for each user is not supported. Users without write access to that file cannot change contexts or configuration. Use a per-user installation when you need independent contexts and authentication settings.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Optional: Add the following command to your shell profile to load shell completions:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">source /usr/local/bin/acr_env</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Verify that <code>/usr/local/bin</code> is on your <code>PATH</code>, and run <code>/usr/local/bin/acr --help</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="configuring-registry-cli-contexts_registry"><a class="anchor" href="#configuring-registry-cli-contexts_registry"></a>Configuring Apicurio Registry CLI contexts</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -636,6 +701,17 @@ $ acr context update --group my-schemas</code></pre>
 </div>
 </li>
 <li>
+<p>Optional: Save group and artifact identifiers automatically after successful <code>group create</code>, <code>group get</code>, <code>artifact create</code>, and <code>artifact get</code> commands:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr config set context.auto-update=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This setting is disabled by default. When a group command changes the context group, it clears the previous artifact identifier. An artifact command saves both identifiers. Commands that omit <code>--group</code> or <code>--artifact</code> then use these saved values.</p>
+</div>
+</li>
+<li>
 <p>Delete a context that you no longer need:</p>
 <div class="listingblock">
 <div class="content">
@@ -682,14 +758,22 @@ $ acr context update --group my-schemas</code></pre>
 </div>
 </li>
 <li>
-<p>To log in with OAuth2 client credentials, provide the token endpoint and client ID. The CLI prompts for the client secret:</p>
+<p>To log in with OAuth2 client credentials, provide the OpenID Connect (OIDC) provider URL and client ID. The CLI discovers the token endpoint and prompts for the client secret:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr login --auth-server-url https://auth.example.com/realms/registry --client-id registry-client</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The CLI appends <code>/.well-known/openid-configuration</code> to the provider URL. Alternatively, specify the token endpoint directly:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr login --token-endpoint https://auth.example.com/realms/registry/protocol/openid-connect/token --client-id registry-client</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Optional: Provide an OAuth2 scope with the <code>--scope</code> option.</p>
+<p>If you specify both options, <code>--token-endpoint</code> takes precedence over discovery. Provide an OAuth2 scope with <code>--scope</code> when required by your provider.</p>
 </div>
 </li>
 <li>
@@ -744,6 +828,9 @@ $ acr context update --group my-schemas</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr group</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The first page includes the built-in group as <code>default (implicit)</code> in table output. Use <code>default</code> as the identifier in commands. JSON output uses <code>default</code> without the display marker. You cannot create, update, or delete this implicit group.</p>
 </div>
 <div class="paragraph">
 <p>Optional: Use pagination options for large result sets:</p>
@@ -1222,6 +1309,219 @@ $ acr rule delete VALIDITY</code></pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="synchronizing-gitops-using-registry-cli_registry"><a class="anchor" href="#synchronizing-gitops-using-registry-cli_registry"></a>Checking and synchronizing GitOps storage using the CLI</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can inspect GitOps storage status and request an immediate synchronization from the configured Git repositories.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Your CLI context points to a Apicurio Registry instance that uses GitOps storage.</p>
+</li>
+<li>
+<p>You have read access to view status and administrator access to request synchronization when authorization is enabled.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Check the current synchronization status:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr gitops status</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output includes the synchronization state, attempt and success timestamps, resource counts, source commit identifiers, and reported errors.</p>
+</div>
+</li>
+<li>
+<p>Request synchronization and wait for the server to report a completed attempt:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr gitops sync --wait --timeout 300</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The CLI checks status every two seconds. It waits for the attempt timestamp to advance and for the state to become <code>IDLE</code> or <code>ERROR</code>. Without <code>--wait</code>, the command returns after requesting synchronization.</p>
+</div>
+</li>
+<li>
+<p>Optional: Write the reported status as JSON for automation:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr gitops status --output-type json
+$ acr gitops sync --wait --output-type json</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For <code>sync</code>, JSON status output requires <code>--wait</code>. Without <code>--wait</code>, the command prints a request confirmation regardless of the output format.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Check that the <code>sources</code> values match the expected commits. The CLI reports the server status; a successful command exit alone does not verify which commit the registry loaded.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-configuring-gitops-storage.html" class="page">Configuring Apicurio Registry with GitOps storage</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="validating-gitops-using-registry-cli_registry"><a class="anchor" href="#validating-gitops-using-registry-cli_registry"></a>Validating a Git revision using the CLI</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can validate the content of a Git revision before merging a change. Validation does not change the live registry content.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Your CLI context points to a Apicurio Registry instance that uses GitOps storage.</p>
+</li>
+<li>
+<p>The server has <code>apicurio.gitops.validate.enabled=true</code>.</p>
+</li>
+<li>
+<p>The repository ID is configured on the server, and the server can fetch the Git revision.</p>
+</li>
+<li>
+<p>You have administrator access when authorization is enabled.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Submit a branch, tag, or pull request ref for validation:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr gitops validate --repo primary --ref refs/heads/proposed-schemas --timeout 300</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace <code>primary</code> with the configured repository ID. The CLI waits for the validation task to finish and displays its result, resource counts, and errors. The default timeout is 300 seconds.</p>
+</div>
+</li>
+<li>
+<p>Optional: Use JSON output to process the validation result in a pipeline:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr gitops validate --repo primary --ref refs/heads/proposed-schemas --output-type json</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>JSON output includes the task ID, task state, validation result, timestamps, counts, and error details. A failed task, failed validation result, or timeout returns exit code <code>1</code>.</p>
+</div>
+</li>
+<li>
+<p>Optional: Retain the server task for later inspection:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr gitops validate --repo primary --ref refs/heads/proposed-schemas --no-cleanup</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, the CLI attempts to delete the task when it finishes waiting, including after an error or timeout. With <code>--no-cleanup</code>, the task remains available until it expires or you delete it through the REST API.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Check the command exit code and the reported validation result. Successful validation reports <code>success</code>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-configuring-gitops-storage.html" class="page">Configuring Apicurio Registry with GitOps storage</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-cli-gitops-options_registry"><a class="anchor" href="#registry-cli-gitops-options_registry"></a>GitOps CLI options</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The GitOps commands support waiting for results, JSON output, and validation task cleanup.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. GitOps command options</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Command</th>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code>, <code>sync</code>, <code>validate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--output-type</code>, <code>-o</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output format: <code>table</code> (default) or <code>json</code>. The <code>sync</code> command requires <code>--wait</code> to return status in either format.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sync</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--wait</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wait for a completed synchronization attempt. Disabled by default. A reported <code>ERROR</code> state or timeout returns exit code <code>1</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sync</code>, <code>validate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum wait in seconds. Default: <code>300</code>. Applies only when the command waits for completion.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>validate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--repo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required repository ID from the server configuration, not a repository URL.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>validate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--ref</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required Git branch, tag, or pull request ref to validate.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>validate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--no-wait</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Return the initial task details without waiting for the result or deleting the task. A successful exit confirms task creation, not successful validation. Retrieve the task result through the REST API using the returned task ID.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>validate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--cleanup</code>, <code>--no-cleanup</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Control task deletion after waiting. Cleanup is enabled by default and does not apply with <code>--no-wait</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
 <h2 id="registry-cli-output-formats_registry"><a class="anchor" href="#registry-cli-output-formats_registry"></a>CLI output formats and pagination</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -1295,10 +1595,38 @@ $ acr artifact version --columns version,state,createdOn</code></pre>
 <p>An unknown column name produces an error that lists the valid columns. This option only affects <code>table</code> output, and is available on commands that list multiple records rather than commands that show details of a single record.</p>
 </div>
 <div class="paragraph">
+<p><strong>Terminal width</strong></p>
+</div>
+<div class="paragraph">
+<p>Table output adapts to the terminal width by wrapping long cell values. If automatic width detection fails, the CLI uses the <code>COLUMNS</code> environment variable, then a default of 120 characters. Piped or redirected output has no width limit. JSON output is unaffected by terminal width.</p>
+</div>
+<div class="paragraph">
 <p><strong>Verbose output</strong></p>
 </div>
 <div class="paragraph">
 <p>To enable verbose output for debugging, use the <code>--verbose</code> option. This option has no short form.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr --verbose artifact get my-artifact --group my-schemas</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verbose output includes HTTP requests prefixed with <code>&gt;</code> and responses prefixed with <code>&lt;</code>. It shows the method, URL, headers, status, and body. Bodies longer than 8192 characters are truncated.</p>
+</div>
+<div class="paragraph">
+<p>The logger redacts credential headers and common credential query parameters. Other URL values and body content remain visible, so review verbose logs before sharing them. Redirects appear as separate requests with a redirect number; retries appear as additional requests.</p>
+</div>
+<div class="paragraph">
+<p>To suppress HTTP traffic logs and retain other debug output, configure the HTTP logging category:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr config set 'quarkus.log.category."io.apicurio.registry.client.http".level=WARNING'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Category overrides apply only when you use <code>--verbose</code>.</p>
 </div>
 </div>
 </div>
@@ -1312,7 +1640,7 @@ $ acr artifact version --columns version,state,createdOn</code></pre>
 <p>The following options are available for most CLI commands:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Global options</caption>
+<caption class="title">Table 2. Global options</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -1342,7 +1670,7 @@ $ acr artifact version --columns version,state,createdOn</code></pre>
 <p>The CLI uses the following exit codes:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Exit codes</caption>
+<caption class="title">Table 3. Exit codes</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -1376,7 +1704,7 @@ $ acr artifact version --columns version,state,createdOn</code></pre>
 <p>The following commands are available. Running a parent command, such as <code>acr group</code>, without a subcommand lists the corresponding records.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Command summary</caption>
+<caption class="title">Table 4. Command summary</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -1473,8 +1801,12 @@ $ acr artifact version --columns version,state,createdOn</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Import registry data from a .zip file.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr gitops</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Display GitOps command help. Subcommands: <code>status</code>, <code>sync</code>, <code>validate</code>.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr install</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Install the CLI for the current user.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Install the CLI for the current user, or for all users with <code>--global</code> on Linux or macOS.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>acr update</code></p></td>
@@ -1490,7 +1822,7 @@ $ acr artifact version --columns version,state,createdOn</code></pre>
 <p>The rule commands accept the following rule types and configuration values:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Rule types and configuration values</caption>
+<caption class="title">Table 5. Rule types and configuration values</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -1520,7 +1852,7 @@ $ acr artifact version --columns version,state,createdOn</code></pre>
 <p>You can adjust the behavior of the CLI itself with the <code>acr config set</code> command. The following CLI configuration properties are available:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. CLI configuration properties</caption>
+<caption class="title">Table 6. CLI configuration properties</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 16.6666%;">
@@ -1534,6 +1866,11 @@ $ acr artifact version --columns version,state,createdOn</code></pre>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>context.auto-update</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Save group and artifact identifiers to the current context after successful group or artifact <code>create</code> and <code>get</code> commands.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>update.check-enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
