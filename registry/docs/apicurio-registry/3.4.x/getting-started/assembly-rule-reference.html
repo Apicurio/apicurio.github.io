@@ -572,7 +572,7 @@
 <p>Full</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Mapping detection not supported</p>
+<p>Full</p>
 </div></div></td>
 </tr>
 <tr>
@@ -685,6 +685,36 @@
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-rule-json-schema-validity_registry"><a class="anchor" href="#registry-rule-json-schema-validity_registry"></a>JSON Schema validity</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>With the <code>FULL</code> level, the <code>VALIDITY</code> rule checks that a JSON Schema artifact is a valid schema in JSON Schema draft 4, 6, 7, 2019-09, or 2020-12.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Draft</strong>: the draft is the one that <code>$schema</code> declares. A schema without <code>$schema</code> is validated as draft 7, as the compatibility rule reads it. A schema whose <code>$schema</code> names no draft, such as a custom meta-schema, is also validated as draft 7, but the compatibility rule cannot compare it yet and fails with HTTP status 422.</p>
+</li>
+<li>
+<p><strong>Meta-schema</strong>: the schema must be valid against the meta-schema of its draft.</p>
+</li>
+<li>
+<p><strong>References</strong>: a reference within the schema must point at something that exists, such as a definition. A reference to another document is resolved against the artifact references recorded for the version. If Apicurio Registry has no content for it, the reference is accepted, because the validity of a schema does not depend on what an external reference points to. No document is fetched over the network. To require that every external reference is recorded, use the <code>INTEGRITY</code> rule.</p>
+</li>
+<li>
+<p><strong>Unused references</strong>: an artifact reference that the content does not use is rejected, because it usually indicates a typo in the reference name.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each rule violation has a JSON Pointer to the problem as its <code>context</code>, for example <code>/items/properties/price/exclusiveMinimum</code>. More than one problem can be reported at once.</p>
+</div>
+<div class="paragraph">
+<p>The <code>SYNTAX_ONLY</code> level checks only that the content is well-formed JSON.</p>
+</div>
 </div>
 </div>
 <div class="sect1">

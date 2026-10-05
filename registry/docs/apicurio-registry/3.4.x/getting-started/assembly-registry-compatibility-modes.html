@@ -641,7 +641,7 @@ As a result, Version 3 passes the <code>BACKWARD</code> check but fails the <cod
 <h2 id="registry-compatibility-json-schema_registry"><a class="anchor" href="#registry-compatibility-json-schema_registry"></a>JSON Schema compatibility</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry uses a custom library to analyze differences between JSON Schema versions.
+<p>Apicurio Registry checks JSON Schema compatibility with <a href="https://www.apitomy.io/projects/data-models/docs/4.x/user-guide/schema-compatibility.html" target="_blank" rel="noopener">Apitomy Data Models</a>, which supports JSON Schema drafts 4, 6, 7, 2019-09, and 2020-12.
 Because JSON Schema uses a constraint-based validation model, the following table describes common changes and whether they maintain or break backward compatibility. For JSON Schema, forward compatibility is the inverse of backward compatibility: a change that makes the schema more permissive is backward compatible but forward incompatible, and a change that makes the schema more restrictive is forward compatible but backward incompatible.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -660,9 +660,9 @@ Because JSON Schema uses a constraint-based validation model, the following tabl
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Add a new optional property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add an optional property whose schema accepts every value the old schema allowed under that name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Old data without the property remains valid under the new schema.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data remains valid. When <code>additionalProperties</code> is <code>false</code>, the old schema allowed no value, so any property schema qualifies. When <code>additionalProperties</code> is a schema, a property schema that accepts at least as much qualifies.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Remove a property from <code>required</code></p></td>
@@ -695,9 +695,19 @@ Because JSON Schema uses a constraint-based validation model, the following tabl
 <td class="tableblock halign-left valign-top"><p class="tableblock">Making the additional properties schema more permissive accepts more data.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Increase the size of <code>oneOf</code> or <code>anyOf</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a subschema to <code>anyOf</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Adding alternatives to combined schemas accepts more data patterns.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adding alternatives accepts more data.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a subschema to <code>oneOf</code> that cannot match the same values as an existing one</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adding an alternative accepts more data, and no value can match two subschemas, which <code>oneOf</code> rejects.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widen the <code>type</code> keyword</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The new schema accepts every value the old one did. For example, <code>integer</code> to <code>number</code>, or <code>string</code> to <code>["string", "null"]</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Decrease <code>minimum</code> or <code>exclusiveMinimum</code></p></td>
@@ -745,9 +755,19 @@ Because JSON Schema uses a constraint-based validation model, the following tabl
 <td class="tableblock halign-left valign-top"><p class="tableblock">Old data with additional properties fails validation.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Change the <code>type</code> keyword</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add an optional property whose schema is narrower than what the old schema allowed under that name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old data with a value the new property schema rejects fails validation. For example, when <code>additionalProperties</code> is absent or <code>true</code>, any value was allowed, so adding a property with a <code>type</code> breaks compatibility. The change is forward compatible, so a <code>FORWARD</code> rule accepts it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change or narrow the <code>type</code> keyword</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Old data of the previous type fails validation. For example, changing <code>string</code> to <code>integer</code> breaks compatibility.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a subschema to <code>oneOf</code> that can match the same values as an existing one</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A value that matches both subschemas is rejected by <code>oneOf</code>, so old data that matched only the original subschema can fail.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Add a <code>pattern</code> or <code>format</code> constraint</p></td>
@@ -765,7 +785,7 @@ Because JSON Schema uses a constraint-based validation model, the following tabl
 <td class="tableblock halign-left valign-top"><p class="tableblock">The new schema tightens the upper bound. Old data above the new bound fails validation.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Decrease the size of <code>oneOf</code> or <code>anyOf</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove a subschema from <code>oneOf</code> or <code>anyOf</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Removing alternatives from combined schemas causes some previously valid data to fail validation.</p></td>
 </tr>
@@ -781,6 +801,138 @@ Because JSON Schema uses a constraint-based validation model, the following tabl
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-compatibility-json-schema-reports_registry"><a class="anchor" href="#registry-compatibility-json-schema-reports_registry"></a>What the JSON Schema compatibility check reports</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The compatibility check compares two versions by what they accept, rather than by how they are written, and reports each change that breaks compatibility at the place where it was made.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Every draft</dt>
+<dd>
+<p>All drafts from 4 to 2020-12 are compared, including keywords introduced in 2019-09 and 2020-12, such as <code>prefixItems</code>, <code>unevaluatedProperties</code>, <code>dependentRequired</code>, <code>$defs</code>, and <code>$anchor</code>.
+A schema without <code>$schema</code> is read as draft 7.
+A schema whose <code>$schema</code> names no draft, such as a custom meta-schema, cannot be compared yet, and the check fails with HTTP status 422.</p>
+</dd>
+<dt class="hdlist1">Versions in different drafts</dt>
+<dd>
+<p>A version can declare a different <code>$schema</code> from the previous one, and the two are compared by meaning.
+For example, a draft 7 tuple (<code>"items": [{"type": "string"}]</code>) rewritten in draft 2020-12 as <code>"prefixItems": [{"type": "string"}]</code> is compatible, because both accept the same data.</p>
+</dd>
+<dt class="hdlist1">Exact location</dt>
+<dd>
+<p>In a <code>BACKWARD</code> check, the <code>context</code> of each rule violation is a JSON Pointer into the new version that ends at the keyword that changed, and the <code>description</code> is a sentence.
+A change deep inside the schema is reported where it was made, not at the enclosing property.
+For example, decreasing <code>maxLength</code> from <code>10</code> to <code>5</code> on the property <code>b</code> of the object property <code>a</code> is reported as:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "description": "The 'maxLength' string-length limit was decreased.",
+  "context": "/properties/a/properties/b/maxLength"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A <code>FORWARD</code> check compares the two versions in the opposite direction, so the <code>context</code> points into the previous version, and the <code>description</code> reads as if the previous version were the new one.</p>
+</div>
+</dd>
+<dt class="hdlist1"><code>oneOf</code> and boolean schemas</dt>
+<dd>
+<p><code>oneOf</code> accepts a value that matches exactly one of its subschemas, so a new subschema that can match the same values as an existing one is reported, even though it adds alternatives.
+Boolean schemas, <code>true</code> and <code>false</code>, are compared like any other schema.</p>
+</dd>
+<dt class="hdlist1">References</dt>
+<dd>
+<p>References to other artifacts are resolved from the artifact references that are stored with the version, including references inside the referenced artifacts, and references between artifacts that refer to each other.
+No document is fetched over the network.
+If a reference cannot be resolved, part of the schema cannot be compared, so the check fails with HTTP status 422 instead of returning a result.</p>
+</dd>
+<dt class="hdlist1">Known over-strict verdicts</dt>
+<dd>
+<p>Where the check cannot prove that a change is compatible, it reports it as incompatible, so it never accepts a breaking change. In the following cases, it reports a compatible change as incompatible. Future versions of Apitomy Data Models will handle them:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Adding a property whose schema accepts every value, for example one with only a <code>description</code>, when <code>additionalProperties</code> is absent or <code>true</code>.</p>
+</li>
+<li>
+<p>Adding a <code>type</code> inside <code>then</code> or <code>else</code>, when an enclosing schema already requires that type.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>For a description and examples of every kind of change the check reports, see the <a href="https://www.apitomy.io/projects/data-models/docs/4.x/user-guide/schema-compatibility.html" target="_blank" rel="noopener">Apitomy Data Models schema compatibility guide</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-compatibility-json-schema-changes_registry"><a class="anchor" href="#registry-compatibility-json-schema-changes_registry"></a>Changes to JSON Schema compatibility checking in Apicurio Registry 3.4</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Earlier versions of Apicurio Registry checked JSON Schema compatibility with a different checker, based on the everit library.
+If you used JSON Schema compatibility rules before version 3.4, note the following differences:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Artifacts in drafts 2019-09 and 2020-12 are now checked.
+The earlier checker could not load them, and the check failed with an error instead.</p>
+</li>
+<li>
+<p>Rule violations are worded differently, and their <code>context</code> points at the keyword that changed.
+Update anything that matches the previous text or contexts, for example:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Change</th>
+<th class="tableblock halign-left valign-top">Before 3.4</th>
+<th class="tableblock halign-left valign-top">From 3.4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change the <code>type</code> of property <code>a</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Subschema type changed</code> at <code>/properties/a</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>The declared 'type' of the schema was changed.</code> at <code>/properties/a/type</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a property to <code>required</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object type property schemas narrowed</code> at <code>/propertySchemasAdded</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>A property was made 'required'.</code> at <code>/required/0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove a value from <code>enum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Combined type subschema not compatible</code> at <code>/</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>A value was removed from the 'enum' allowed set.</code> at <code>/enum</code></p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>A new <code>oneOf</code> subschema that can match the same values as an existing one is now reported as incompatible.
+The earlier checker compared <code>oneOf</code> like <code>anyOf</code>, and accepted such a change.</p>
+</li>
+<li>
+<p>Adding a <code>type</code> inside <code>then</code> or <code>else</code> that an enclosing schema already requires is reported as incompatible, where the earlier checker accepted it.
+See <strong>Known over-strict verdicts</strong> in "What the JSON Schema compatibility check reports".</p>
+</li>
+<li>
+<p>The <code>apicurio.compat.json-schema.use-apitomy</code> configuration property, which selected the new checker in version 3.3, no longer has any effect, and is deprecated.
+If it is set, Apicurio Registry logs a warning at startup.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
