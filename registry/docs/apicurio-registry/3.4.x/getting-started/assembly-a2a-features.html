@@ -656,7 +656,7 @@
 </dd>
 <dt class="hdlist1">GET /.well-known/agents</dt>
 <dd>
-<p>Searches for registered Agent Cards with filtering support. This endpoint requires no authentication. When OIDC or basic authentication is enabled, the search returns only the Agent Cards that the caller has permission to view, based on the <code>apicurio.agent.visibility</code> label.</p>
+<p>Searches for registered Agent Cards with filtering support. This endpoint requires no authentication. When any authentication mechanism is enabled, the search returns only the Agent Cards that the caller has permission to view, based on the <code>apicurio.agent.visibility</code> label.</p>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 3. Query parameters for /.well-known/agents</caption>
 <colgroup>
@@ -783,7 +783,7 @@
 <h2 id="a2a-visibility-model_registry"><a class="anchor" href="#a2a-visibility-model_registry"></a>Agent visibility model</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Agent Cards support three visibility levels, controlled by the <code>apicurio.agent.visibility</code> artifact label. When OIDC or basic authentication is enabled, <code>GET /.well-known/agents</code> and the AI Catalog and ARD endpoints described in <a href="assembly-ai-catalog-ard.html" class="page">AI Catalog and ARD discovery</a> enforce visibility.</p>
+<p>Agent Cards support three visibility levels, controlled by the <code>apicurio.agent.visibility</code> artifact label. When any authentication mechanism is enabled, <code>GET /.well-known/agents</code> and the AI Catalog and ARD endpoints described in <a href="assembly-ai-catalog-ard.html" class="page">AI Catalog and ARD discovery</a> enforce visibility.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 4. Agent visibility levels</caption>
@@ -804,7 +804,7 @@
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>entitled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Visible to any authenticated user (this is the default)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Visible to callers who can read artifacts: a registry role (<code>sr-readonly</code>, <code>sr-developer</code> or <code>sr-admin</code>) when role-based authorization is enabled, any authenticated user when <code>apicurio.auth.authenticated-read-access.enabled</code> is set or a trusted proxy has authorized the request, and unauthenticated clients when <code>apicurio.auth.anonymous-read-access.enabled</code> is set (this is the default)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>private</code></p></td>
@@ -871,7 +871,7 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-When neither OIDC nor basic authentication is configured, Apicurio Registry skips visibility filtering and all agents are visible to all users.
+When no authentication mechanism is configured (OIDC, basic, proxy header, Kubernetes, or form), Apicurio Registry skips visibility filtering and all agents are visible to all users.
 </td>
 </tr>
 </table>
