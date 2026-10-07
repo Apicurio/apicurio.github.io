@@ -908,9 +908,23 @@ configured, the behavior is a no-op and the SerDes add no trace headers.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RETRY_COUNT</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.retry-count</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. If the SerDes cannot retrieve a schema from the registry, they can retry a number of times. This configuration option controls the number of retry attempts.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. <strong>To retry registry outages, set <code>apicurio.registry.retry.transient-errors=true</code> and preferably <code>apicurio.registry.retry.total-timeout-ms</code>.</strong> This key then controls how many times the schema cache retries a failed load. By default the cache only retries HTTP 429; raising <code>retry-count</code> alone does not cover network or registry-down failures.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>non-negative Number, or integer String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RETRY_TRANSIENT_ERRORS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.retry.transient-errors</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. <strong>Activation step for outage retries.</strong> When <code>false</code> (default), schema-cache retries stay limited to HTTP 429 (historical behavior). When <code>true</code>, also retries 502/503/504 and retriable network failures (including <code>NoRouteToHostException</code>). Enabling this increases worst-case blocking because each cache attempt may run a full HTTP client retry ladder (see <code>apicurio.registry.client.retry.max-attempts</code>). Set <code>apicurio.registry.retry.total-timeout-ms</code> when enabling.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RETRY_TOTAL_TIMEOUT_MS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.retry.total-timeout-ms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Optional wall-clock budget (milliseconds) for one schema-cache load retry loop. Checked before each re-attempt; it does not interrupt an in-flight cache attempt (that attempt may still run a full HTTP client retry ladder and request timeouts). <code>0</code> means unlimited. Recommended when <code>apicurio.registry.retry.transient-errors=true</code> to bound blocking on Kafka <code>Producer.send()</code> / Connect polls.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Duration, non-negative Number, or integer String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>FAULT_TOLERANT_REFRESH</code></p></td>
