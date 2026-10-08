@@ -560,6 +560,267 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 <li>
 <p><a href="assembly-rule-reference.html">Apicurio Registry rule reference</a></p>
 </li>
+<li>
+<p><a href="assembly-data-contracts.html" class="page">Apicurio Registry data contracts</a></p>
+</li>
+<li>
+<p><a href="assembly-usage-telemetry.html" class="page">Usage Telemetry and API Lifecycle Governance</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="comparing-artifact-versions-using-console_registry"><a class="anchor" href="#comparing-artifact-versions-using-console_registry"></a>Comparing artifact versions using the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can compare the content of two versions of the same artifact to review schema or API changes.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have access to the web console of a running Apicurio Registry instance.</p>
+</li>
+<li>
+<p>You have an artifact with at least two versions whose content you can retrieve. The web console cannot load the content of a disabled version. If you select one, the <strong>Compare Versions</strong> dialog displays an error.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>On the <strong>Explore</strong> tab, open the group that contains the artifact.</p>
+</li>
+<li>
+<p>Click the artifact to open its details.</p>
+</li>
+<li>
+<p>On the <strong>Overview</strong> tab, select the check boxes for two versions in the <strong>Versions in artifact</strong> list.</p>
+<div class="paragraph">
+<p>After you select two versions, the web console disables the remaining check boxes and enables the <strong>Compare</strong> button. The button label shows the selection count, for example, <strong>Compare (2/2)</strong>. You can select versions on different pages of the list. The selection persists until you clear a check box or click <strong>Clear selection</strong>.</p>
+</div>
+</li>
+<li>
+<p>Click <strong>Compare</strong> to open the <strong>Compare Versions</strong> dialog.</p>
+<div class="paragraph">
+<p>The comparison displays the older version on the left and the newer version on the right, based on creation time. The comparison is read-only.</p>
+</div>
+</li>
+<li>
+<p>Optional: Click <strong>Inline</strong> to display the changes in a single view.</p>
+</li>
+<li>
+<p>Optional: Click <strong>Wrap text</strong> to wrap long lines.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Verify that the <strong>Older</strong> and <strong>Newer</strong> labels identify the versions that you selected.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="artifact-version-states-using-console_registry"><a class="anchor" href="#artifact-version-states-using-console_registry"></a>Artifact version states in the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Each artifact version has a state that identifies its lifecycle stage. The web console displays only the state changes available for the selected version.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Version states and available changes in the web console</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 50%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">State</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Available new states</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Draft</strong> (<code>DRAFT</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A version for preparing content before publication. By default, Apicurio Registry does not apply content rules to a draft until you publish it. You create draft versions on the <strong>Drafts</strong> tab, which the web console displays only when draft content mutability is enabled and you have the developer or administrator role, or by selecting <strong>Create draft from&#8230;&#8203;</strong> on a version page.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Enabled</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Enabled</strong> (<code>ENABLED</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An active version whose content applications can retrieve. New versions start in this state unless you create them as drafts. The <strong>Versions in artifact</strong> list displays no badge for enabled versions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Deprecated</strong>, <strong>Disabled</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Deprecated</strong> (<code>DEPRECATED</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A version that applications can still retrieve but that you intend to retire. Apicurio Registry adds an <code>X-Registry-Deprecated</code> header to REST API responses that return the content, to signal that applications must migrate to a newer version.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Enabled</strong>, <strong>Disabled</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Disabled</strong> (<code>DISABLED</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A version whose content requests return <code>404 Not Found</code>. Its metadata remains available, and you can change its state again. Requests for the <code>latest</code> version skip disabled versions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Enabled</strong>, <strong>Deprecated</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Sunset</strong> (<code>SUNSET</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A version that has reached the end of its deprecation period. You can set this state only by using the REST API.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Enabled</strong>, <strong>Deprecated</strong>, <strong>Disabled</strong></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>You can create a version in the <code>DRAFT</code> state, but you cannot change an existing version back to <code>DRAFT</code> after publication.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#changing-version-state-using-console_registry">Changing an artifact version state using the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="assembly-schema-lifecycle-best-practices.html" class="page">Schema lifecycle best practices</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="changing-version-state-using-console_registry"><a class="anchor" href="#changing-version-state-using-console_registry"></a>Changing an artifact version state using the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can change an artifact version&#8217;s state to publish a draft, deprecate a version, or disable access to its content.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have access to the web console of a running Apicurio Registry instance, and the web console is not in read-only mode.</p>
+</li>
+<li>
+<p>If authentication is enabled, you have the developer or administrator role. If artifact owner-only authorization is enabled, you are the owner of the artifact or an administrator.</p>
+</li>
+<li>
+<p>You have confirmed that applications no longer need to retrieve the version&#8217;s content if you plan to disable it.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>On the <strong>Explore</strong> tab, open the group that contains the artifact.</p>
+</li>
+<li>
+<p>Click the artifact to open its details.</p>
+</li>
+<li>
+<p>On the <strong>Overview</strong> tab, click the version in the <strong>Versions in artifact</strong> list.</p>
+</li>
+<li>
+<p>On the version&#8217;s <strong>Overview</strong> tab, click <strong>Change</strong> next to <strong>Status</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Change version state</strong> dialog, select a value from the <strong>New state</strong> list.</p>
+<div class="paragraph">
+<p>For a draft version, the only available value is <strong>Enabled</strong>. For other versions, select one of the available <strong>Enabled</strong>, <strong>Disabled</strong>, or <strong>Deprecated</strong> values.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can publish a draft by selecting <strong>Finalize draft</strong> from the Action menu (three vertical dots) in the version page header, or edit its content by clicking <strong>Edit draft</strong>.</p>
+</div>
+</li>
+<li>
+<p>Click <strong>Change state</strong>.</p>
+<div class="paragraph">
+<p>When you publish a draft, Apicurio Registry applies the configured content rules. If the content violates a rule, the web console displays the <strong>Invalid Content Error</strong> dialog with the rule violations, and the version remains a draft.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Verify that <strong>Status</strong> on the version&#8217;s <strong>Overview</strong> tab displays the selected state. In the <strong>Versions in artifact</strong> list, the version displays a <strong>Deprecated</strong> or <strong>Disabled</strong> badge, or no badge if you enabled the version.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#artifact-version-states-using-console_registry">Artifact version states in the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="#configuring-rules-using-console_registry">Configuring content rules using the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="assembly-schema-lifecycle-best-practices.html" class="page">Schema lifecycle best practices</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="viewing-json-schema-using-console_registry"><a class="anchor" href="#viewing-json-schema-using-console_registry"></a>Viewing a JSON Schema visualization using the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can view the properties, constraints, and generated example for a JSON Schema in the web console to review its structure without reading the source content.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have access to the web console of a running Apicurio Registry instance.</p>
+</li>
+<li>
+<p>You have stored a JSON Schema artifact with at least one version in Apicurio Registry. The <strong>Documentation</strong> tab is not available for disabled versions.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>On the <strong>Explore</strong> tab, open the group that contains the JSON Schema artifact.</p>
+</li>
+<li>
+<p>Click the artifact to open its details.</p>
+</li>
+<li>
+<p>On the <strong>Overview</strong> tab, click the version in the <strong>Versions in artifact</strong> list.</p>
+</li>
+<li>
+<p>Click the <strong>Documentation</strong> tab.</p>
+<div class="paragraph">
+<p>The left panel displays the schema title, root type, description, and the <strong>Schema</strong> row with the <code>$schema</code> value, followed by a <strong>Properties</strong> section. Each property displays its name, a type badge, and a <strong>required</strong> marker when the schema requires the property. The property also displays its description, constraints such as <code>minLength</code>, <code>maxLength</code>, <code>min</code>, <code>max</code>, <code>pattern</code>, and <code>format</code>, enumerated values, and the default value, when the schema defines them.</p>
+</div>
+</li>
+<li>
+<p>Optional: Click <strong>Show properties</strong> to expand a nested object or array item, or click <strong>Hide properties</strong> to collapse it.</p>
+<div class="paragraph">
+<p>The web console expands top-level properties by default. The web console lists alternatives that the schema defines with <code>oneOf</code>, <code>anyOf</code>, or <code>allOf</code> under <strong>One of</strong>, <strong>Any of</strong>, or <strong>All of</strong>.</p>
+</div>
+</li>
+<li>
+<p>Review the <strong>Generated Example</strong> panel to see sample JSON content based on the schema.</p>
+<div class="paragraph">
+<p>The web console generates the example from the default values, examples, constants, enumerated values, types, and formats that the schema defines. The generated example is read-only. Viewing it does not change the stored schema.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#browsing-artifacts-using-console_registry">Viewing artifacts using the Apicurio Registry web console</a></p>
+</li>
 </ul>
 </div>
 </div>
@@ -1288,7 +1549,7 @@ Apicurio Registry displays authentication and authorization settings in the web 
 <li>
 <p>Select the settings that you want to configure for Apicurio Registry:</p>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Authentication settings</caption>
+<caption class="title">Table 2. Authentication settings</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -1309,7 +1570,7 @@ Not selected by default.</p></td>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Authorization settings</caption>
+<caption class="title">Table 3. Authorization settings</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -1340,7 +1601,7 @@ Not selected by default.</p></td>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Compatibility settings</caption>
+<caption class="title">Table 4. Compatibility settings</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -1367,7 +1628,7 @@ Not selected by default.</p></td>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Web console settings</caption>
+<caption class="title">Table 5. Web console settings</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -1386,7 +1647,7 @@ Not selected by default.</p></td>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Semantic versioning settings</caption>
+<caption class="title">Table 6. Semantic versioning settings</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
@@ -1409,7 +1670,7 @@ Not selected by default.</p></td>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Additional properties</caption>
+<caption class="title">Table 7. Additional properties</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
