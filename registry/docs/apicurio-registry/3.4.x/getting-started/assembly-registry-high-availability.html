@@ -625,21 +625,33 @@ to the <code>app</code> component:</p>
         value: "50"
 
       # Connection acquisition timeout (5 seconds)
-      - name: QUARKUS_DATASOURCE_JDBC_ACQUISITION-TIMEOUT
+      - name: QUARKUS_DATASOURCE_POSTGRESQL_JDBC_ACQUISITION_TIMEOUT
         value: "5S"
 
       # Background validation to detect stale connections (every 2 minutes)
-      - name: QUARKUS_DATASOURCE_JDBC_BACKGROUND-VALIDATION-INTERVAL
+      - name: QUARKUS_DATASOURCE_POSTGRESQL_JDBC_BACKGROUND_VALIDATION_INTERVAL
         value: "2M"
 
       # Foreground validation before use (every 1 minute)
-      - name: QUARKUS_DATASOURCE_JDBC_FOREGROUND-VALIDATION-INTERVAL
+      - name: QUARKUS_DATASOURCE_POSTGRESQL_JDBC_FOREGROUND_VALIDATION_INTERVAL
         value: "1M"
 
       # Maximum connection lifetime (30 minutes)
-      - name: QUARKUS_DATASOURCE_JDBC_MAX-LIFETIME
+      - name: QUARKUS_DATASOURCE_POSTGRESQL_JDBC_MAX_LIFETIME
         value: "30M"</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Apicurio Registry defines a named datasource for each supported database. The <code>QUARKUS_DATASOURCE_POSTGRESQL_*</code> variables target the named PostgreSQL datasource. Generic <code>QUARKUS_DATASOURCE_JDBC_*</code> variables have no effect. For MySQL storage, replace <code>POSTGRESQL</code> with <code>MYSQL</code> in each of these variable names.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>These settings ensure that:</p>
