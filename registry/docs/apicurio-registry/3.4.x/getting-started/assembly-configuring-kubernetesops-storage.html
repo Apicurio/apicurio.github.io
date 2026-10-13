@@ -739,7 +739,7 @@ spec:
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry-v0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Registry configuration including global rules and settings</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Registry configuration including global rules, settings, and peer registries</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>group-v0</code></p></td>
@@ -1015,6 +1015,11 @@ data:
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>properties</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">list of properties</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Configuration properties. Each property has <code>name</code> and <code>value</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>peers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">list of peers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Peer registries for federated search. Each peer has <code>peerId</code> (required; lowercase letters, digits, <code>.</code>, <code>_</code>, and <code>-</code> only; must be unique and cannot be <code>local</code>, which is reserved), <code>url</code> (required), optional <code>name</code> and <code>description</code>, <code>enabled</code> (boolean, defaults to <code>true</code> when omitted), and an optional <code>credentialSecretRef</code> (a reference to a credential, never a secret value). The full list is replaced on every load: omitting the field, or setting it to an empty list, removes all previously loaded peers.</p></td>
 </tr>
 </tbody>
 </table>

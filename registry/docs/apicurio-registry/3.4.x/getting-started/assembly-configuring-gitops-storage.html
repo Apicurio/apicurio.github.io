@@ -530,7 +530,7 @@ GitOps storage is an <strong>experimental</strong> feature. You must enable the 
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry-v0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Registry configuration. Fields: <code>registryId</code>, <code>globalRules</code> (list of <code>ruleType</code> and <code>config</code> pairs), and <code>properties</code>. The <code>registryId</code> value must match the <code>apicurio.polling-storage.id</code> property of the registry instance.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Registry configuration. Fields: <code>registryId</code>, <code>globalRules</code> (list of <code>ruleType</code> and <code>config</code> pairs), <code>properties</code>, and <code>peers</code> (list of peer registries; see below). The <code>registryId</code> value must match the <code>apicurio.polling-storage.id</code> property of the registry instance.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>group-v0</code></p></td>
@@ -631,6 +631,9 @@ versions:
 </li>
 <li>
 <p>The optional <code>validatedUpTo</code> field on an artifact controls rule validation during a load. When unset, only the latest version is validated, against all preceding versions. When set to a version identifier, versions up to and including that version are not re-validated. When the value matches no version, all versions are validated.</p>
+</li>
+<li>
+<p>The optional <code>peers</code> list on the registry configuration declares peer registries. Each entry has <code>peerId</code> (lowercase letters, digits, <code>.</code>, <code>_</code>, and <code>-</code> only; must be unique and cannot be <code>local</code>, which is reserved), <code>url</code>, optional <code>name</code> and <code>description</code>, <code>enabled</code> (defaults to <code>true</code> when omitted), and an optional <code>credentialSecretRef</code>, which is a reference to a credential and never a secret value itself. The full <code>peers</code> list is replaced on every load: omitting the key, or setting it to an empty list, removes all previously loaded peers.</p>
 </li>
 </ul>
 </div>
