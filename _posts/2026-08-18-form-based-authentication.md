@@ -6,67 +6,96 @@ author: arjav
 categories: registry security authentication
 ---
 
-Securing your API schemas and event definitions is a critical part of managing any Apicurio Registry deployment. For enterprise environments, Apicurio has always provided robust integrations with Identity Providers (IdPs) like Keycloak via OIDC.
+Securing your API schemas and event definitions is a critical part of managing any Apicurio Registry deployment. Historically, securing the registry required integrating with an external OpenID Connect (OIDC) Identity Provider (IdP) such as Keycloak. Even HTTP Basic authentication (`apicurio.authn.basic-client-credentials.enabled`) operated by exchanging client credentials with an upstream OIDC server.
 
-However, for smaller deployments, testing environments, or teams that prefer a simpler setup without the overhead of maintaining an external IdP, Apicurio Registry offers a built-in "Basic" authentication mechanism.
+For development environments, testing deployments, or teams seeking a lightweight architecture without the operational overhead of an external IdP, this posed a barrier to entry.
 
-While functional, HTTP Basic Authentication has historically relied on the browser's native credential popup. Today, I am excited to share that starting with version 3.3.1 (via [PR #8614](https://github.com/Apicurio/apicurio-registry/pull/8614)), Apicurio Registry now officially supports Form-Based Authentication!
+Starting with **version 3.3.2** (via [PR #8614](https://github.com/Apicurio/apicurio-registry/pull/8614)), Apicurio Registry introduces support for **Form-Based Authentication**. Paired with a Quarkus identity provider (such as embedded users, JDBC, or LDAP), form auth provides a way to secure Apicurio Registry in a completely standalone deployment without Keycloak or an external OIDC server.
 
 ---
 
-## The Problem with Basic Auth Popups
-
-If you have used the basic authentication mode in the past, you are likely familiar with the unstyled browser popup asking for a username and password. While this gets the job done, it comes with a few significant drawbacks:
-
-1. **Poor User Experience:** The native browser popup feels disconnected from the rest of the application.
-2. **Password Manager Issues:** Modern password managers (like 1Password, Bitwarden, or browser auto-fill) often struggle to interact reliably with native HTTP Basic Auth dialogs.
-
-## The Solution: Form-Based Authentication
-
-To solve these issues, we integrated Form-Based Authentication into the registry's pluggable auth chain. Instead of a harsh browser popup, users are greeted with an HTML login form.
-
-### Why is this better?
-
-* **Frictionless Password Management:** HTML `<input>` fields mean your favorite password managers will seamlessly detect and auto-fill your credentials.
-* **Cookie-Based Flows:** Form authentication utilizes cookie-based sessions natively through Quarkus, providing a much smoother web experience than traditional Basic Auth headers.
-
 ## How It Works Under the Hood
 
-Apicurio Registry is built on top of [Quarkus](https://quarkus.io/), which provides a highly extensible security architecture.
+Apicurio Registry runs on [Quarkus](https://quarkus.io/), which features an extensible security architecture.
 
-Instead of writing custom browser-detection logic or UI files, this feature wires Quarkus's built-in `FormAuthenticationMechanism` directly into Apicurio Registry's pluggable authentication chain.
+Instead of introducing custom authentication handling, this feature integrates Quarkus's built-in `FormAuthenticationMechanism` directly into Apicurio Registry's configurable authentication chain.
 
-The implementation builds an ordered chain of authentication strategies from a configurable priority list and seamlessly iterates through them. By adding Form Authentication as a link in this chain, Apicurio can now securely fall back to an HTML form for credential collection when configured to do so.
+The registry constructs an ordered chain of authentication strategies from a priority list and evaluates incoming requests strictly in that sequence. When configured, form authentication handles credential verification via standard HTML forms and issues cookie-backed session tokens.
+
+> **Note on Evaluation Order:** The authentication chain executes strictly in the sequence configured by `apicurio.authn.mechanism.priority`; there is no automatic fallback. Furthermore, if `quarkus.http.auth.form.enabled=true` but `form` is not included in the priority list, the registry logs a **"silent lockout"** warning at startup and form authentication will not function.
+
+---
+
+## Operator Requirement: Providing the Login Form
+
+It is important to note that **Apicurio Registry does not ship with a built-in HTML login form or UI form-login screen**. The registry web console currently supports `none` and `oidc` authentication flows.
+
+When form authentication is enabled, Quarkus redirects unauthenticated browser requests to a login page (defaulting to `/login.html`). Operators must provide and serve their own static HTML login, error, and landing pages (for example, by placing them in the application's static resources or serving them via an upstream reverse proxy). If these files are not present, users will receive a `404 Not Found` response.
+
+Quarkus allows configuring these paths:
+
+```properties
+quarkus.http.auth.form.login-page=/login.html
+quarkus.http.auth.form.error-page=/error.html
+quarkus.http.auth.form.landing-page=/index.html
+```
+
+---
 
 ## How to Configure It
 
-Enabling this feature requires configuring Quarkus's form authentication alongside a backing `IdentityProvider`.
+Enabling form authentication involves configuring the mechanism priority, providing an identity provider, and enabling role-based authorization.
 
-First, enable the form auth and set the mechanism priority in your configuration:
+### 1. Enable Form Authentication & Set Priority
 
 ```properties
 quarkus.http.auth.form.enabled=true
-apicurio.authn.mechanism.priority=form
+
+# Specify the mechanism priority. Note that setting this property replaces the
+# default chain ("basic,proxy-header,oidc"). Combine mechanisms as needed:
+apicurio.authn.mechanism.priority=form,oidc
 ```
 
-> **Warning:** Form auth with session cookies reintroduces CSRF exposure for state-changing requests. Production deployments must configure CSRF protection and Secure/HttpOnly cookies.
+### 2. Configure a Backing Identity Provider
 
-Next, you must configure a backing Quarkus `IdentityProvider` so the registry knows how to verify the credentials. For example, to use embedded properties-based users for a quick development setup:
+The registry requires an identity provider to validate credentials. For testing and development, you can use Quarkus's embedded properties-based realm. Note that `plain-text=true` is required when using unhashed passwords:
 
 ```properties
 quarkus.security.users.embedded.enabled=true
+quarkus.security.users.embedded.plain-text=true
 quarkus.security.users.embedded.users.alice=alice123
 quarkus.security.users.embedded.roles.alice=sr-admin
 ```
 
-*(Note: Storing plaintext passwords like `alice123` is strictly for development and testing—never use embedded plaintext credentials in production. In production environments, back this with an external Identity Provider, LDAP, or a secure JDBC realm, and ensure proper cookie security and CSRF protection are configured).*
+### 3. Enable Role-Based Authorization
+
+To enforce permissions based on assigned roles (such as `sr-admin`), enable authorization and configure the role source:
+
+```properties
+apicurio.auth.role-based-authorization=true
+apicurio.auth.role-source=token
+```
+
+---
+
+## Security Considerations
+
+While form-based authentication simplifies standalone deployments, session cookies introduce security implications that must be planned for in production:
+
+> **Important Security Considerations:**
+>
+> 1. **CSRF Exposure:** Form authentication with session cookies introduces CSRF exposure for state-changing requests. Production deployments must configure CSRF protection as documented in the [Quarkus CSRF Prevention Guide](https://quarkus.io/guides/security-csrf-prevention).
+> 2. **Cookie Hardening:** Ensure session cookies are appropriately hardened using Quarkus's form-auth cookie configuration properties. In particular, enable the `HttpOnly` setting and ensure the session cookie is appropriately configured for HTTPS deployments.
+> 3. **Production Credentials:** Embedded plain-text passwords (`alice123`) should only be used for local development and testing. Production environments should back authentication with an external Identity Provider, LDAP, or a database realm via JDBC.
+
+---
 
 ## Conclusion
 
-Contributing this feature to Apicurio Registry was an incredible experience. Diving into the Quarkus security layer and figuring out how to perfectly wire the `FormAuthenticationMechanism` into the registry's authentication chain was a fun architectural challenge.
+Form-based authentication provides a lightweight, standalone security alternative for Apicurio Registry deployments where running an external OIDC provider is unnecessary.
 
-A huge thank you to **Eric Wittmann**, **Carles Arnal**, **Paolo Antinori**, and **Jakub Senko** for their incredibly helpful reviews, guidance, and for helping get this feature merged!
+A huge thank you to **Eric Wittmann**, **Carles Arnal**, **Paolo Antinori**, and **Jakub Senko** for their guidance, reviews, and architectural support.
 
-If you want to dive into the code and see exactly how we implemented this, you can check out the pull request here: [PR #8614](https://github.com/Apicurio/apicurio-registry/pull/8614).
+To explore the implementation details, check out the merged pull request: [PR #8614](https://github.com/Apicurio/apicurio-registry/pull/8614).
 
 Happy coding!
