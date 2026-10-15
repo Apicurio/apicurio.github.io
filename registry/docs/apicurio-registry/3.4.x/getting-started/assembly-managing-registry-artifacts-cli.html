@@ -983,6 +983,9 @@ $ acr context update --group my-schemas</code></pre>
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr artifact --group my-schemas</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>To browse the artifacts in a selectable table instead of a static list, see <a href="#browsing-artifacts-interactively-using-registry-cli_registry">Browsing artifacts interactively using the CLI</a>.</p>
+</div>
 </li>
 <li>
 <p>Create a new artifact from a file:</p>
@@ -1043,6 +1046,110 @@ $ acr context update --group my-schemas</code></pre>
 </div>
 </li>
 </ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="browsing-artifacts-interactively-using-registry-cli_registry"><a class="anchor" href="#browsing-artifacts-interactively-using-registry-cli_registry"></a>Browsing artifacts interactively using the CLI</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the CLI in interactive mode to browse the artifacts of a group or the results of an artifact search in a selectable table, view artifact metadata, and delete artifacts, all from one terminal screen.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Interactive mode is experimental and subject to backwards-incompatible change or removal. It requires an interactive terminal (TTY). When no TTY is available, for example when standard input is redirected, the command fails with the error message <code>Interactive mode requires an interactive terminal (TTY).</code></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have configured at least one CLI context.</p>
+</li>
+<li>
+<p>You have an interactive terminal (TTY).</p>
+</li>
+<li>
+<p>You have set <code>apicurio.rest.deletion.artifact.enabled=true</code> on the Apicurio Registry server if you want to delete artifacts with the <code>d</code> key.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Start interactive mode by adding the <code>--interactive</code> option to the <code>acr artifact</code> command or to the <code>acr search artifact</code> command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr artifact --group my-schemas --interactive
+$ acr search artifact --type AVRO --interactive</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Search filters apply before the table loads and to every page that you load afterwards. Each row shows the artifact name or ID, the artifact type, and the creation date.</p>
+</div>
+</li>
+<li>
+<p>Work in the table with the following keys:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Up arrow, Down arrow</dt>
+<dd>
+<p>Move the selection.</p>
+</dd>
+<dt class="hdlist1">Enter</dt>
+<dd>
+<p>Print the metadata of the selected artifact and exit.</p>
+</dd>
+<dt class="hdlist1"><code>d</code></dt>
+<dd>
+<p>Delete the selected artifact after confirmation.</p>
+</dd>
+<dt class="hdlist1"><code>/</code></dt>
+<dd>
+<p>Filter the loaded rows.</p>
+</dd>
+<dt class="hdlist1">Page Down, Page Up</dt>
+<dd>
+<p>Load the next or previous page.</p>
+</dd>
+<dt class="hdlist1"><code>q</code>, Esc</dt>
+<dd>
+<p>Exit without a selection.</p>
+</dd>
+</dl>
+</div>
+</li>
+<li>
+<p>To narrow the list, press <code>/</code> and type a filter value. The CLI filters the loaded rows as you type. The filter matches the artifact ID, name, group ID, type, and description, and ignores case. Press Enter to apply the filter, or press Esc to clear it. An applied filter remains visible in the footer and stays in effect for pages that you load afterwards. The filter does not query the registry; use the <code>acr search artifact</code> options to filter on the server.</p>
+</li>
+<li>
+<p>To move through large result sets, press Page Down and Page Up. The table opens on the first page, the footer shows the current page number, and the <code>--size</code> option sets the number of artifacts in each page.</p>
+</li>
+<li>
+<p>To view an artifact, select it with the arrow keys and press Enter. The CLI prints the artifact metadata and exits. With <code>--output-type json</code>, the CLI prints the metadata as JSON.</p>
+</li>
+<li>
+<p>To delete the selected artifact, press <code>d</code>, and then press <code>y</code> to confirm. Press <code>n</code>, Enter, or Esc to cancel. After a successful deletion, the CLI reloads the current page and the table stays open. When a deletion fails, the error appears in the footer and the command exits with code <code>1</code> after you leave the table.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>After you press Enter on a selected artifact, the CLI prints a <code>Field</code> and <code>Value</code> table that includes the <code>Group ID</code>, <code>Artifact ID</code>, <code>Name</code>, <code>Artifact Type</code>, <code>Description</code>, <code>Created On</code>, <code>Owner</code>, <code>Modified On</code>, <code>Modified By</code>, and <code>Labels</code> fields.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
