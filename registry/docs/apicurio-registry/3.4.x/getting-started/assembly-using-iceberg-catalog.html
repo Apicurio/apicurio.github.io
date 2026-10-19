@@ -1244,6 +1244,180 @@ A namespace must be empty (contain no tables) before you can drop it.
 </div>
 </div>
 <div class="sect1">
+<h2 id="monitoring-iceberg-catalog-metrics_registry"><a class="anchor" href="#monitoring-iceberg-catalog-metrics_registry"></a>Collecting Iceberg catalog metrics</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can collect Iceberg catalog metrics to monitor namespace, table, and view operations, commit duration, conflicts, and errors.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The Apicurio Registry Iceberg REST Catalog is enabled.</p>
+</li>
+<li>
+<p>You can access the server&#8217;s management interface, which uses port <code>9000</code> by default.</p>
+</li>
+<li>
+<p>You have permission to create and delete an Iceberg namespace for verification.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Configure <code>apicurio.metrics.iceberg.enabled=true</code> in the server configuration if the setting is currently disabled.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.metrics.iceberg.enabled=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The default value is <code>true</code>.
+The equivalent environment variable is <code>APICURIO_METRICS_ICEBERG_ENABLED=true</code>.
+Restart the deployment if you change the setting.</p>
+</div>
+</li>
+<li>
+<p>Configure your Prometheus-compatible monitoring system to collect the <code>/metrics</code> endpoint on the management interface.</p>
+<div class="paragraph">
+<p>For a server running locally with the default management port, the endpoint is <code><a href="http://localhost:9000/metrics" class="bare">http://localhost:9000/metrics</a></code>.
+Metrics for an operation appear after the server records that operation.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<div class="title">Verification</div>
+<ol class="arabic">
+<li>
+<p>Create a namespace with a unique name to generate a namespace operation metric:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST "http://localhost:8080/apis/iceberg/v1/default/namespaces" \
+  -H "Content-Type: application/json" \
+  -d '{"namespace":["metrics_check"],"properties":{}}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace the URL, catalog prefix, and namespace with values for your deployment, and supply authentication if required.</p>
+</div>
+</li>
+<li>
+<p>Retrieve the management metrics:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl --fail "http://localhost:9000/metrics"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Check that <code>iceberg_namespace_operations_total</code> includes a sample with <code>operation="created"</code> and <code>result="success"</code>.</p>
+</div>
+</li>
+<li>
+<p>Remove the empty verification namespace when you no longer need it:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X DELETE "http://localhost:8080/apis/iceberg/v1/default/namespaces/metrics_check"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Namespace deletion requires administrator authorization when authentication is enabled.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#iceberg-catalog-metrics-reference_registry">Iceberg catalog metrics reference</a></p>
+</li>
+<li>
+<p><a href="assembly-config-reference.html">Apicurio Registry configuration reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="iceberg-catalog-metrics-reference_registry"><a class="anchor" href="#iceberg-catalog-metrics-reference_registry"></a>Iceberg catalog metrics reference</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The Iceberg catalog publishes the following Micrometer metrics in Prometheus format on the management <code>/metrics</code> endpoint.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Iceberg catalog metrics</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Prometheus metric</th>
+<th class="tableblock halign-left valign-top">Labels</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>iceberg_namespace_operations_total</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>operation</code>, <code>result</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Successful namespace creation, deletion, and property updates.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>iceberg_table_operations_total</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>operation</code>, <code>result</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Successful table creation, deletion, renaming, and commits.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>iceberg_view_operations_total</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>operation</code>, <code>result</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Successful view creation, deletion, renaming, and replacement.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>iceberg_commit_conflicts_total</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>entity_type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Commit conflicts for tables or views detected by optimistic concurrency checks.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>iceberg_commit_duration_seconds_count</code>, <code>iceberg_commit_duration_seconds_sum</code>, <code>iceberg_commit_duration_seconds_max</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>entity_type</code>, <code>result</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Successful commit timer samples, total duration, and maximum duration in seconds.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>iceberg_errors_total</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>error_type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Errors handled by the Iceberg API error mapper, grouped by error type.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>operation</code> label identifies the completed operation, such as <code>created</code>, <code>deleted</code>, or <code>committed</code>.
+The <code>entity_type</code> label identifies <code>table</code> or <code>view</code>.
+Operation counters and commit timers use <code>result="success"</code>.
+Use the error and conflict counters to monitor failures.</p>
+</div>
+<div class="paragraph">
+<p>Setting <code>apicurio.metrics.iceberg.enabled=false</code> disables collection of these Micrometer metrics.
+OpenTelemetry export uses the separate OpenTelemetry configuration.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-configuring-the-registry.html#configuring-registry-observability_registry" class="page">OpenTelemetry configuration</a></p>
+</li>
+<li>
+<p><a href="assembly-config-reference.html">Apicurio Registry configuration reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="registry-iceberg-catalog-query-engines_registry"><a class="anchor" href="#registry-iceberg-catalog-query-engines_registry"></a>Query engine configuration for Apicurio Registry</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -1370,7 +1544,7 @@ SELECT * FROM apicurio_db.users;</code></pre>
 <p>Apicurio Registry supports a set of Iceberg REST Catalog API endpoints for managing namespaces, tables, and views.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 8. Iceberg REST Catalog API endpoints</caption>
+<caption class="title">Table 9. Iceberg REST Catalog API endpoints</caption>
 <colgroup>
 <col style="width: 18.1818%;">
 <col style="width: 36.3636%;">

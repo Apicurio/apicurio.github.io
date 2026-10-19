@@ -793,13 +793,142 @@ an MCP registry. Use this artifact type to:</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="registry-automatic-group-creation_registry"><a class="anchor" href="#registry-automatic-group-creation_registry"></a>Automatic group creation</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can require clients to create a group before registering its first artifact by disabling automatic group creation.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Default behavior</dt>
+<dd>
+<p>With SQL or KafkaSQL storage, <code>apicurio.storage.enable-automatic-group-creation</code> defaults to <code>true</code>.
+Registering an artifact in a named group that does not exist creates the group automatically.
+The new group uses the artifact owner&#8217;s identity as its owner.</p>
+</dd>
+<dt class="hdlist1">Explicit group creation</dt>
+<dd>
+<p>With <code>apicurio.storage.enable-automatic-group-creation=false</code>, registering an artifact in a missing named group fails with a group-not-found error.
+Clients must first create the group, for example, with <code>POST /apis/registry/v3/groups</code>.
+Existing groups and the built-in <code>default</code> group remain available.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">Example: Requiring explicit group creation</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.storage.enable-automatic-group-creation=false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The equivalent environment variable is <code>APICURIO_STORAGE_ENABLE_AUTOMATIC_GROUP_CREATION=false</code>.
+The setting takes effect when you restart the server.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-config-reference.html">Apicurio Registry configuration reference</a></p>
+</li>
+<li>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-default-reference-handling_registry"><a class="anchor" href="#registry-default-reference-handling_registry"></a>Default reference handling for artifact content</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can set a default representation for retrieved artifact references when clients omit the reference-handling parameter.</p>
+</div>
+<div class="paragraph">
+<p>The optional <code>apicurio.rest.artifact.references.default-handling</code> property accepts the following values for supported v3 content endpoints:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Default reference-handling values</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Returned content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PRESERVE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keeps references in the stored content unchanged.
+This is the v3 API default when the property is unset.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DEREFERENCE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Resolves registered references and incorporates the referenced content, according to the artifact type&#8217;s dereferencing support.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REWRITE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rewrites registered references as URLs to the referenced content in Apicurio Registry, according to the artifact type&#8217;s reference support.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">Example: Dereferencing content by default</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.rest.artifact.references.default-handling=DEREFERENCE</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The equivalent environment variable is <code>APICURIO_REST_ARTIFACT_REFERENCES_DEFAULT_HANDLING=DEREFERENCE</code>.
+The setting takes effect when you restart the server.
+It changes the response representation without modifying stored artifact content.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Per-request override</dt>
+<dd>
+<p>For v3 content retrieval by global ID or by group, artifact, and version, an explicit <code>references</code> query parameter overrides the configured default.
+For example, this request preserves references even when the server default is <code>DEREFERENCE</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "https://registry.example.com/apis/registry/v3/groups/my-group/artifacts/my-schema/versions/1.0.0/content?references=PRESERVE"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace the URL and artifact coordinates with values from your deployment, and supply authentication if required.</p>
+</div>
+</dd>
+<dt class="hdlist1">Compatibility APIs</dt>
+<dd>
+<p>When no explicit parameter is supplied, the v2 API treats a configured <code>DEREFERENCE</code> value as <code>dereference=true</code>.
+The Confluent-compatible API applies its resolved format to supported Avro and Protobuf responses when this default is <code>DEREFERENCE</code>.
+Without the property, each API retains its existing default behavior.</p>
+</dd>
+</dl>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-config-reference.html">Apicurio Registry configuration reference</a></p>
+</li>
+<li>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="registry-artifact-metadata_registry"><a class="anchor" href="#registry-artifact-metadata_registry"></a>Apicurio Registry artifact metadata</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>When an artifact is added to Apicurio Registry, a set of metadata properties is created and stored. This metadata consists of system-generated or user-generated properties that are read-only, and editable properties that you can update after the artifact is created.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 6. Apicurio Registry system-generated metadata</caption>
+<caption class="title">Table 7. Apicurio Registry system-generated metadata</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -836,7 +965,7 @@ an MCP registry. Use this artifact type to:</p>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 7. Apicurio Registry user-provided or system-generated metadata</caption>
+<caption class="title">Table 8. Apicurio Registry user-provided or system-generated metadata</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -868,7 +997,7 @@ an MCP registry. Use this artifact type to:</p>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 8. Apicurio Registry editable metadata</caption>
+<caption class="title">Table 9. Apicurio Registry editable metadata</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -934,7 +1063,7 @@ an MCP registry. Use this artifact type to:</p>
 <p>When an artifact version is added to a Apicurio Registry artifact, a set of metadata properties is created and stored along with the artifact version content. This metadata consists of system-generated or user-generated properties that are read-only, and editable properties that you can update after the artifact version is created.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 9. Apicurio Registry system-generated metadata</caption>
+<caption class="title">Table 10. Apicurio Registry system-generated metadata</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -981,7 +1110,7 @@ an MCP registry. Use this artifact type to:</p>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 10. Apicurio Registry user-provided or system-generated metadata</caption>
+<caption class="title">Table 11. Apicurio Registry user-provided or system-generated metadata</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -1013,7 +1142,7 @@ an MCP registry. Use this artifact type to:</p>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 11. Apicurio Registry editable metadata</caption>
+<caption class="title">Table 12. Apicurio Registry editable metadata</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">

@@ -742,6 +742,174 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 </div>
 </div>
 <div class="sect1">
+<h2 id="draft-version-settings_registry"><a class="anchor" href="#draft-version-settings_registry"></a>Draft version settings</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can prepare schema and API changes as draft versions before publishing them. The following server settings control draft editing and draft content access. Both settings default to <code>false</code>.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>apicurio.rest.mutability.artifact-version-content.enabled</code></dt>
+<dd>
+<p>Set to <code>true</code> to update the content of versions in the <code>DRAFT</code> state and use the Studio editor in the web console. This setting does not make published versions editable. The equivalent environment variable is <code>APICURIO_REST_MUTABILITY_ARTIFACT_VERSION_CONTENT_ENABLED</code>.</p>
+</dd>
+<dt class="hdlist1"><code>apicurio.rest.draft.production-mode.enabled</code></dt>
+<dd>
+<p>Set to <code>true</code> to use production-like behavior for drafts: Apicurio Registry uses content hashes for newly registered drafts, permits content retrieval by global ID and content ID, and applies content rules when you register a draft. This setting does not publish the draft or enable content editing. The equivalent environment variable is <code>APICURIO_REST_DRAFT_PRODUCTION_MODE_ENABLED</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>An administrator can change these dynamic settings on the <strong>Settings</strong> tab as <strong>Update artifact version content</strong> and <strong>Draft production mode</strong>. Alternatively, set the environment variables in the server deployment configuration and restart the server. For an Operator deployment, set <code>spec.app.features.versionMutabilityEnabled: true</code> to enable draft content editing.</p>
+</div>
+<div class="paragraph">
+<p>By default, draft registration skips content rules and content retrieval by global ID or content ID is unavailable. You can still retrieve a draft by its group ID, artifact ID, and version. When you finalize a draft, Apicurio Registry applies the configured content rules before changing the state to <code>ENABLED</code>.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#configuring-settings-using-console_registry">Configuring Apicurio Registry settings using the web console</a></p>
+</li>
+<li>
+<p><a href="assembly-deploying-registry-operator.html#enabling-version-mutability_registry" class="page">Artifact version mutability configuration</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-editing-drafts-using-console_registry"><a class="anchor" href="#creating-editing-drafts-using-console_registry"></a>Creating and editing draft versions using the web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can create a draft, edit its content in Studio, and save changes without publishing a new version after each edit.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have access to the web console of a running Apicurio Registry instance, and the web console is not in read-only mode.</p>
+</li>
+<li>
+<p>An administrator has enabled draft content mutability on the server.</p>
+</li>
+<li>
+<p>If authentication is enabled, you have the developer or administrator role. If artifact owner-only authorization is enabled, you are the owner of the artifact or an administrator.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Click the <strong>Drafts</strong> tab, and then click <strong>Create draft</strong>.</p>
+</li>
+<li>
+<p>In <strong>Draft Coordinates</strong>, enter the group ID, draft ID, and version number, select the artifact type, and then click <strong>Next</strong>. Leave the group ID empty to use the <code>default</code> group.</p>
+<div class="paragraph">
+<p>Use a version number that does not already exist for the artifact. You can leave the draft ID and version number empty to generate them automatically.</p>
+</div>
+</li>
+<li>
+<p>In <strong>Draft Content</strong>, choose a template, upload or enter content, or import content from a URL, and then click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>In <strong>Draft References (optional)</strong>, add any references that the content requires, and then click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>In <strong>Draft Metadata</strong>, enter an optional name and description, and then click <strong>Create</strong>.</p>
+<div class="paragraph">
+<p>The web console opens the draft in the editor. To edit an existing draft, select <strong>Edit draft</strong> from its Action menu (three vertical dots) on the <strong>Drafts</strong> tab.</p>
+</div>
+</li>
+<li>
+<p>Edit the content, and then click <strong>Save</strong>.</p>
+<div class="paragraph">
+<p>Studio provides dedicated editors for OpenAPI, AsyncAPI, and Protobuf, and a text editor for other types. Saving updates the same draft version. It does not publish the draft.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Return to the <strong>Drafts</strong> tab, select <strong>Edit draft</strong> for the same version, and verify that the editor displays your saved content.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#draft-version-settings_registry">Draft version settings</a></p>
+</li>
+<li>
+<p><a href="#publishing-drafts-using-console_registry">Publishing a draft version using the web console</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="publishing-drafts-using-console_registry"><a class="anchor" href="#publishing-drafts-using-console_registry"></a>Publishing a draft version using the web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can validate a saved draft against the configured content rules, and then finalize it to publish the version.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have saved the draft content that you want to publish.</p>
+</li>
+<li>
+<p>You have access to the <strong>Drafts</strong> tab and permission to update the artifact.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>On the <strong>Drafts</strong> tab, select <strong>Finalize draft</strong> from the draft&#8217;s Action menu (three vertical dots).</p>
+</li>
+<li>
+<p>Optional: Turn on <strong>Dry run only</strong>, and then click <strong>Finalize (dry run)</strong> to check the content rules without publishing the version.</p>
+<div class="paragraph">
+<p>If the content violates a rule, correct the content in the editor and save it before trying again. A successful dry run leaves the version in the <code>DRAFT</code> state.</p>
+</div>
+</li>
+<li>
+<p>Select <strong>Finalize draft</strong> again if you performed a dry run. Ensure that <strong>Dry run only</strong> is off, and then click <strong>Finalize</strong>.</p>
+<div class="paragraph">
+<p>Apicurio Registry applies the content rules and changes the version to <code>ENABLED</code>. If a rule fails, the version remains a draft. After publication, you cannot edit the version&#8217;s content or return it to <code>DRAFT</code>. To prepare further changes, select <strong>Create draft from&#8230;&#8203;</strong> on the published version page and create a new draft version.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Open the published version on the <strong>Explore</strong> tab and verify that <strong>Status</strong> displays <strong>Enabled</strong>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#artifact-version-states-using-console_registry">Artifact version states in the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="#configuring-rules-using-console_registry">Configuring content rules using the Apicurio Registry web console</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="artifact-version-states-using-console_registry"><a class="anchor" href="#artifact-version-states-using-console_registry"></a>Artifact version states in the Apicurio Registry web console</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">

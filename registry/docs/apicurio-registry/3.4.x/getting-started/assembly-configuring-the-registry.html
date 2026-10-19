@@ -403,7 +403,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can set important configuration options for your Apicurio Registry deployment, including the Apicurio Registry web console, logging, health checks, and observability.</p>
+<p>You can configure your Apicurio Registry deployment, including file-based secrets, HTTP caching, the web console, logging, health checks, and observability.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -416,6 +416,262 @@ For a list of all available configuration options, see <a href="assembly-config-
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-file-based-secrets_registry"><a class="anchor" href="#configuring-file-based-secrets_registry"></a>Loading configuration values from files</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can load a Apicurio Registry configuration value from a file, such as a mounted secret, to keep the value out of the deployment&#8217;s environment variables.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You can update and restart the Apicurio Registry deployment.</p>
+</li>
+<li>
+<p>The file contains the required configuration value and is readable by the Apicurio Registry process.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Mount the file in the Apicurio Registry container, for example, at <code>/run/secrets/db_password</code>.
+Use file permissions that restrict access to the processes that need the value.</p>
+</li>
+<li>
+<p>Set the environment variable for the configuration property with an additional <code>_FILE</code> suffix:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">APICURIO_DATASOURCE_PASSWORD_FILE=/run/secrets/db_password</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, configure the property with a <code>.file</code> suffix in the server configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.datasource.password.file=/run/secrets/db_password</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The file value takes precedence over a directly configured value for <code>apicurio.datasource.password</code>.
+Apicurio Registry removes leading and trailing whitespace from the file contents.
+This mechanism applies to configuration properties resolved by the server, including properties other than passwords.</p>
+</div>
+</li>
+<li>
+<p>Restart the deployment to load the value.</p>
+<div class="paragraph">
+<p>Apicurio Registry caches the value after reading the file.
+Restart the deployment after changing the file or its configured path.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Check the server log for a message that confirms the file was loaded for <code>apicurio.datasource.password</code>.
+The message identifies the property without displaying the secret value.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Troubleshooting</div>
+<ul>
+<li>
+<p>If the server reports that the file is missing or unreadable, check the mounted path and file permissions.
+A configured file that cannot be read causes configuration resolution to fail; the server does not fall back to the directly configured value.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-config-reference.html">Apicurio Registry configuration reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-registry-http-caching_registry"><a class="anchor" href="#configuring-registry-http-caching_registry"></a>Enabling HTTP caching for artifact content</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can enable HTTP cache headers for supported v3 content endpoints so that a reverse proxy can serve repeated requests from its cache.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You can update and restart the Apicurio Registry deployment.</p>
+</li>
+<li>
+<p>A reverse proxy cache is available in front of Apicurio Registry.</p>
+</li>
+<li>
+<p>An artifact version is available for testing content requests.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Enable HTTP caching in the server configuration:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.http-caching.enabled=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The equivalent environment variable is <code>APICURIO_HTTP_CACHING_ENABLED=true</code>.</p>
+</div>
+</li>
+<li>
+<p>Set expiration times that match how long your clients can tolerate stale content.
+For example, the following configuration caches highly cacheable content for one hour and uses shorter periods for content that can change:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.http-caching.high-cacheability.max-age-seconds=3600
+apicurio.http-caching.moderate-cacheability.max-age-seconds=30
+apicurio.http-caching.low-cacheability.max-age-seconds=10</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Configure the reverse proxy to use <code>Surrogate-Control</code>, <code>ETag</code>, and <code>Vary</code> response headers.</p>
+<div class="paragraph">
+<p>The default <code>Vary</code> headers are <code>Accept</code>, <code>Accept-Encoding</code>, and <code>Authorization</code>.
+Configure the proxy to keep responses for different credentials separate and to enforce your access policy when serving cached responses.
+Apicurio Registry does not invalidate proxy entries when content access or version state changes.</p>
+</div>
+</li>
+<li>
+<p>Restart the Apicurio Registry deployment to apply the configuration.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Request an existing artifact version through the proxy and inspect its response headers:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl --include \
+  "https://registry.example.com/apis/registry/v3/groups/my-group/artifacts/my-schema/versions/1.0.0/content"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace the URL and artifact coordinates with values from your deployment, and supply authentication if required.
+For a successful cacheable response, check for <code>ETag</code>, <code>Surrogate-Control</code>, and <code>Vary</code> headers.
+With the default diagnostic headers enabled, <code>X-Cache-Cacheability</code> identifies the selected cacheability level.
+Use the proxy&#8217;s cache-hit statistics or logs to verify that repeated requests use its cache.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#registry-http-cache-behavior_registry">HTTP cache behavior</a></p>
+</li>
+<li>
+<p><a href="assembly-config-reference.html">Apicurio Registry configuration reference</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/http-caching">HTTP caching example with Varnish</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-http-cache-behavior_registry"><a class="anchor" href="#registry-http-cache-behavior_registry"></a>HTTP cache behavior</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry assigns a cacheability level to supported v3 content responses based on the request, version state, and reference handling.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. HTTP cacheability levels</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Level</th>
+<th class="tableblock halign-left valign-top">Default expiration</th>
+<th class="tableblock halign-left valign-top">Typical behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HIGH</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">864,000 seconds (10 days)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content identified by an immutable identifier or a specific immutable version can use the longest expiration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODERATE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30 seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Requests that use version expressions, such as a branch, or retrieve mutable draft content need a shorter expiration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LOW</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10 seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Responses whose dependencies can change or whose content identity cannot be determined use the shortest expiration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NONE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not applicable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The response does not receive a <code>Surrogate-Control</code> caching policy.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Activation</dt>
+<dd>
+<p>HTTP caching is disabled by default.
+Set <code>apicurio.http-caching.enabled=true</code> and keep at least one cacheability expiration greater than zero to activate it.
+Setting an individual expiration to zero or a negative value suppresses the caching policy for that level.</p>
+</dd>
+<dt class="hdlist1">Scope</dt>
+<dd>
+<p>Cache headers apply to supported v3 content operations, including content retrieved by global ID and by group, artifact, and version.
+The server evaluates the request and can reduce its cacheability because of reference handling or version mutability.</p>
+</dd>
+<dt class="hdlist1">Response headers</dt>
+<dd>
+<p><code>Surrogate-Control</code> specifies the proxy expiration policy.
+<code>ETag</code> identifies the response representation, and <code>Vary</code> identifies request headers that distinguish cached representations.
+These headers do not enable browser caching; the API&#8217;s <code>Cache-Control</code> policy remains <code>no-cache, no-store</code>.</p>
+</dd>
+<dt class="hdlist1">Expiration and invalidation</dt>
+<dd>
+<p>Cached responses can remain available until the proxy refreshes or expires them.
+Automatic invalidation of reverse proxy entries is not available.
+Choose shorter expiration times when content changes or access changes must reach clients sooner.</p>
+</dd>
+</dl>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-config-reference.html">Apicurio Registry configuration reference</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -508,7 +764,7 @@ Before you configure OpenTelemetry, ensure that you have installed Apicurio Regi
 <p>To enable OpenTelemetry observability, configure the following environment variables:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 1. Environment variables for enabling OpenTelemetry</caption>
+<caption class="title">Table 2. Environment variables for enabling OpenTelemetry</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -542,7 +798,7 @@ Before you configure OpenTelemetry, ensure that you have installed Apicurio Regi
 <p>In production environments, configure trace sampling to reduce processing overhead and control the volume of trace data:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 2. Environment variables for trace sampling</caption>
+<caption class="title">Table 3. Environment variables for trace sampling</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -637,7 +893,7 @@ Before you configure OpenTelemetry, ensure that you have installed Apicurio Regi
 <p>OpenTelemetry instrumentation adds a small performance overhead. The following table shows the measured impact when all telemetry signals are enabled with 100% sampling:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 3. Performance impact with OpenTelemetry enabled (100% sampling)</caption>
+<caption class="title">Table 4. Performance impact with OpenTelemetry enabled (100% sampling)</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 22.2222%;">
@@ -791,7 +1047,7 @@ Before you configure OpenTelemetry, ensure that you have installed Apicurio Regi
 <p>The following properties control how Apicurio Registry publishes distribution statistics for its REST request timer metrics. Change the distribution type when your monitoring system computes percentiles poorly from histogram buckets, for example, Datadog.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 4. REST metrics distribution properties</caption>
+<caption class="title">Table 5. REST metrics distribution properties</caption>
 <colgroup>
 <col style="width: 36.3636%;">
 <col style="width: 27.2727%;">
@@ -940,7 +1196,7 @@ The following environment variables are provided for reference only. The default
 </table>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 5. Environment variables for Apicurio Registry liveness probes</caption>
+<caption class="title">Table 6. Environment variables for Apicurio Registry liveness probes</caption>
 <colgroup>
 <col style="width: 29.4117%;">
 <col style="width: 29.4117%;">
@@ -995,7 +1251,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 </table>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 6. Environment variables for Apicurio Registry readiness probes</caption>
+<caption class="title">Table 7. Environment variables for Apicurio Registry readiness probes</caption>
 <colgroup>
 <col style="width: 30.7692%;">
 <col style="width: 38.4615%;">
