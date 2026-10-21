@@ -1,0 +1,15 @@
+{%- comment -%}
+Derives the Apicurio Registry documentation version from the current release, so that
+documentation links track each new release without being edited by hand.
+
+The published documentation is organized by minor version branch (for example 3.3.x),
+while releases are tagged with a full version (for example 3.3.3), so the patch segment
+of the release tag is replaced with "x".
+
+Sets:
+  registry_release      - release data for the current release (for example 3.3.3)
+  registry_docs_version - matching documentation branch (for example 3.3.x)
+{%- endcomment -%}
+{%- assign registry_release = site.data.registry.latestRelease -%}
+{%- assign registry_version_parts = registry_release.tag_name | remove_first: "v" | split: "." -%}
+{%- assign registry_docs_version = registry_version_parts[0] | append: "." | append: registry_version_parts[1] | append: ".x" -%}

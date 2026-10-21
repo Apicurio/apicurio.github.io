@@ -1,5 +1,6 @@
 {% assign nav_segments = page.url | split: "/" %}
 {% assign nav_segment = nav_segments[2] %}
+{%- include registry/_docs-version.html -%}
 <ul class="projnav nav">
     <li class="{% if nav_segment == blank %}active{% endif %}">
         <a href="{{ site.baseurl }}/registry">
@@ -14,7 +15,7 @@
         </a>
     </li>
     <li class="last {% if nav_segment == 'docs' %}active{% endif %}">
-        <a href="{{ site.baseurl }}/registry/docs/apicurio-registry/3.2.x/index.html">
+        <a href="{{ site.baseurl }}/registry/docs/apicurio-registry/{{ registry_docs_version }}/index.html">
             <span>Documentation</span>
             <i class="fa fa-book" aria-hidden="true"></i>
         </a>
@@ -28,13 +29,13 @@
         </a>
     </li>
     <li>
-        <a href="{{ site.baseurl }}/registry/docs/apicurio-registry/3.0.x/assets-attachments/registry-rest-api.htm">
+        <a href="{{ site.baseurl }}/registry/docs/apicurio-registry/{{ registry_docs_version }}/assets-attachments/registry-rest-api.htm">
             <span>API Docs</span>
             <i class="fa fa-book" aria-hidden="true"></i>
         </a>
     </li>
     <li>
-        <a href="{{ site.baseurl }}/registry/maven-plugin/{{ latestRelease.name }}/index.html">
+        <a href="{{ site.baseurl }}/registry/maven-plugin/{{ registry_release.name }}/index.html">
             <span>Maven Plugin Docs</span>
             <i class="fa fa-book" aria-hidden="true"></i>
         </a>
