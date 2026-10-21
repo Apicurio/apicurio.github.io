@@ -1,27 +1,51 @@
+$masthead-collapse-width: 1024px;
+
 .masthead-container {
 
   width: 100%;
   background-color: rgb(35, 31, 32);
-  height: 96px;
   text-align: center;
   display: flex;
   justify-content: center;
 
   .masthead {
 
-    width: 1180px;
-    height: 96px;
+    width: 100%;
+    max-width: 1180px;
+    min-height: 96px;
+    padding: 0 20px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
 
-    @media screen and (max-width: 1024px) {
-    }
-
     .logo {
       width: 294px;
-      flex-shrink: 0;
+      max-width: 65%;
       margin-right: 20px;
+
+      .project-logo {
+        max-width: 100%;
+      }
+    }
+
+    .nav-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      padding: 10px;
+      background: none;
+      border: none;
+
+      .nav-toggle-bar {
+        display: block;
+        height: 2px;
+        background-color: white;
+
+        + .nav-toggle-bar {
+          margin-top: 5px;
+        }
+      }
     }
 
     .main-nav {
@@ -54,6 +78,45 @@
 
         li.nav-divider {
           border-left: 1px solid #ccc;
+        }
+
+      }
+
+    }
+
+    @media screen and (max-width: $masthead-collapse-width) {
+
+      .nav-toggle {
+        display: block;
+      }
+
+      .main-nav {
+        flex: 0 0 100%;
+        order: 1;
+        display: none;
+
+        &.is-open {
+          display: block;
+        }
+
+        .menu {
+          display: block;
+          text-align: left;
+          padding-bottom: 10px;
+
+          li {
+            margin-left: 0;
+            a {
+              display: block;
+              padding: 12px 0;
+            }
+          }
+
+          li.nav-divider {
+            border-left: none;
+            border-top: 1px solid #ccc;
+          }
+
         }
 
       }
