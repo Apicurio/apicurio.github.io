@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Configuring per-resource authorization :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.4.x/getting-started/assembly-configuring-resource-authorization.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.4.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-compatibility-modes.html">Apicurio Registry schema compatibility modes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-gitops-storage.html">Configuring Apicurio Registry with GitOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-secured-kafka.html">Deploying Apicurio Registry with a secured Kafka instance</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-sizing-guide.html">Apicurio Registry capacity planning and sizing guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Versioning and support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-versioning-support-policy.html">Versioning and support policy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-resource-authorization.html">Configuring per-resource authorization</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-custom-artifact-types.html">Configuring custom artifact types</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-events.html">Apicurio Registry change events and the outbox pattern</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using an SDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Usage Telemetry and Lifecycle Governance</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-usage-telemetry.html">Usage Telemetry and API Lifecycle Governance</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-registry-quickstart.html">Agent registry quick start</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A protocol features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP tool definition features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-server-integration.html">MCP server integration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-registry-api.html">MCP Registry API (Developer Preview)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-ai-catalog-ard.html">AI Catalog and ARD discovery</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Best Practices Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-schema-lifecycle-best-practices.html">Schema lifecycle best practices</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.4.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.4.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.3.x/index.html">3.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.2.x/index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Configuration</li>
+    <li><a href="assembly-configuring-resource-authorization.html">Configuring per-resource authorization</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.4.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-configuring-resource-authorization.html">3.4.x</a>
+    <a class="version is-missing" href="../../3.3.x/index.html">3.3.x</a>
+    <a class="version is-missing" href="../../3.2.x/index.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Configuring per-resource authorization</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Per-resource authorization controls access to individual groups and artifacts, for example "Alice can write artifacts in group <code>team-a</code> and read <code>shared</code>, but cannot see `team-b`". Access is defined in a grants file and applies to every Apicurio Registry API, including search and list results.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#resource-authorization-overview_registry">Overview</a></p>
+</li>
+<li>
+<p><a href="#resource-authorization-configuration_registry">Configuration</a></p>
+</li>
+<li>
+<p><a href="#resource-authorization-grants_registry">Grants file format</a></p>
+</li>
+<li>
+<p><a href="#resource-authorization-coverage_registry">References and generated artifacts</a></p>
+</li>
+<li>
+<p><a href="#resource-authorization-use-cases_registry">Common use cases</a></p>
+</li>
+<li>
+<p><a href="#resource-authorization-interactions_registry">Interaction with other authorization features</a></p>
+</li>
+<li>
+<p><a href="#resource-authorization-monitoring_registry">Monitoring and audit logging</a></p>
+</li>
+<li>
+<p><a href="#resource-authorization-troubleshooting_registry">Troubleshooting</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resource-authorization-overview_registry"><a class="anchor" href="#resource-authorization-overview_registry"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apicurio Registry applies two layers of authorization:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Role-based access control (RBAC):</strong> coarse-grained global roles (<code>sr-readonly</code>, <code>sr-developer</code>, <code>sr-admin</code>), typically assigned by an identity provider such as Keycloak.</p>
+</li>
+<li>
+<p><strong>Per-resource authorization:</strong> fine-grained access to individual groups and artifacts, defined in a grants file and evaluated after RBAC.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A request must pass both layers. Grants restrict within what RBAC allows; they never grant more than the user&#8217;s role permits.</p>
+</div>
+<div class="paragraph">
+<p>Grants are evaluated by an implementation of the <a href="https://github.com/kroxylicious/kroxylicious/tree/main/kroxylicious-authorizer-api">Kroxylicious Authorizer API</a>, the authorization contract shared with Kroxylicious and StreamsHub, so the same grants file can describe access across those systems.</p>
+</div>
+<div class="sect2">
+<h3 id="_how_it_works"><a class="anchor" href="#_how_it_works"></a>How it works</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Point access</strong> (reading, writing, or deleting a specific group or artifact): the user&#8217;s identity and roles are matched against the grants for the addressed resource.</p>
+</li>
+<li>
+<p><strong>Search and lists:</strong> the user&#8217;s grants are translated into the storage query, so results contain exactly the resources the user can read, and page sizes and total counts are accurate. A resource never appears in search results unless direct read access to it would also be allowed.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resource-authorization-configuration_registry"><a class="anchor" href="#resource-authorization-configuration_registry"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Per-resource authorization requires authentication (OIDC, HTTP basic, or proxy header authentication) to be enabled.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables per-resource authorization.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.grants.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>(none)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the JSON grants file. Required when per-resource authorization is enabled. Apicurio Registry fails to start if the file is missing or invalid.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.grants.reload-every</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5s</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How often to check the grants file for changes. Must be a duration, for example <code>5s</code> or <code>1m</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.grants.reload-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reloads the grants file when it changes. Set to <code>false</code> to load it only at startup.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.owner-bypass.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lets the recorded owner of an artifact or group access it regardless of grants.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">Example configuration</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
+  apicurio.auth.resource-based-authorization.enabled: "true"
+  apicurio.auth.resource-based-authorization.grants.path: "/opt/apicurio/authz/grants.json"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In Kubernetes, store the grants file in a ConfigMap and mount it as a volume. Mount the ConfigMap as a directory rather than with <code>subPath</code>, because <code>subPath</code> mounts do not receive ConfigMap updates.</p>
+</div>
+<div class="paragraph">
+<p>A complete Docker Compose example with Keycloak, including a script that verifies the expected access, is available in <code>distro/docker-compose/in-memory-with-authz-grants/</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resource-authorization-grants_registry"><a class="anchor" href="#resource-authorization-grants_registry"></a>Grants file format</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The grants file is a JSON object with an optional <code>config</code> section and a required <code>grants</code> array.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "config": {
+    "admin_roles": ["sr-admin"]
+  },
+  "grants": [
+    {
+      "principal": "alice",
+      "operation": "write",
+      "resource_type": "artifact",
+      "resource_pattern_type": "prefix",
+      "resource_pattern": "team-a/"
+    },
+    {
+      "principal_role": "sr-developer",
+      "operation": "read",
+      "resource_type": "artifact",
+      "resource_pattern_type": "prefix",
+      "resource_pattern": "public/"
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>config.admin_roles</code> lists roles whose users have full access to all resources; no grants are evaluated for them. RBAC administrators (the <code>sr-admin</code> role, or the role configured as the RBAC admin role) always bypass grants, so <code>admin_roles</code> is only needed for additional roles. It must be an array of non-empty strings; any other value rejects the file, like an invalid grant.</p>
+</div>
+<div class="sect2">
+<h3 id="_grant_fields"><a class="anchor" href="#_grant_fields"></a>Grant fields</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>principal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One of <code>principal</code> or <code>principal_role</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User name to match, from the authenticated identity. Never matches unauthenticated requests.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>principal_role</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One of <code>principal</code> or <code>principal_role</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Role to match. Any user with this role receives the grant.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>operation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>read</code>, <code>write</code>, or <code>admin</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resource_type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifact</code> or <code>group</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resource_pattern_type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>prefix</code> matches names that start with the pattern. <code>exact</code>, or omitting the field, matches the name exactly.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resource_pattern</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name or prefix to match. <code>*</code> matches every resource of the type, whatever the pattern type.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deny</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> makes the grant deny the matched access. Deny rules take precedence over allow rules. Default: <code>false</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Every grant must be valid: exactly one of <code>principal</code> and <code>principal_role</code>, a known <code>operation</code> and <code>resource_pattern_type</code>, and a boolean <code>deny</code>. A file with an invalid grant is rejected as a whole, because skipping an invalid deny rule would grant access you meant to forbid: Apicurio Registry does not start, or keeps the previous grants on reload.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resource_names"><a class="anchor" href="#_resource_names"></a>Resource names</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Artifacts:</strong> <code>{groupId}/{artifactId}</code>, for example <code>team-a/my-schema</code>. Artifacts in the default group are named <code>default/{artifactId}</code>.</p>
+</li>
+<li>
+<p><strong>Groups:</strong> the group ID, for example <code>team-a</code>. The default group is named <code>default</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In artifact names, the characters <code>%</code> and <code>/</code> in the group ID are written as <code>%25</code> and <code>%2F</code>, so the first <code>/</code> always separates the group from the artifact ID. For example, artifact <code>x</code> in group <code>team-a/sub</code> is named <code>team-a%2Fsub/x</code>, while artifact <code>sub/x</code> in group <code>team-a</code> is named <code>team-a/sub/x</code>. Artifact IDs and group names are not escaped.</p>
+</div>
+<div class="paragraph">
+<p>Patterns are matched against the complete name. For example, the prefix <code>team-a/</code> matches every artifact in group <code>team-a</code> (but not in group <code>team-a/sub</code>), and the prefix <code>team-a/internal-</code> matches only the artifacts in <code>team-a</code> whose ID starts with <code>internal-</code>.</p>
+</div>
+<div class="paragraph">
+<p>Matching is case-sensitive on every storage variant, in direct access and in search results. Some databases, such as MySQL and SQL Server, look up group and artifact IDs case-insensitively, so a request for <code>TEAM-A/My-Schema</code> can address the stored artifact <code>team-a/my-schema</code>. Such a request is authorized against the stored IDs, so changing the case of an ID never gets around a grant or deny rule.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_operations"><a class="anchor" href="#_operations"></a>Operations</h3>
+<div class="paragraph">
+<p><code>admin</code> implies <code>write</code>, and <code>write</code> implies <code>read</code>. The operation required by each API operation matches its RBAC level: reads require <code>read</code>, and changes, including deletes, require <code>write</code>. A few operations require <code>admin</code>, such as dropping Iceberg namespaces, tables, and views.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_group_grants_and_artifact_grants"><a class="anchor" href="#_group_grants_and_artifact_grants"></a>Group grants and artifact grants</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Group grants</strong> control operations on the group itself: reading group metadata, listing artifacts in it, and creating, updating, or deleting the group.</p>
+</li>
+<li>
+<p><strong>Artifact grants</strong> control operations on artifacts and their versions, content, comments, and references.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Some operations need both:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Creating an artifact requires <code>write</code> on the group and on the new artifact&#8217;s name, so a deny on an artifact name also prevents creating it. This applies to every API that creates artifacts, including registering a new subject with the Confluent compatibility API, publishing a new MCP server, and renaming an Iceberg table.</p>
+</li>
+<li>
+<p>Deleting a group, or all artifacts in a group, requires <code>write</code> on the group and on every artifact in it.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Most deployments need both. For example, to give a user full access to <code>team-a</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"principal": "alice", "operation": "write", "resource_type": "group", "resource_pattern_type": "exact", "resource_pattern": "team-a"},
+{"principal": "alice", "operation": "write", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "team-a/"}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deny_rules"><a class="anchor" href="#_deny_rules"></a>Deny rules</h3>
+<div class="paragraph">
+<p>Deny rules use the same fields with <code>"deny": true</code>. If a deny rule matches, access is denied even if an allow rule also matches. Deny rules apply to search results as well as direct access.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"principal": "alice", "operation": "write", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "team-a/"},
+{"principal": "alice", "operation": "read", "resource_type": "artifact", "resource_pattern_type": "exact", "resource_pattern": "team-a/secret-schema", "deny": true}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alice can read and write all artifacts in <code>team-a</code> except <code>team-a/secret-schema</code>.</p>
+</div>
+<div class="paragraph">
+<p>A deny rule denies its operation and every operation that implies it:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Denying <code>read</code> blocks all access, and hides the resource from search results.</p>
+</li>
+<li>
+<p>Denying <code>write</code> blocks changes but keeps read access, which makes the resource read-only for the user.</p>
+</li>
+<li>
+<p>Denying <code>admin</code> blocks only operations that require <code>admin</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_reloading_the_grants_file"><a class="anchor" href="#_reloading_the_grants_file"></a>Reloading the grants file</h3>
+<div class="paragraph">
+<p>Apicurio Registry checks the grants file for changes at the interval set by <code>apicurio.auth.resource-based-authorization.grants.reload-every</code> and applies changes without a restart. If the changed file is not valid JSON, is not an object, or has no <code>grants</code> array, Apicurio Registry logs an error and keeps using the previously loaded grants.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="resource-authorization-coverage_registry"><a class="anchor" href="#resource-authorization-coverage_registry"></a>References and generated artifacts</h3>
+<div class="paragraph">
+<p>Some operations read or write artifacts other than the one addressed by the request. These artifacts are authorized as if the caller accessed them directly:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Resolving references:</strong> dereferencing content (<code>references=DEREFERENCE</code>, or <code>dereference=true</code> in the v2 API), returning canonical content, exporting a Protobuf version as a ZIP file, and the Confluent <code>format=resolved</code> option all include the content of referenced artifacts. They require <code>read</code> on every referenced artifact, including references of references; otherwise the request fails with 403. Without these options, content is returned as stored, with its references unresolved.</p>
+</li>
+<li>
+<p><strong>Registering references:</strong> creating an artifact or version whose content references other artifacts requires <code>read</code> on every referenced artifact, through any API, including draft versions.</p>
+</li>
+<li>
+<p><strong>Listing references:</strong> inbound reference lists, including the Confluent <code>referencedby</code> endpoint, contain only readable artifacts. The outbound reference graph shows that a reference exists but hides the metadata of unreadable targets.</p>
+</li>
+<li>
+<p><strong>Generated artifacts:</strong> some artifact types make Apicurio Registry write additional artifacts in the same group. Embedded schemas of <code>MODEL_SCHEMA</code> and <code>PROMPT_TEMPLATE</code> artifacts are registered as <code>{artifactId}-input-schema</code> and <code>{artifactId}-output-schema</code>, and an OpenAPI artifact with an <code>x-agent-card</code> extension generates <code>{artifactId}-agent-card</code>. Writing the artifact requires <code>write</code> on each artifact it would generate and, if a generated artifact does not exist yet, <code>write</code> on the group, as for any artifact creation. Embedded schemas are also subject to owner-only authorization. These checks, and the reference checks above, run before anything is written, so a request rejected with 403 leaves no generated artifacts or versions behind.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_covered_apis"><a class="anchor" href="#_covered_apis"></a>Covered APIs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Per-resource authorization applies to every API that addresses or lists groups and artifacts:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">API</th>
+<th class="tableblock halign-left valign-top">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Core REST API v3 and v2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Group and artifact operations are checked against the addressed resource. Searches and lists, including group lists, artifact and version searches, and inbound references, return only readable resources. Creating a group requires <code>write</code> on that group.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content and global IDs (<code>/ids/&#8230;&#8203;</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A global ID resolves to its artifact. Content can be shared by several artifacts, so a content ID or hash is readable if at least one artifact that uses it is readable.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Confluent Schema Registry compatibility API</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A subject is an artifact in the group given by the <code>X-Registry-GroupId</code> header (or, with <code>apicurio.ccompat.group-concat.enabled</code>, in the group encoded in the subject name). Schema IDs resolve as content IDs, or as global IDs in legacy ID mode. Subject and schema lists, and <code>referencedby</code> lists, contain only readable subjects. Registering a schema under a new subject also requires <code>write</code> on its group.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Iceberg REST catalog</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A namespace is a group and a table or view is an artifact in it. The catalog prefix in the URL does not affect authorization. Renaming requires <code>write</code> on the source, on the destination, and on the destination namespace.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP Registry API</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A server name <code>namespace/server</code> is the artifact <code>namespace/server</code>. Publishing requires <code>write</code> on it, and publishing a new server also requires <code>write</code> on the <code>namespace</code> group. Server lists contain only readable servers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Discovery endpoints (<code>/.well-known/&#8230;&#8203;</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agent, AI catalog, and MCP tool listings contain only readable artifacts.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resource-authorization-use-cases_registry"><a class="anchor" href="#resource-authorization-use-cases_registry"></a>Common use cases</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_multi_team_isolation"><a class="anchor" href="#_multi_team_isolation"></a>Multi-team isolation</h3>
+<div class="paragraph">
+<p>Each team sees and modifies only its own schemas:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "config": { "admin_roles": ["sr-admin"] },
+  "grants": [
+    {"principal_role": "team-a-developers", "operation": "write", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "team-a/"},
+    {"principal_role": "team-a-developers", "operation": "write", "resource_type": "group", "resource_pattern_type": "exact", "resource_pattern": "team-a"},
+    {"principal_role": "team-b-developers", "operation": "write", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "team-b/"},
+    {"principal_role": "team-b-developers", "operation": "write", "resource_type": "group", "resource_pattern_type": "exact", "resource_pattern": "team-b"}
+  ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_shared_schemas_with_selective_write_access"><a class="anchor" href="#_shared_schemas_with_selective_write_access"></a>Shared schemas with selective write access</h3>
+<div class="paragraph">
+<p>All developers read shared schemas; only the platform team modifies them:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"principal_role": "sr-developer", "operation": "read", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "shared/"},
+{"principal_role": "sr-developer", "operation": "read", "resource_type": "group", "resource_pattern_type": "exact", "resource_pattern": "shared"},
+{"principal_role": "platform-team", "operation": "write", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "shared/"},
+{"principal_role": "platform-team", "operation": "write", "resource_type": "group", "resource_pattern_type": "exact", "resource_pattern": "shared"}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_read_only_service_account"><a class="anchor" href="#_read_only_service_account"></a>Read-only service account</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"principal": "monitoring-service", "operation": "read", "resource_type": "artifact", "resource_pattern": "*"},
+{"principal": "monitoring-service", "operation": "read", "resource_type": "group", "resource_pattern": "*"}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cicd_pipeline_with_scoped_write_access"><a class="anchor" href="#_cicd_pipeline_with_scoped_write_access"></a>CI/CD pipeline with scoped write access</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"principal": "ci-pipeline", "operation": "write", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "production/"},
+{"principal": "ci-pipeline", "operation": "write", "resource_type": "group", "resource_pattern_type": "exact", "resource_pattern": "production"}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_group_access_with_excluded_artifacts"><a class="anchor" href="#_group_access_with_excluded_artifacts"></a>Group access with excluded artifacts</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"principal": "contractor", "operation": "read", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "team-a/"},
+{"principal": "contractor", "operation": "read", "resource_type": "group", "resource_pattern_type": "exact", "resource_pattern": "team-a"},
+{"principal": "contractor", "operation": "read", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "team-a/internal-", "deny": true}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resource-authorization-interactions_registry"><a class="anchor" href="#resource-authorization-interactions_registry"></a>Interaction with other authorization features</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Requests are authorized in this order:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>Authentication
+  → Admin override                     (bypasses everything below)
+  → RBAC                                (role check; skipped for reads when anonymous or
+                                         authenticated read access applies)
+  → Owner-only authorization (OBAC)     (when enabled)
+  → Per-resource authorization          (RBAC admins, and by default resource owners, bypass it)</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_rbac"><a class="anchor" href="#_rbac"></a>RBAC</h3>
+<div class="paragraph">
+<p>RBAC administrators bypass per-resource authorization. A user with the <code>sr-readonly</code> role can never write, whatever their grants. To control write access with grants, give users the <code>sr-developer</code> role and use grants to choose which resources they can change.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resource_owners"><a class="anchor" href="#_resource_owners"></a>Resource owners</h3>
+<div class="paragraph">
+<p>By default, the recorded owner of an artifact or group has access to it whatever the grants, whether or not owner-only authorization (<code>apicurio.auth.owner-only-authorization</code>) is enabled. Set <code>apicurio.auth.resource-based-authorization.owner-bypass.enabled</code> to <code>false</code> to make grants the only per-resource authority. Owners also see their own resources in search results and can read content used by their artifacts. With the Elasticsearch search index, searches that require the index (content and structure searches) include at most 1000 of the caller&#8217;s owned artifacts that are not otherwise covered by grants. A resource without a recorded owner does not grant this exception to anyone.</p>
+</div>
+<div class="paragraph">
+<p>When owner-only authorization is enabled, it applies as well to resources named in a request body, such as Iceberg rename targets and published MCP servers: only the owner can change them, even if other users have matching grants.</p>
+</div>
+<div class="paragraph">
+<p>The creator of an artifact becomes its owner, but creating it requires <code>write</code> on both the group and the artifact name, so the owner bypass cannot be used to get around a deny on that name.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_anonymous_and_authenticated_read_access"><a class="anchor" href="#_anonymous_and_authenticated_read_access"></a>Anonymous and authenticated read access</h3>
+<div class="paragraph">
+<p>These settings skip the RBAC check for reads; per-resource authorization still applies:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>With <code>apicurio.auth.authenticated-read-access.enabled</code>, any authenticated user can read, even without a registry role, but only the resources their grants allow.</p>
+</li>
+<li>
+<p>With <code>apicurio.auth.anonymous-read-access.enabled</code>, unauthenticated callers get the role <code>$anonymous</code>. They can read only what grants allow to that role, for example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"principal_role": "$anonymous", "operation": "read", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "public/"}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Other reads by unauthenticated callers are answered with <code>401</code>.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_registry_wide_reports"><a class="anchor" href="#_registry_wide_reports"></a>Registry-wide reports</h3>
+<div class="paragraph">
+<p>Reports that cover the whole registry and cannot be filtered per resource, such as the GitOps status and validation tasks, are available only to callers who are not restricted by grants (administrators).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_admin_override_and_trusted_proxy_authorization"><a class="anchor" href="#_admin_override_and_trusted_proxy_authorization"></a>Admin override and trusted proxy authorization</h3>
+<div class="paragraph">
+<p>Users identified as administrators by the admin override (<code>apicurio.auth.admin-override.*</code>) bypass per-resource authorization. When <code>apicurio.authn.proxy-header.trust-proxy-authorization</code> is <code>true</code>, requests authenticated by proxy headers bypass all local authorization, including grants.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resource-authorization-monitoring_registry"><a class="anchor" href="#resource-authorization-monitoring_registry"></a>Monitoring and audit logging</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_metrics"><a class="anchor" href="#_metrics"></a>Metrics</h3>
+<div class="paragraph">
+<p>When OpenTelemetry metrics are enabled, Apicurio Registry exports the counter <code>apicurio.authz.decisions</code>, with the attributes:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.result</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow</code> or <code>deny</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.entity_type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifact</code>, <code>group</code>, or <code>content</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.operation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>read</code>, <code>write</code>, or <code>admin</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_audit_log"><a class="anchor" href="#_audit_log"></a>Audit log</h3>
+<div class="paragraph">
+<p>Denied point-access decisions are logged at <code>INFO</code> level to the <code>io.apicurio.registry.audit.authz</code> logger:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>authz.denied user="alice" operation="write" resource_type="artifact" resource="team-b/secret-schema"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To disable these messages, set <code>quarkus.log.category."io.apicurio.registry.audit.authz".level=OFF</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resource-authorization-troubleshooting_registry"><a class="anchor" href="#resource-authorization-troubleshooting_registry"></a>Troubleshooting</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_a_user_is_denied_access_although_a_grant_matches"><a class="anchor" href="#_a_user_is_denied_access_although_a_grant_matches"></a>A user is denied access although a grant matches</h3>
+<div class="paragraph">
+<p>Check, in order:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>RBAC:</strong> does the user&#8217;s role allow the operation? <code>sr-readonly</code> users cannot write.</p>
+</li>
+<li>
+<p><strong>Operation:</strong> does the grant&#8217;s operation cover the request? Changes and deletes require <code>write</code>.</p>
+</li>
+<li>
+<p><strong>Resource type:</strong> operations on a group itself, such as listing its artifacts or creating an artifact in it, need a <code>group</code> grant.</p>
+</li>
+<li>
+<p><strong>Deny rules:</strong> does a deny rule match? Deny rules take precedence.</p>
+</li>
+<li>
+<p><strong>Referenced and generated artifacts:</strong> dereferencing, or registering content with references, requires <code>read</code> on every referenced artifact; writing an artifact that generates other artifacts requires <code>write</code> on them.</p>
+</li>
+<li>
+<p><strong>Resource name:</strong> artifacts are named <code>{groupId}/{artifactId}</code>; the default group is <code>default</code>. For the Confluent compatibility API, check which group the request addresses.</p>
+</li>
+<li>
+<p><strong>Audit log:</strong> the <code>authz.denied</code> message shows the exact resource name and operation that were evaluated.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_a_user_can_see_more_than_expected"><a class="anchor" href="#_a_user_can_see_more_than_expected"></a>A user can see more than expected</h3>
+<div class="paragraph">
+<p>Check whether the user is an RBAC administrator or has a role listed in <code>config.admin_roles</code>, whether the user owns the resources (see <code>owner-bypass.enabled</code>), and, for unauthenticated callers, what the <code>$anonymous</code> role is granted.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_apicurio_registry_does_not_start"><a class="anchor" href="#_apicurio_registry_does_not_start"></a>Apicurio Registry does not start</h3>
+<div class="paragraph">
+<p>Apicurio Registry fails to start when per-resource authorization is enabled and the grants file path is not set, the file does not exist, or the file is not valid grants data. The startup error names the file and the problem.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_grants_file_changes_do_not_take_effect"><a class="anchor" href="#_grants_file_changes_do_not_take_effect"></a>Grants file changes do not take effect</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Check that <code>apicurio.auth.resource-based-authorization.grants.reload-enabled</code> is not <code>false</code>.</p>
+</li>
+<li>
+<p>Check the logs for <code>Grants data reloaded successfully</code> or for a reload error. If the new file is invalid, the previous grants stay in effect.</p>
+</li>
+<li>
+<p>In Kubernetes, check that the ConfigMap is not mounted with <code>subPath</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.4.x/getting-started/assembly-configuring-resource-authorization.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
