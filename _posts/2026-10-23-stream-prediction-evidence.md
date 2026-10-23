@@ -7,34 +7,28 @@ categories: registry engineering
 published: false
 ---
 
-*Draft for editorial review. Verification status and limitations are included below.*
+A prediction endpoint can return HTTP 200 while serving results for events that arrived minutes ago. Adding API replicas will not help if the delay sits upstream in a Spark micro-batch or a growing Kafka backlog. Where should an application team measure before changing capacity?
 
-## Availability is not freshness
+Building on my streaming-classification application presented at OCX, this session isolates Spark Structured Streaming in a reproducible experiment. A fixed four-text classifier processes twelve timestamped events per case: sustainable input, overload with a labeled injected delay, and the same nominal input rate after removing that delay. The lab uses a file source and collected results to isolate processing; Kafka and HTTP serving overhead are outside the measurement.
 
-The existing classification pipeline connects Kafka, Spark inference and a Quarkus results API. An available API can serve predictions about old inputs. Adding replicas to that API does not necessarily improve upstream processing. Apicurio Registry supports schema integration, but a schema cannot establish that a prediction is timely.
+In the local run, baseline input drained without backlog. Removing the injected delay reduced median prediction age from about 8.4 to 5.8 seconds, but eleven events were still pending when input stopped: the one-file-per-trigger cap remained. We inspect event timelines and batch progress to explain why eliminating one delay did not eliminate the next bottleneck. These are single-run fixture observations, not production performance claims.
 
-## Give every event a timeline
 
-Record ingress time, processing start, processing end and query visibility with a stable event identity. The new CSV analyzer calculates queue, processing and visibility intervals and their sum. It rejects empty observations, duplicate IDs, naive timestamps and reversed boundaries. Its unit fixtures prove arithmetic and validation only, not a measured throughput or latency figure.
+## What actually ran
 
-## Control the replay
+Actual Spark 3.5.3 Structured Streaming experiment passed with a fitted CountVectorizer/MultinomialNB fixture and twelve events per case. Baseline had no pending events when input stopped. Injected overload had median age about 8.4 seconds; removing the injected delay reduced it to about 5.8 seconds but retained eleven pending events because the source still admitted one file per trigger.
 
-Use fixed inputs and stamp their current ingress time; historical source timestamps are a different age metric. Keep model, resources and input distribution comparable. Run a sustainable baseline, then overload, then change a single processing setting. Separate warm-up and observation windows. A micro-batch interval can add scheduling delay, but reducing it does not create inference capacity.
+## Reproduce the observation
 
-## What remains to measure
-
-The earlier OCX presentation supports the application and speaker background. It is not a recording of this new controlled experiment. The repository now contains the measurement contract and analyzer, while actual replay/load measurements remain pending. Report observed input/processing rates and backlog alongside per-event age before recommending a capacity change.
-
-## Try the companion material
-
-The [companion repository](https://github.com/carlesarnal/reddit-realtime-classification/tree/talk/evidence-2026-10-23) contains the presentation, speaker guide and evidence ledger.
+[Companion implementation](https://github.com/carlesarnal/reddit-realtime-classification/tree/talk/evidence-2026-10-23).
 
 ```sh
-python3 -m unittest discover -s talk -p "test_*.py" -v
+docker build -t talk-stream-experiment:local experiment
+docker run --rm --cpus 2 --memory 3g -v "$PWD/experiment:/lab" talk-stream-experiment:local
 ```
 
-Timestamp analyzer and unit fixtures prepared. Fixtures are synthetic correctness inputs, not performance results. The fixed-replay Spark load experiment and fresh Kubernetes execution remain pending.
+## What the result establishes
 
-## Before applying this to your system
+Single run, four training texts, file source, driver-side classifier in foreachBatch, local[2], two-CPU/3GB container. Injected delay is a labeled intervention, not measured model inference cost. Result visibility is collection into the callback output, not a Quarkus endpoint. Kafka, Kubernetes and production ML quality are outside this isolation experiment.
 
-Start with one representative operation and state the result you expect to observe. Keep version and environment assumptions with the result. A successful narrow check is useful precisely because its boundary is visible; it is not proof of every deployment, workload or failure mode.
+The machine-readable result and the executable assertions are kept together. A failed candidate is an observation to preserve, not a reason to revise acceptance criteria after seeing the answer. These tests are evidence for the stated mechanism, not a promise of production scale or universal correctness.

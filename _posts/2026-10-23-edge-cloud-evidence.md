@@ -7,34 +7,27 @@ categories: registry engineering
 published: false
 ---
 
-*Draft for editorial review. Verification status and limitations are included below.*
+Your search index is disposable only if you can replace it correctly. While a replacement loads, a customer record changes twice and another is deleted. A successful bulk load says little about whether searches will return the right state after cutover.
 
-## A completed bulk load is not enough
+This session runs PostgreSQL, Debezium, Kafka and Elasticsearch through that sequence. Two snapshot records form the baseline; two updates, a delete and an insert arrive while the replacement loads. We replay the complete ordered history again, assert the same document contents, switch the read alias and verify another source update after cutover. The seven captured events make the recovery evidence inspectable.
 
-During a search-index rebuild, source rows can change or disappear. Copying a snapshot without coordinating later changes can resurrect a deleted document or overwrite a new value with an old one. The recovery design needs a baseline, subsequent events and an explicit point at which the replacement becomes eligible for reads.
+The tested example uses one partition and complete retained history. We explain why that is sufficient for this trace, and what changes when required history has expired or multiple partitions are involved. A new-snapshot recovery path is a separate design discussion, not a demonstrated result. Attendees get an executable rebuild trace and explicit cutover checks rather than a guarantee of instantaneous equality with the database.
 
-## Make the invariant executable
 
-The companion model stores the last revision for each key, including tombstones. Older events cannot replace newer state, duplicate events are harmless, and conflicting content at the same key/revision is rejected. Tests include two updates during catch-up and a late update arriving after a delete. These are algorithmic fixtures, not a claim that a connector automatically provides the required revision contract.
+## What actually ran
 
-## Know whether history is sufficient
+Real PostgreSQL 16.4 -> Debezium 3.0.0.Final -> Kafka 3.9.1 -> Elasticsearch 8.17.0 integration passed. Two baseline records, two updates, a delete, an insert and a post-cutover update were captured. Full replay converged; alias reads showed the expected documents and continued updating after cutover.
 
-If retained Kafka events include the required baseline and changes, replay can reconstruct the view. Otherwise a fresh source snapshot must be coordinated with the stream. Compaction and tombstone retention affect what is recoverable. Per-key or per-partition order is not a global source transaction order; choose the guarantee the view actually requires.
+## Reproduce the observation
 
-## Cut over with evidence
-
-Track progress, check known insert/update/delete fixtures and declare acceptable remaining lag before switching an Elasticsearch read alias. New writes must continue reaching the replacement afterward. The historical CDC repository supplies deployment context, while the new full snapshot/catch-up/alias exercise is still pending. Apicurio handles schema information; it does not establish rebuild completeness.
-
-## Try the companion material
-
-The [companion repository](https://github.com/carlesarnal/debezium-ocp-etc-demo/tree/talk/evidence-2026-10-23) contains the presentation, speaker guide and evidence ledger.
+[Companion implementation](https://github.com/carlesarnal/debezium-ocp-etc-demo/tree/talk/evidence-2026-10-23).
 
 ```sh
-python3 talk/rebuild_model.py
+python3 recovery.py
 ```
 
-Three executable replay-invariant tests prepared. They model per-key revision behavior; real Debezium snapshot coordination, Kafka retention and Elasticsearch alias cutover are not integration-tested in this pass.
+## What the result establishes
 
-## Before applying this to your system
+One topic partition and retained complete history. The runner reads real Kafka events then applies them in order; it is not a continuously deployed sink connector. Expired-history recovery and distributed partition barriers remain separate design problems. No Registry involvement is claimed in this JSON-envelope recovery fixture.
 
-Start with one representative operation and state the result you expect to observe. Keep version and environment assumptions with the result. A successful narrow check is useful precisely because its boundary is visible; it is not proof of every deployment, workload or failure mode.
+The machine-readable result and the executable assertions are kept together. A failed candidate is an observation to preserve, not a reason to revise acceptance criteria after seeing the answer. These tests are evidence for the stated mechanism, not a promise of production scale or universal correctness.

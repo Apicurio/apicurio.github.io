@@ -7,34 +7,30 @@ categories: registry engineering
 published: false
 ---
 
-*Draft for editorial review. Verification status and limitations are included below.*
+You have a summarization service and two plausible interfaces: expose an MCP tool or publish an A2A agent. Both can accept text and return a summary. The useful comparison starts when the caller needs to understand task progress, cancel work, or respond to a failed invocation.
 
-## Compare a requirement, not a label
+This session holds a deterministic summarization capability constant and invokes it over real HTTP through the official Python A2A and MCP SDKs. Both return the same eight-word result. A blank input becomes a failed A2A task and an MCP error result; progress appears as queryable A2A task state or MCP progress notifications. We then cancel a request and inspect what each client can actually observe.
 
-The same summarization work can be exposed as an MCP tool or an A2A agent. Choosing an interface from the words tool and agent alone hides the questions the caller must answer: how to discover inputs, represent progress, cancel work and interpret a failed invocation. Apicurio can store discovery metadata, but that does not make these interfaces interchangeable.
+The versioned observations distinguish A2A's canceled task record from MCP's canceled client request and subsequent usable session. Neither local implementation supplies durable restart recovery or production authentication. A decision table ties those limits to caller requirements rather than labels: an A2A endpoint need not contain a reasoning loop, and an MCP tool need not perform simple work.
 
-## Control the experiment
 
-Begin with one deterministic summarization fixture and the same input on both paths. Pin the protocol and SDK versions and record the actual messages. Introduce a model only after transport behavior is understood, otherwise different generated summaries can obscure an interface-level comparison. The existing connected briefing uses different capabilities and is not evidence of parity.
+## What actually ran
 
-## Use four evidence states
+Official SDK loopback integration passed. Both interfaces returned the same eight-word fixture. Blank input produced a failed A2A task and an MCP error result. A2A exposed working/canceled task states; MCP exposed progress notifications and client-request cancellation with a usable subsequent session.
 
-For each requirement, record specification support, advertised implementation support, observed behavior and unsupported behavior. Untested is not synonymous with unsupported. The repository includes a small validator and a delivery gate that refuses an evidence table with untested rows. It currently fails that delivery gate because the paired implementation is still preparation work.
+## Reproduce the observation
 
-## A design method, not a finished benchmark
-
-This article presents the comparison method and its evidence requirements. It does not claim an implemented cross-protocol benchmark or a universal recommendation. Exposing both interfaces adds contract tests and lifecycle obligations. Choose that extra surface only when distinct callers need it, rather than because both protocols are fashionable.
-
-## Try the companion material
-
-The [companion repository](https://github.com/carlesarnal/a2a-mcp-comparison/tree/main) contains the presentation, speaker guide and evidence ledger.
+[Companion implementation](https://github.com/carlesarnal/a2a-mcp-comparison/tree/main).
 
 ```sh
-python3 compare.py
+uv venv .venv
+uv pip install --python .venv/bin/python -r requirements.txt
+.venv/bin/python integration.py
+.venv/bin/python compare.py --require-observed
 ```
 
-Evidence-table validator passes. Paired A2A/MCP transport implementation is not complete. The --require-observed delivery gate deliberately fails; no interface-parity result is claimed.
+## What the result establishes
 
-## Before applying this to your system
+A2A SDK 0.3.22 / protocol 0.3.0; MCP SDK 1.26.0 / protocol 2025-11-25. Python implementation, not the previously proposed Quarkus comparison. MCP server-side compute cessation is not proven by client cancellation; neither implementation persists tasks across restart. No auth or production inference benchmark.
 
-Start with one representative operation and state the result you expect to observe. Keep version and environment assumptions with the result. A successful narrow check is useful precisely because its boundary is visible; it is not proof of every deployment, workload or failure mode.
+The machine-readable result and the executable assertions are kept together. A failed candidate is an observation to preserve, not a reason to revise acceptance criteria after seeing the answer. These tests are evidence for the stated mechanism, not a promise of production scale or universal correctness.

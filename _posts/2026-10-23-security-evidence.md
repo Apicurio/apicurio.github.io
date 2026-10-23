@@ -7,34 +7,27 @@ categories: registry engineering
 published: false
 ---
 
-*Draft for editorial review. Verification status and limitations are included below.*
+A service can have permission to publish Kafka records without having permission to change their schemas. Another can present a valid token and still be denied a topic. How do you distinguish an identity problem from an authorization decision without broadening permissions until the request works?
 
-## Follow both connections
+We exercise Keycloak, a Kafka broker using Strimzi's OAuth libraries and Apicurio Registry in a reproducible local integration lab. An invalid token returns 401; a read-only identity can fetch a schema but receives 403 when publishing a version, with accepted content unchanged. Kafka accepts an authorized producer and rejects another authenticated identity with TopicAuthorizationException; broker reads verify which record actually arrived.
 
-A Kafka producer using a Registry-aware serializer makes at least two kinds of request: it talks to the broker and resolves schema material from Registry. Those requests have different audiences, permissions and failure modes. One Keycloak realm can simplify identity administration without making every token valid for every resource.
+The configuration walkthrough connects issuer and audience checks to principal mapping, Kafka ACLs and registry authorization. The lab exposed an outdated auth setting that left Registry authentication disabled, showing why negative controls matter. We map these findings to Kubernetes deployment responsibilities while labeling the local plaintext/admin listener as lab-only. The takeaway is a tested diagnostic method, not a production security template.
 
-## Build a denial matrix
 
-Use three cases: an invalid token, a valid identity lacking Kafka WRITE permission, and a valid read-only identity attempting a Registry mutation. Pair each with a successful control so a broken network or unavailable service cannot masquerade as authorization enforcement. For the denied mutation, inspect the artifact afterward to establish that content was unchanged.
+## What actually ran
 
-## Inspect the enforcing component
+Real Keycloak 26.0, Registry 3.3.3 and Strimzi Kafka OAuth integration passed. Invalid token: 401. Read-only schema lookup: success. Read-only mutation: 403, accepted content unchanged, new version absent. Authorized Kafka producer observed in broker; reader got TopicAuthorizationException and its record was absent.
 
-Record issuer and audience expectations, mapped principal, operation and denial details; never publish live tokens. Registry role mapping is not the same thing as a Kafka ACL. Expiry and signing-key refresh add operational concerns, while TLS protects transport rather than replacing authorization decisions.
+## Reproduce the observation
 
-## Current verification boundary
-
-The repository contains historical Kubernetes scaffolding and the new diagnostic matrix. Its service accounts, actual ACL commands and Registry permission mapping still require end-to-end verification. The local cluster was unavailable in this preparation run. This draft therefore explains a testing method and does not advertise a verified zero-trust deployment.
-
-## Try the companion material
-
-The [companion repository](https://github.com/carlesarnal/keycloak-strimzi-apicurio-security/tree/talk/evidence-2026-10-23) contains the presentation, speaker guide and evidence ledger.
+[Companion implementation](https://github.com/carlesarnal/keycloak-strimzi-apicurio-security/tree/talk/evidence-2026-10-23).
 
 ```sh
-Review talk/authorization-matrix.md; cluster tests remain pending
+python3 verify.py
 ```
 
-Authorization matrix prepared. Kubernetes API unavailable; no fresh token/ACL/registry-denial integration run. Existing manifests are unverified scaffolding, not a production security recipe.
+## What the result establishes
 
-## Before applying this to your system
+Compose integration uses Strimzi Kafka image 0.45.0/Kafka 3.9.0 and OAuth libraries, not a Strimzi operator deployment. Plaintext and an internal anonymous admin listener are deliberate lab fixtures. Tokens and real credentials are not recorded. Fixed local-lab credentials are disposable. TLS, rotation and Kubernetes routing are not established by this test.
 
-Start with one representative operation and state the result you expect to observe. Keep version and environment assumptions with the result. A successful narrow check is useful precisely because its boundary is visible; it is not proof of every deployment, workload or failure mode.
+The machine-readable result and the executable assertions are kept together. A failed candidate is an observation to preserve, not a reason to revise acceptance criteria after seeing the answer. These tests are evidence for the stated mechanism, not a promise of production scale or universal correctness.
