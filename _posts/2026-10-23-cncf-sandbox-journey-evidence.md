@@ -1,40 +1,81 @@
 ---
 layout: post
-title: "Preparing a CNCF Sandbox Application: A Maintainer's View from Apicurio Registry"
+title: "Before and After the Sandbox Vote: Preparing an Open-Source Project for CNCF"
 date: 2026-10-23 12:00:00
+updated: 2026-10-25
 author: carles
-categories: registry engineering
-published: false
+categories: registry cncf community
 ---
 
-*Draft for editorial review. Verification status and limitations are included below.*
 
-## A decision to defer is part of the story
+In January 2024, I closed Apicurio Registry's earlier CNCF Sandbox application. We had branding questions to resolve and were exploring our relationship with the xRegistry effort. In March 2026, the renewed application passed its Technical Oversight Committee vote.
 
-In January 2024, I closed Apicurio Registry’s earlier Sandbox application while branding questions were resolved and the project explored its relationship with xRegistry. The public comment is useful because it records a decision, not a retrospective invented to make acceptance look inevitable.
+Between those two moments was work that is easy to leave out of an acceptance announcement: defining the project boundary, explaining its relationship to neighboring work, and assigning responsibility for what happens after the vote. This post uses the public application record to make that work useful to other maintainers.
 
-## Explain scope in terms outsiders can verify
+## An application is a description that other people must evaluate
 
-The renewed application identifies repository scope and describes the consolidation of Studio functionality. It distinguishes a runtime implementation from a neighboring specification and describes alignment work. These are application statements: a reader should not turn intended conformance or ecosystem positioning into independently verified technical guarantees.
+Maintainers already know what their software does. People reviewing a contribution to a foundation do not share all of that context. They need to understand which repositories are involved, how decisions are made and why the project fits the ecosystem.
 
-## A passed vote is not the end of onboarding
+The [earlier application](https://github.com/cncf/sandbox/issues/72) contains a good example. A question about using Apicurio with the Kubernetes API required clarification: deploying Registry through an operator, managing Registry artifacts through Kubernetes, and using Registry to describe another API are different integrations.
 
-The March 2026 vote passed. A later comment explicitly required the contribution agreement before onboarding, and issue #495 lists project and foundation tasks. Keeping those stages distinct helps maintainers assign work realistically. The public record does not establish that I personally completed every task or that a particular code change caused acceptance.
+The lesson is not that every application must implement all of them. It is that an answer like “we integrate with Kubernetes” is too broad to tell a reader which capability actually exists.
 
-## Use the worksheet on your project
+## Defining the boundary came before continuing
 
-For each application question, write the claim, a public reference, what it actually proves, the remaining gap and an owner. Recheck current requirements before applying. The durable takeaway is evidence organization and stewardship, rather than a permanent checklist of foundation rules or a promise that membership creates a contributor community.
+My [January 23, 2024 comment](https://github.com/cncf/sandbox/issues/72#issuecomment-1906355967) recorded the decision to defer over branding questions and engagement with the Discovery API/xRegistry effort. It was a decision to clarify the contribution, not evidence that the software had stopped being useful.
 
-## Try the companion material
+The [renewed application](https://github.com/cncf/sandbox/issues/461) explicitly identifies the Registry repository in scope and describes the consolidation of Studio functionality. It also explains the intended relationship between a registry implementation and the xRegistry specification.
 
-The [companion repository](https://github.com/carlesarnal/cncf-sandbox-journey/tree/main) contains the presentation, speaker guide and evidence ledger.
+That distinction matters in an application just as it does in technical documentation. Implementing a specification, intending to implement it and participating in its community are related but different claims. A reviewer should be able to tell which one the project is making and what evidence supports it.
 
-```sh
-Read worksheet.md alongside the linked public application records
+## The vote and onboarding are separate milestones
+
+The renewed application's vote passed on March 12, 2026. A subsequent message required the contribution agreement before official onboarding could begin. The [onboarding issue](https://github.com/cncf/sandbox/issues/495) then listed work spanning project and foundation responsibilities.
+
+Examples include licensing and trademark arrangements, repository hosting, governance and security documentation, community channels and project services. These are not all engineering tasks, and they are not all tasks a maintainer can complete alone.
+
+It is tempting to compress that sequence into “the project was accepted.” For planning, the distinction is more useful:
+
+```text
+Define the contribution
+        ↓
+Substantiate the application
+        ↓
+Review and vote
+        ↓
+Agreements and onboarding
+        ↓
+Ongoing project stewardship
 ```
 
-Public application #72, renewed application #461 and onboarding #495 inspected. No software execution needed. Historical decisions are evidence; no causal claim about acceptance or contributor growth.
+The public record establishes that these steps occurred. It does not establish that one feature caused acceptance, or that I personally completed every onboarding task. Those would be different claims requiring different evidence.
 
-## Before applying this to your system
+## Turn broad claims into a worksheet
 
-Start with one representative operation and state the result you expect to observe. Keep version and environment assumptions with the result. A successful narrow check is useful precisely because its boundary is visible; it is not proof of every deployment, workload or failure mode.
+The [companion worksheet](https://github.com/carlesarnal/cncf-sandbox-journey/blob/main/worksheet.md) uses a simple structure:
+
+| Field | What to write |
+|---|---|
+| Question | What does the application or reviewer need to know? |
+| Claim | What are we saying about the project? |
+| Public evidence | A document, code path or decision record, with its revision/date |
+| Remaining gap | What is missing or still ambiguous? |
+| Owner | Who will take the next action? |
+
+For example, “we have open governance” should lead to a public decision process, named responsibilities and a path for an outside contributor to participate. “We fit this standard” should identify implemented behavior or explicitly say that alignment is planned.
+
+Evidence should also be maintainable. A link to a changing `main` branch may be sufficient for exploration, but a historical account benefits from a dated reference. Record what the evidence established at the time instead of treating the current state of a repository as a perfect reconstruction of the past.
+
+## Carry ownership beyond acceptance
+
+Foundation participation does not remove the daily work of reviewing changes, maintaining releases or responding to users. An application can reveal gaps that remain relevant long after admission: unclear ownership, contribution instructions that assume internal knowledge, or security documentation nobody has responsibility to update.
+
+Use the same worksheet after the milestone. Which promises require continuing work? Which documents need periodic review? Which services now have a foundation contact as well as a project owner?
+
+There is no universal formula here. Requirements evolve, and another project's situation may differ from Apicurio's. Check the [current CNCF project process](https://github.com/cncf/toc/tree/main/process) before applying. The reusable practice is to connect each claim to something another person can inspect and each gap to someone who can act on it.
+
+## Share the decisions, not only the announcement
+
+The [acceptance announcement](https://www.apicur.io/blog/2026/06/18/apicurio-registry-joins-cncf) records an important milestone for Apicurio Registry. The earlier deferral and onboarding record provide a different kind of value: they show the questions a maintainer team needed to resolve.
+
+If you are preparing your own project, begin there. Define the contribution, distinguish current capability from intent, and make the remaining work visible. That produces a clearer application—and a clearer project for contributors and users, regardless of the outcome of a foundation review.
