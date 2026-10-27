@@ -880,8 +880,9 @@ When you enable roles in Apicurio Registry, you must also create the same roles 
 </div>
 </li>
 <li>
-<p>In Apicurio Registry UI, configure the following environment variables:</p>
+<p>Configure the following environment variables for the Apicurio Registry web console to use Azure AD ID tokens:</p>
 <table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 7. Configuration for the Apicurio Registry web console with Azure AD</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 33.3333%;">
@@ -1018,7 +1019,7 @@ You can specify multiple scopes by using comma separation. The scopes are conver
 <p>Without an OIDC-compliant provider, the following Apicurio Registry features do not work:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 7. Features requiring OIDC compliance</caption>
+<caption class="title">Table 8. Features requiring OIDC compliance</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -1197,7 +1198,7 @@ When generating the client secret, avoid special characters such as <code>+</cod
 <li>
 <p>In your Apicurio Registry deployment, set the following environment variables to configure authentication by using Dex:</p>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 8. Configuration for Apicurio Registry authentication with Dex</caption>
+<caption class="title">Table 9. Configuration for Apicurio Registry authentication with Dex</caption>
 <colgroup>
 <col style="width: 29.4117%;">
 <col style="width: 35.2941%;">
@@ -1294,7 +1295,7 @@ Both <code>QUARKUS_OIDC_CLIENT_ID</code> and <code>APICURIO_UI_AUTH_OIDC_CLIENT_
 <li>
 <p>Configure role-based authorization. Dex passes upstream group membership in the <code>groups</code> claim. Map your upstream groups to Apicurio Registry roles:</p>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 9. Configuration for Apicurio Registry role-based authorization with Dex</caption>
+<caption class="title">Table 10. Configuration for Apicurio Registry role-based authorization with Dex</caption>
 <colgroup>
 <col style="width: 29.4117%;">
 <col style="width: 35.2941%;">
@@ -1346,7 +1347,7 @@ Both <code>QUARKUS_OIDC_CLIENT_ID</code> and <code>APICURIO_UI_AUTH_OIDC_CLIENT_
 <p>The mapping between upstream provider groups and Apicurio Registry roles works as follows:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 10. Group-to-role mapping example</caption>
+<caption class="title">Table 11. Group-to-role mapping example</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
@@ -1677,7 +1678,7 @@ Dex supports multiple connectors simultaneously. You can federate across multipl
 <p>The preceding configuration covers the browser-based UI flow. For CI/CD pipelines, Kafka SerDes, and services that need to interact with the Apicurio Registry API without a browser, additional considerations apply.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 11. M2M access with Dex <code>client_credentials</code></caption>
+<caption class="title">Table 12. M2M access with Dex <code>client_credentials</code></caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 16.6666%;">
@@ -1979,7 +1980,7 @@ All authentication and authorization options in Apicurio Registry are disabled b
 <p>You can set the following environment variables to configure authentication for the Apicurio Registry web console and API with Keycloak:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 12. Configuration for Apicurio Registry authentication with Keycloak</caption>
+<caption class="title">Table 13. Configuration for Apicurio Registry authentication with Keycloak</caption>
 <colgroup>
 <col style="width: 29.4117%;">
 <col style="width: 35.2941%;">
@@ -2048,7 +2049,7 @@ All authentication and authorization options in Apicurio Registry are disabled b
 <p>By default, Apicurio Registry supports authentication by using OpenID Connect. Users or API clients must obtain an access token to make authenticated calls to the Apicurio Registry REST API. However, because some tools do not support OpenID Connect, you can also configure Apicurio Registry to support HTTP basic authentication by setting the following configuration options to <code>true</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. Configuration for Apicurio Registry HTTP basic authentication</caption>
+<caption class="title">Table 14. Configuration for Apicurio Registry HTTP basic authentication</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 40%;">
@@ -2085,7 +2086,7 @@ All authentication and authorization options in Apicurio Registry are disabled b
 <p>When you use Keycloak, set this configuration to your Keycloak JWT expiry time minus one minute. For example, if you have the expiry time set to <code>5</code> mins in Keycloak, set the following configuration option to <code>4</code> mins:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 14. Configuration for HTTP basic client credentials cache expiry</caption>
+<caption class="title">Table 15. Configuration for HTTP basic client credentials cache expiry</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 40%;">
@@ -2124,7 +2125,7 @@ All authentication and authorization options in Apicurio Registry are disabled b
 <p>For each request, Apicurio Registry tries the mechanisms in order, and the first mechanism that produces an identity wins. A mechanism that does not apply to the request, for example because the expected header or bearer token is absent, passes the request to the next mechanism. When no mechanism produces an identity, the request is anonymous. The authentication challenge in <code>401</code> responses comes from the last mechanism in the chain.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 15. Authentication mechanisms</caption>
+<caption class="title">Table 16. Authentication mechanisms</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -2388,7 +2389,7 @@ APICURIO_AUTH_ROLE_SOURCE_KUBERNETES_GROUP_MAPPING_READONLY=viewers</code></pre>
 <p>You can set the following options to <code>true</code> to enable role-based authorization in Apicurio Registry:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 16. Configuration for Apicurio Registry role-based authorization</caption>
+<caption class="title">Table 17. Configuration for Apicurio Registry role-based authorization</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 40%;">
@@ -2444,7 +2445,7 @@ APICURIO_AUTH_ROLE_SOURCE_KUBERNETES_GROUP_MAPPING_READONLY=viewers</code></pre>
 <p>To use roles assigned in Keycloak, set the following environment variables:</p>
 </div>
 <table id="registry-security-rbac-keycloak-settings_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 17. Configuration for Apicurio Registry role-based authorization by using Keycloak</caption>
+<caption class="title">Table 18. Configuration for Apicurio Registry role-based authorization by using Keycloak</caption>
 <colgroup>
 <col style="width: 35.2941%;">
 <col style="width: 35.2941%;">
@@ -2491,7 +2492,7 @@ APICURIO_AUTH_ROLE_SOURCE_KUBERNETES_GROUP_MAPPING_READONLY=viewers</code></pre>
 of the following user roles in Keycloak. However, you can configure different user role names by using the environment variables shown in the preceding table.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 18. Apicurio Registry roles for authentication and authorization</caption>
+<caption class="title">Table 19. Apicurio Registry roles for authentication and authorization</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 16.6666%;">
@@ -2541,7 +2542,7 @@ of the following user roles in Keycloak. However, you can configure different us
 <p>To use roles managed internally by Apicurio Registry, set the following environment variable:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 19. Configuration for Apicurio Registry role-based authorization by using internal role mappings</caption>
+<caption class="title">Table 20. Configuration for Apicurio Registry role-based authorization by using internal role mappings</caption>
 <colgroup>
 <col style="width: 35.2941%;">
 <col style="width: 35.2941%;">
@@ -2582,7 +2583,7 @@ users can grant access to other users.</p>
 <p>Because Apicurio Registry has no default admin users, you can configure an alternative way to identify admins. Configure the admin-override feature by using the following environment variables:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 20. Configuration for Apicurio Registry admin-override</caption>
+<caption class="title">Table 21. Configuration for Apicurio Registry admin-override</caption>
 <colgroup>
 <col style="width: 35.2941%;">
 <col style="width: 35.2941%;">
@@ -2650,7 +2651,7 @@ REST API (or associated UI) to grant roles to additional users (including additi
 <p>You can set the following options to <code>true</code> to enable owner-only authorization for updates to artifacts or artifact groups in Apicurio Registry:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 21. Configuration for owner-only authorization</caption>
+<caption class="title">Table 22. Configuration for owner-only authorization</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 40%;">
@@ -2704,7 +2705,7 @@ REST API (or associated UI) to grant roles to additional users (including additi
 <p>To enable authenticated read access, you must first enable role-based authorization, and then ensure that the following options are set to <code>true</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 22. Configuration for authenticated read access</caption>
+<caption class="title">Table 23. Configuration for authenticated read access</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 40%;">
@@ -2756,7 +2757,7 @@ supports an anonymous read-only access option.</p>
 calls to the REST API, set the following options to <code>true</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 23. Configuration for anonymous read-only access</caption>
+<caption class="title">Table 24. Configuration for anonymous read-only access</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 40%;">
@@ -2919,7 +2920,7 @@ No 'Access-Control-Allow-Origin' header is present on the requested resource.</p
 The default settings from <code>application.properties</code> are:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 24. Default Apicurio Registry CORS configuration properties</caption>
+<caption class="title">Table 25. Default Apicurio Registry CORS configuration properties</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -2964,7 +2965,7 @@ You must add your application&#8217;s origin to the allowed list.</p>
 Environment variables are the recommended approach because they let you configure Apicurio Registry without modifying configuration files.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 25. Apicurio Registry CORS environment variables</caption>
+<caption class="title">Table 26. Apicurio Registry CORS environment variables</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 41.6666%;">
@@ -3299,7 +3300,7 @@ This automatic CORS detection works whether your networking layer uses Kubernete
 <p>Use the following table to match common CORS error messages to their cause and fix.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 26. Common CORS errors and fixes</caption>
+<caption class="title">Table 27. Common CORS errors and fixes</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 30%;">
