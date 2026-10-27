@@ -1240,6 +1240,66 @@ servers:
 </div>
 </div>
 <div class="sect1">
+<h2 id="a2a-artifact-references_registry"><a class="anchor" href="#a2a-artifact-references_registry"></a>References between agents, MCP servers, and tools</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Artifact references record which tools, servers, models, and prompts an agent uses, and which tools an MCP server provides. The references are registry metadata: Agent Card and <code>server.json</code> content is not changed.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Allowed reference targets</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Artifact type</th>
+<th class="tableblock halign-left valign-top">Can reference</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AGENT_CARD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MCP_TOOL</code>, <code>MCP_SERVER</code>, <code>MODEL_SCHEMA</code>, <code>PROMPT_TEMPLATE</code>, <code>AGENT_CARD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tools, servers, models, and prompts the agent uses, and peer agents it delegates to.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MCP_SERVER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MCP_TOOL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tools the server provides.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MCP_TOOL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The allowed target types are checked by the <code>INTEGRITY</code> rule at the <code>REFS_EXIST</code> or <code>FULL</code> level, together with the check that each referenced version exists. A reference to any other artifact type is rejected, and no version is created. Without an <code>INTEGRITY</code> rule, references are not checked, so enable <code>INTEGRITY</code> for groups that contain agent artifacts. Violations of this check report the <code>REFS_EXIST</code> level, also when the rule is configured as <code>FULL</code>. Other artifact types, including custom types, do not restrict the types they reference.</p>
+</div>
+<div class="paragraph">
+<p>Reference names are not interpreted by Apicurio Registry. Use the name of the referenced tool, server, model, or prompt.</p>
+</div>
+<div class="paragraph">
+<p>Versions are immutable, including their references. To change the tools that an MCP server provides, create a new version of the <code>MCP_SERVER</code> artifact. Creating a version with the number of an existing version is rejected.</p>
+</div>
+<div class="paragraph">
+<p>Disabling or deleting a referenced version does not change the versions that reference it. Their references remain, and point to a version that is disabled or no longer exists.</p>
+</div>
+<div class="paragraph">
+<p>To find the agents and servers that use a tool, query the inbound references of the tool version:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/get-weather/versions/1/references?refType=INBOUND"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="a2a-automatic-label-extraction_registry"><a class="anchor" href="#a2a-automatic-label-extraction_registry"></a>Automatic label extraction for Agent Cards</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -1414,7 +1474,7 @@ metadata:
 <p>You can chain context across multiple agents in a pipeline. The <code>a2a-real-world-integration</code> example in the Apicurio Registry repository demonstrates this pattern.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Context chaining pipeline</caption>
+<caption class="title">Table 8. Context chaining pipeline</caption>
 <colgroup>
 <col style="width: 14.2857%;">
 <col style="width: 42.8571%;">
