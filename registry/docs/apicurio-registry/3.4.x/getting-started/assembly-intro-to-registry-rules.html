@@ -520,7 +520,23 @@ If a rule is configured at a higher level (e.g. at the global level), but you wa
 <p>Administrators can configure Apicurio Registry global rules, group-specific rules, and artifact-specific rules. Developers can configure group-specific and artifact-specific rules only.</p>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry applies the rules configured for the specific artifact. If no rules are configured at that level, Apicurio Registry applies the group-specific rules. If no rules are configured at the group level, then Apicurio Registry applies the globally configured rules. If no global rules are configured, then no rules are applied.</p>
+<p>Apicurio Registry evaluates rule precedence separately for each rule type, such as <code>COMPATIBILITY</code> or <code>VALIDITY</code>. For each rule type, an artifact-specific rule overrides a group-specific rule of the same type, and a group-specific rule overrides a global rule of the same type. If a rule type is not configured at any level, and no default global rule is set for that type in the application properties, Apicurio Registry does not enforce that rule type. Configuring one rule type at a lower level does not disable other rule types that are configured at a higher level.</p>
+</div>
+<div class="paragraph">
+<p>For example, consider a group with a <code>COMPATIBILITY</code> rule set to <code>BACKWARD</code>, and an artifact in that group with only a <code>VALIDITY</code> rule set to <code>FULL</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>When you add a new version of the artifact, Apicurio Registry enforces both rules: the <code>VALIDITY</code> rule from the artifact and the <code>COMPATIBILITY</code> rule from the group. The group rule still applies because the artifact rule is of a different type.</p>
+</li>
+<li>
+<p>Apicurio Registry rejects a new version that is not backward compatible, and accepts a new version that passes both rules.</p>
+</li>
+<li>
+<p>To disable compatibility checks for this artifact only, configure a <code>COMPATIBILITY</code> rule set to <code>NONE</code> on the artifact. The artifact-specific rule then overrides the group rule, and Apicurio Registry accepts the previously rejected content.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>You can configure group-specific and artifact-specific rules using the Apicurio Registry web console or REST API.</p>

@@ -406,7 +406,8 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry emits change events whenever artifacts, versions, groups, or rules are created, updated, or deleted. These events enable integration with external systems for auditing, automation, and event-driven workflows.</p>
+<p>Apicurio Registry emits change events for artifact, version, group, rule, and contract operations.
+You can consume these events to audit changes and automate workflows in external systems.</p>
 </div>
 <div class="paragraph">
 <p>This chapter explains the event system architecture, available event types, and how to configure event delivery for your storage variant.</p>
@@ -466,6 +467,10 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Event delivery uses Kafka, with Debezium for SQL storage and direct publishing for KafkaSQL storage.
+Apicurio Registry does not currently provide an HTTP webhook subscription API or a webhook delivery service.</p>
 </div>
 </div>
 </div>
@@ -599,16 +604,51 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>Contract operations produce the following event types:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Contract event types</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Event type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CONTRACT_RULESET_CONFIGURED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A global, artifact, or version contract ruleset is set or deleted.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CONTRACT_METADATA_UPDATED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contract metadata labels are updated.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CONTRACT_STATUS_CHANGED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The contract lifecycle status changes, for example, from <code>DRAFT</code> to <code>STABLE</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Contract events use the same delivery mechanism as the other change events for your storage variant.
+The internal <code>READY</code> startup signal is not a published change event.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="registry-event-payload-structure_registry"><a class="anchor" href="#registry-event-payload-structure_registry"></a>Event payload structure</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>All Apicurio Registry change events share a common JSON payload structure, with additional fields depending on the event type.</p>
+<p>Each Apicurio Registry change event has a JSON payload with an <code>id</code> and an <code>eventType</code>.
+Additional fields identify the affected resource and describe the change.</p>
 </div>
 <div class="paragraph">
-<p>All events share a common base structure:</p>
+<p>Artifact events include the following identifying fields:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -626,10 +666,16 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Version events</strong> include a <code>version</code> field.</p>
+<p><strong>Group events</strong> include <code>groupId</code> and omit <code>artifactId</code>.</p>
 </li>
 <li>
-<p><strong>State change events</strong> include <code>oldState</code> and <code>newState</code> fields.</p>
+<p><strong>Global rule events</strong> omit both <code>groupId</code> and <code>artifactId</code>.</p>
+</li>
+<li>
+<p><strong>Artifact version events</strong> include a <code>version</code> field.</p>
+</li>
+<li>
+<p><strong>Artifact version state change events</strong> include <code>oldState</code> and <code>newState</code> fields.</p>
 </li>
 <li>
 <p><strong>Metadata update events</strong> include <code>name</code>, <code>description</code>, and <code>owner</code> fields where applicable.</p>
@@ -638,6 +684,10 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 <p><strong>Rule events</strong> include <code>ruleType</code> and <code>rule</code> (the rule configuration) fields.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>For artifacts in the default group, the payload omits <code>groupId</code>.
+Optional metadata fields with no value are also omitted.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example: ARTIFACT_VERSION_CREATED payload</div>
@@ -664,6 +714,79 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
   "version": "1.0.0",
   "oldState": "ENABLED",
   "newState": "DEPRECATED"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Contract events have the following payload fields in addition to <code>id</code> and <code>eventType</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Contract event payload fields</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Event type</th>
+<th class="tableblock halign-left valign-top">Fields and behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CONTRACT_RULESET_CONFIGURED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groupId</code>, <code>artifactId</code>, and <code>action</code>, which is <code>SET</code> or <code>DELETE</code>.
+Version rulesets also include <code>version</code>.
+Global rulesets use <code><em>GLOBAL</em></code> for both <code>groupId</code> and <code>artifactId</code> and omit <code>version</code>.
+The payload does not include the ruleset content.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CONTRACT_METADATA_UPDATED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groupId</code> and <code>artifactId</code> identify the affected contract.
+The payload does not include the updated labels.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CONTRACT_STATUS_CHANGED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groupId</code>, <code>artifactId</code>, <code>fromStatus</code>, and <code>toStatus</code>.
+If the contract had no previous status, <code>fromStatus</code> is an empty string.
+The payload does not include the transition effective date.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">Example: Version contract ruleset update</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "id": "550e8400-e29b-41d4-a716-446655440002",
+  "eventType": "CONTRACT_RULESET_CONFIGURED",
+  "groupId": "com.example",
+  "artifactId": "orders",
+  "version": "1.0.0",
+  "action": "SET"
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example: Contract metadata update</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "id": "550e8400-e29b-41d4-a716-446655440003",
+  "eventType": "CONTRACT_METADATA_UPDATED",
+  "groupId": "com.example",
+  "artifactId": "orders"
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example: Contract status change</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "id": "550e8400-e29b-41d4-a716-446655440004",
+  "eventType": "CONTRACT_STATUS_CHANGED",
+  "groupId": "com.example",
+  "artifactId": "orders",
+  "fromStatus": "DRAFT",
+  "toStatus": "STABLE"
 }</code></pre>
 </div>
 </div>
@@ -899,7 +1022,7 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 <p>The following table lists configuration properties related to the Apicurio Registry event system.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Event configuration properties</caption>
+<caption class="title">Table 7. Event configuration properties</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 20%;">
@@ -939,7 +1062,7 @@ Event publishing is supported only with PostgreSQL and MSSQL when using SQL stor
 <p>The following table lists event support by storage variant:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Event support by storage variant</caption>
+<caption class="title">Table 8. Event support by storage variant</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 25%;">
