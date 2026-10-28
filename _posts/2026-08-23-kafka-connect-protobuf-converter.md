@@ -2,7 +2,7 @@
 layout: post
 title: "Protobuf in Kafka Connect: Building a Converter for Apicurio Registry"
 date: 2026-08-24 12:00:00
-author: kartikangiras
+author: kartik
 categories: registry kafka-connect protobuf converter serdes
 ---
 
@@ -33,7 +33,7 @@ encode:  Connect Struct + Schema ──► ProtobufData ──► DynamicMessage
 decode:  bytes ──► ProtobufKafkaDeserializer ──► Message ──► ProtobufData ──► Connect Struct + Schema
 ```
 
-Schema registration and lookup happen in the SerDes layer, which already knew how to talk to the registry. `ProtobufData` is the new part.
+Schema registration and lookup happen in the SerDes layer, which already knows how to talk to the registry. `ProtobufData` is the new part.
 
 The converter class is 57 lines, and only two of them do anything Protobuf-specific: Connect to `Message` on the way out, `Message` back to Connect on the way in.
 
@@ -69,7 +69,7 @@ Connect's type system and proto3's are close enough to look interchangeable and 
 | `map<string, array<T>>` | a map value cannot be `repeated` | not directly expressible |
 | `map<string, map<K,V>>` | not expressible at all | must be rejected |
 
-Each of the first four is solved; the last two are rejected loudly.
+The first five are solved. The last is rejected.
 
 ## Narrow integers
 
@@ -161,14 +161,14 @@ Wrapper names are tracked separately from struct names. Struct messages are dedu
 
 ## What gets rejected
 
-Two shapes are not supported, and the converter says so at descriptor-build time rather than producing something that silently fails to round-trip:
+Two shapes are not supported. Building the descriptor for them succeeds, since `FileDescriptor.buildFrom()` does not validate the Connect schema's shape. The converter rejects them the first time it converts a non-null value for that field, rather than silently mis-encoding:
 
 ```java
 private static final String NESTED_MAP_UNSUPPORTED =
         "Nested map-in-collection is not supported. Wrap the inner map in a struct field.";
 ```
 
-That covers both `map<string, map<K,V>>` and `array<map<K,V>>`. Non-string map keys are rejected separately, with `Only string map keys are supported by the Protobuf converter`.
+That covers both `map<string, map<K,V>>` and `array<map<K,V>>`. Non-string map keys are caught earlier. That check runs while the descriptor is built, so it fails even if the field is never populated, with the message `Only string map keys are supported by the Protobuf converter`.
 
 ## Descriptor caching
 
@@ -189,9 +189,9 @@ The decode direction needs no cache, because the descriptor arrives with the mes
 
 Protobuf CDC pipelines work end to end now. A Debezium source connector emits Protobuf, the schema lands in Apicurio Registry, and a sink connector reads it back. Before this, the practical answer was to use Avro.
 
-It also takes a jar off your workers. The compatibility-API route meant deploying Confluent's `ProtobufConverter` and pointing it at Apicurio's compatibility endpoint; this is Apicurio's own converter talking to Apicurio's own v3 API. Schemas register as native `PROTOBUF` artifacts, so the registry treats them like any other: validity and compatibility rules, versions, branches, and the same UI and REST surface Avro already gets.
+It also takes a jar off your workers. The compatibility-API route meant deploying Confluent's `ProtobufConverter` and pointing it at Apicurio's compatibility endpoint. This one is Apicurio's own converter talking to Apicurio's own v3 API. Schemas register as native `PROTOBUF` artifacts, so the registry treats them like any other: validity and compatibility rules, versions, branches, and the same UI and REST surface Avro already gets.
 
-The round-trip fidelity is what makes it usable for existing CDC topics rather than only greenfield ones. A `Struct` that leaves a source connector comes back field-for-field identical at the sink, including `INT8` and `INT16` widths, nulls in optional fields, hyphenated field names, and nested collections.
+Round-trip fidelity makes it usable for existing CDC topics, not only greenfield ones. A `Struct` that leaves a source connector comes back field-for-field identical at the sink, including `INT8` and `INT16` widths, nulls in optional fields, hyphenated field names, and nested collections.
 
 Configuration is unchanged from Avro. The properties are the standard schema-resolver ones, so switching an existing pipeline is a converter class name swap.
 
@@ -211,7 +211,7 @@ The Registry API comes up on `http://localhost:8080`, Kafka Connect on `http://l
 
 ## 2. Switch the connector to Protobuf
 
-Edit `studio-connector.json` and change the four converter lines. This is the file that matters: a connector's own `key.converter` and `value.converter` override whatever the worker has as its default, so editing only the Compose environment will leave you on Avro.
+Edit `studio-connector.json` and change the two converter class names, `key.converter` and `value.converter`. The registry URL and auto-register settings stay the same. This is the file that matters: a connector's own `key.converter` and `value.converter` override whatever the worker has as its default, so editing only the Compose environment will leave you on Avro.
 
 ```json
 {
