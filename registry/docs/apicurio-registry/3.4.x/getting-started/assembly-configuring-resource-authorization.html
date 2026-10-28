@@ -406,7 +406,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Per-resource authorization controls access to individual groups and artifacts, for example "Alice can write artifacts in group <code>team-a</code> and read <code>shared</code>, but cannot see `team-b`". Access is defined in a grants file and applies to every Apicurio Registry API, including search and list results.</p>
+<p>Per-resource authorization controls access to individual groups and artifacts, for example "Alice can write artifacts in group <code>team-a</code> and read <code>shared</code>, but cannot see `team-b`". Access is defined in an access rules file and applies to every Apicurio Registry API, including search and list results.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -417,7 +417,7 @@
 <p><a href="#resource-authorization-configuration_registry">Configuration</a></p>
 </li>
 <li>
-<p><a href="#resource-authorization-grants_registry">Grants file format</a></p>
+<p><a href="#resource-authorization-grants_registry">Access rules file format</a></p>
 </li>
 <li>
 <p><a href="#resource-authorization-coverage_registry">References and generated artifacts</a></p>
@@ -450,25 +450,25 @@
 <p><strong>Role-based access control (RBAC):</strong> coarse-grained global roles (<code>sr-readonly</code>, <code>sr-developer</code>, <code>sr-admin</code>), typically assigned by an identity provider such as Keycloak.</p>
 </li>
 <li>
-<p><strong>Per-resource authorization:</strong> fine-grained access to individual groups and artifacts, defined in a grants file and evaluated after RBAC.</p>
+<p><strong>Per-resource authorization:</strong> fine-grained access to individual groups and artifacts, defined in an access rules file and evaluated after RBAC.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>A request must pass both layers. Grants restrict within what RBAC allows; they never grant more than the user&#8217;s role permits.</p>
+<p>A request must pass both layers. Access rules restrict within what RBAC allows; they never allow more than the user&#8217;s role permits.</p>
 </div>
 <div class="paragraph">
-<p>Grants are evaluated by an implementation of the <a href="https://github.com/kroxylicious/kroxylicious/tree/main/kroxylicious-authorizer-api">Kroxylicious Authorizer API</a>, the authorization contract shared with Kroxylicious and StreamsHub, so the same grants file can describe access across those systems.</p>
+<p>The access rules file uses the <a href="https://github.com/kroxylicious/design/blob/main/proposals/009-authorizer.md">Kroxylicious ACL rules format</a>, also used by Kroxylicious and StreamsHub. Apicurio Registry reads it with the Kroxylicious rules parser and evaluates it itself, with the semantics described here.</p>
 </div>
 <div class="sect2">
 <h3 id="_how_it_works"><a class="anchor" href="#_how_it_works"></a>How it works</h3>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Point access</strong> (reading, writing, or deleting a specific group or artifact): the user&#8217;s identity and roles are matched against the grants for the addressed resource.</p>
+<p><strong>Point access</strong> (reading, writing, or deleting a specific group or artifact): the user&#8217;s identity and roles are matched against the rules for the addressed resource.</p>
 </li>
 <li>
-<p><strong>Search and lists:</strong> the user&#8217;s grants are translated into the storage query, so results contain exactly the resources the user can read, and page sizes and total counts are accurate. A resource never appears in search results unless direct read access to it would also be allowed.</p>
+<p><strong>Search and lists:</strong> the rules that apply to the user are translated into the storage query, so results contain exactly the resources the user can read, and page sizes and total counts are accurate. A resource never appears in search results unless direct read access to it would also be allowed.</p>
 </li>
 </ul>
 </div>
@@ -501,24 +501,24 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enables per-resource authorization.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.grants.path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.rules.path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>(none)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the JSON grants file. Required when per-resource authorization is enabled. Apicurio Registry fails to start if the file is missing or invalid.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the access rules file. Required when per-resource authorization is enabled. Apicurio Registry fails to start if the file is missing or invalid.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.grants.reload-every</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.rules.reload-every</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5s</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">How often to check the grants file for changes. Must be a duration, for example <code>5s</code> or <code>1m</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How often to check the access rules file for changes. Must be a duration, for example <code>5s</code> or <code>1m</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.grants.reload-enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.rules.reload-enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Reloads the grants file when it changes. Set to <code>false</code> to load it only at startup.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reloads the access rules file when it changes. Set to <code>false</code> to load it only at startup.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.owner-bypass.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Lets the recorded owner of an artifact or group access it regardless of grants.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lets the recorded owner of an artifact or group access it regardless of the access rules.</p></td>
 </tr>
 </tbody>
 </table>
@@ -527,11 +527,11 @@
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
   apicurio.auth.resource-based-authorization.enabled: "true"
-  apicurio.auth.resource-based-authorization.grants.path: "/opt/apicurio/authz/grants.json"</code></pre>
+  apicurio.auth.resource-based-authorization.rules.path: "/opt/apicurio/authz/access.rules"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In Kubernetes, store the grants file in a ConfigMap and mount it as a volume. Mount the ConfigMap as a directory rather than with <code>subPath</code>, because <code>subPath</code> mounts do not receive ConfigMap updates.</p>
+<p>In Kubernetes, store the access rules file in a ConfigMap and mount it as a volume. Mount the ConfigMap as a directory rather than with <code>subPath</code>, because <code>subPath</code> mounts do not receive ConfigMap updates.</p>
 </div>
 <div class="paragraph">
 <p>A complete Docker Compose example with Keycloak, including a script that verifies the expected access, is available in <code>distro/docker-compose/in-memory-with-authz-grants/</code>.</p>
@@ -539,95 +539,89 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="resource-authorization-grants_registry"><a class="anchor" href="#resource-authorization-grants_registry"></a>Grants file format</h2>
+<h2 id="resource-authorization-grants_registry"><a class="anchor" href="#resource-authorization-grants_registry"></a>Access rules file format</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The grants file is a JSON object with an optional <code>config</code> section and a required <code>grants</code> array.</p>
+<p>The access rules file lists who may do what, one rule per line, and ends with <code>otherwise deny;</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "config": {
-    "admin_roles": ["sr-admin"]
-  },
-  "grants": [
-    {
-      "principal": "alice",
-      "operation": "write",
-      "resource_type": "artifact",
-      "resource_pattern_type": "prefix",
-      "resource_pattern": "team-a/"
-    },
-    {
-      "principal_role": "sr-developer",
-      "operation": "read",
-      "resource_type": "artifact",
-      "resource_pattern_type": "prefix",
-      "resource_pattern": "public/"
-    }
-  ]
-}</code></pre>
+<pre class="highlightjs highlight"><code>from io.apicurio.authz import Artifact, Group, Role;
+
+deny User with name = "bob" to * Artifact with name = "team-a/secret-schema";
+allow User with name = "alice" to WRITE Artifact with name like "team-a/*";
+allow User with name = "alice" to WRITE Group with name = "team-a";
+allow Role with name = "sr-developer" to READ Artifact with name like "public/*";
+otherwise deny;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><code>config.admin_roles</code> lists roles whose users have full access to all resources; no grants are evaluated for them. RBAC administrators (the <code>sr-admin</code> role, or the role configured as the RBAC admin role) always bypass grants, so <code>admin_roles</code> is only needed for additional roles. It must be an array of non-empty strings; any other value rejects the file, like an invalid grant.</p>
+<p>The format is the Kroxylicious ACL rules format, described in <a href="https://github.com/kroxylicious/design/blob/main/proposals/009-authorizer.md">Kroxylicious proposal 009</a>. In Apicurio Registry:</p>
 </div>
-<div class="sect2">
-<h3 id="_grant_fields"><a class="anchor" href="#_grant_fields"></a>Grant fields</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>from io.apicurio.authz import Artifact, Group, Role;</code> imports the Apicurio Registry resource types <code>Artifact</code> and <code>Group</code>, and the <code>Role</code> principal. <code>User</code> does not need to be imported.</p>
+</li>
+<li>
+<p><code>User with name &#8230;&#8203;</code> matches the authenticated user name. <code>Role with name &#8230;&#8203;</code> matches a role of the user, for example a role from the identity provider.</p>
+</li>
+<li>
+<p><code>deny</code> rules must come before <code>allow</code> rules, and the file must end with <code>otherwise deny;</code>. Lines starting with <code>//</code> are comments.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Names are selected with:</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 16.6666%;">
-<col style="width: 50.0001%;">
+<col style="width: 25%;">
+<col style="width: 75%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Field</th>
-<th class="tableblock halign-left valign-top">Required</th>
-<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Selector</th>
+<th class="tableblock halign-left valign-top">Matches</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>principal</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">One of <code>principal</code> or <code>principal_role</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User name to match, from the authenticated identity. Never matches unauthenticated requests.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>with name = "x"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">exactly <code>x</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>principal_role</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">One of <code>principal</code> or <code>principal_role</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Role to match. Any user with this role receives the grant.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>with name in {"x", "y"}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">any of the listed names</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>operation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>read</code>, <code>write</code>, or <code>admin</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>with name like "team-a/*"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">names starting with <code>team-a/</code>. <code><strong></code> is only allowed at the end; <code>like "</strong>"</code> matches every name.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resource_type</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifact</code> or <code>group</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>with name *</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">every name</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resource_pattern_type</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>prefix</code> matches names that start with the pattern. <code>exact</code>, or omitting the field, matches the name exactly.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resource_pattern</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name or prefix to match. <code>*</code> matches every resource of the type, whatever the pattern type.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deny</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> makes the grant deny the matched access. Deny rules take precedence over allow rules. Default: <code>false</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>with name matching /regex/</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">names that fully match the regular expression (RE2 syntax). Resources only. A backslash inside the expression is removed, so <code>/a\.b/</code> is the expression <code>a.b</code>.</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Every grant must be valid: exactly one of <code>principal</code> and <code>principal_role</code>, a known <code>operation</code> and <code>resource_pattern_type</code>, and a boolean <code>deny</code>. A file with an invalid grant is rejected as a whole, because skipping an invalid deny rule would grant access you meant to forbid: Apicurio Registry does not start, or keeps the previous grants on reload.</p>
+<p>The file is validated as a whole. A syntax error, an unknown type, principal or operation, an invalid regular expression, or a rule for a resource type that Apicurio Registry does not enforce (such as a Kroxylicious <code>Topic</code>) rejects the file: Apicurio Registry does not start, or keeps the previous rules on reload.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>config.admin_roles</code> setting of earlier development versions has no equivalent. To give a role full access, allow it every operation on every resource: <code>allow Role with name = "ops" to * Artifact with name *;</code> and the same for <code>Group</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_resource_names"><a class="anchor" href="#_resource_names"></a>Resource names</h3>
@@ -645,27 +639,27 @@
 <p>In artifact names, the characters <code>%</code> and <code>/</code> in the group ID are written as <code>%25</code> and <code>%2F</code>, so the first <code>/</code> always separates the group from the artifact ID. For example, artifact <code>x</code> in group <code>team-a/sub</code> is named <code>team-a%2Fsub/x</code>, while artifact <code>sub/x</code> in group <code>team-a</code> is named <code>team-a/sub/x</code>. Artifact IDs and group names are not escaped.</p>
 </div>
 <div class="paragraph">
-<p>Patterns are matched against the complete name. For example, the prefix <code>team-a/</code> matches every artifact in group <code>team-a</code> (but not in group <code>team-a/sub</code>), and the prefix <code>team-a/internal-</code> matches only the artifacts in <code>team-a</code> whose ID starts with <code>internal-</code>.</p>
+<p>Names are matched in full. For example, <code>like "team-a/<strong>"</code> matches every artifact in group <code>team-a</code> (but not in group <code>team-a/sub</code>), and <code>like "team-a/internal-</strong>"</code> matches only the artifacts in <code>team-a</code> whose ID starts with <code>internal-</code>.</p>
 </div>
 <div class="paragraph">
-<p>Matching is case-sensitive on every storage variant, in direct access and in search results. Some databases, such as MySQL and SQL Server, look up group and artifact IDs case-insensitively, so a request for <code>TEAM-A/My-Schema</code> can address the stored artifact <code>team-a/my-schema</code>. Such a request is authorized against the stored IDs, so changing the case of an ID never gets around a grant or deny rule.</p>
+<p>Matching is case-sensitive on every storage variant, in direct access and in search results. Some databases, such as MySQL and SQL Server, look up group and artifact IDs case-insensitively, so a request for <code>TEAM-A/My-Schema</code> can address the stored artifact <code>team-a/my-schema</code>. Such a request is authorized against the stored IDs, so changing the case of an ID never gets around a rule.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_operations"><a class="anchor" href="#_operations"></a>Operations</h3>
 <div class="paragraph">
-<p><code>admin</code> implies <code>write</code>, and <code>write</code> implies <code>read</code>. The operation required by each API operation matches its RBAC level: reads require <code>read</code>, and changes, including deletes, require <code>write</code>. A few operations require <code>admin</code>, such as dropping Iceberg namespaces, tables, and views.</p>
+<p><code>ADMIN</code> implies <code>WRITE</code>, and <code>WRITE</code> implies <code>READ</code>; <code>*</code> means all three. The operation required by each API operation matches its RBAC level: reads require <code>READ</code>, and changes, including deletes, require <code>WRITE</code>. A few operations require <code>ADMIN</code>, such as dropping Iceberg namespaces, tables, and views.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_group_grants_and_artifact_grants"><a class="anchor" href="#_group_grants_and_artifact_grants"></a>Group grants and artifact grants</h3>
+<h3 id="_group_rules_and_artifact_rules"><a class="anchor" href="#_group_rules_and_artifact_rules"></a>Group rules and artifact rules</h3>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Group grants</strong> control operations on the group itself: reading group metadata, listing artifacts in it, and creating, updating, or deleting the group.</p>
+<p><strong>Group rules</strong> control operations on the group itself: reading group metadata, listing artifacts in it, and creating, updating, or deleting the group.</p>
 </li>
 <li>
-<p><strong>Artifact grants</strong> control operations on artifacts and their versions, content, comments, and references.</p>
+<p><strong>Artifact rules</strong> control operations on artifacts and their versions, content, comments, and references.</p>
 </li>
 </ul>
 </div>
@@ -675,10 +669,10 @@
 <div class="ulist">
 <ul>
 <li>
-<p>Creating an artifact requires <code>write</code> on the group and on the new artifact&#8217;s name, so a deny on an artifact name also prevents creating it. This applies to every API that creates artifacts, including registering a new subject with the Confluent compatibility API, publishing a new MCP server, and renaming an Iceberg table.</p>
+<p>Creating an artifact requires <code>WRITE</code> on the group and on the new artifact&#8217;s name, so a deny on an artifact name also prevents creating it. This applies to every API that creates artifacts, including registering a new subject with the Confluent compatibility API, publishing a new MCP server, and renaming an Iceberg table.</p>
 </li>
 <li>
-<p>Deleting a group, or all artifacts in a group, requires <code>write</code> on the group and on every artifact in it.</p>
+<p>Deleting a group, or all artifacts in a group, requires <code>WRITE</code> on the group and on every artifact in it.</p>
 </li>
 </ul>
 </div>
@@ -687,46 +681,46 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"principal": "alice", "operation": "write", "resource_type": "group", "resource_pattern_type": "exact", "resource_pattern": "team-a"},
-{"principal": "alice", "operation": "write", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "team-a/"}</code></pre>
+<pre class="highlightjs highlight"><code>allow User with name = "alice" to * Group with name = "team-a";
+allow User with name = "alice" to * Artifact with name like "team-a/*";</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_deny_rules"><a class="anchor" href="#_deny_rules"></a>Deny rules</h3>
 <div class="paragraph">
-<p>Deny rules use the same fields with <code>"deny": true</code>. If a deny rule matches, access is denied even if an allow rule also matches. Deny rules apply to search results as well as direct access.</p>
+<p>If a deny rule matches, access is denied even if an allow rule also matches. Deny rules apply to search results as well as direct access.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"principal": "alice", "operation": "write", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "team-a/"},
-{"principal": "alice", "operation": "read", "resource_type": "artifact", "resource_pattern_type": "exact", "resource_pattern": "team-a/secret-schema", "deny": true}</code></pre>
+<pre class="highlightjs highlight"><code>deny User with name = "alice" to * Artifact with name = "team-a/secret-schema";
+allow User with name = "alice" to WRITE Artifact with name like "team-a/*";</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Alice can read and write all artifacts in <code>team-a</code> except <code>team-a/secret-schema</code>.</p>
 </div>
 <div class="paragraph">
-<p>A deny rule denies its operation and every operation that implies it:</p>
+<p>A deny rule denies its operations and the operations they imply:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Denying <code>read</code> blocks all access, and hides the resource from search results.</p>
+<p>Denying <code>*</code> (or <code>ADMIN</code>, which implies the other two) blocks all access, and hides the resource from search results. Use it to hide a resource.</p>
 </li>
 <li>
-<p>Denying <code>write</code> blocks changes but keeps read access, which makes the resource read-only for the user.</p>
+<p>Denying <code>WRITE</code> also denies <code>READ</code>, which <code>WRITE</code> implies, but not <code>ADMIN</code>: a rule that allows <code>ADMIN</code> or <code>*</code> still allows <code>ADMIN</code> operations. A resource cannot be made read-only with a deny rule; allow only <code>READ</code> on it instead.</p>
 </li>
 <li>
-<p>Denying <code>admin</code> blocks only operations that require <code>admin</code>.</p>
+<p>Denying <code>READ</code> blocks reads but not writes: <code>WRITE</code> implies <code>READ</code>, but <code>READ</code> does not imply <code>WRITE</code>. Use <code>*</code> to hide a resource.</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_reloading_the_grants_file"><a class="anchor" href="#_reloading_the_grants_file"></a>Reloading the grants file</h3>
+<h3 id="_reloading_the_access_rules_file"><a class="anchor" href="#_reloading_the_access_rules_file"></a>Reloading the access rules file</h3>
 <div class="paragraph">
-<p>Apicurio Registry checks the grants file for changes at the interval set by <code>apicurio.auth.resource-based-authorization.grants.reload-every</code> and applies changes without a restart. If the changed file is not valid JSON, is not an object, or has no <code>grants</code> array, Apicurio Registry logs an error and keeps using the previously loaded grants.</p>
+<p>Apicurio Registry checks the access rules file for changes at the interval set by <code>apicurio.auth.resource-based-authorization.rules.reload-every</code> and applies changes without a restart. If the changed file is invalid, Apicurio Registry logs an error and keeps using the previously loaded rules.</p>
 </div>
 </div>
 <div class="sect2">
@@ -802,6 +796,9 @@
 <div class="sect1">
 <h2 id="resource-authorization-use-cases_registry"><a class="anchor" href="#resource-authorization-use-cases_registry"></a>Common use cases</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Each example is a complete rules file, or the rules to add before <code>otherwise deny;</code>.</p>
+</div>
 <div class="sect2">
 <h3 id="_multi_team_isolation"><a class="anchor" href="#_multi_team_isolation"></a>Multi-team isolation</h3>
 <div class="paragraph">
@@ -809,29 +806,27 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "config": { "admin_roles": ["sr-admin"] },
-  "grants": [
-    {"principal_role": "team-a-developers", "operation": "write", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "team-a/"},
-    {"principal_role": "team-a-developers", "operation": "write", "resource_type": "group", "resource_pattern_type": "exact", "resource_pattern": "team-a"},
-    {"principal_role": "team-b-developers", "operation": "write", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "team-b/"},
-    {"principal_role": "team-b-developers", "operation": "write", "resource_type": "group", "resource_pattern_type": "exact", "resource_pattern": "team-b"}
-  ]
-}</code></pre>
+<pre class="highlightjs highlight"><code>from io.apicurio.authz import Artifact, Group, Role;
+
+allow Role with name = "team-a-developers" to WRITE Artifact with name like "team-a/*";
+allow Role with name = "team-a-developers" to WRITE Group with name = "team-a";
+allow Role with name = "team-b-developers" to WRITE Artifact with name like "team-b/*";
+allow Role with name = "team-b-developers" to WRITE Group with name = "team-b";
+otherwise deny;</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_shared_schemas_with_selective_write_access"><a class="anchor" href="#_shared_schemas_with_selective_write_access"></a>Shared schemas with selective write access</h3>
 <div class="paragraph">
-<p>All developers read shared schemas; only the platform team modifies them:</p>
+<p>All developers can read the <code>shared</code> group; only the platform team can change it:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"principal_role": "sr-developer", "operation": "read", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "shared/"},
-{"principal_role": "sr-developer", "operation": "read", "resource_type": "group", "resource_pattern_type": "exact", "resource_pattern": "shared"},
-{"principal_role": "platform-team", "operation": "write", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "shared/"},
-{"principal_role": "platform-team", "operation": "write", "resource_type": "group", "resource_pattern_type": "exact", "resource_pattern": "shared"}</code></pre>
+<pre class="highlightjs highlight"><code>allow Role with name = "sr-developer" to READ Artifact with name like "shared/*";
+allow Role with name = "sr-developer" to READ Group with name = "shared";
+allow Role with name = "platform-team" to WRITE Artifact with name like "shared/*";
+allow Role with name = "platform-team" to WRITE Group with name = "shared";</code></pre>
 </div>
 </div>
 </div>
@@ -839,8 +834,8 @@
 <h3 id="_read_only_service_account"><a class="anchor" href="#_read_only_service_account"></a>Read-only service account</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"principal": "monitoring-service", "operation": "read", "resource_type": "artifact", "resource_pattern": "*"},
-{"principal": "monitoring-service", "operation": "read", "resource_type": "group", "resource_pattern": "*"}</code></pre>
+<pre class="highlightjs highlight"><code>allow User with name = "monitoring-service" to READ Artifact with name *;
+allow User with name = "monitoring-service" to READ Group with name *;</code></pre>
 </div>
 </div>
 </div>
@@ -848,8 +843,8 @@
 <h3 id="_cicd_pipeline_with_scoped_write_access"><a class="anchor" href="#_cicd_pipeline_with_scoped_write_access"></a>CI/CD pipeline with scoped write access</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"principal": "ci-pipeline", "operation": "write", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "production/"},
-{"principal": "ci-pipeline", "operation": "write", "resource_type": "group", "resource_pattern_type": "exact", "resource_pattern": "production"}</code></pre>
+<pre class="highlightjs highlight"><code>allow User with name = "ci-pipeline" to WRITE Artifact with name like "production/*";
+allow User with name = "ci-pipeline" to WRITE Group with name = "production";</code></pre>
 </div>
 </div>
 </div>
@@ -857,10 +852,16 @@
 <h3 id="_group_access_with_excluded_artifacts"><a class="anchor" href="#_group_access_with_excluded_artifacts"></a>Group access with excluded artifacts</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"principal": "contractor", "operation": "read", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "team-a/"},
-{"principal": "contractor", "operation": "read", "resource_type": "group", "resource_pattern_type": "exact", "resource_pattern": "team-a"},
-{"principal": "contractor", "operation": "read", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "team-a/internal-", "deny": true}</code></pre>
+<pre class="highlightjs highlight"><code>deny User with name = "contractor" to * Artifact with name like "team-a/internal-*";
+allow User with name = "contractor" to READ Artifact with name like "team-a/*";
+allow User with name = "contractor" to READ Group with name = "team-a";</code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_search_and_regular_expressions"><a class="anchor" href="#_search_and_regular_expressions"></a>Search and regular expressions</h3>
+<div class="paragraph">
+<p><code>matching</code> rules work for direct access, but search cannot evaluate them. A user whose rules use <code>matching</code> for a resource type gets no search results for that type. Use <code>=</code>, <code>in</code> or <code>like</code> for resources that must be searchable.</p>
 </div>
 </div>
 </div>
@@ -884,16 +885,16 @@
 <div class="sect2">
 <h3 id="_rbac"><a class="anchor" href="#_rbac"></a>RBAC</h3>
 <div class="paragraph">
-<p>RBAC administrators bypass per-resource authorization. A user with the <code>sr-readonly</code> role can never write, whatever their grants. To control write access with grants, give users the <code>sr-developer</code> role and use grants to choose which resources they can change.</p>
+<p>RBAC administrators bypass per-resource authorization. A user with the <code>sr-readonly</code> role can never write, whatever the access rules say. To control write access with rules, give users the <code>sr-developer</code> role and use rules to choose which resources they can change.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_resource_owners"><a class="anchor" href="#_resource_owners"></a>Resource owners</h3>
 <div class="paragraph">
-<p>By default, the recorded owner of an artifact or group has access to it whatever the grants, whether or not owner-only authorization (<code>apicurio.auth.owner-only-authorization</code>) is enabled. Set <code>apicurio.auth.resource-based-authorization.owner-bypass.enabled</code> to <code>false</code> to make grants the only per-resource authority. Owners also see their own resources in search results and can read content used by their artifacts. With the Elasticsearch search index, searches that require the index (content and structure searches) include at most 1000 of the caller&#8217;s owned artifacts that are not otherwise covered by grants. A resource without a recorded owner does not grant this exception to anyone.</p>
+<p>By default, the recorded owner of an artifact or group has access to it whatever the access rules, whether or not owner-only authorization (<code>apicurio.auth.owner-only-authorization</code>) is enabled. Set <code>apicurio.auth.resource-based-authorization.owner-bypass.enabled</code> to <code>false</code> to make the access rules the only per-resource authority. Owners also see their own resources in search results and can read content used by their artifacts. With the Elasticsearch search index, searches that require the index (content and structure searches) include at most 1000 of the caller&#8217;s owned artifacts that are not otherwise covered by the rules. A resource without a recorded owner does not grant this exception to anyone.</p>
 </div>
 <div class="paragraph">
-<p>When owner-only authorization is enabled, it applies as well to resources named in a request body, such as Iceberg rename targets and published MCP servers: only the owner can change them, even if other users have matching grants.</p>
+<p>When owner-only authorization is enabled, it applies as well to resources named in a request body, such as Iceberg rename targets and published MCP servers: only the owner can change them, even if rules allow other users.</p>
 </div>
 <div class="paragraph">
 <p>The creator of an artifact becomes its owner, but creating it requires <code>write</code> on both the group and the artifact name, so the owner bypass cannot be used to get around a deny on that name.</p>
@@ -907,13 +908,13 @@
 <div class="ulist">
 <ul>
 <li>
-<p>With <code>apicurio.auth.authenticated-read-access.enabled</code>, any authenticated user can read, even without a registry role, but only the resources their grants allow.</p>
+<p>With <code>apicurio.auth.authenticated-read-access.enabled</code>, any authenticated user can read, even without a registry role, but only the resources the rules allow them.</p>
 </li>
 <li>
-<p>With <code>apicurio.auth.anonymous-read-access.enabled</code>, unauthenticated callers get the role <code>$anonymous</code>. They can read only what grants allow to that role, for example:</p>
+<p>With <code>apicurio.auth.anonymous-read-access.enabled</code>, unauthenticated callers get the role <code>$anonymous</code>. They can read only what the rules allow to that role, for example:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"principal_role": "$anonymous", "operation": "read", "resource_type": "artifact", "resource_pattern_type": "prefix", "resource_pattern": "public/"}</code></pre>
+<pre class="highlightjs highlight"><code>allow Role with name = "$anonymous" to READ Artifact with name like "public/*";</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -926,13 +927,13 @@
 <div class="sect2">
 <h3 id="_registry_wide_reports"><a class="anchor" href="#_registry_wide_reports"></a>Registry-wide reports</h3>
 <div class="paragraph">
-<p>Reports that cover the whole registry and cannot be filtered per resource, such as the GitOps status and validation tasks, are available only to callers who are not restricted by grants (administrators).</p>
+<p>Reports that cover the whole registry and cannot be filtered per resource, such as the GitOps status and validation tasks, are available only to callers who are not restricted by the access rules (administrators).</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_admin_override_and_trusted_proxy_authorization"><a class="anchor" href="#_admin_override_and_trusted_proxy_authorization"></a>Admin override and trusted proxy authorization</h3>
 <div class="paragraph">
-<p>Users identified as administrators by the admin override (<code>apicurio.auth.admin-override.*</code>) bypass per-resource authorization. When <code>apicurio.authn.proxy-header.trust-proxy-authorization</code> is <code>true</code>, requests authenticated by proxy headers bypass all local authorization, including grants.</p>
+<p>Users identified as administrators by the admin override (<code>apicurio.auth.admin-override.*</code>) bypass per-resource authorization. When <code>apicurio.authn.proxy-header.trust-proxy-authorization</code> is <code>true</code>, requests authenticated by proxy headers bypass all local authorization, including the access rules.</p>
 </div>
 </div>
 </div>
@@ -992,7 +993,7 @@
 <h2 id="resource-authorization-troubleshooting_registry"><a class="anchor" href="#resource-authorization-troubleshooting_registry"></a>Troubleshooting</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_a_user_is_denied_access_although_a_grant_matches"><a class="anchor" href="#_a_user_is_denied_access_although_a_grant_matches"></a>A user is denied access although a grant matches</h3>
+<h3 id="_a_user_is_denied_access_although_a_rule_matches"><a class="anchor" href="#_a_user_is_denied_access_although_a_rule_matches"></a>A user is denied access although a rule matches</h3>
 <div class="paragraph">
 <p>Check, in order:</p>
 </div>
@@ -1002,19 +1003,19 @@
 <p><strong>RBAC:</strong> does the user&#8217;s role allow the operation? <code>sr-readonly</code> users cannot write.</p>
 </li>
 <li>
-<p><strong>Operation:</strong> does the grant&#8217;s operation cover the request? Changes and deletes require <code>write</code>.</p>
+<p><strong>Operation:</strong> does the rule&#8217;s operation cover the request? Changes and deletes require <code>WRITE</code>.</p>
 </li>
 <li>
-<p><strong>Resource type:</strong> operations on a group itself, such as listing its artifacts or creating an artifact in it, need a <code>group</code> grant.</p>
+<p><strong>Resource type:</strong> operations on a group itself, such as listing its artifacts or creating an artifact in it, need a <code>Group</code> rule.</p>
 </li>
 <li>
-<p><strong>Deny rules:</strong> does a deny rule match? Deny rules take precedence.</p>
+<p><strong>Deny rules:</strong> does a deny rule match? Deny rules take precedence, and denying <code>WRITE</code> also denies <code>READ</code>.</p>
 </li>
 <li>
-<p><strong>Referenced and generated artifacts:</strong> dereferencing, or registering content with references, requires <code>read</code> on every referenced artifact; writing an artifact that generates other artifacts requires <code>write</code> on them.</p>
+<p><strong>Referenced and generated artifacts:</strong> dereferencing, or registering content with references, requires <code>READ</code> on every referenced artifact; writing an artifact that generates other artifacts requires <code>WRITE</code> on them.</p>
 </li>
 <li>
-<p><strong>Resource name:</strong> artifacts are named <code>{groupId}/{artifactId}</code>; the default group is <code>default</code>. For the Confluent compatibility API, check which group the request addresses.</p>
+<p><strong>Resource name and principal:</strong> artifacts are named <code>{groupId}/{artifactId}</code>; the default group is <code>default</code>. For the Confluent compatibility API, check which group the request addresses. Roles are matched with <code>Role</code>, user names with <code>User</code>.</p>
 </li>
 <li>
 <p><strong>Audit log:</strong> the <code>authz.denied</code> message shows the exact resource name and operation that were evaluated.</p>
@@ -1025,24 +1026,24 @@
 <div class="sect2">
 <h3 id="_a_user_can_see_more_than_expected"><a class="anchor" href="#_a_user_can_see_more_than_expected"></a>A user can see more than expected</h3>
 <div class="paragraph">
-<p>Check whether the user is an RBAC administrator or has a role listed in <code>config.admin_roles</code>, whether the user owns the resources (see <code>owner-bypass.enabled</code>), and, for unauthenticated callers, what the <code>$anonymous</code> role is granted.</p>
+<p>Check whether the user is an RBAC administrator or has a role that the rules allow everything, whether the user owns the resources (see <code>owner-bypass.enabled</code>), and, for unauthenticated callers, what the rules allow the <code>$anonymous</code> role. A <code>READ</code> deny does not block writes: use <code>*</code> to hide a resource.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_apicurio_registry_does_not_start"><a class="anchor" href="#_apicurio_registry_does_not_start"></a>Apicurio Registry does not start</h3>
 <div class="paragraph">
-<p>Apicurio Registry fails to start when per-resource authorization is enabled and the grants file path is not set, the file does not exist, or the file is not valid grants data. The startup error names the file and the problem.</p>
+<p>Apicurio Registry fails to start when per-resource authorization is enabled and the access rules file path is not set, the file does not exist, or the file is not a valid rules file, including when it has rules for resource types Apicurio Registry does not enforce. The startup error names the file, and the line and problem of each error.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_grants_file_changes_do_not_take_effect"><a class="anchor" href="#_grants_file_changes_do_not_take_effect"></a>Grants file changes do not take effect</h3>
+<h3 id="_access_rules_file_changes_do_not_take_effect"><a class="anchor" href="#_access_rules_file_changes_do_not_take_effect"></a>Access rules file changes do not take effect</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Check that <code>apicurio.auth.resource-based-authorization.grants.reload-enabled</code> is not <code>false</code>.</p>
+<p>Check that <code>apicurio.auth.resource-based-authorization.rules.reload-enabled</code> is not <code>false</code>.</p>
 </li>
 <li>
-<p>Check the logs for <code>Grants data reloaded successfully</code> or for a reload error. If the new file is invalid, the previous grants stay in effect.</p>
+<p>Check the logs for <code>Access rules reloaded successfully</code> or for a reload error. If the new file is invalid, the previous rules stay in effect.</p>
 </li>
 <li>
 <p>In Kubernetes, check that the ConfigMap is not mounted with <code>subPath</code>.</p>
