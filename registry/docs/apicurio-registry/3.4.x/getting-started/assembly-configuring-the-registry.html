@@ -785,7 +785,11 @@ Before you configure OpenTelemetry, ensure that you have installed Apicurio Regi
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OTEL_EXPORTER_OTLP_ENDPOINT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL of your OpenTelemetry collector. For example, <code><a href="http://jaeger:4317" class="bare">http://jaeger:4317</a></code> for gRPC or <code><a href="http://jaeger:4318" class="bare">http://jaeger:4318</a></code> for HTTP.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The endpoint URL of your OpenTelemetry collector. The port must match the exporter protocol: use <code><a href="http://jaeger:4317" class="bare">http://jaeger:4317</a></code> for the default <code>grpc</code> protocol, or <code><a href="http://jaeger:4318" class="bare">http://jaeger:4318</a></code> for the <code>http/protobuf</code> protocol.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OTEL_EXPORTER_OTLP_PROTOCOL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The protocol that the OTLP exporter uses. Default is <code>grpc</code>, which matches collector port 4317. Set to <code>http/protobuf</code> when the endpoint uses HTTP port 4318.</p></td>
 </tr>
 </tbody>
 </table>
@@ -834,13 +838,13 @@ Before you configure OpenTelemetry, ensure that you have installed Apicurio Regi
 </div>
 </div>
 <div class="paragraph">
-<p>When you use JSON logging format, Apicurio Registry automatically includes trace context (trace ID and span ID) in log entries. You can then correlate logs and traces.</p>
+<p>When you enable the OpenTelemetry SDK and use JSON logging format, Apicurio Registry automatically includes trace context (trace ID and span ID) in log entries. You can then correlate logs and traces.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example: Enabling structured logging with trace context</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
-  QUARKUS_OTEL_TRACES_ENABLED: "true"
+  QUARKUS_OTEL_SDK_DISABLED: "false"
   QUARKUS_LOG_CONSOLE_JSON: "true"</code></pre>
 </div>
 </div>
