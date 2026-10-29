@@ -541,7 +541,7 @@ GitOps storage is an <strong>experimental</strong> feature. You must enable the 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifact-v0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An artifact with its versions declared inline. Fields: <code>registryIds</code>, <code>groupId</code>, <code>artifactId</code>, <code>artifactType</code>, <code>name</code>, <code>description</code>, <code>createdOn</code>, <code>rules</code>, <code>validatedUpTo</code>, and <code>versions</code>. Each version has <code>version</code>, <code>state</code>, and <code>content</code>, where <code>content</code> is a relative path to a schema file.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An artifact with its versions declared inline. Fields: <code>registryIds</code>, <code>groupId</code>, <code>artifactId</code>, <code>artifactType</code> (optional), <code>name</code>, <code>description</code>, <code>createdOn</code>, <code>rules</code>, <code>validatedUpTo</code>, and <code>versions</code>. Each version has <code>version</code>, <code>state</code>, and <code>content</code>, where <code>content</code> is a relative path to a schema file.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>content-v0</code></p></td>
@@ -580,43 +580,80 @@ versions:
 </div>
 </div>
 <div class="paragraph">
-<p>Content files are plain schema files that metadata files reference by a path relative to the directory of the metadata file. The artifact type comes from the <code>artifactType</code> field of the artifact metadata, or from automatic content detection when you omit the field. The file extension determines only the media type that the registry stores with the content:</p>
+<p>Content files are plain schema files that metadata files reference by a path relative to the directory of the metadata file.</p>
+</div>
+<div class="paragraph">
+<p>When <code>artifactType</code> is omitted, the registry determines the type in the following order:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Unambiguous file extension</strong> — extensions listed in the table below are mapped directly to a single artifact type. An explicit <code>artifactType</code> always takes precedence over the extension. A mapped extension is treated like a declared <code>artifactType</code>: the content is not checked against it, so an OpenAPI document saved as <code>api.avsc</code> is stored as AVRO unless a validity rule rejects it.</p>
+</li>
+<li>
+<p><strong>Content-based detection</strong> — for ambiguous extensions (<code>.json</code>, <code>.yaml</code>, <code>.yml</code>, <code>.xml</code>) where multiple artifact types are possible, the registry inspects the file content to determine the type.</p>
+</li>
+<li>
+<p><strong>Error</strong> — if neither the extension nor the content identifies a type, the load fails with an error listing the supported extensions.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>All versions of an artifact must share the same type. When <code>artifactType</code> is omitted and versions resolve to different types from their extensions, the load fails with an error asking you to set <code>artifactType</code> explicitly.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Content file extensions and stored media types</caption>
+<caption class="title">Table 2. File extensions and artifact type detection</caption>
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Extension</th>
+<th class="tableblock halign-left valign-top">Artifact type</th>
 <th class="tableblock halign-left valign-top">Stored media type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.yaml</code>, <code>.yml</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">YAML</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.xml</code>, <code>.xsd</code>, <code>.wsdl</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">XML</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.avsc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AVRO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>.proto</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PROTOBUF</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Protobuf</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.graphql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.graphql</code>, <code>.gql</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GRAPHQL</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GraphQL</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.wsdl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WSDL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">XML</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.xsd</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">XSD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">XML</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>.thrift</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">THRIFT</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Thrift</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.json</code>, <code>.yaml</code>, <code>.yml</code>, <code>.xml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>(detected from content)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>(matches extension)</em></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">All other extensions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>(detected from content)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JSON</p></td>
 </tr>
 </tbody>
