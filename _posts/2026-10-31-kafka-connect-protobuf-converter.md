@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Protobuf in Kafka Connect: Building a Converter for Apicurio Registry"
-date: 2026-08-24 12:00:00
+date: 2026-10-31 12:00:00
 author: kartik
 categories: registry kafka-connect protobuf converter serdes
 ---
@@ -53,7 +53,7 @@ The rest is the class declaration, two methods returning `ProtobufKafkaSerialize
 
 - instantiating the serializer and deserializer (or accepting pre-built ones via `apicurio.registry.converter.serializer` / `.deserializer`),
 - sharing one `SchemaResolver` between the serializer and the deserializer, so a single converter instance keeps one schema cache rather than two,
-- returning `SchemaAndValue.NULL` for null payloads so Kafka tombstones don't blow up,
+- returning `SchemaAndValue.NULL` for null payloads on the way in, so a sink reading tombstones doesn't blow up,
 - closing whatever it created.
 
 # How It Works
@@ -157,7 +157,7 @@ After a round trip, `resultStruct.get("user-id")` works.
 
 The encoder synthesises a wrapper message with exactly one repeated field named `items`, so `array<array<string>>` becomes a `repeated Wrapper` where each `Wrapper` holds `repeated string items = 1`. The decoder recognises a wrapper by that signature and unwraps it transparently, so `map<string, array<string>>` decodes back as a `MAP` whose value schema is an `ARRAY`, not as `struct{items:[...]}`.
 
-Wrapper names are tracked separately from struct names. Struct messages are deduped by Connect `Schema` so two fields sharing a schema produce one proto message; wrapper names only need to be unique. Mixing the two would let a sibling struct field resolve to a wrapper message instead of its own type, which is exactly what one of the regression tests pins down.
+Wrapper names are tracked separately from struct names. Struct messages are deduped by Connect `Schema` so two fields sharing a schema produce one proto message; wrapper names only need to be unique. Mixing the two would let a sibling struct field resolve to a wrapper message instead of its own type, which is what one of the regression tests pins down.
 
 ## What gets rejected
 
@@ -187,42 +187,90 @@ The decode direction needs no cache, because the descriptor arrives with the mes
 
 # Why This Is Useful
 
-Protobuf CDC pipelines work end to end now. A Debezium source connector emits Protobuf, the schema lands in Apicurio Registry, and a sink connector reads it back. Before this, the practical answer was to use Avro.
+Protobuf CDC pipelines run end to end now. A Debezium source connector emits Protobuf, the schema lands in Apicurio Registry, and a sink connector reads it back. Before this, the practical answer was to use Avro.
 
 It also takes a jar off your workers. The compatibility-API route meant deploying Confluent's `ProtobufConverter` and pointing it at Apicurio's compatibility endpoint. This one is Apicurio's own converter talking to Apicurio's own v3 API. Schemas register as native `PROTOBUF` artifacts, so the registry treats them like any other: validity and compatibility rules, versions, branches, and the same UI and REST surface Avro already gets.
 
-Round-trip fidelity makes it usable for existing CDC topics, not only greenfield ones. A `Struct` that leaves a source connector comes back field-for-field identical at the sink, including `INT8` and `INT16` widths, nulls in optional fields, hyphenated field names, and nested collections.
+Round-trip fidelity is the goal, and most of it holds today. A `Struct` that leaves a source connector comes back at the sink with the same field names, including hyphenated ones, the same `INT8` and `INT16` widths, and the same nested collections. Nulls in optional fields are the exception in 3.3.2: they survive in-process, but not through the `.proto` text the registry stores. The Limitations section has the details.
 
 Configuration is unchanged from Avro. The properties are the standard schema-resolver ones, so switching an existing pipeline is a converter class name swap.
 
 # Walkthrough
 
-The repo's [event-driven-architecture example](https://github.com/Apicurio/apicurio-registry/tree/main/examples/event-driven-architecture) brings up Kafka, Kafka Connect, Postgres, and Apicurio Registry, with Debezium watching the Registry's own database. It ships wired for Avro. Switching it to Protobuf is a converter swap.
+The repo's [event-driven-architecture example](https://github.com/Apicurio/apicurio-registry/tree/main/examples/event-driven-architecture) brings up Kafka, Kafka Connect, Postgres, and Apicurio Registry, with Debezium watching the Registry's own database. It ships wired for Avro. Switching it to Protobuf is a converter swap, plus one extra step to get a new enough converter onto the Connect worker.
 
-## 1. Start the stack
+## 1. Put the converter on the worker
+
+The example runs Kafka Connect from `quay.io/debezium/connect:latest` with `ENABLE_APICURIO_CONVERTERS: "true"`. That flag makes the image's entrypoint symlink every jar under `/kafka/external_libs/apicurio/` into each connector's plugin directory. The jars bundled there are Apicurio Registry 3.2.5, which predates `ProtobufConverter`. With the stock image, Connect rejects the connector with HTTP 400 and `Class io.apicurio.registry.utils.converter.ProtobufConverter could not be found`.
+
+The converter distribution for 3.3.2 is on Maven Central. Unpack it next to the Compose file:
 
 ```bash
 git clone https://github.com/Apicurio/apicurio-registry.git
 cd apicurio-registry/examples/event-driven-architecture
+
+mkdir apicurio-converter
+curl -sL https://repo1.maven.org/maven2/io/apicurio/apicurio-registry-distro-connect-converter/3.3.2/apicurio-registry-distro-connect-converter-3.3.2.tar.gz \
+  | tar -xz -C apicurio-converter
+```
+
+Then give it its own plugin directory. In `docker-compose.yml`, mount it under `/kafka/connect`, which is the image's `plugin.path`, and turn the symlinking off:
+
+```yaml
+  kafka-connect0:
+    image: quay.io/debezium/connect:latest
+    volumes:
+      - ./apicurio-converter:/kafka/connect/apicurio-converter
+    environment:
+      ENABLE_APICURIO_CONVERTERS: "false"
+      # ... rest unchanged
+```
+
+Connect loads each subdirectory of `plugin.path` in its own classloader, so the converter and its dependencies stay isolated from the Debezium connectors.
+
+That isolation matters here. The obvious alternative, mounting the new tarball over `/kafka/external_libs/apicurio` and leaving the flag on, does not work for Protobuf: the symlinks put Apicurio's `protobuf-java` 4.x into the Postgres connector's directory next to the `protobuf-java` 3.25 that Debezium ships there. Connect orders a plugin's jars by file name, so the 3.25 copy wins, and the task dies on its first record with `NoSuchMethodError: Descriptors$FileDescriptor.getMessageType(int)`. The Avro path never loads those classes, which is why the bundled layout has been fine until now. Until Debezium and Apicurio Registry agree on a `protobuf-java` version, a separate plugin directory is the layout to use even once the image bundles a converter that has `ProtobufConverter`.
+
+If you are building from `main` instead of downloading, `./mvnw package -pl distro/connect-converter -am -DskipTests` produces the same tarball at `distro/connect-converter/target/apicurio-kafka-connect-converter-<version>.tar.gz`.
+
+## 2. Start the stack
+
+```bash
 docker compose up -d
 ```
 
-The Registry API comes up on `http://localhost:8080`, Kafka Connect on `http://localhost:8083`, and the Registry UI on `http://localhost:8888`.
+The Registry API comes up on `http://localhost:8080`, Kafka Connect on `http://localhost:8083`, and the Registry UI on `http://localhost:8888`. Before going further, confirm the worker can see the converter:
 
-## 2. Switch the connector to Protobuf
+```bash
+curl -s 'http://localhost:8083/connector-plugins?connectorsOnly=false' \
+  | jq -r '.[].class' | grep Protobuf
+# io.apicurio.registry.utils.converter.ProtobufConverter
+```
 
-Edit `studio-connector.json` and change the two converter class names, `key.converter` and `value.converter`. The registry URL and auto-register settings stay the same. This is the file that matters: a connector's own `key.converter` and `value.converter` override whatever the worker has as its default, so editing only the Compose environment will leave you on Avro.
+If that prints nothing, the mount isn't in place. `docker compose exec kafka-connect0 ls /kafka/connect/apicurio-converter | grep utils-converter` should show the 3.3.2 jar, and the worker log should have a `Registered loader` line for `/kafka/connect/apicurio-converter/`.
+
+## 3. Switch the connector to Protobuf
+
+Edit `studio-connector.json` and make three changes. Change the two converter class names, `key.converter` and `value.converter`, from `AvroConverter` to `ProtobufConverter`. A connector's own converter settings override the worker defaults, so editing only the Compose environment leaves you on Avro.
+
+Then add `tombstones.on.delete: false`. Debezium follows every delete with a tombstone record whose value and value schema are both null, and in 3.3.2 `ProtobufConverter` throws on a null schema and kills the task (see Limitations). The Registry deletes from its `outbox` table as part of normal operation, so without this the connector fails on the first delete it sees. Everything else stays as shipped. This is the whole file after the change:
 
 ```json
 {
   "name": "Test",
   "config": {
     "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",
     "database.hostname": "apicurio-db",
+    "database.port": "5432",
+    "database.user": "postgres",
+    "database.password": "postgres",
     "database.dbname": "apicuriodb",
     "topic.prefix": "postgre-changes",
+    "plugin.name": "pgoutput",
     "schema.include.list": "public",
-
+    "schema.history.internal.kafka.bootstrap.servers": "broker:9092",
+    "schema.history.internal.kafka.topic": "schema-changes.inventory",
+    "tombstones.on.delete": "false",
     "key.converter": "io.apicurio.registry.utils.converter.ProtobufConverter",
     "key.converter.apicurio.registry.url": "http://schema-registry:8080/apis/registry/v3",
     "key.converter.apicurio.registry.auto-register": "true",
@@ -235,15 +283,7 @@ Edit `studio-connector.json` and change the two converter class names, `key.conv
 
 Debezium emits keys as structs (the primary key), so `ProtobufConverter` works on both sides here. In pipelines where keys are plain strings, use `StringConverter` for the key: this converter requires a struct at the top level.
 
-One caveat on the image. `ENABLE_APICURIO_CONVERTERS: "true"` makes the Debezium container use the Apicurio converter jars it bundles, and those will only contain `ProtobufConverter` once Debezium picks up Apicurio Registry 3.3.2 or later. Until then, build the converter distribution and mount it:
-
-```bash
-./mvnw package -pl distro/connect-converter -am -DskipTests
-# produces apicurio-kafka-connect-converter-<version>.tar.gz
-# unpack it into a directory on the worker's plugin.path
-```
-
-## 3. Create the connector
+## 4. Create the connector
 
 ```bash
 curl http://localhost:8083/connectors \
@@ -260,7 +300,7 @@ io.apicurio.registry.utils.converter.ProtobufConverter
 io.apicurio.registry.utils.converter.SerdeBasedConverter
 ```
 
-## 4. Generate a change event
+## 5. Generate a change event
 
 The connector is watching the Registry's own Postgres database, so creating an artifact in the Registry produces CDC events on the `artifacts` table:
 
@@ -276,7 +316,7 @@ curl -X POST "http://localhost:8080/apis/registry/v3/groups/default/artifacts" \
 
 Debezium publishes that to `postgre-changes.public.artifacts`, and the converter registers the value schema under `<topic>-value`.
 
-## 5. Read the generated `.proto`
+## 6. Read the generated `.proto`
 
 ```bash
 curl -s "http://localhost:8080/apis/registry/v3/search/artifacts?artifactType=PROTOBUF" \
@@ -287,21 +327,71 @@ curl -s "http://localhost:8080/apis/registry/v3/search/artifacts?artifactType=PR
 curl -s "http://localhost:8080/apis/registry/v3/groups/default/artifacts/postgre-changes.public.artifacts-value/versions/branch=latest/content"
 ```
 
-In the `.proto` you should see `optional` on every nullable column, and `json_name` carrying a `__raw:` prefix on any column whose name needed sanitising. Debezium's envelope nests the row under `before` and `after` structs, so those appear as nested messages.
+In the `.proto` you should see `optional` on every nullable column. Debezium's envelope nests the row under `before` and `after` structs, so those appear as nested messages, and both are `optional` because Debezium leaves `before` null on an insert and `after` null on a delete. None of the Registry's own columns need sanitising or narrowing, so you won't see a `json_name` here. A table with a `user-id` text column and a `smallint` column produces this instead:
 
-## 6. Verify the round trip
+```proto
+message Before {
+  int32 id = 1;
 
-Point a sink connector at `postgre-changes.public.artifacts` with the same `value.converter` settings. The Connect `Struct` it receives should match what the source produced, field name for field name, including nulls in optional columns rather than empty strings and zeros. Worth checking against your own schemas before you rely on it.
+  string user_id = 2 [json_name = "__raw:user-id"];
+
+  int32 tiny = 4 [json_name = "__int16:tiny"];
+
+  optional string event_type = 3 [json_name = "__raw:event.type"];
+
+  optional int32 nullable_small = 5 [json_name = "__int16:nullable_small"];
+}
+```
+
+## 7. Verify the round trip
+
+Point a sink connector at the topic with the same converter settings. The simplest is Kafka's own `FileStreamSinkConnector`, which since Kafka 3.2 is no longer on the worker classpath and needs a plugin directory of its own. Copy its jar out of the image and mount it next to the converter:
+
+```bash
+mkdir file-sink
+docker compose exec -T kafka-connect0 sh -c 'cat /kafka/libs/connect-file-*.jar' > file-sink/connect-file.jar
+```
+
+```yaml
+    volumes:
+      - ./apicurio-converter:/kafka/connect/apicurio-converter
+      - ./file-sink:/kafka/connect/file-sink
+```
+
+Recreate the worker with `docker compose up -d kafka-connect0`, then create the sink:
+
+```bash
+curl http://localhost:8083/connectors -H 'Content-Type: application/json' -d '{
+  "name": "file-sink",
+  "config": {
+    "connector.class": "org.apache.kafka.connect.file.FileStreamSinkConnector",
+    "tasks.max": "1",
+    "topics": "postgre-changes.public.artifacts",
+    "file": "/tmp/sink.out",
+    "key.converter": "io.apicurio.registry.utils.converter.ProtobufConverter",
+    "key.converter.apicurio.registry.url": "http://schema-registry:8080/apis/registry/v3",
+    "value.converter": "io.apicurio.registry.utils.converter.ProtobufConverter",
+    "value.converter.apicurio.registry.url": "http://schema-registry:8080/apis/registry/v3"
+  }
+}'
+docker compose exec kafka-connect0 cat /tmp/sink.out
+```
+
+Each line is the decoded `Struct`, printed with `Struct.toString()`. Field names come back as the source emitted them. For the step 6 example table, `user-id` arrives with its hyphen even though the `.proto` had to sanitise it, and the `__int16:` hint restores `INT16` on the Connect schema.
+
+The output also shows the presence bug from the Limitations section. `Struct.toString()` skips null fields, so an insert event should print without a `before=` entry, and the example table's row should print without `event.type` or `nullable_small` when those columns are `NULL`. In 3.3.2 the `artifacts` insert prints `before=Struct{groupid=,artifactid=,type=,createdon=0,...}`, and the example table prints `before=Struct{id=0,user-id=,tiny=0,...}` with `event.type=` and `nullable_small=0`. The sink received defaults where the source had nulls, because the schema the deserializer rebuilds from the registry has lost `proto3_optional` and the decoder's presence check never runs.
 
 # Limitations
 
+- **Optional fields lose presence through the registry in 3.3.2.** The encoder marks optional Connect fields `proto3_optional` and the decoder honours that flag, but the descriptor the deserializer rebuilds from the `.proto` text stored in the registry comes back with `proto3_optional` false on every field. At a sink, a `NULL` column arrives as `0`, `""` or `false`, and an unset optional struct such as Debezium's `before` on an insert arrives as a struct of defaults rather than `null`. Field names and the `__int8:`/`__int16:` hints are unaffected, because `json_name` does survive the text form. The in-memory tests pass because they decode with the descriptor the encoder built.
+- **Null schemas are rejected on the way out.** `fromConnectData` with a null schema throws `NullPointerException: schema must not be null`, because the null check runs before the null-value short-circuit. Kafka Connect tombstones have a null value schema, so a source connector that emits them kills its task. For Debezium, set `tombstones.on.delete` to `false` or drop them with the `Filter` transform and the `RecordIsTombstone` predicate. The decode side handles null payloads fine.
 - **Map keys must be `STRING`.** Protobuf permits integral keys; this converter does not, for now.
 - **Map-in-collection is unsupported.** Wrap the inner map in a struct field.
 - **Connect logical types are not mapped to well-known types.** `Decimal`, `Date`, `Time`, and `Timestamp` flow through as their underlying primitives (`bytes`, `int32`, `int64`). Semantic type information is not preserved. `AvroConverter` has richer logical-type handling here.
 - **Protobuf enums decode as `STRING`.** There is no Connect enum type to decode into.
 - **Collection fields always decode as optional.** Array and map schemas are built with `.optional()` unconditionally, so a required array encodes fine but comes back optional.
 - **Schema names are sanitised.** A Connect schema named `io.apicurio.my-app.Event` becomes `io.apicurio.my_app.Event` on the way back. Field names are preserved via `__raw:`; the schema name is not.
-- **Fidelity is guaranteed Connect to Connect.** An external Protobuf consumer sees plain `int32` fields, sanitised field names, and `Wrapper` messages. That is valid Protobuf; it is not the Connect shape. Only this converter reads the `json_name` annotations that close the gap.
+- **Fidelity is Connect to Connect only.** An external Protobuf consumer sees plain `int32` fields, sanitised field names, and `Wrapper` messages. That is valid Protobuf, but it is not the Connect shape. Only this converter reads the `json_name` annotations that close the gap.
 
 # Troubleshooting
 
@@ -309,16 +399,19 @@ Point a sink connector at `postgre-changes.public.artifacts` with the same `valu
 - `Nested map-in-collection is not supported. Wrap the inner map in a struct field.`: your Connect schema has `map<string, map<...>>` or `array<map<...>>`. Introduce a struct level.
 - `Only string map keys are supported by the Protobuf converter`: change the map key schema to `STRING`, or restructure as an array of key/value structs.
 - `Invalid Protobuf schema generated from Connect schema`: a wrapped `DescriptorValidationException`. The usual cause is two Connect field names that sanitise to the same proto identifier (`user-id` and `user.id` both become `user_id`). Check the cause chain for the exact conflict.
-- **Converter class not found at startup**: the distribution tarball isn't unpacked under a directory on `plugin.path`, or it's on the worker classpath instead. Connect discovers converters via `ServiceLoader` inside plugin directories.
-- **An optional field comes back as `0` or `""` instead of `null`**: the Connect schema didn't declare the field optional, so `proto3_optional` was never set.
-- **`INT8` arrives as `INT32`**: the message was produced by something other than this converter, so there is no `__int8:` annotation to read. Expected; the type hint only exists on schemas this converter generated.
+- `NullPointerException: schema must not be null` and the source task fails: a record with a null schema reached the converter, almost always a tombstone after a delete. Set `tombstones.on.delete` to `false` on the Debezium connector, or filter tombstones out before the converter.
+- **Converter class not found at startup**: the distribution tarball isn't unpacked under a directory on `plugin.path`, or it's on the worker classpath instead. Connect discovers converters via `ServiceLoader` inside plugin directories. On the Debezium image, this is the HTTP 400 you get from the bundled 3.2.5 jars with no mount; see step 1 of the walkthrough.
+- **An optional field comes back as `0` or `""` instead of `null`**: in 3.3.2 this is the presence limitation above whenever the message went through the registry. If it happens in-process, the Connect schema didn't declare the field optional, so `proto3_optional` was never set.
+- **`INT8` arrives as `INT32`**: the message was produced by something other than this converter, so there is no `__int8:` annotation to read. That is expected, because the type hint only exists on schemas this converter generated.
 - **Schema not appearing in the registry**: check `apicurio.registry.auto-register` is `true` on the converter prefix (`value.converter.apicurio.registry.auto-register`), not the bare property.
 
 # What's Next
 
-Logical types are the obvious next gap. `Decimal`, `Date`, `Time`, and `Timestamp` currently flow through as raw primitives, and mapping them onto the Protobuf well-known types would bring parity with `AvroConverter`. Integral map keys are the other one.
+Two of the limitations above are bugs rather than design choices, and they come first. The presence loss needs the `.proto` text to round-trip `proto3_optional` through `FileDescriptorUtils`, or the decoder to fall back to `hasField()` for message-typed fields regardless of the flag. The tombstone failure is a two-line reorder in `ProtobufData.fromConnectData`, so a null value short-circuits before the schema is checked.
 
-The converter ships with 40 tests covering the round-trip cases that would otherwise regress silently: `Byte` and `Short` boundary values including inside optionals, maps, and array-of-array; `NaN` and both infinities; empty collections; the wrapper-versus-struct collision; and both rejected nested-map shapes.
+Logical types are the next gap. `Decimal`, `Date`, `Time`, and `Timestamp` currently flow through as raw primitives, and mapping them onto the Protobuf well-known types would bring parity with `AvroConverter`. Integral map keys are the other one.
+
+The converter ships with 40 tests covering the round-trip cases that would otherwise regress silently: `Byte` and `Short` boundary values including inside optionals, maps, and array-of-array; `NaN` and both infinities; empty collections; the wrapper-versus-struct collision; and both rejected nested-map shapes. All of them decode with the descriptor the encoder built. A test that serialises the descriptor to `.proto` text and parses it back, the way the deserializer does, would have caught the presence bug.
 
 If you hit a schema shape that doesn't round-trip, open an issue on [GitHub](https://github.com/Apicurio/apicurio-registry/issues) with the Connect schema that reproduces it.
 
@@ -327,7 +420,6 @@ If you hit a schema shape that doesn't round-trip, open an issue on [GitHub](htt
 ```bash
 git clone https://github.com/Apicurio/apicurio-registry.git
 cd apicurio-registry/examples/event-driven-architecture
-docker compose up -d
 ```
 
-Swap the converter class as above, and check the [converter source](https://github.com/Apicurio/apicurio-registry/tree/main/utils/converter) if you want to see how the round-tripping is implemented.
+Follow the walkthrough above to mount the converter and swap the converter class, and check the [converter source](https://github.com/Apicurio/apicurio-registry/tree/main/utils/converter) if you want to see how the round-tripping is implemented.
