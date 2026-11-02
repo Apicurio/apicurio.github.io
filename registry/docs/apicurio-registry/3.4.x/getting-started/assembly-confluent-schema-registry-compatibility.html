@@ -406,7 +406,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry provides a compatibility API layer so that applications with Confluent Schema Registry clients can work with Apicurio Registry. Review the supported features, behavioral differences, unsupported features, and migration considerations.</p>
+<p>Apicurio Registry provides a compatibility API layer so that applications with Confluent Schema Registry clients can work with Apicurio Registry. Review the supported and unsupported features, behavioral differences, and migration considerations, and migrate schemas with the export utility.</p>
 </div>
 </div>
 </div>
@@ -914,6 +914,10 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 <td class="tableblock halign-left valign-top"><p class="tableblock">Schema registration, retrieval, and compatibility checks work identically. No changes required.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Existing schemas</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Export subjects, schema versions, references, and compatibility levels from Confluent Schema Registry with the export utility, and then import the ZIP file into Apicurio Registry.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Client configuration</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Update <code>schema.registry.url</code> to point to the Apicurio Registry ccompat endpoint.</p></td>
 </tr>
@@ -971,6 +975,9 @@ props.put("schema.registry.url", "http://apicurio-registry:8080/apis/ccompat/v7"
 <div class="title">Additional resources</div>
 <ul>
 <li>
+<p><a href="#migrating-schemas-using-confluent-export-utility_registry">Migrating schemas from Confluent Schema Registry by using the export utility</a></p>
+</li>
+<li>
 <p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
 </li>
 <li>
@@ -981,6 +988,264 @@ props.put("schema.registry.url", "http://apicurio-registry:8080/apis/ccompat/v7"
 </li>
 <li>
 <p><a href="https://docs.confluent.io/platform/current/schema-registry/schema-linking-cp.html">Confluent Schema Linking Documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="confluent-export-utility-data-mapping_registry"><a class="anchor" href="#confluent-export-utility-data-mapping_registry"></a>Confluent Schema Registry export utility data mapping</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The Confluent Schema Registry export utility reads a Confluent Schema Registry through its REST API and writes the data as a ZIP file in the Apicurio Registry import format. Review how the utility maps Confluent Schema Registry data to Apicurio Registry before you migrate.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. Confluent Schema Registry data in the export file</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Confluent Schema Registry data</th>
+<th class="tableblock halign-left valign-top">Apicurio Registry equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Subject</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact in the default group, with the subject name as the artifact ID. The artifact type is <code>AVRO</code>, <code>JSON</code>, or <code>PROTOBUF</code>, matching the Confluent schema type.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schema version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact version that keeps the Confluent version number, so clients can continue to request the same version numbers through the ccompat API.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schema ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content ID. By default, the ccompat API returns content IDs as schema IDs, so existing clients can continue to resolve the schema IDs that are embedded in serialized messages.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schema reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact reference to the referenced subject and version.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Subject compatibility level</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>COMPATIBILITY</code> rule on the artifact, written only for subjects that set their own level.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global compatibility level</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global <code>COMPATIBILITY</code> rule.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The export file also contains a global <code>VALIDITY</code> rule set to <code>SYNTAX_ONLY</code>. After the import, Apicurio Registry applies this rule to every artifact in the target instance that does not define its own validity rule.</p>
+</div>
+<div class="paragraph">
+<p>The utility exports only active subjects and versions. It does not export soft-deleted subjects or versions, subject modes, registration timestamps, or the metadata, tags, and rulesets of Confluent Data Contracts.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="migrating-schemas-using-confluent-export-utility_registry"><a class="anchor" href="#migrating-schemas-using-confluent-export-utility_registry"></a>Migrating schemas from Confluent Schema Registry by using the export utility</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can copy subjects, schema versions, references, and compatibility levels from Confluent Schema Registry into Apicurio Registry by using the Confluent Schema Registry export utility. The utility writes a ZIP file that you import through the Apicurio Registry admin API.</p>
+</div>
+<div class="paragraph">
+<p>The export utility is a command-line tool from the Apicurio Registry project. Each Apicurio Registry release publishes it to Maven Central.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have Java 17 or later on a machine that can reach the Confluent Schema Registry REST API and the Apicurio Registry API.</p>
+</li>
+<li>
+<p>If the Confluent Schema Registry requires authentication, you have credentials for it.</p>
+</li>
+<li>
+<p>You have administrator access to the target Apicurio Registry instance.</p>
+</li>
+<li>
+<p>You have an empty target Apicurio Registry instance, or you plan to import with new identifiers.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Download the <code>apicurio-registry-utils-exportConfluent</code> archive from Maven Central:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -LO https://repo1.maven.org/maven2/io/apicurio/apicurio-registry-utils-exportConfluent/VERSION/apicurio-registry-utils-exportConfluent-VERSION.tar.gz</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace <code>VERSION</code> with the version of your Apicurio Registry instance, for example <code>3.3.3</code>. Use version 3.3.0 or later. Archives for earlier versions extract into a <code>quarkus-app</code> directory, so run the launcher from that directory instead.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+To build the utility from source instead, run <code>./mvnw -Dfull -pl utils/exportConfluent -am -DskipTests package</code> in the Apicurio Registry source repository with JDK 21 or later. The build creates the launcher at <code>utils/exportConfluent/target/quarkus-app/quarkus-run.jar</code>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Extract the archive into an empty directory:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ mkdir confluent-export
+$ tar -xzf apicurio-registry-utils-exportConfluent-VERSION.tar.gz -C confluent-export
+$ cd confluent-export</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The directory contains the <code>quarkus-run.jar</code> launcher with its <code>lib</code>, <code>app</code>, and <code>quarkus</code> directories.</p>
+</div>
+</li>
+<li>
+<p>Export the Confluent Schema Registry data:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ java -jar quarkus-run.jar MY-CONFLUENT-URL --output confluent-schema-registry-export.zip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>MY-CONFLUENT-URL</code> is the URL of the Confluent Schema Registry REST API. For example: <code>http://my-confluent:8081</code>. The URL must be the first argument. The utility prints <code>Export successfully done.</code> when it finishes. If the export fails, the utility exits with status <code>1</code> and leaves an incomplete ZIP file that you must not import.</p>
+</div>
+<div class="paragraph">
+<p>The following options are available:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>--output</code> or <code>-o</code></dt>
+<dd>
+<p>The name of the ZIP file. The default is <code>confluent-schema-registry-export.zip</code> in the current directory.</p>
+</dd>
+<dt class="hdlist1"><code>--insecure</code></dt>
+<dd>
+<p>Accepts any TLS certificate and host name when the URL uses HTTPS. Use this option only for testing, and do not combine it with <code>--client-props</code>, because the client properties restore the default Java trust store. For a certificate from a private certificate authority, pass a trust store as client properties instead: <code>schema.registry.ssl.truststore.location</code> and <code>schema.registry.ssl.truststore.password</code>.</p>
+</dd>
+<dt class="hdlist1"><code>--client-props</code></dt>
+<dd>
+<p>Passes Confluent client properties as <code>key=value</code> pairs, for example, to authenticate. Place this option last, because the utility reads every remaining argument as a property. The utility splits each argument at the first <code>=</code> and silently truncates a value that contains another <code>=</code>.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The utility prints the parsed client properties, including any credentials, to the console.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For example, to export from a Confluent Schema Registry that requires basic authentication:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ java -jar quarkus-run.jar MY-CONFLUENT-URL --output confluent-schema-registry-export.zip \
+  --client-props basic.auth.credentials.source=USER_INFO basic.auth.user.info=MY-USER:MY-PASSWORD</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For Confluent Cloud, use the Schema Registry API key as <code>MY-USER</code> and the API secret as <code>MY-PASSWORD</code>.</p>
+</div>
+</dd>
+</dl>
+</div>
+</li>
+<li>
+<p>Import the ZIP file into the target Apicurio Registry instance:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST "MY-REGISTRY-URL/apis/registry/v3/admin/import" \
+  -H "Content-Type: application/zip" -H "Authorization: Bearer $ACCESS_TOKEN" \
+  --data-binary @confluent-schema-registry-export.zip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>MY-REGISTRY-URL</code> is the URL of the target Apicurio Registry instance. For example: <code>http://my-registry:8080</code>. Omit the <code>Authorization</code> header if authentication is disabled. You can also import the file by using the web console or the CLI. If the import fails with HTTP <code>400</code> because the file exceeds the ZIP import limits, raise <code>apicurio.import.zip.max-entry-count</code> on the target instance and retry. The default is <code>10000</code> entries.</p>
+</div>
+<div class="paragraph">
+<p>By default, the import requires an empty registry and keeps the content IDs and global IDs from the file, so the schema IDs that are embedded in existing Kafka messages stay valid. The file numbers global IDs from <code>1</code>, so they collide with data that the target registry already holds. To import into a registry that already contains data, add the <code>requireEmptyRegistry=false</code> query parameter and set the <code>X-Registry-Preserve-GlobalId</code> and <code>X-Registry-Preserve-ContentId</code> headers to <code>false</code>, so that Apicurio Registry assigns new identifiers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST "MY-REGISTRY-URL/apis/registry/v3/admin/import?requireEmptyRegistry=false" \
+  -H "Content-Type: application/zip" -H "Authorization: Bearer $ACCESS_TOKEN" \
+  -H "X-Registry-Preserve-GlobalId: false" -H "X-Registry-Preserve-ContentId: false" \
+  --data-binary @confluent-schema-registry-export.zip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>New content IDs change the schema IDs that the ccompat API returns. Consumers of messages that were produced before the migration can then no longer resolve the embedded Confluent schema IDs through Apicurio Registry. Import into an empty registry whenever those messages must remain readable.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>List the migrated subjects through the ccompat API and compare the list with the output of <code>GET /subjects</code> on the Confluent Schema Registry. The endpoint returns at most <code>apicurio.ccompat.max-subjects</code> subjects, <code>1000</code> by default:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -H "Authorization: Bearer $ACCESS_TOKEN" MY-REGISTRY-URL/apis/ccompat/v7/subjects</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Retrieve a schema by its original Confluent schema ID:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -H "Authorization: Bearer $ACCESS_TOKEN" MY-REGISTRY-URL/apis/ccompat/v7/schemas/ids/1</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check the Apicurio Registry server log for import warnings. The import skips an entity that it cannot store, such as a version with a duplicate global ID, and still returns HTTP <code>204</code>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Next steps</div>
+<ul>
+<li>
+<p>Update the <code>schema.registry.url</code> property of your Kafka clients to the ccompat API endpoint. See <a href="#ccompat-migration-considerations_registry">Migration considerations</a>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#confluent-export-utility-data-mapping_registry">Confluent Schema Registry export utility data mapping</a></p>
+</li>
+<li>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+</li>
+<li>
+<p><a href="assembly-managing-registry-artifacts-api.html#exporting-importing-using-rest-api_registry" class="page">Exporting and importing registry data using Apicurio Registry REST API commands</a></p>
+</li>
+<li>
+<p><a href="assembly-managing-registry-artifacts-ui.html#exporting-importing-using-web-console_registry" class="page">Exporting and importing data using the Apicurio Registry web console</a></p>
+</li>
+<li>
+<p><a href="assembly-managing-registry-artifacts-cli.html#exporting-importing-registry-data-using-registry-cli_registry" class="page">Exporting and importing data using the CLI</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/utils/exportConfluent">Confluent Schema Registry export utility source</a></p>
 </li>
 </ul>
 </div>
