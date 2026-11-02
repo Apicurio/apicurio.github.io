@@ -2049,7 +2049,10 @@ All authentication and authorization options in Apicurio Registry are disabled b
 <h2 id="registry-security-authn-http_registry"><a class="anchor" href="#registry-security-authn-http_registry"></a>Apicurio Registry authentication by using HTTP basic</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>By default, Apicurio Registry supports authentication by using OpenID Connect. Users or API clients must obtain an access token to make authenticated calls to the Apicurio Registry REST API. However, because some tools do not support OpenID Connect, you can also configure Apicurio Registry to support HTTP basic authentication by setting the following configuration options to <code>true</code>:</p>
+<p>By default, Apicurio Registry supports authentication by using OpenID Connect. Because some tools do not support OpenID Connect, you can also configure Apicurio Registry to support HTTP basic authentication.</p>
+</div>
+<div class="paragraph">
+<p>With OpenID Connect, users or API clients must obtain an access token to make authenticated calls to the Apicurio Registry REST API. To enable HTTP basic authentication, set the following configuration options to <code>true</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 14. Configuration for Apicurio Registry HTTP basic authentication</caption>
@@ -2874,8 +2877,7 @@ failures return an authentication error instead.</p>
 <h2 id="registry-cors-understanding_registry"><a class="anchor" href="#registry-cors-understanding_registry"></a>CORS overview</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Browsers enforce a same-origin policy that prevents a web page served from one origin (for example, <code>https://my-app.example.com</code>) from making HTTP requests to a different origin (for example, <code>https://registry.example.com</code>).
-CORS is the mechanism by which a server explicitly allows cross-origin requests by including specific HTTP response headers such as <code>Access-Control-Allow-Origin</code>.</p>
+<p>Browsers enforce a same-origin policy that prevents a web page served from one origin from making HTTP requests to a different origin. CORS is the mechanism by which a server explicitly allows cross-origin requests by including specific HTTP response headers such as <code>Access-Control-Allow-Origin</code>.</p>
 </div>
 <div class="paragraph">
 <p>Consider a typical scenario where your browser application runs at <code>https://my-app.example.com</code> and Apicurio Registry runs at <code>https://registry.example.com</code>.
@@ -3144,8 +3146,10 @@ If you deploy Apicurio Registry by using the Kubernetes Operator, automatic CORS
 <h2 id="registry-cors-authentication_registry"><a class="anchor" href="#registry-cors-authentication_registry"></a>CORS configuration with authentication</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>When you use OIDC authentication (for example, Keycloak), CORS and authentication work together.
-Your browser application must send an <code>Authorization</code> header with a bearer token, and the Apicurio Registry CORS configuration must allow that header for authenticated cross-origin requests to succeed.</p>
+<p>When you use OIDC authentication (for example, Keycloak), CORS and authentication work together.</p>
+</div>
+<div class="paragraph">
+<p>Your browser application must send an <code>Authorization</code> header with a bearer token, and the Apicurio Registry CORS configuration must allow that header for authenticated cross-origin requests to succeed.</p>
 </div>
 <div class="paragraph">
 <p>The <code>authorization</code> header is already included in the default allowed headers, so you typically only need to configure the allowed origins.</p>
