@@ -183,6 +183,9 @@
     <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using an SDK</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-schema-validation-library.html">Validating data with the Apicurio Registry schema validation library</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
   </li>
 </ul>
@@ -406,7 +409,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can configure your Apicurio Registry deployment, including file-based secrets, HTTP caching, the web console, logging, health checks, and observability.</p>
+<p>You can configure your Apicurio Registry deployment, including file-based secrets, HTTP caching, the web console, logging, health checks, observability, and the storage content cache.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1088,6 +1091,383 @@ Before you configure OpenTelemetry, ensure that you have installed Apicurio Regi
 </div>
 </div>
 <div class="sect1">
+<h2 id="registry-storage-content-cache_registry"><a class="anchor" href="#registry-storage-content-cache_registry"></a>Storage content cache</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry keeps an in-memory, byte-weighted cache of immutable artifact content in front of the storage layer. The cache reduces storage round trips for reads that look up content by content ID or content hash, such as the Confluent-compatible schema lookup by ID that Kafka clients use.</p>
+</div>
+<div class="paragraph">
+<p>The cache is enabled by default and applies to every storage variant because Apicurio Registry adds it as a storage decorator. The storage content cache is separate from HTTP caching, which sets response headers so that a reverse proxy or CDN can cache REST responses outside Apicurio Registry. The content cache works inside the Apicurio Registry process and also serves requests that HTTP caching does not cover, such as Confluent-compatible requests, which Apicurio Registry returns without cache headers.</p>
+</div>
+<div class="paragraph">
+<p><strong>Cached reads</strong></p>
+</div>
+<div class="paragraph">
+<p>A cache entry holds the content bytes, the artifact type, and the parsed references for one piece of content. Apicurio Registry caches only reads whose result depends solely on an immutable content identifier:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Content by content ID, for example, <code>GET /apis/registry/v3/ids/contentIds/{contentId}</code> and its <code>/references</code> variant.</p>
+</li>
+<li>
+<p>Content by SHA-256 content hash, for example, <code>GET /apis/registry/v3/ids/contentHashes/{contentHash}</code> and its <code>/references</code> variant.</p>
+</li>
+<li>
+<p>Content and artifact type by content ID, which serves the Confluent-compatible <code>GET /apis/ccompat/v7/schemas/ids/{id}</code> and <code>GET /apis/ccompat/v7/schemas/ids/{id}/schema</code> requests when legacy ID mode is disabled, which is the default.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry does not cache reads that resolve content through a group, artifact, and version coordinate, or through a global ID, because that mapping can change over time.</p>
+</div>
+<div class="paragraph">
+<p>Content bytes never change for a given content ID or content hash, so the content-by-ID and content-by-hash entries have no expiry. Apicurio Registry evicts them only when a cache exceeds its size limit. The content-and-type entry also depends on whether an artifact version still references the content, so it has a bounded staleness window.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry coalesces concurrent misses for the same key into a single storage call. It never caches failed lookups, so a request for content that does not exist always reaches storage.</p>
+</div>
+<div class="paragraph">
+<p><strong>Bounded staleness window</strong></p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry returns <code>404 Not Found</code> for a content-and-type lookup when the content is orphaned, that is, when no artifact version references it. Orphan status can change after Apicurio Registry caches the entry, most commonly when you delete the last version that references the content. To keep the hot path fast, Apicurio Registry accepts a short window during which a cached content-and-type entry can be stale:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Each content-and-type entry expires <code>apicurio.storage.content-cache.hot-path.ttl-seconds</code> after Apicurio Registry writes it. The default is 30 seconds.</p>
+</li>
+<li>
+<p>When you delete a single artifact version, Apicurio Registry resolves the content ID of that version before the delete and invalidates the matching content-and-type entry after the delete. If the lookup fails, the delete still completes and the entry expires through the TTL instead.</p>
+</li>
+<li>
+<p>Other operations that can orphan content, such as deleting a whole artifact or group, importing data, or restoring a snapshot, do not invalidate entries. The TTL bounds the staleness for these cases.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As a result, a Confluent-compatible schema lookup by ID can still succeed for up to the TTL after a bulk operation removes the last referencing version. Set the TTL to <code>0</code> to disable the content-and-type cache and remove the window at the cost of a storage query on every lookup.</p>
+</div>
+<div class="paragraph">
+<p>The scheduled orphaned content cleanup job, configured by <code>apicurio.storage.orphan-cleanup.every</code>, later removes orphaned content rows from storage. Content-by-ID and content-by-hash entries never expire, so a cached copy of removed content remains readable by content ID or content hash until Apicurio Registry evicts it or restarts.</p>
+</div>
+<div class="paragraph">
+<p><strong>Memory sizing</strong></p>
+</div>
+<div class="paragraph">
+<p><code>apicurio.storage.content-cache.max-size</code> sets the maximum weight, in bytes, of each of the three caches separately, not of all caches together. The default is 64 MiB (<code>67108864</code> bytes) for each cache, so the caches can hold up to about 192 MiB of content in total. The same content can be present in more than one cache, for example, when clients request it by content ID and by content hash.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The configuration reference describes this property as a maximum total weight. The limit applies to each cache separately, so the total memory bound is the configured value multiplied by the number of caches.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry weighs each entry as the size of the content bytes plus 64 bytes of overhead and 128 bytes for each reference. The weight estimates the payload, not the JVM objects that hold it. When you plan the JVM heap and the container memory limit, count up to three times the configured <code>max-size</code> toward the memory that Apicurio Registry uses under sustained load, in addition to the baseline memory that your capacity planning requires.</p>
+</div>
+<div class="paragraph">
+<p>To size the cache for your workload, compare the total size of the schemas that clients read most often with the per-cache limit. Use the cache metrics to confirm the result after a change.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#configuring-storage-content-cache_registry">Configuring the storage content cache</a></p>
+</li>
+<li>
+<p><a href="#storage-content-cache-reference_registry">Storage content cache properties and metrics</a></p>
+</li>
+<li>
+<p><a href="assembly-registry-sizing-guide.html" class="page">Apicurio Registry capacity planning and sizing guide</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-storage-content-cache_registry"><a class="anchor" href="#configuring-storage-content-cache_registry"></a>Configuring the storage content cache</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can disable the storage content cache, change its size limit, or tune the staleness window for the content-and-type entry. Apicurio Registry reads these settings at startup, so you apply them by restarting Apicurio Registry with updated configuration properties or environment variables.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and you can change its configuration properties or environment variables.</p>
+</li>
+<li>
+<p>You can reach the Apicurio Registry management port, <code>9000</code> by default, to read metrics.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Decide whether to keep the cache enabled. To disable it entirely, set <code>apicurio.storage.content-cache.enabled</code> to <code>false</code>. The default value is <code>true</code>.</p>
+</li>
+<li>
+<p>Set the per-cache size limit in bytes with <code>apicurio.storage.content-cache.max-size</code>. The default value is <code>67108864</code> (64 MiB). For example, set <code>134217728</code> to allow 128 MiB in each of the three caches.</p>
+</li>
+<li>
+<p>Set the staleness window for the content-and-type entry with <code>apicurio.storage.content-cache.hot-path.ttl-seconds</code>. The default value is <code>30</code>. Set <code>0</code> to disable that cache and query storage on every Confluent-compatible schema lookup by ID.</p>
+</li>
+<li>
+<p>Apply the settings and restart Apicurio Registry. Use configuration properties or the equivalent environment variables:</p>
+<div class="listingblock">
+<div class="title">Example: Configuration properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.storage.content-cache.enabled=true
+apicurio.storage.content-cache.max-size=134217728
+apicurio.storage.content-cache.hot-path.ttl-seconds=10</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example: Environment variables in a container deployment</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
+  APICURIO_STORAGE_CONTENT_CACHE_ENABLED: "true"
+  APICURIO_STORAGE_CONTENT_CACHE_MAX_SIZE: "134217728"
+  APICURIO_STORAGE_CONTENT_CACHE_HOT_PATH_TTL_SECONDS: "10"</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<div class="title">Verification</div>
+<p>These steps assume the default setting <code>apicurio.ccompat.legacy-id-mode.enabled=false</code>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Request the same content twice by content ID. Replace <code>1</code> with a content ID that exists in your registry:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -s http://localhost:8080/apis/registry/v3/ids/contentIds/1 &gt; /dev/null
+$ curl -s http://localhost:8080/apis/registry/v3/ids/contentIds/1 &gt; /dev/null</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Read the cache metrics from the management port and filter for the content caches:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -s http://localhost:9000/metrics | grep 'cache="content'</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Confirm the behavior that matches your configuration:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>When the cache is enabled, <code>cache_gets_total{cache="contentById",result="hit"}</code> increases on the second request and <code>cache_size{cache="contentById"}</code> is at least <code>1</code>.</p>
+</li>
+<li>
+<p>When the cache is disabled, the output contains no series with a <code>cache="contentById"</code>, <code>cache="contentByHash"</code>, or <code>cache="contentAndTypeById"</code> tag.</p>
+</li>
+<li>
+<p>When the TTL is <code>0</code>, the <code>cache="contentAndTypeById"</code> series are absent while the other two caches still report metrics.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#registry-storage-content-cache_registry">Storage content cache</a></p>
+</li>
+<li>
+<p><a href="#storage-content-cache-reference_registry">Storage content cache properties and metrics</a></p>
+</li>
+<li>
+<p><a href="assembly-config-reference.html">Apicurio Registry configuration reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="storage-content-cache-reference_registry"><a class="anchor" href="#storage-content-cache-reference_registry"></a>Storage content cache properties and metrics</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The storage content cache has three configuration properties, three named caches, and five Micrometer meters for each cache, exposed at <code>/metrics</code> on the management port. When <code>apicurio.storage.content-cache.hot-path.ttl-seconds</code> is <code>0</code>, Apicurio Registry does not create the <code>contentAndTypeById</code> cache and does not register its meters. The properties are available since Apicurio Registry 3.3.3.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 6. Storage content cache configuration properties</caption>
+<colgroup>
+<col style="width: 26.6666%;">
+<col style="width: 26.6666%;">
+<col style="width: 13.3333%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.storage.content-cache.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_STORAGE_CONTENT_CACHE_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables the storage content cache. When <code>false</code>, Apicurio Registry does not create the caches and every content read goes to storage.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.storage.content-cache.max-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_STORAGE_CONTENT_CACHE_MAX_SIZE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>67108864</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum weight, in bytes, of each of the three caches. The limit applies to each cache separately, so the caches can hold up to three times this value in total.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.storage.content-cache.hot-path.ttl-seconds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_STORAGE_CONTENT_CACHE_HOT_PATH_TTL_SECONDS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of seconds after which a content-and-type entry expires. Set <code>0</code> to disable the content-and-type cache. The other two caches are not affected.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 7. Caches and the reads that they serve</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 26.6666%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Cache name (<code>cache</code> tag)</th>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Expiry</th>
+<th class="tableblock halign-left valign-top">Serves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentById</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None. Apicurio Registry evicts entries only when the cache exceeds its size limit.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content and stored reference metadata by content ID, including the REST API <code>/ids/contentIds/{contentId}</code> requests.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentByHash</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SHA-256 content hash</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None. Apicurio Registry evicts entries only when the cache exceeds its size limit.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content and references by content hash, including the REST API <code>/ids/contentHashes/{contentHash}</code> requests.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentAndTypeById</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hot-path.ttl-seconds</code> after Apicurio Registry writes the entry, plus invalidation when you delete a single artifact version.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Confluent-compatible <code>GET /schemas/ids/{id}</code> and <code>GET /schemas/ids/{id}/schema</code> requests when <code>apicurio.ccompat.legacy-id-mode.enabled</code> is <code>false</code>, which is the default.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 8. Storage content cache metrics</caption>
+<colgroup>
+<col style="width: 21.4285%;">
+<col style="width: 21.4285%;">
+<col style="width: 21.4285%;">
+<col style="width: 35.7145%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Micrometer meter</th>
+<th class="tableblock halign-left valign-top">Prometheus name</th>
+<th class="tableblock halign-left valign-top">Tags</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache.size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache_size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Approximate number of entries currently in the cache.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache.gets</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache_gets_total</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache</code>, <code>result</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of lookups that returned a cached value (<code>result="hit"</code>) or loaded a new value from storage (<code>result="miss"</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache.puts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache_puts_total</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of loads from storage, including lookups that failed because the content does not exist. A failed load does not add an entry.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache.evictions</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache_evictions_total</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of entries removed by size-based eviction or expiry. The count excludes invalidations after a version delete.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache.eviction.weight</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache_eviction_weight_total</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cache</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total weight, in bytes, of the evicted entries. The count excludes invalidations after a version delete.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Reading the metrics</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The hit ratio for a cache is <code>hit / (hit + miss)</code> from <code>cache_gets_total</code>. A high ratio means that most reads avoid a storage round trip.</p>
+</li>
+<li>
+<p>For <code>contentById</code> and <code>contentByHash</code>, steadily increasing evictions and misses can indicate that the working set exceeds the per-cache limit. Consider increasing <code>apicurio.storage.content-cache.max-size</code> if memory allows.</p>
+</li>
+<li>
+<p>For <code>contentAndTypeById</code>, TTL expirations also count as evictions and cause misses on subsequent requests. Confirm that the size limit causes the evictions before increasing <code>max-size</code>; more capacity does not prevent TTL expiry.</p>
+</li>
+<li>
+<p>When the hit ratio stays high with few evictions, a smaller limit reclaims memory without affecting throughput.</p>
+</li>
+<li>
+<p>When the cache is disabled, or when the TTL is <code>0</code> for the <code>contentAndTypeById</code> cache, Apicurio Registry does not register the corresponding series.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#registry-storage-content-cache_registry">Storage content cache</a></p>
+</li>
+<li>
+<p><a href="#configuring-storage-content-cache_registry">Configuring the storage content cache</a></p>
+</li>
+<li>
+<p><a href="assembly-config-reference.html">Apicurio Registry configuration reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="configuring-liveness-readiness-probes_registry"><a class="anchor" href="#configuring-liveness-readiness-probes_registry"></a>Configuring Apicurio Registry health checks on OpenShift</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -1203,7 +1583,7 @@ The following environment variables are provided for reference only. The default
 </table>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 6. Environment variables for Apicurio Registry liveness probes</caption>
+<caption class="title">Table 9. Environment variables for Apicurio Registry liveness probes</caption>
 <colgroup>
 <col style="width: 29.4117%;">
 <col style="width: 29.4117%;">
@@ -1258,7 +1638,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 </table>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 7. Environment variables for Apicurio Registry readiness probes</caption>
+<caption class="title">Table 10. Environment variables for Apicurio Registry readiness probes</caption>
 <colgroup>
 <col style="width: 30.7692%;">
 <col style="width: 38.4615%;">

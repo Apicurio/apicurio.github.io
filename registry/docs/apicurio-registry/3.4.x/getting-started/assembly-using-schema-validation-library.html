@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Validating data with the Apicurio Registry schema validation library :: Apicurio Registry</title>
+    <link rel="canonical" href="https://www.apicur.io/registry/docs/apicurio-registry/3.4.x/getting-started/assembly-using-schema-validation-library.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="../../../assets/css/site.css">
+    <link rel="stylesheet" href="https://www.apicur.io/css/rhbar.css">
+<link rel="stylesheet" href="../../../assets/css/search.css">
+    <link rel="shortcut icon" href="https://www.apicur.io/images/favicon.ico" type="image/x-icon" integrity="sha384-if9KH+NQ2dMhdrWu+INnJTcvG6riRakUAnbhecX5a7voubrapo7ouFGS+GYZ/N4P" crossorigin="anonymous"/>
+  </head>
+  <body class="article">
+<div class="masthead-wrapper">
+    <div class="search-box">
+        <input id="search-input" type="text" placeholder="Search docs">
+    </div>
+    <div class="masthead">
+        <div class="logo-wrapper">
+            <a href="/"><img src="https://www.apicur.io/images/apicurio_headerlogo.png" class="project-logo"
+                    title="Apicurio"></a>
+        </div>
+        <div class="menu-wrapper">
+            <ul id="menu" class="menu">
+                <li>
+                    <a href="/studio/" id="menu-item-studio">Studio</a>
+                </li>
+                <li>
+                    <a href="/registry/" id="menu-item-registry">Registry</a>
+                </li>
+                <li>
+                    <a href="/datamodels/">Data Models</a>
+                </li>
+                <li>
+                    <a href="/apicurito/">Apicurito</a>
+                </li>
+                <li>
+                    <a href="/blog/">Blog</a>
+                </li>
+                <li>
+                    <a href="/contact/">Contact</a>
+                </li>
+                <li>
+                    <a href="https://github.com/apicurio">Fork</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentURL = window.location.href;
+    var studioAnchor = document.getElementById("menu-item-studio");
+    var registryAnchor = document.getElementById("menu-item-registry");
+
+    if (currentURL.includes("studio")) {
+        studioAnchor.classList.add("active");
+    } else if (currentURL.includes("registry")) {
+        registryAnchor.classList.add("active");
+    }
+</script>
+<div class="body">
+<div class="nav-container" data-component="apicurio-registry" data-version="3.4.x">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Apicurio Registry</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Introduction</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-the-registry.html">Introduction to Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-concepts-glossary.html">Apicurio Registry concepts and glossary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-intro-to-registry-rules.html">Apicurio Registry content rules</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-compatibility-modes.html">Apicurio Registry schema compatibility modes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-data-contracts.html">Apicurio Registry data contracts</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-docker.html">Installing Apicurio Registry using Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-installing-registry-storage-openshift.html">Installing Apicurio Registry storage on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kubernetesops-storage.html">Configuring Apicurio Registry with KubernetesOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-gitops-storage.html">Configuring Apicurio Registry with GitOps storage</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-operator.html">Deploying Apicurio Registry using the Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-deploying-registry-secured-kafka.html">Deploying Apicurio Registry with a secured Kafka instance</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-implementing-multitenancy.html">Implementing multitenancy with Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-high-availability.html">Deploying Apicurio Registry for high availability</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-sizing-guide.html">Apicurio Registry capacity planning and sizing guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Versioning and support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-versioning-support-policy.html">Versioning and support policy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-registry-security.html">Configuring Apicurio Registry security options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-resource-authorization.html">Configuring per-resource authorization</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-the-registry.html">Configuring your Apicurio Registry deployment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-custom-artifact-types.html">Configuring custom artifact types</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-registry-events.html">Apicurio Registry change events and the outbox pattern</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Client applications</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-cli.html">Managing Apicurio Registry content using the command-line interface</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-the-registry-client.html">Managing Apicurio Registry content using an SDK</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="assembly-using-schema-validation-library.html">Validating data with the Apicurio Registry schema validation library</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-managing-registry-artifacts-maven.html">Managing Apicurio Registry content using the Maven plug-in</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Flink integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-flink-catalog.html">Using Apicurio Registry with Apache Flink</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Apache Iceberg integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-iceberg-catalog.html">Using Apicurio Registry as an Apache Iceberg REST Catalog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kafka client serializers/deserialisers</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-using-kafka-client-serdes.html">Validating Kafka messages using serializers/deserializers in Java clients</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Usage Telemetry and Lifecycle Governance</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-usage-telemetry.html">Usage Telemetry and API Lifecycle Governance</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-registry-kafka-topic-data.html">Exporting Apicurio Registry Kafka topic data</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">AI Agent Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-registry-quickstart.html">Agent registry quick start</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-a2a-features.html">A2A protocol features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-tool-features.html">MCP tool definition features in Apicurio Registry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-server-integration.html">MCP server integration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-mcp-registry-api.html">MCP Registry API (Developer Preview)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-ai-catalog-ard.html">AI Catalog and ARD discovery</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-llm-artifact-types-implementation.html">LLM artifact types implementation guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Confluent Schema Registry Compatibility</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Best Practices Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-schema-lifecycle-best-practices.html">Schema lifecycle best practices</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-artifact-reference.html">Apicurio Registry artifact reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-rule-reference.html">Apicurio Registry content rule reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-config-reference.html">Apicurio Registry configuration reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-operator-config-reference.html">Apicurio Registry Operator configuration reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Apicurio Registry</span>
+    <span class="version">3.4.x</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Apicurio Registry</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">3.4.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.3.x/index.html">3.3.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.2.x/index.html">3.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.1.x/index.html">3.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../3.0.x/index.html">3.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.6.x/index.html">2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.2.x/index.html">2.2.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.1.x/index.html">2.1.x</a>
+        </li>
+        <li class="version">
+          <a href="../../2.0.x/index.html">2.0.x</a>
+        </li>
+        <li class="version">
+          <a href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Apicurio Registry Operator</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../../apicurio-registry-operator/1.2.0-dev-v2.6.x/index.html">1.2.0-dev-v2.6.x</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.1-v2.5.9.final/index.html">1.1.1-v2.5.9.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.1.0-v2.4.12.final/index.html">1.1.0-v2.4.12.final</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/1.0.0/index.html">1.0.0</a>
+        </li>
+        <li class="version">
+          <a href="../../../apicurio-registry-operator/0.0.4/index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Apicurio Registry</a></li>
+    <li>Client applications</li>
+    <li><a href="assembly-using-schema-validation-library.html">Validating data with the Apicurio Registry schema validation library</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.4.x</button>
+  <div class="version-menu">
+    <a class="version is-current" href="assembly-using-schema-validation-library.html">3.4.x</a>
+    <a class="version is-missing" href="../../3.3.x/index.html">3.3.x</a>
+    <a class="version is-missing" href="../../3.2.x/index.html">3.2.x</a>
+    <a class="version is-missing" href="../../3.1.x/index.html">3.1.x</a>
+    <a class="version is-missing" href="../../3.0.x/index.html">3.0.x</a>
+    <a class="version is-missing" href="../../2.6.x/index.html">2.6.x</a>
+    <a class="version is-missing" href="../../2.2.x/index.html">2.2.x</a>
+    <a class="version is-missing" href="../../2.1.x/index.html">2.1.x</a>
+    <a class="version is-missing" href="../../2.0.x/index.html">2.0.x</a>
+    <a class="version is-missing" href="../../1.3.3.Final/index.html">1.3.3.Final</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/Apicurio/apicurio-registry">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Validating data with the Apicurio Registry schema validation library</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the Apicurio Registry schema validation library to check JSON, Avro, and Protobuf payloads in a Java application against schemas stored in Apicurio Registry. The library fetches and caches each schema and reports every problem it finds, without Kafka serializers or deserializers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="schema-validation-library-overview_registry"><a class="anchor" href="#schema-validation-library-overview_registry"></a>Schema validation library overview</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The Apicurio Registry schema validation library is a set of standalone Java modules that validate payloads against schemas that are stored in Apicurio Registry. Each module provides one validator class for one schema format, and all modules share the same result and error types.</p>
+</div>
+<div class="paragraph">
+<p>The library is useful when you want to validate data outside of a Kafka producer or consumer, for example in a REST endpoint, a message broker plugin, or a batch job. You choose the schema by its coordinates in Apicurio Registry, and the library downloads it through the Apicurio Registry Java SDK, caches it, and validates your payload against it.</p>
+</div>
+<div class="paragraph">
+<p><strong>Validator classes</strong></p>
+</div>
+<div class="paragraph">
+<p>The following table lists the validator that each module provides.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Validator classes in the schema validation library</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Schema format</th>
+<th class="tableblock halign-left valign-top">Validator class</th>
+<th class="tableblock halign-left valign-top">Payload types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON Schema</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.apicurio.schema.validation.json.JsonValidator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any Java object that Jackson can convert to a JSON tree, such as a Java bean or a <code>Map</code>, or a <code>ByteBuffer</code> that contains serialized JSON. A <code>String</code> that contains JSON is not parsed; the validator treats it as a single JSON string value. To validate serialized JSON, wrap the bytes in a <code>ByteBuffer</code>, for example <code>ByteBuffer.wrap(json.getBytes(StandardCharsets.UTF_8))</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Avro</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.apicurio.schema.validation.avro.AvroValidator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An Avro <code>GenericRecord</code>, or a <code>String</code> that contains JSON-encoded Avro data</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protobuf</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.apicurio.schema.validation.protobuf.ProtobufValidator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A generated Protobuf <code>Message</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Validation methods</strong></p>
+</div>
+<div class="paragraph">
+<p>Every validator offers two ways to choose the schema:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Fixed artifact reference</dt>
+<dd>
+<p>You pass an <code>ArtifactReference</code> when you create the validator, and then call <code>validateByArtifactReference</code> for each payload. The validator always resolves the same artifact. Use this method when one validator instance handles one schema.</p>
+</dd>
+<dt class="hdlist1">Per-record artifact reference</dt>
+<dd>
+<p>You call <code>validate</code> with a <code>Record</code> whose metadata carries the <code>ArtifactReference</code> for that payload. The library provides <code>SchemaValidationRecord</code> and <code>SchemaValidationMetadata</code> for this purpose. Use this method when one validator instance handles payloads for different schemas.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>If you create a validator with <code>Optional.empty()</code> instead of an artifact reference, only the <code>validate</code> method is available. Calling <code>validateByArtifactReference</code> on such a validator throws a <code>NullPointerException</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Validation results</strong></p>
+</div>
+<div class="paragraph">
+<p>Each validation method returns a <code>ValidationResult</code>. Call <code>success()</code> to check the outcome. When validation fails, <code>getValidationErrors()</code> returns a list of <code>ValidationError</code> objects, and each error has a <code>description</code> and a <code>context</code>. The meaning of the context depends on the format: an error code for JSON Schema, a field path or error category for Avro, and an empty string for Protobuf.</p>
+</div>
+<div class="paragraph">
+<p>When the validator cannot fetch the schema from Apicurio Registry, for example because the artifact does not exist or the registry is unreachable, it does not throw an exception. Instead, it returns a failed result that contains a single error with the context <code>SCHEMA_RESOLUTION_ERROR</code> and a description that starts with <code>Failed to resolve schema from registry</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Schema resolution and caching</strong></p>
+</div>
+<div class="paragraph">
+<p>The validators use the same schema resolver as the Apicurio Registry Kafka client serializers and deserializers (SerDes), so they accept the same <code>apicurio.registry.*</code> configuration properties. The resolver caches each schema after the first lookup and checks Apicurio Registry again after the configured check period. When the artifact version references other artifacts, the resolver fetches those references and passes them to the format parser, so schemas with references validate correctly.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#validating-json-with-schema-validation-library_registry">Validating JSON data against a JSON Schema artifact</a></p>
+</li>
+<li>
+<p><a href="#validating-avro-with-schema-validation-library_registry">Validating Avro data against an Avro schema artifact</a></p>
+</li>
+<li>
+<p><a href="#validating-protobuf-with-schema-validation-library_registry">Validating Protobuf messages against a Protobuf schema artifact</a></p>
+</li>
+<li>
+<p><a href="#schema-validation-library-reference_registry">Schema validation library dependencies and configuration</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="validating-json-with-schema-validation-library_registry"><a class="anchor" href="#validating-json-with-schema-validation-library_registry"></a>Validating JSON data against a JSON Schema artifact</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can validate Java objects against a JSON Schema artifact that is stored in Apicurio Registry by using the <code>JsonValidator</code> class. The validator reports every constraint that the payload violates, which helps you reject bad data before it reaches a downstream system.</p>
+</div>
+<div class="paragraph">
+<p>The examples in this procedure use the following JSON Schema, registered in the <code>default</code> group with the artifact ID <code>message-schema</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "$id": "https://example.com/message.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["message", "time"],
+  "properties": {
+    "message": { "type": "string" },
+    "time": { "type": "number" }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running in your environment.</p>
+</li>
+<li>
+<p>A JSON Schema artifact is registered in Apicurio Registry, and you know its group ID and artifact ID.</p>
+</li>
+<li>
+<p>You have a Maven project for your Java application.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add the JSON Schema validation module to your Maven project:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+    &lt;artifactId&gt;apicurio-registry-schema-validation-jsonschema&lt;/artifactId&gt;
+    &lt;version&gt;${apicurio-registry.version}&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the validator with the Apicurio Registry URL and an artifact reference for the schema:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.registry.resolver.config.SchemaResolverConfig;
+import io.apicurio.registry.resolver.strategy.ArtifactReference;
+import io.apicurio.schema.validation.json.JsonValidator;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+Map&lt;String, Object&gt; config = new HashMap&lt;&gt;();
+config.put(SchemaResolverConfig.REGISTRY_URL, "http://localhost:8080/apis/registry/v3");
+
+ArtifactReference reference = ArtifactReference.builder()
+        .groupId("default")
+        .artifactId("message-schema")
+        .build();
+
+JsonValidator validator = new JsonValidator(config, Optional.of(reference));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you omit the version, the validator resolves the latest version of the artifact.</p>
+</div>
+</li>
+<li>
+<p>Validate a payload that conforms to the schema:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.schema.validation.ValidationResult;
+
+Map&lt;String, Object&gt; payload = Map.of(
+        "message", "Hello world",
+        "time", System.currentTimeMillis());
+
+ValidationResult result = validator.validateByArtifactReference(payload);
+System.out.println(result);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output is <code>ValidationResult [ success ]</code>.</p>
+</div>
+</li>
+<li>
+<p>Validate a payload that violates the schema and read the errors:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.schema.validation.ValidationError;
+
+Map&lt;String, Object&gt; invalidPayload = Map.of(
+        "message", "Hello world",
+        "time", "not-a-number");
+
+ValidationResult invalidResult = validator.validateByArtifactReference(invalidPayload);
+if (!invalidResult.success()) {
+    for (ValidationError error : invalidResult.getValidationErrors()) {
+        System.out.println(error.getContext() + ": " + error.getDescription());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output is <code>1029: $.time: string found, number expected</code>. The context is the error code of the violated JSON Schema keyword, and the description names the JSON path of the offending value. The error codes and message wording come from the networknt json-schema-validator library and can change when Apicurio Registry upgrades that dependency.</p>
+</div>
+</li>
+<li>
+<p>Optional: To choose the schema for each payload at run time, wrap the payload in a <code>SchemaValidationRecord</code> and call <code>validate</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.schema.validation.SchemaValidationMetadata;
+import io.apicurio.schema.validation.SchemaValidationRecord;
+
+SchemaValidationRecord&lt;Object&gt; record = new SchemaValidationRecord&lt;&gt;(
+        payload, new SchemaValidationMetadata(reference));
+
+ValidationResult recordResult = validator.validate(record);</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Run the application. The conforming payload prints <code>ValidationResult [ success ]</code>, and the invalid payload prints one error with the context <code>1029</code>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#schema-validation-library-reference_registry">Schema validation library dependencies and configuration</a></p>
+</li>
+<li>
+<p><a href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="validating-avro-with-schema-validation-library_registry"><a class="anchor" href="#validating-avro-with-schema-validation-library_registry"></a>Validating Avro data against an Avro schema artifact</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can validate Avro <code>GenericRecord</code> objects or JSON-encoded Avro data against an Avro schema artifact that is stored in Apicurio Registry by using the <code>AvroValidator</code> class.</p>
+</div>
+<div class="paragraph">
+<p><code>GenericRecord</code> validation performs partial checks. It skips primitive type checks, accepts a union when any branch reports no errors, and does not reject a non-collection value for an array or a non-map value for a map. For example, a record whose own schema declares <code>time</code> as a string can pass against a registered <code>long</code> field. A successful result does not establish full schema conformance.</p>
+</div>
+<div class="paragraph">
+<p>The JSON <code>String</code> overload instead decodes the data against the registered schema and reports decoding failures, including primitive type mismatches.</p>
+</div>
+<div class="paragraph">
+<p>The examples in this procedure use the following Avro schema, saved as <code>message.avsc</code> in the working directory of the application and registered in the <code>default</code> group with the artifact ID <code>message-avro</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "type": "record",
+  "name": "Message",
+  "namespace": "com.example",
+  "fields": [
+    { "name": "message", "type": "string" },
+    { "name": "time", "type": "long" }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running in your environment.</p>
+</li>
+<li>
+<p>An Avro schema artifact is registered in Apicurio Registry, and you know its group ID and artifact ID.</p>
+</li>
+<li>
+<p>You have a Maven project for your Java application.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add the Avro validation module to your Maven project:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+    &lt;artifactId&gt;apicurio-registry-schema-validation-avro&lt;/artifactId&gt;
+    &lt;version&gt;${apicurio-registry.version}&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the validator with the Apicurio Registry URL and an artifact reference for the schema:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.registry.resolver.config.SchemaResolverConfig;
+import io.apicurio.registry.resolver.strategy.ArtifactReference;
+import io.apicurio.schema.validation.avro.AvroValidator;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+Map&lt;String, Object&gt; config = new HashMap&lt;&gt;();
+config.put(SchemaResolverConfig.REGISTRY_URL, "http://localhost:8080/apis/registry/v3");
+
+ArtifactReference reference = ArtifactReference.builder()
+        .groupId("default")
+        .artifactId("message-avro")
+        .build();
+
+AvroValidator validator = new AvroValidator(config, Optional.of(reference));</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Validate a <code>GenericRecord</code> that conforms to the schema:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.schema.validation.ValidationResult;
+import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericRecord;
+
+import java.io.File;
+
+Schema schema = new Schema.Parser().parse(new File("message.avsc"));
+
+GenericRecord payload = new GenericData.Record(schema);
+payload.put("message", "Hello world");
+payload.put("time", System.currentTimeMillis());
+
+ValidationResult result = validator.validateByArtifactReference(payload);
+System.out.println(result);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output is <code>ValidationResult [ success ]</code>. When a field that the registered schema requires is missing from the record, the result contains an error whose context is the field path and whose description is <code>Missing required field: &lt;name&gt;</code>.</p>
+</div>
+</li>
+<li>
+<p>Validate JSON-encoded data that violates the schema and read the errors:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.schema.validation.ValidationError;
+
+String invalidJson = "{\"message\": \"Hello world\", \"time\": \"not-a-number\"}";
+
+ValidationResult invalidResult = validator.validateByArtifactReference(invalidJson);
+if (!invalidResult.success()) {
+    for (ValidationError error : invalidResult.getValidationErrors()) {
+        System.out.println(error.getContext() + ": " + error.getDescription());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output is <code>TYPE_ERROR: Expected long. Got VALUE_STRING</code>. The <code>String</code> overload decodes the JSON with the registered schema, so the context is <code>TYPE_ERROR</code> for a type mismatch and <code>VALIDATION_ERROR</code> for any other decoding problem.</p>
+</div>
+</li>
+<li>
+<p>Optional: To choose the schema for each record at run time, wrap the record in a <code>SchemaValidationRecord</code> and call <code>validate</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.schema.validation.SchemaValidationMetadata;
+import io.apicurio.schema.validation.SchemaValidationRecord;
+
+SchemaValidationRecord&lt;GenericRecord&gt; record = new SchemaValidationRecord&lt;&gt;(
+        payload, new SchemaValidationMetadata(reference));
+
+ValidationResult recordResult = validator.validate(record);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>validate</code> method accepts <code>GenericRecord</code> payloads only. To validate JSON-encoded Avro data, call <code>validateByArtifactReference</code> instead.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Run the application. The conforming record prints <code>ValidationResult [ success ]</code>, and the invalid JSON prints one error with the context <code>TYPE_ERROR</code>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#schema-validation-library-reference_registry">Schema validation library dependencies and configuration</a></p>
+</li>
+<li>
+<p><a href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="validating-protobuf-with-schema-validation-library_registry"><a class="anchor" href="#validating-protobuf-with-schema-validation-library_registry"></a>Validating Protobuf messages against a Protobuf schema artifact</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can validate generated Protobuf messages against a Protobuf schema artifact in Apicurio Registry by using the <code>ProtobufValidator</code> class. The validator checks that the registered schema defines the message type and that the compiled definition is compatible with it.</p>
+</div>
+<div class="paragraph">
+<p>This check catches a <code>.proto</code> file that has drifted from the registry before you deploy the application.</p>
+</div>
+<div class="paragraph">
+<p>The examples in this procedure use the following Protobuf schema, registered in the <code>default</code> group with the artifact ID <code>message-proto</code>, and the <code>MessageExample</code> class that <code>protoc</code> generates from it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-proto hljs" data-lang="proto">syntax = "proto3";
+package com.example;
+
+message MessageExample {
+  string key = 1;
+  string value = 2;
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running in your environment.</p>
+</li>
+<li>
+<p>A Protobuf schema artifact is registered in Apicurio Registry, and you know its group ID and artifact ID.</p>
+</li>
+<li>
+<p>You have a Maven project for your Java application that generates Java classes from your <code>.proto</code> files.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add the Protobuf validation module to your Maven project:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+    &lt;artifactId&gt;apicurio-registry-schema-validation-protobuf&lt;/artifactId&gt;
+    &lt;version&gt;${apicurio-registry.version}&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the validator with the Apicurio Registry URL and an artifact reference for the schema:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.registry.resolver.config.SchemaResolverConfig;
+import io.apicurio.registry.resolver.strategy.ArtifactReference;
+import io.apicurio.schema.validation.protobuf.ProtobufValidator;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+Map&lt;String, Object&gt; config = new HashMap&lt;&gt;();
+config.put(SchemaResolverConfig.REGISTRY_URL, "http://localhost:8080/apis/registry/v3");
+
+ArtifactReference reference = ArtifactReference.builder()
+        .groupId("default")
+        .artifactId("message-proto")
+        .build();
+
+ProtobufValidator validator = new ProtobufValidator(config, Optional.of(reference));</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Validate a message whose type the registered schema defines:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.schema.validation.ValidationResult;
+
+MessageExample payload = MessageExample.newBuilder()
+        .setKey("order-1001")
+        .setValue("Hello world")
+        .build();
+
+ValidationResult result = validator.validateByArtifactReference(payload);
+System.out.println(result);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output is <code>ValidationResult [ success ]</code>.</p>
+</div>
+</li>
+<li>
+<p>Validate a message whose type the registered schema does not define, and read the errors:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.schema.validation.ValidationError;
+
+// MessageExample2 is generated from a different .proto file
+MessageExample2 invalidPayload = MessageExample2.newBuilder()
+        .setKey2("order-1002")
+        .setValue2(32)
+        .build();
+
+ValidationResult invalidResult = validator.validateByArtifactReference(invalidPayload);
+if (!invalidResult.success()) {
+    for (ValidationError error : invalidResult.getValidationErrors()) {
+        System.out.println(error.getDescription());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output is <code>Missing message type MessageExample2 in the protobuf schema</code>. When the message type exists but its compiled definition removes or changes a field that the registered schema defines, for example a field with a different type or number, the result contains one error for each difference. The context of a Protobuf validation error is always an empty string.</p>
+</div>
+</li>
+<li>
+<p>Optional: To choose the schema for each message at run time, wrap the message in a <code>SchemaValidationRecord</code> and call <code>validate</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import com.google.protobuf.Message;
+import io.apicurio.schema.validation.SchemaValidationMetadata;
+import io.apicurio.schema.validation.SchemaValidationRecord;
+
+ArtifactReference recordReference = ArtifactReference.builder()
+        .groupId("default")
+        .artifactId("message-proto")
+        .version("1")
+        .build();
+
+ProtobufValidator recordValidator = new ProtobufValidator(config, Optional.empty());
+
+SchemaValidationRecord&lt;Message&gt; record = new SchemaValidationRecord&lt;&gt;(
+        payload, new SchemaValidationMetadata(recordReference));
+
+ValidationResult recordResult = recordValidator.validate(record);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace <code>1</code> with the registered schema version. The explicit version lets this new validator fetch the schema without a prior fixed-reference lookup.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Run the application. The <code>MessageExample</code> message prints <code>ValidationResult [ success ]</code>, and the <code>MessageExample2</code> message prints the missing message type error.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#schema-validation-library-reference_registry">Schema validation library dependencies and configuration</a></p>
+</li>
+<li>
+<p><a href="assembly-managing-registry-artifacts-api.html">Managing Apicurio Registry content using the REST API</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="schema-validation-library-reference_registry"><a class="anchor" href="#schema-validation-library-reference_registry"></a>Schema validation library dependencies and configuration</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The schema validation library consists of four Maven modules that share one result API and one set of configuration properties. The following tables list the modules, the result methods, the error context values, the artifact coordinates, and the configuration properties.</p>
+</div>
+<div class="paragraph">
+<p><strong>Maven modules</strong></p>
+</div>
+<div class="paragraph">
+<p>All modules use the group ID <code>io.apicurio</code> and the same version as the Apicurio Registry release. Versions 3.3.0 and later are available from Maven Central. Add only the format modules that you need; each format module pulls in the common module, the schema resolver, and the Apicurio Registry Java SDK.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Maven modules of the schema validation library</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Artifact ID</th>
+<th class="tableblock halign-left valign-top">Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio-registry-schema-validation-common</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ValidationResult</code>, <code>ValidationError</code>, <code>SchemaValidationRecord</code>, and <code>SchemaValidationMetadata</code> in the <code>io.apicurio.schema.validation</code> package</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio-registry-schema-validation-jsonschema</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JsonValidator</code>, which validates JSON payloads with the networknt <code>json-schema-validator</code> library. The validator uses the JSON Schema draft-07 dialect by default; when the artifact declares a <code>$schema</code> keyword, the validator uses that dialect.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio-registry-schema-validation-avro</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AvroValidator</code>, which validates <code>GenericRecord</code> objects and JSON-encoded data with Apache Avro</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio-registry-schema-validation-protobuf</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ProtobufValidator</code>, which compares the compiled message definition with the registered schema by using the Apicurio Registry Protobuf compatibility checker</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Result types</strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Methods of ValidationResult and ValidationError</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ValidationResult.success()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns <code>true</code> when the validator reports no errors and <code>false</code> otherwise. The <code>GenericRecord</code> validation limitations still apply.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ValidationResult.getValidationErrors()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the list of errors, or <code>null</code> when the validator reports no errors. Check <code>success()</code> before you read the list.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ValidationResult.toString()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns <code>ValidationResult [ success ]</code> for a successful result, or <code>ValidationResult [ errors = [...] ]</code> with every reported error for a failed result.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ValidationError.getDescription()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the human-readable message for one violation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ValidationError.getContext()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns where or why the violation occurred. The value depends on the format, as described in the following table.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Values of the error context by format</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Context value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON Schema</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The error code of the violated keyword from the networknt library, for example <code>1028</code> for a missing required property and <code>1029</code> for a type mismatch. The description starts with the JSON path of the value, for example <code>$.time</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Avro, <code>GenericRecord</code> payload</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The path of the field that failed, for example <code>time</code> or <code>address.city</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Avro, JSON <code>String</code> payload</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TYPE_ERROR</code> when the data does not match the schema type, or <code>VALIDATION_ERROR</code> for any other decoding failure.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protobuf</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An empty string.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any format</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SCHEMA_RESOLUTION_ERROR</code> when the validator cannot fetch the schema from Apicurio Registry. The description starts with <code>Failed to resolve schema from registry</code> and includes the exception class and message. For JSON payloads, the validator also returns this context when it cannot convert the payload to a JSON tree, for example when a <code>ByteBuffer</code> contains malformed JSON.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Artifact references</strong></p>
+</div>
+<div class="paragraph">
+<p>For <code>validateByArtifactReference</code>, build an <code>ArtifactReference</code> with <code>ArtifactReference.builder()</code> and one of the following combinations of coordinates, and pass it to the validator constructor. When a reference carries more than one kind of coordinate, the resolver uses the first one in the order of the table.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Artifact coordinates for validateByArtifactReference</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Builder methods</th>
+<th class="tableblock halign-left valign-top">Resolved version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentId(Long)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The content with that content ID.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentHash(String)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The content with that content hash.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>globalId(Long)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The version with that global ID.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groupId(String)</code>, <code>artifactId(String)</code>, <code>version(String)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The named version of the artifact. When you omit <code>version</code>, the latest version of the artifact. The <code>artifactId</code> is required.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For per-record <code>validate</code>, the resolver copies only the group ID, artifact ID, and version from the metadata reference. It discards <code>contentId</code>, <code>contentHash</code>, and <code>globalId</code>, so an ID-only metadata reference cannot select the schema by that ID and can produce <code>SCHEMA_RESOLUTION_ERROR</code>.</p>
+</div>
+<div class="paragraph">
+<p>Specify a version in the per-record reference, or set <code>SchemaResolverConfig.FIND_LATEST_ARTIFACT</code> to <code>true</code> to select the latest version by group ID and artifact ID. With the default <code>false</code> and no version, a cache miss uses schema-content lookup instead. The Protobuf validator cannot extract schema content through that lookup path, so it requires an explicit version or <code>FIND_LATEST_ARTIFACT=true</code> to work without a cached schema.</p>
+</div>
+<div class="paragraph">
+<p><strong>Configuration properties</strong></p>
+</div>
+<div class="paragraph">
+<p>You pass configuration properties to the validator constructor as a <code>Map&lt;String, Object&gt;</code>. The property keys are available as constants on the <code>SchemaResolverConfig</code> class. The following table lists the properties that are most relevant to validation.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Configuration properties for the schema validation library</caption>
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 42.8571%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL of the Apicurio Registry REST API, for example <code>http://localhost:8080/apis/registry/v3</code>. Required.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.url.version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Major version of the REST API at the URL, <code>2</code> or <code>3</code>. Set it only when the resolver cannot detect the version from the URL.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Detected from the URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.auth.service.token.endpoint</code>, <code>apicurio.registry.auth.client.id</code>, <code>apicurio.registry.auth.client.secret</code>, <code>apicurio.registry.auth.client.scope</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth 2.0 client credentials for an instance of Apicurio Registry that requires authentication.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.auth.username</code>, <code>apicurio.registry.auth.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Credentials for HTTP basic authentication.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.check-period-ms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How long, in milliseconds, the resolver caches a schema before it checks Apicurio Registry again.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30000</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.cache-latest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the resolver caches lookups that do not specify a version. Set it to <code>false</code> to fetch the latest version on every validation.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.find-latest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether per-record <code>validate</code> resolves by artifact coordinates instead of schema content when no version is specified. Set it to <code>true</code> to use the latest version. The fixed-reference <code>validateByArtifactReference</code> method uses the latest version when no version is specified, regardless of this setting.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.retry-count</code>, <code>apicurio.registry.retry-backoff-ms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times the resolver retries a failed schema lookup, and the delay between retries in milliseconds.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3</code>, <code>300</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.fault-tolerant-refresh</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the resolver keeps a cached schema and logs the error when a refresh fails, instead of failing the validation.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.dereference-schema</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the resolver asks Apicurio Registry for a dereferenced schema instead of fetching the referenced artifacts separately.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.vertx.instance</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A <code>Vertx</code> object that the resolver uses for HTTP connections. Set it programmatically to reuse a Vert.x instance that you manage. When it is not set, the Apicurio Registry Java SDK creates its own HTTP client, with Vert.x when it is available and the JDK HTTP client otherwise.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The validators accept every property of the Apicurio Registry schema resolver. For the TLS and proxy properties, see <a href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a>. For the complete list, including the HTTP adapter and client retry properties, see the <code>SchemaResolverConfig</code> class in the schema resolver module.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-using-the-registry-client.html" class="page">Managing Apicurio Registry content using an SDK</a></p>
+</li>
+<li>
+<p><a href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/schema-validation">Schema validation library source code</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2024 Red Hat, Inc. All rights reserved.</p>
+</footer>
+<script src="../../../assets/js/site.js"></script>
+<script src="../../../assets/js/vendor/lunr.js"></script>
+<script src="../../../assets/js/vendor/search.js" id="search-script" data-base-path="../../.." data-page-path="/apicurio-registry/3.4.x/getting-started/assembly-using-schema-validation-library.html"></script>
+<script async src="../../../assets/../search-index.js"></script>
+<script async src="../../../assets/js/vendor/highlight.js"></script>
+  </body>
+</html>
