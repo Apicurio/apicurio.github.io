@@ -409,7 +409,10 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can connect Large Language Model (LLM) clients such as Claude Desktop to Apicurio Registry by using the Apicurio Registry MCP server container. The MCP server acts as an adapter between LLM clients and Apicurio Registry. On the LLM side, it communicates by using stdio transport (standard input/output). On the Apicurio Registry side, it communicates by using HTTP or HTTPS to the Apicurio Registry REST API, configured through the <code>REGISTRY_URL</code> environment variable.</p>
+<p>You can connect Large Language Model (LLM) clients such as Claude Desktop to Apicurio Registry by using the Apicurio Registry MCP server container, which acts as an adapter between LLM clients and Apicurio Registry.</p>
+</div>
+<div class="paragraph">
+<p>On the LLM side, the MCP server communicates by using stdio transport (standard input/output). On the Apicurio Registry side, it communicates by using HTTP or HTTPS to the Apicurio Registry REST API, configured through the <code>REGISTRY_URL</code> environment variable.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -437,7 +440,10 @@ The Apicurio Registry MCP server connects LLM clients to a running Apicurio Regi
 <h2 id="mcp-server-overview_registry"><a class="anchor" href="#mcp-server-overview_registry"></a>MCP server overview</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The Apicurio Registry MCP server container acts as an adapter between LLM clients and Apicurio Registry. On the LLM side, it communicates by using stdio transport (standard input/output). On the Apicurio Registry side, it communicates by using HTTP or HTTPS to the Apicurio Registry REST API, configured through the <code>REGISTRY_URL</code> environment variable.</p>
+<p>The Apicurio Registry MCP server container acts as an adapter between LLM clients and Apicurio Registry.</p>
+</div>
+<div class="paragraph">
+<p>On the LLM side, it communicates by using stdio transport (standard input/output). On the Apicurio Registry side, it communicates by using HTTP or HTTPS to the Apicurio Registry REST API, configured through the <code>REGISTRY_URL</code> environment variable.</p>
 </div>
 <div class="paragraph">
 <p>When an LLM client sends a request, the MCP server converts that request into Apicurio Registry REST API calls, runs the operation, and returns the results to the LLM client. The LLM client prompts you for confirmation before each tool call.</p>
@@ -1177,7 +1183,10 @@ The <code>latest</code> tag refers to the most recent stable release. For develo
 <h2 id="configuring-mcp-server-http-oauth_registry"><a class="anchor" href="#configuring-mcp-server-http-oauth_registry"></a>Configuring MCP server HTTP transport with OAuth</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can run the Apicurio Registry MCP server as an HTTP service for MCP clients that connect over the network, whether they run locally or remotely. Clients authenticate with the same Keycloak realm as Apicurio Registry and the UI. The MCP server validates the inbound bearer token and forwards it unchanged to Apicurio Registry REST API calls, so role-based access control applies per user.</p>
+<p>You can run the Apicurio Registry MCP server as an HTTP service for MCP clients that connect over the network, whether they run locally or remotely.</p>
+</div>
+<div class="paragraph">
+<p>Clients authenticate with the same Keycloak realm as Apicurio Registry and the UI. The MCP server validates the inbound bearer token and forwards it unchanged to Apicurio Registry REST API calls, so role-based access control applies per user.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -1273,7 +1282,10 @@ QUARKUS_HTTP_CORS_ORIGINS=http://localhost:6274</code></pre>
 <h2 id="mcp-http-mode-without-token-forwarding_registry"><a class="anchor" href="#mcp-http-mode-without-token-forwarding_registry"></a>MCP HTTP mode without token forwarding</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>By default, HTTP mode forwards each caller&#8217;s bearer token to Apicurio Registry, so role-based access control applies per user. You can disable token forwarding so that all callers act as one shared service account, for example, in shared deployments where OIDC only controls access to the MCP endpoint.</p>
+<p>By default, HTTP mode forwards each caller&#8217;s bearer token to Apicurio Registry, so role-based access control applies per user. You can disable token forwarding so that all callers act as one shared service account.</p>
+</div>
+<div class="paragraph">
+<p>Disabling token forwarding is useful, for example, in shared deployments where OIDC only controls access to the MCP endpoint.</p>
 </div>
 <div class="paragraph">
 <p>To disable token forwarding, set <code>apicurio.mcp.http.forward-token=false</code>. Callers still authenticate to the MCP server with OIDC, by using the same Keycloak realm and HTTP authentication settings as with token forwarding enabled. MCP tool calls then use the shared <code>apicurio.mcp.auth.*</code> service account against Apicurio Registry, not the caller&#8217;s token.</p>

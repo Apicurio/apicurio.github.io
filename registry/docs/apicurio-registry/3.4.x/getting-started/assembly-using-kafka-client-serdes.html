@@ -409,7 +409,10 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Apicurio Registry provides client serializers/deserializers (SerDes) for Kafka producer and consumer applications written in Java. Kafka producer applications use serializers to encode messages that conform to a specific event schema. Kafka consumer applications use deserializers to validate that messages have been serialized using the correct schema, based on a specific schema ID. This ensures consistent schema use and helps to prevent data errors at runtime.</p>
+<p>Apicurio Registry provides client serializers/deserializers (SerDes) for Kafka producer and consumer applications written in Java. Using these SerDes ensures consistent schema use and helps prevent data errors at runtime.</p>
+</div>
+<div class="paragraph">
+<p>Kafka producer applications use serializers to encode messages that conform to a specific event schema. Kafka consumer applications use deserializers to validate that messages have been serialized using the correct schema, based on a specific schema ID.</p>
 </div>
 <div class="paragraph">
 <p>This chapter explains how to use Kafka client SerDes in your producer and consumer client applications.</p>
@@ -578,7 +581,10 @@
 <h2 id="registry-serdes-concepts-strategy_registry"><a class="anchor" href="#registry-serdes-concepts-strategy_registry"></a>Strategies to look up a schema in Apicurio Registry</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The Kafka client serializer uses <em>lookup strategies</em> to determine the artifact ID and global ID under which the message schema is registered in Apicurio Registry. For a given topic and message, you can use different implementations of the <code>ArtifactReferenceResolverStrategy</code> Java interface to return a reference to an artifact in the registry.</p>
+<p>The Kafka client serializer uses <em>lookup strategies</em> to determine the artifact ID and global ID under which the message schema is registered in Apicurio Registry.</p>
+</div>
+<div class="paragraph">
+<p>For a given topic and message, you can use different implementations of the <code>ArtifactReferenceResolverStrategy</code> Java interface to return a reference to an artifact in the registry.</p>
 </div>
 <div class="paragraph">
 <p>The classes for each strategy are in the <code>io.apicurio.registry.serde.strategy</code> package. Specific strategy classes for Avro SerDes are in the <code>io.apicurio.registry.serde.avro.strategy package</code>. The default strategy is the <code>TopicIdStrategy</code>, which looks for Apicurio Registry artifacts with the same name as the Kafka topic receiving messages.</p>
@@ -814,7 +820,7 @@
 <h2 id="registry-serdes-config-consumer_registry"><a class="anchor" href="#registry-serdes-config-consumer_registry"></a>Using a schema from a Kafka consumer client</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This procedure describes how to configure a Kafka consumer client written in Java to use a schema from Apicurio Registry.</p>
+<p>You can configure a Kafka consumer client written in Java to use a schema from Apicurio Registry.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -869,7 +875,7 @@ props.putIfAbsent(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
 <h2 id="registry-serdes-config-producer_registry"><a class="anchor" href="#registry-serdes-config-producer_registry"></a>Using a schema from a Kafka producer client</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This procedure describes how to configure a Kafka producer client written in Java to use a schema from Apicurio Registry.</p>
+<p>You can configure a Kafka producer client written in Java to use a schema from Apicurio Registry.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -917,7 +923,7 @@ props.put(SerdeConfig.FIND_LATEST_ARTIFACT, Boolean.TRUE);</code></pre>
 <h2 id="registry-serdes-config-stream_registry"><a class="anchor" href="#registry-serdes-config-stream_registry"></a>Using a schema from a Kafka Streams application</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>This procedure describes how to configure a Kafka Streams client written in Java to use an Apache Avro schema from Apicurio Registry.</p>
+<p>You can configure a Kafka Streams client written in Java to use an Apache Avro schema from Apicurio Registry.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
