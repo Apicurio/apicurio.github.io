@@ -984,45 +984,155 @@ If you already use the <code>FULL</code> validity level for MCP tool definitions
 <h2 id="mcp-compatibility-checking_registry"><a class="anchor" href="#mcp-compatibility-checking_registry"></a>Compatibility checking</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>When you version MCP tool definitions, Apicurio Registry checks for breaking changes based on compatibility rules.</p>
-</div>
-<div class="paragraph">
-<p>The following changes are compatible and are allowed:</p>
+<p>When a <code>COMPATIBILITY</code> rule is configured, Apicurio Registry compares the <code>inputSchema</code> and optional <code>outputSchema</code> of successive <code>MCP_TOOL</code> versions with the same Apitomy Data Models checker used for JSON Schema artifacts.
+The two schemas have opposite directions:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Adding optional input parameters</p>
+<p><code>BACKWARD</code>: the new tool accepts every input allowed by the old input schema, and every output allowed by the new output schema satisfies the old output schema.</p>
 </li>
 <li>
-<p>Changing name, title, or description</p>
+<p><code>FORWARD</code>: the old tool accepts every input allowed by the new input schema, and every output allowed by the old output schema satisfies the new output schema.</p>
 </li>
 <li>
-<p>Changing annotations</p>
+<p><code>FULL</code>: both conditions hold.</p>
 </li>
 <li>
-<p>Adding or modifying outputSchema</p>
+<p>The <code>_TRANSITIVE</code> modes check every earlier version rather than only the latest. <code>NONE</code> disables compatibility checking. With no previous version, there is no compatibility comparison; configure a <code>VALIDITY</code> rule for initial content validation.</p>
 </li>
 </ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. MCP tool schema evolution rules</caption>
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Change (old to new)</th>
+<th class="tableblock halign-left valign-top">Input BACKWARD</th>
+<th class="tableblock halign-left valign-top">Input FORWARD</th>
+<th class="tableblock halign-left valign-top">Output BACKWARD</th>
+<th class="tableblock halign-left valign-top">Output FORWARD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a required property optional, keeping its schema</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make an optional property required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a typed optional property to a closed object (<code>additionalProperties: false</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a typed optional property to an open object (absent or <code>true</code> additionalProperties)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove an optional property declaration from a closed object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove an optional property constraint from an open object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widen <code>type</code>, including nested properties and array items (<code>integer</code> to <code>number</code>, or <code>string</code> to <code>["string", "null"]</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change between disjoint types (<code>string</code> to <code>integer</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Expand <code>enum</code>, remove <code>const</code>, or relax <code>multipleOf</code> from 4 to 2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lower <code>minimum</code>, <code>exclusiveMinimum</code>, <code>minLength</code>, <code>minItems</code>, or <code>minProperties</code>; raise the corresponding maximum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow additional properties, widen their schema, or relax <code>uniqueItems</code> from <code>true</code> to <code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The table assumes a strict change in accepted values with other constraints unchanged. Reverse a widening change to reverse its results. A property declaration is a constraint, not a guarantee that the property exists: use <code>required</code> for that guarantee. A required output can become optional only with a forward-compatible change; adding a required output can be backward compatible if the old schema already allowed that property and its values.</p>
 </div>
 <div class="paragraph">
-<p>The following changes are incompatible and might break clients:</p>
+<p>Adding an <code>outputSchema</code> where none existed is backward compatible but not forward compatible. Removing it loses the declared output guarantee and is backward incompatible but forward compatible. Changing the tool&#8217;s name, title, description, or annotations does not affect this schema comparison; that does not establish that a renamed tool or changed implementation is safe for callers.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Removing input parameters from inputSchema.properties</p>
-</li>
-<li>
-<p>Adding new required parameters</p>
-</li>
-<li>
-<p>Removing required parameters</p>
-</li>
-<li>
-<p>Changing the inputSchema type</p>
-</li>
-</ul>
+<div class="sect2">
+<h3 id="_supported_schema_subset_and_limits"><a class="anchor" href="#_supported_schema_subset_and_limits"></a>Supported schema subset and limits</h3>
+<div class="paragraph">
+<p>The publication rule supports recursive <code>properties</code>, schema-valued or boolean <code>additionalProperties</code>, homogeneous <code>items</code>, boolean subschemas, <code>type</code> (including unions), <code>required</code>, <code>enum</code>, <code>const</code>, numeric bounds and <code>multipleOf</code>, string length bounds, array size and uniqueness, and object property counts. It recognizes drafts 4, 6, 7, 2019-09, and 2020-12; absent <code>$schema</code> uses draft 7. Keywords must be valid for the declared draft. In draft 4, <code>const</code> (which draft 4 does not define) and the boolean <code>exclusiveMinimum</code> and <code>exclusiveMaximum</code> modifiers are outside the supported subset. The checker compares most numbers as 64-bit floating-point values, so numbers must be exactly representable at that precision, such as <code>0.1</code> or integers up to 2<sup>53</sup>. A value such as <code>9007199254740993.0</code>, or an integer above 2<sup>53</sup> in a numeric bound or <code>multipleOf</code>, is outside the supported subset and returns HTTP 422 rather than comparing equal to a neighboring value. Integers of any size inside <code>enum</code> and <code>const</code> values are compared exactly.</p>
+</div>
+<div class="paragraph">
+<p>Schema annotations (<code>title</code>, <code>description</code>, <code>default</code>, <code>examples</code>, <code>$comment</code>, <code>deprecated</code>, <code>readOnly</code>, and <code>writeOnly</code>) do not enforce compatibility constraints. Default values do not fill missing inputs.</p>
+</div>
+<div class="paragraph">
+<p>References (<code>$ref</code>, <code>$dynamicRef</code>, <code>$recursiveRef</code>, identifiers and definition containers), composition (<code>allOf</code>, <code>anyOf</code>, <code>oneOf</code>, <code>not</code>), conditionals, dependencies, tuple schemas, <code>prefixItems</code>, <code>contains</code>, <code>unevaluated*</code>, <code>pattern</code>, <code>patternProperties</code>, <code>format</code>, and other unlisted keywords are outside this publication rule&#8217;s supported subset. They are not silently discarded. If either compared schema uses one, even unchanged, the comparison fails with HTTP 422. No reference is fetched or resolved. This deliberately narrower contract does not change the JSON artifact checker or cross-tool chaining endpoint.</p>
+</div>
+<div class="paragraph">
+<p>A known incompatible change returns HTTP 400 with a rule-violation context prefixed by <code>/inputSchema</code> or <code>/outputSchema</code>. For example, narrowing an input string reports <code>/inputSchema/properties/query/maxLength</code>. Input BACKWARD contexts point into the new schema; output BACKWARD contexts point into the old schema because its accepted outputs are the comparison target. FORWARD reverses those locations; FULL can report both. Invalid or unsupported schemas return HTTP 422. Neither rejection creates the candidate version or changes previously accepted content.</p>
+</div>
+<div class="paragraph">
+<p>The engine can conservatively reject changes that accept the same values, especially when several constraints interact. A passing schema check is not proof of behavioral equivalence, runtime conformance, successful invocation, or compatibility between two different tools.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_upgrade_and_sample_guidance"><a class="anchor" href="#_upgrade_and_sample_guidance"></a>Upgrade and sample guidance</h3>
+<div class="paragraph">
+<p>Earlier MCP tool checking compared only top-level input types, property names, and requiredness; output changes and nested constraint changes were unchecked. Version 3.4 checks the supported subset above and changes those results. Making an input optional is now backward compatible. Adding a typed optional input to an open schema is no longer automatically accepted. Stored versions are not rewritten; unsupported schemas in existing versions can prevent subsequent publication under an enabled compatibility rule.</p>
+</div>
+<div class="paragraph">
+<p>For a release-safety demonstration, publish a tool whose input <code>query</code> is a string with <code>maxLength: 10</code>, enable <code>BACKWARD</code>, and propose <code>maxLength: 5</code>. Expect HTTP 400 and unchanged old content. Propose <code>maxLength: 20</code> and expect acceptance. For an output schema, the direction is reversed. Use a disposable registry and retain the rule configuration, exact versions, responses, and retrieved content as evidence for the agent-registry graduation work (#10294). This demonstrates publication-time schema enforcement only; it is not evidence of runtime admission, authenticated invocation, or full feature graduation.</p>
+</div>
 </div>
 </div>
 </div>
