@@ -681,7 +681,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by artifact name or artifact ID. A value without <code><strong></code> matches anywhere in the name or ID. Use <code></strong></code> as a prefix or suffix wildcard, for example <code>weather*</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by artifact name or artifact ID. A value without <code>*</code> matches anywhere in the name or ID. Use <code>*</code> as a prefix or suffix wildcard, for example <code>weather*</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>skill</code></p></td>
@@ -1060,13 +1060,13 @@ servers:
 <p>Ordinary DRAFT creates/edits do not generate published companions. Transitioning a draft to a published state validates and generates from its edited content. Dry-run requests do not write companions. Published updates re-read the source tip, and conditional target-version writes prevent a concurrent manual version from being superseded.</p>
 </div>
 <div class="paragraph">
-<p>Required Agent Card fields with no OpenAPI equivalent — <code>capabilities</code>, <code>skills</code>, <code>defaultInputModes</code>, and <code>defaultOutputModes</code> — must always be supplied explicitly in the extension.</p>
+<p>In the extension, you must explicitly supply the required Agent Card fields that have no OpenAPI equivalent: <code>capabilities</code>, <code>skills</code>, <code>defaultInputModes</code>, and <code>defaultOutputModes</code>.</p>
 </div>
 <div class="paragraph">
-<div class="title">Provenance and sync labels</div>
-<p>The companion artifact and its source OpenAPI artifact are marked with <code>apicurio.a2a.openapi-agent-card.*</code> labels:</p>
+<p>Apicurio Registry marks the companion artifact and its source OpenAPI artifact with <code>apicurio.a2a.openapi-agent-card.*</code> labels:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Provenance and sync labels</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -1109,8 +1109,10 @@ servers:
 <div class="paragraph">
 <p>Labels are editable provenance/navigation hints, never authorization grants. Owner-only access is checked independently on the companion. Generation provenance is stored atomically with each version; failure updating the source navigation link can be repaired on a subsequent unchanged-content synchronization. A manually edited version without generation provenance is preserved. Regeneration after manual changes requires an explicit user decision, not deletion of its hash label.</p>
 </div>
-<div class="ulist _additional-resources">
-<div class="title">Known limitations</div>
+<div class="paragraph">
+<p><strong>Known limitations</strong></p>
+</div>
+<div class="ulist">
 <ul>
 <li>
 <p>REST publication paths trigger generation: first published version, new published version, <code>ifExists=UPDATE</code>/<code>FIND_OR_CREATE_VERSION</code>, and publication of an edited draft. KafkaSQL REST requests journal both writes; replay itself does not generate an extra companion. Confluent-compatible APIs and read-only GitOps/KubernetesOps imports do not trigger generation.</p>
@@ -1254,7 +1256,7 @@ servers:
 <p>Artifact references record which tools, servers, models, and prompts an agent uses, and which tools an MCP server provides. The references are registry metadata: Agent Card and <code>server.json</code> content is not changed.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Allowed reference targets</caption>
+<caption class="title">Table 8. Allowed reference targets</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -1482,7 +1484,7 @@ metadata:
 <p>You can chain context across multiple agents in a pipeline. The <code>a2a-real-world-integration</code> example in the Apicurio Registry repository demonstrates this pattern.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. Context chaining pipeline</caption>
+<caption class="title">Table 9. Context chaining pipeline</caption>
 <colgroup>
 <col style="width: 14.2857%;">
 <col style="width: 42.8571%;">
