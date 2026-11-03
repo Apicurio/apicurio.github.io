@@ -412,41 +412,16 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Per-resource authorization controls access to individual groups and artifacts, for example "Alice can write artifacts in group <code>team-a</code> and read <code>shared</code>, but cannot see `team-b`". Access is defined in an access rules file and applies to every Apicurio Registry API, including search and list results.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#resource-authorization-overview_registry">Overview</a></p>
-</li>
-<li>
-<p><a href="#resource-authorization-configuration_registry">Configuration</a></p>
-</li>
-<li>
-<p><a href="#resource-authorization-grants_registry">Access rules file format</a></p>
-</li>
-<li>
-<p><a href="#resource-authorization-coverage_registry">References and generated artifacts</a></p>
-</li>
-<li>
-<p><a href="#resource-authorization-use-cases_registry">Common use cases</a></p>
-</li>
-<li>
-<p><a href="#resource-authorization-interactions_registry">Interaction with other authorization features</a></p>
-</li>
-<li>
-<p><a href="#resource-authorization-monitoring_registry">Monitoring and audit logging</a></p>
-</li>
-<li>
-<p><a href="#resource-authorization-troubleshooting_registry">Troubleshooting</a></p>
-</li>
-</ul>
+<p>Per-resource authorization controls access to individual groups and artifacts. For example, Alice can write artifacts in group <code>team-a</code> and read <code>shared</code>, but cannot see <code>team-b</code>. You define the rules in a file, and Apicurio Registry applies them to every API, including search and list results.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="resource-authorization-overview_registry"><a class="anchor" href="#resource-authorization-overview_registry"></a>Overview</h2>
+<h2 id="resource-authorization-overview_registry"><a class="anchor" href="#resource-authorization-overview_registry"></a>Per-resource authorization overview</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Per-resource authorization adds a fine-grained layer on top of role-based access control (RBAC), so that you can restrict which groups and artifacts each user or role can read, write, or administer. Apicurio Registry applies the rules to direct requests and to search and list results.</p>
+</div>
 <div class="paragraph">
 <p>Apicurio Registry applies two layers of authorization:</p>
 </div>
@@ -461,33 +436,99 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>A request must pass both layers. Access rules restrict within what RBAC allows; they never allow more than the user&#8217;s role permits.</p>
+<p>A request must pass both layers. Access rules restrict within what RBAC allows and never allow more than the role of the user permits.</p>
 </div>
 <div class="paragraph">
-<p>The access rules file uses the <a href="https://github.com/kroxylicious/design/blob/main/proposals/009-authorizer.md">Kroxylicious ACL rules format</a>, also used by Kroxylicious and StreamsHub. Apicurio Registry reads it with the Kroxylicious rules parser and evaluates it itself, with the semantics described here.</p>
+<p>The access rules file uses the Kroxylicious ACL rules format, which Kroxylicious and StreamsHub also use. Apicurio Registry reads the file with the Kroxylicious rules parser and evaluates it itself, with the semantics described in this guide.</p>
 </div>
-<div class="sect2">
-<h3 id="_how_it_works"><a class="anchor" href="#_how_it_works"></a>How it works</h3>
+<div class="paragraph">
+<p><strong>How it works</strong></p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Point access</strong> (reading, writing, or deleting a specific group or artifact): the user&#8217;s identity and roles are matched against the rules for the addressed resource.</p>
+<p><strong>Point access</strong> (reading, writing, or deleting a specific group or artifact): Apicurio Registry matches the identity and roles of the user against the rules for the addressed resource.</p>
 </li>
 <li>
-<p><strong>Search and lists:</strong> the rules that apply to the user are translated into the storage query, so results contain exactly the resources the user can read, and page sizes and total counts are accurate. A resource never appears in search results unless direct read access to it would also be allowed.</p>
+<p><strong>Search and lists:</strong> Apicurio Registry translates the rules that apply to the user into the storage query, so results contain exactly the resources the user can read, and page sizes and total counts are accurate. A resource never appears in search results unless direct read access to it would also be allowed.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="https://github.com/kroxylicious/design/blob/main/proposals/009-authorizer.md">Kroxylicious ACL rules format (proposal 009)</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="enabling-resource-authorization_registry"><a class="anchor" href="#enabling-resource-authorization_registry"></a>Enabling per-resource authorization</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You enable per-resource authorization by pointing Apicurio Registry at an access rules file. After you enable it, Apicurio Registry checks every request against the rules in that file, in addition to RBAC.</p>
+</div>
+<div class="paragraph">
+<p>A complete Docker Compose example with Keycloak, including a script that verifies the expected access, is available in the <code>distro/docker-compose/in-memory-with-authz-grants/</code> directory of the Apicurio Registry source repository.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have enabled authentication in Apicurio Registry by using OpenID Connect (OIDC), HTTP basic authentication, or proxy header authentication.</p>
+</li>
+<li>
+<p>You have an access rules file in the Kroxylicious ACL rules format that ends with <code>otherwise deny;</code>.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Make the access rules file available to Apicurio Registry.</p>
+<div class="paragraph">
+<p>In Kubernetes, store the access rules file in a ConfigMap and mount it as a volume. Mount the ConfigMap as a directory rather than with <code>subPath</code>, because <code>subPath</code> mounts do not receive ConfigMap updates.</p>
+</div>
+</li>
+<li>
+<p>Set <code>apicurio.auth.resource-based-authorization.enabled</code> to <code>true</code>, and set <code>apicurio.auth.resource-based-authorization.rules.path</code> to the path of the file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
+  apicurio.auth.resource-based-authorization.enabled: "true"
+  apicurio.auth.resource-based-authorization.rules.path: "/opt/apicurio/authz/access.rules"</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Start or restart Apicurio Registry.</p>
+<div class="paragraph">
+<p>Apicurio Registry fails to start if the access rules file is missing or not valid.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Send a request that the rules deny, and check that Apicurio Registry rejects it with HTTP <code>403</code> and logs an <code>authz.denied</code> message to the <code>io.apicurio.registry.audit.authz</code> logger.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 <div class="sect1">
-<h2 id="resource-authorization-configuration_registry"><a class="anchor" href="#resource-authorization-configuration_registry"></a>Configuration</h2>
+<h2 id="resource-authorization-configuration_registry"><a class="anchor" href="#resource-authorization-configuration_registry"></a>Per-resource authorization configuration properties</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Per-resource authorization requires authentication (OIDC, HTTP basic, or proxy header authentication) to be enabled.</p>
+<div class="paragraph _abstract">
+<p>The following configuration properties control per-resource authorization. Per-resource authorization requires authentication (OIDC, HTTP basic, or proxy header authentication) to be enabled.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Per-resource authorization properties</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 16.6666%;">
@@ -509,7 +550,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.rules.path</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>(none)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the access rules file. Required when per-resource authorization is enabled. Apicurio Registry fails to start if the file is missing or invalid.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the access rules file. Required when per-resource authorization is enabled. Apicurio Registry fails to start if the file is missing or not valid.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.rules.reload-every</code></p></td>
@@ -528,27 +569,22 @@
 </tr>
 </tbody>
 </table>
-<div class="listingblock">
-<div class="title">Example configuration</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
-  apicurio.auth.resource-based-authorization.enabled: "true"
-  apicurio.auth.resource-based-authorization.rules.path: "/opt/apicurio/authz/access.rules"</code></pre>
-</div>
+<div class="paragraph">
+<p><strong>Automatic reloading</strong></p>
 </div>
 <div class="paragraph">
-<p>In Kubernetes, store the access rules file in a ConfigMap and mount it as a volume. Mount the ConfigMap as a directory rather than with <code>subPath</code>, because <code>subPath</code> mounts do not receive ConfigMap updates.</p>
-</div>
-<div class="paragraph">
-<p>A complete Docker Compose example with Keycloak, including a script that verifies the expected access, is available in <code>distro/docker-compose/in-memory-with-authz-grants/</code>.</p>
+<p>Apicurio Registry checks the access rules file for changes at the interval set by <code>apicurio.auth.resource-based-authorization.rules.reload-every</code> and applies changes without a restart. If the changed file is not valid, Apicurio Registry logs an error and keeps using the previously loaded rules.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="resource-authorization-grants_registry"><a class="anchor" href="#resource-authorization-grants_registry"></a>Access rules file format</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The access rules file lists who can do what, one rule per line, in the Kroxylicious ACL rules format. Apicurio Registry validates the file as a whole and rejects it if any rule is not valid.</p>
+</div>
 <div class="paragraph">
-<p>The access rules file lists who may do what, one rule per line, and ends with <code>otherwise deny;</code>:</p>
+<p>The following example is a complete access rules file. The file ends with <code>otherwise deny;</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -578,9 +614,10 @@ otherwise deny;</code></pre>
 </ul>
 </div>
 <div class="paragraph">
-<p>Names are selected with:</p>
+<p>You select names with the following selectors:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Name selectors</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -602,7 +639,7 @@ otherwise deny;</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>with name like "team-a/*"</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">names starting with <code>team-a/</code>. <code><strong></code> is only allowed at the end; <code>like "</strong>"</code> matches every name.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">names starting with <code>team-a/</code>. <code>*</code> is only allowed at the end; <code>like "*"</code> matches every name.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>with name *</code></p></td>
@@ -615,7 +652,7 @@ otherwise deny;</code></pre>
 </tbody>
 </table>
 <div class="paragraph">
-<p>The file is validated as a whole. A syntax error, an unknown type, principal or operation, an invalid regular expression, or a rule for a resource type that Apicurio Registry does not enforce (such as a Kroxylicious <code>Topic</code>) rejects the file: Apicurio Registry does not start, or keeps the previous rules on reload.</p>
+<p>Apicurio Registry validates the file as a whole. A syntax error, an unknown type, principal, or operation, an invalid regular expression, or a rule for a resource type that Apicurio Registry does not enforce (such as a Kroxylicious <code>Topic</code>) rejects the file: Apicurio Registry does not start, or keeps the previous rules on reload.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -629,8 +666,9 @@ The <code>config.admin_roles</code> setting of earlier development versions has 
 </tr>
 </table>
 </div>
-<div class="sect2">
-<h3 id="_resource_names"><a class="anchor" href="#_resource_names"></a>Resource names</h3>
+<div class="paragraph">
+<p><strong>Resource names</strong></p>
+</div>
 <div class="ulist">
 <ul>
 <li>
@@ -645,20 +683,20 @@ The <code>config.admin_roles</code> setting of earlier development versions has 
 <p>In artifact names, the characters <code>%</code> and <code>/</code> in the group ID are written as <code>%25</code> and <code>%2F</code>, so the first <code>/</code> always separates the group from the artifact ID. For example, artifact <code>x</code> in group <code>team-a/sub</code> is named <code>team-a%2Fsub/x</code>, while artifact <code>sub/x</code> in group <code>team-a</code> is named <code>team-a/sub/x</code>. Artifact IDs and group names are not escaped.</p>
 </div>
 <div class="paragraph">
-<p>Names are matched in full. For example, <code>like "team-a/<strong>"</code> matches every artifact in group <code>team-a</code> (but not in group <code>team-a/sub</code>), and <code>like "team-a/internal-</strong>"</code> matches only the artifacts in <code>team-a</code> whose ID starts with <code>internal-</code>.</p>
+<p>Apicurio Registry matches names in full. For example, <code>like "team-a/*"</code> matches every artifact in group <code>team-a</code> (but not in group <code>team-a/sub</code>), and <code>like "team-a/internal-*"</code> matches only the artifacts in <code>team-a</code> whose ID starts with <code>internal-</code>.</p>
 </div>
 <div class="paragraph">
-<p>Matching is case-sensitive on every storage variant, in direct access and in search results. Some databases, such as MySQL and SQL Server, look up group and artifact IDs case-insensitively, so a request for <code>TEAM-A/My-Schema</code> can address the stored artifact <code>team-a/my-schema</code>. Such a request is authorized against the stored IDs, so changing the case of an ID never gets around a rule.</p>
+<p>Matching is case-sensitive on every storage variant, in direct access and in search results. Some databases, such as MySQL and SQL Server, look up group and artifact IDs case-insensitively, so a request for <code>TEAM-A/My-Schema</code> can address the stored artifact <code>team-a/my-schema</code>. Apicurio Registry authorizes such a request against the stored IDs, so changing the case of an ID never gets around a rule.</p>
 </div>
+<div class="paragraph">
+<p><strong>Operations</strong></p>
 </div>
-<div class="sect2">
-<h3 id="_operations"><a class="anchor" href="#_operations"></a>Operations</h3>
 <div class="paragraph">
 <p><code>ADMIN</code> implies <code>WRITE</code>, and <code>WRITE</code> implies <code>READ</code>; <code>*</code> means all three. The operation required by each API operation matches its RBAC level: reads require <code>READ</code>, and changes, including deletes, require <code>WRITE</code>. A few operations require <code>ADMIN</code>, such as dropping Iceberg namespaces, tables, and views.</p>
 </div>
+<div class="paragraph">
+<p><strong>Group rules and artifact rules</strong></p>
 </div>
-<div class="sect2">
-<h3 id="_group_rules_and_artifact_rules"><a class="anchor" href="#_group_rules_and_artifact_rules"></a>Group rules and artifact rules</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -675,7 +713,7 @@ The <code>config.admin_roles</code> setting of earlier development versions has 
 <div class="ulist">
 <ul>
 <li>
-<p>Creating an artifact requires <code>WRITE</code> on the group and on the new artifact&#8217;s name, so a deny on an artifact name also prevents creating it. This applies to every API that creates artifacts, including registering a new subject with the Confluent compatibility API, publishing a new MCP server, and renaming an Iceberg table.</p>
+<p>Creating an artifact requires <code>WRITE</code> on the group and on the name of the new artifact, so a deny on an artifact name also prevents creating it. This applies to every API that creates artifacts, including registering a new subject with the Confluent compatibility API, publishing a new MCP server, and renaming an Iceberg table.</p>
 </li>
 <li>
 <p>Deleting a group, or all artifacts in a group, requires <code>WRITE</code> on the group and on every artifact in it.</p>
@@ -691,11 +729,11 @@ The <code>config.admin_roles</code> setting of earlier development versions has 
 allow User with name = "alice" to * Artifact with name like "team-a/*";</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_deny_rules"><a class="anchor" href="#_deny_rules"></a>Deny rules</h3>
 <div class="paragraph">
-<p>If a deny rule matches, access is denied even if an allow rule also matches. Deny rules apply to search results as well as direct access.</p>
+<p><strong>Deny rules</strong></p>
+</div>
+<div class="paragraph">
+<p>If a deny rule matches, Apicurio Registry denies access even if an allow rule also matches. Deny rules apply to search results as well as direct access.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -715,7 +753,7 @@ allow User with name = "alice" to WRITE Artifact with name like "team-a/*";</cod
 <p>Denying <code>*</code> (or <code>ADMIN</code>, which implies the other two) blocks all access, and hides the resource from search results. Use it to hide a resource.</p>
 </li>
 <li>
-<p>Denying <code>WRITE</code> also denies <code>READ</code>, which <code>WRITE</code> implies, but not <code>ADMIN</code>: a rule that allows <code>ADMIN</code> or <code>*</code> still allows <code>ADMIN</code> operations. A resource cannot be made read-only with a deny rule; allow only <code>READ</code> on it instead.</p>
+<p>Denying <code>WRITE</code> also denies <code>READ</code>, which <code>WRITE</code> implies, but not <code>ADMIN</code>: a rule that allows <code>ADMIN</code> or <code>*</code> still allows <code>ADMIN</code> operations. You cannot make a resource read-only with a deny rule; allow only <code>READ</code> on it instead.</p>
 </li>
 <li>
 <p>Denying <code>READ</code> blocks reads but not writes: <code>WRITE</code> implies <code>READ</code>, but <code>READ</code> does not imply <code>WRITE</code>. Use <code>*</code> to hide a resource.</p>
@@ -723,43 +761,15 @@ allow User with name = "alice" to WRITE Artifact with name like "team-a/*";</cod
 </ul>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_reloading_the_access_rules_file"><a class="anchor" href="#_reloading_the_access_rules_file"></a>Reloading the access rules file</h3>
-<div class="paragraph">
-<p>Apicurio Registry checks the access rules file for changes at the interval set by <code>apicurio.auth.resource-based-authorization.rules.reload-every</code> and applies changes without a restart. If the changed file is invalid, Apicurio Registry logs an error and keeps using the previously loaded rules.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="resource-authorization-coverage_registry"><a class="anchor" href="#resource-authorization-coverage_registry"></a>References and generated artifacts</h3>
-<div class="paragraph">
-<p>Some operations read or write artifacts other than the one addressed by the request. These artifacts are authorized as if the caller accessed them directly:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Resolving references:</strong> dereferencing content (<code>references=DEREFERENCE</code>, or <code>dereference=true</code> in the v2 API), returning canonical content, exporting a Protobuf version as a ZIP file, and the Confluent <code>format=resolved</code> option all include the content of referenced artifacts. They require <code>read</code> on every referenced artifact, including references of references; otherwise the request fails with 403. Without these options, content is returned as stored, with its references unresolved.</p>
-</li>
-<li>
-<p><strong>Registering references:</strong> creating an artifact or version whose content references other artifacts requires <code>read</code> on every referenced artifact, through any API, including draft versions.</p>
-</li>
-<li>
-<p><strong>Listing references:</strong> inbound reference lists, including the Confluent <code>referencedby</code> endpoint, contain only readable artifacts. The outbound reference graph shows that a reference exists but hides the metadata of unreadable targets.</p>
-</li>
-<li>
-<p><strong>Generated artifacts:</strong> some artifact types make Apicurio Registry write additional artifacts in the same group. Embedded schemas of <code>MODEL_SCHEMA</code> and <code>PROMPT_TEMPLATE</code> artifacts are registered as <code>{artifactId}-input-schema</code> and <code>{artifactId}-output-schema</code>, and an OpenAPI artifact with an <code>x-agent-card</code> extension generates <code>{artifactId}-agent-card</code>. Writing the artifact requires <code>write</code> on each artifact it would generate and, if a generated artifact does not exist yet, <code>write</code> on the group, as for any artifact creation. Embedded schemas are also subject to owner-only authorization. These checks, and the reference checks above, run before anything is written, so a request rejected with 403 leaves no generated artifacts or versions behind.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
 </div>
 <div class="sect1">
-<h2 id="_covered_apis"><a class="anchor" href="#_covered_apis"></a>Covered APIs</h2>
+<h2 id="resource-authorization-coverage_registry"><a class="anchor" href="#resource-authorization-coverage_registry"></a>APIs and operations covered by per-resource authorization</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Per-resource authorization applies to every API that addresses or lists groups and artifacts:</p>
+<div class="paragraph _abstract">
+<p>Per-resource authorization applies to every API that addresses or lists groups and artifacts, and to operations that read or write artifacts other than the one addressed by the request.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Covered APIs</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -797,16 +807,39 @@ allow User with name = "alice" to WRITE Artifact with name like "team-a/*";</cod
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p><strong>References and generated artifacts</strong></p>
+</div>
+<div class="paragraph">
+<p>Some operations read or write artifacts other than the one addressed by the request. Apicurio Registry authorizes these artifacts as if the caller accessed them directly:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Resolving references:</strong> dereferencing content (<code>references=DEREFERENCE</code>, or <code>dereference=true</code> in the v2 API), returning canonical content, exporting a Protobuf version as a ZIP file, and the Confluent <code>format=resolved</code> option all include the content of referenced artifacts. They require <code>read</code> on every referenced artifact, including references of references; otherwise the request fails with 403. Without these options, Apicurio Registry returns content as stored, with its references unresolved.</p>
+</li>
+<li>
+<p><strong>Registering references:</strong> creating an artifact or version whose content references other artifacts requires <code>read</code> on every referenced artifact, through any API, including draft versions.</p>
+</li>
+<li>
+<p><strong>Listing references:</strong> inbound reference lists, including the Confluent <code>referencedby</code> endpoint, contain only readable artifacts. The outbound reference graph shows that a reference exists but hides the metadata of unreadable targets.</p>
+</li>
+<li>
+<p><strong>Generated artifacts:</strong> some artifact types make Apicurio Registry write additional artifacts in the same group. Embedded schemas of <code>MODEL_SCHEMA</code> and <code>PROMPT_TEMPLATE</code> artifacts are registered as <code>{artifactId}-input-schema</code> and <code>{artifactId}-output-schema</code>, and an OpenAPI artifact with an <code>x-agent-card</code> extension generates <code>{artifactId}-agent-card</code>. Writing the artifact requires <code>write</code> on each artifact it would generate and, if a generated artifact does not exist yet, <code>write</code> on the group, as for any artifact creation. Embedded schemas are also subject to owner-only authorization. These checks, and the preceding reference checks, run before anything is written, so a request rejected with 403 leaves no generated artifacts or versions behind.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="resource-authorization-use-cases_registry"><a class="anchor" href="#resource-authorization-use-cases_registry"></a>Common use cases</h2>
+<h2 id="resource-authorization-use-cases_registry"><a class="anchor" href="#resource-authorization-use-cases_registry"></a>Access rules examples for common use cases</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Each example is a complete rules file, or the rules to add before <code>otherwise deny;</code>.</p>
+<div class="paragraph _abstract">
+<p>The following examples show access rules for common deployment patterns. Each example is a complete rules file, or the rules to add before <code>otherwise deny;</code>.</p>
 </div>
-<div class="sect2">
-<h3 id="_multi_team_isolation"><a class="anchor" href="#_multi_team_isolation"></a>Multi-team isolation</h3>
+<div class="paragraph">
+<p><strong>Multi-team isolation</strong></p>
+</div>
 <div class="paragraph">
 <p>Each team sees and modifies only its own schemas:</p>
 </div>
@@ -821,9 +854,9 @@ allow Role with name = "team-b-developers" to WRITE Group with name = "team-b";
 otherwise deny;</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p><strong>Shared schemas with selective write access</strong></p>
 </div>
-<div class="sect2">
-<h3 id="_shared_schemas_with_selective_write_access"><a class="anchor" href="#_shared_schemas_with_selective_write_access"></a>Shared schemas with selective write access</h3>
 <div class="paragraph">
 <p>All developers can read the <code>shared</code> group; only the platform team can change it:</p>
 </div>
@@ -835,27 +868,36 @@ allow Role with name = "platform-team" to WRITE Artifact with name like "shared/
 allow Role with name = "platform-team" to WRITE Group with name = "shared";</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p><strong>Read-only service account</strong></p>
 </div>
-<div class="sect2">
-<h3 id="_read_only_service_account"><a class="anchor" href="#_read_only_service_account"></a>Read-only service account</h3>
+<div class="paragraph">
+<p>A service account can read every artifact and group but cannot change anything:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>allow User with name = "monitoring-service" to READ Artifact with name *;
 allow User with name = "monitoring-service" to READ Group with name *;</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p><strong>CI/CD pipeline with scoped write access</strong></p>
 </div>
-<div class="sect2">
-<h3 id="_cicd_pipeline_with_scoped_write_access"><a class="anchor" href="#_cicd_pipeline_with_scoped_write_access"></a>CI/CD pipeline with scoped write access</h3>
+<div class="paragraph">
+<p>A pipeline user can write only to the <code>production</code> group:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>allow User with name = "ci-pipeline" to WRITE Artifact with name like "production/*";
 allow User with name = "ci-pipeline" to WRITE Group with name = "production";</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p><strong>Group access with excluded artifacts</strong></p>
 </div>
-<div class="sect2">
-<h3 id="_group_access_with_excluded_artifacts"><a class="anchor" href="#_group_access_with_excluded_artifacts"></a>Group access with excluded artifacts</h3>
+<div class="paragraph">
+<p>A contractor can read the <code>team-a</code> group, except for artifacts whose ID starts with <code>internal-</code>:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>deny User with name = "contractor" to * Artifact with name like "team-a/internal-*";
@@ -863,20 +905,22 @@ allow User with name = "contractor" to READ Artifact with name like "team-a/*";
 allow User with name = "contractor" to READ Group with name = "team-a";</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_search_and_regular_expressions"><a class="anchor" href="#_search_and_regular_expressions"></a>Search and regular expressions</h3>
 <div class="paragraph">
-<p><code>matching</code> rules work for direct access, but search cannot evaluate them. A user whose rules use <code>matching</code> for a resource type gets no search results for that type. Use <code>=</code>, <code>in</code> or <code>like</code> for resources that must be searchable.</p>
+<p><strong>Search and regular expressions</strong></p>
 </div>
+<div class="paragraph">
+<p><code>matching</code> rules work for direct access, but search cannot evaluate them. A user whose rules use <code>matching</code> for a resource type gets no search results for that type. Use <code>=</code>, <code>in</code>, or <code>like</code> for resources that must be searchable.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="resource-authorization-interactions_registry"><a class="anchor" href="#resource-authorization-interactions_registry"></a>Interaction with other authorization features</h2>
 <div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Per-resource authorization is one of several authorization features in Apicurio Registry. The order in which Apicurio Registry evaluates them determines which callers bypass the access rules, and how owner access, anonymous access, and administrator access interact with the rules.</p>
+</div>
 <div class="paragraph">
-<p>Requests are authorized in this order:</p>
+<p>Apicurio Registry authorizes requests in the following order:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -888,16 +932,17 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
   → Per-resource authorization          (RBAC admins, and by default resource owners, bypass it)</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_rbac"><a class="anchor" href="#_rbac"></a>RBAC</h3>
+<div class="paragraph">
+<p><strong>RBAC</strong></p>
+</div>
 <div class="paragraph">
 <p>RBAC administrators bypass per-resource authorization. A user with the <code>sr-readonly</code> role can never write, whatever the access rules say. To control write access with rules, give users the <code>sr-developer</code> role and use rules to choose which resources they can change.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_resource_owners"><a class="anchor" href="#_resource_owners"></a>Resource owners</h3>
 <div class="paragraph">
-<p>By default, the recorded owner of an artifact or group has access to it whatever the access rules, whether or not owner-only authorization (<code>apicurio.auth.owner-only-authorization</code>) is enabled. Set <code>apicurio.auth.resource-based-authorization.owner-bypass.enabled</code> to <code>false</code> to make the access rules the only per-resource authority. Owners also see their own resources in search results and can read content used by their artifacts. With the Elasticsearch search index, searches that require the index (content and structure searches) include at most 1000 of the caller&#8217;s owned artifacts that are not otherwise covered by the rules. A resource without a recorded owner does not grant this exception to anyone.</p>
+<p><strong>Resource owners</strong></p>
+</div>
+<div class="paragraph">
+<p>By default, the recorded owner of an artifact or group has access to it whatever the access rules, whether or not owner-only authorization (<code>apicurio.auth.owner-only-authorization</code>) is enabled. Set <code>apicurio.auth.resource-based-authorization.owner-bypass.enabled</code> to <code>false</code> to make the access rules the only per-resource authority. Owners also see their own resources in search results and can read content used by their artifacts. With the Elasticsearch search index, searches that require the index (content and structure searches) include at most 1000 of the owned artifacts of the caller that are not otherwise covered by the rules. A resource without a recorded owner does not grant this exception to anyone.</p>
 </div>
 <div class="paragraph">
 <p>When owner-only authorization is enabled, it applies as well to resources named in a request body, such as Iceberg rename targets and published MCP servers: only the owner can change them, even if rules allow other users.</p>
@@ -905,9 +950,9 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
 <div class="paragraph">
 <p>The creator of an artifact becomes its owner, but creating it requires <code>write</code> on both the group and the artifact name, so the owner bypass cannot be used to get around a deny on that name.</p>
 </div>
+<div class="paragraph">
+<p><strong>Anonymous and authenticated read access</strong></p>
 </div>
-<div class="sect2">
-<h3 id="_anonymous_and_authenticated_read_access"><a class="anchor" href="#_anonymous_and_authenticated_read_access"></a>Anonymous and authenticated read access</h3>
 <div class="paragraph">
 <p>These settings skip the RBAC check for reads; per-resource authorization still applies:</p>
 </div>
@@ -924,35 +969,39 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
 </div>
 </div>
 <div class="paragraph">
-<p>Other reads by unauthenticated callers are answered with <code>401</code>.</p>
+<p>Apicurio Registry answers other reads by unauthenticated callers with <code>401</code>.</p>
 </div>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p><strong>Registry-wide reports</strong></p>
 </div>
-<div class="sect2">
-<h3 id="_registry_wide_reports"><a class="anchor" href="#_registry_wide_reports"></a>Registry-wide reports</h3>
 <div class="paragraph">
 <p>Reports that cover the whole registry and cannot be filtered per resource, such as the GitOps status and validation tasks, are available only to callers who are not restricted by the access rules (administrators).</p>
 </div>
+<div class="paragraph">
+<p><strong>Admin override and trusted proxy authorization</strong></p>
 </div>
-<div class="sect2">
-<h3 id="_admin_override_and_trusted_proxy_authorization"><a class="anchor" href="#_admin_override_and_trusted_proxy_authorization"></a>Admin override and trusted proxy authorization</h3>
 <div class="paragraph">
 <p>Users identified as administrators by the admin override (<code>apicurio.auth.admin-override.*</code>) bypass per-resource authorization. When <code>apicurio.authn.proxy-header.trust-proxy-authorization</code> is <code>true</code>, requests authenticated by proxy headers bypass all local authorization, including the access rules.</p>
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="resource-authorization-monitoring_registry"><a class="anchor" href="#resource-authorization-monitoring_registry"></a>Monitoring and audit logging</h2>
+<h2 id="resource-authorization-monitoring_registry"><a class="anchor" href="#resource-authorization-monitoring_registry"></a>Per-resource authorization metrics and audit log</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_metrics"><a class="anchor" href="#_metrics"></a>Metrics</h3>
+<div class="paragraph _abstract">
+<p>When OpenTelemetry metrics are enabled, Apicurio Registry counts per-resource authorization decisions in a metric. Apicurio Registry also logs denied point-access decisions to a dedicated audit logger.</p>
+</div>
 <div class="paragraph">
-<p>When OpenTelemetry metrics are enabled, Apicurio Registry exports the counter <code>apicurio.authz.decisions</code>, with the attributes:</p>
+<p><strong>Metrics</strong></p>
+</div>
+<div class="paragraph">
+<p>When OpenTelemetry metrics are enabled, Apicurio Registry exports the counter <code>apicurio.authz.decisions</code>, with the following attributes:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Attributes of the <code>apicurio.authz.decisions</code> counter</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -978,11 +1027,11 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_audit_log"><a class="anchor" href="#_audit_log"></a>Audit log</h3>
 <div class="paragraph">
-<p>Denied point-access decisions are logged at <code>INFO</code> level to the <code>io.apicurio.registry.audit.authz</code> logger:</p>
+<p><strong>Audit log</strong></p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry logs denied point-access decisions at <code>INFO</code> level to the <code>io.apicurio.registry.audit.authz</code> logger:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -994,22 +1043,25 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
-<h2 id="resource-authorization-troubleshooting_registry"><a class="anchor" href="#resource-authorization-troubleshooting_registry"></a>Troubleshooting</h2>
+<h2 id="resource-authorization-troubleshooting_registry"><a class="anchor" href="#resource-authorization-troubleshooting_registry"></a>Common per-resource authorization problems</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_a_user_is_denied_access_although_a_rule_matches"><a class="anchor" href="#_a_user_is_denied_access_although_a_rule_matches"></a>A user is denied access although a rule matches</h3>
+<div class="paragraph _abstract">
+<p>Use the following checks to diagnose unexpected access decisions, startup failures, and access rules changes that do not take effect.</p>
+</div>
 <div class="paragraph">
-<p>Check, in order:</p>
+<p><strong>A user is denied access although a rule matches</strong></p>
+</div>
+<div class="paragraph">
+<p>Check the following conditions, in order:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>RBAC:</strong> does the user&#8217;s role allow the operation? <code>sr-readonly</code> users cannot write.</p>
+<p><strong>RBAC:</strong> does the role of the user allow the operation? <code>sr-readonly</code> users cannot write.</p>
 </li>
 <li>
-<p><strong>Operation:</strong> does the rule&#8217;s operation cover the request? Changes and deletes require <code>WRITE</code>.</p>
+<p><strong>Operation:</strong> does the operation of the rule cover the request? Changes and deletes require <code>WRITE</code>.</p>
 </li>
 <li>
 <p><strong>Resource type:</strong> operations on a group itself, such as listing its artifacts or creating an artifact in it, need a <code>Group</code> rule.</p>
@@ -1024,38 +1076,53 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
 <p><strong>Resource name and principal:</strong> artifacts are named <code>{groupId}/{artifactId}</code>; the default group is <code>default</code>. For the Confluent compatibility API, check which group the request addresses. Roles are matched with <code>Role</code>, user names with <code>User</code>.</p>
 </li>
 <li>
-<p><strong>Audit log:</strong> the <code>authz.denied</code> message shows the exact resource name and operation that were evaluated.</p>
+<p><strong>Audit log:</strong> the <code>authz.denied</code> message shows the exact resource name and operation that Apicurio Registry evaluated.</p>
 </li>
 </ol>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_a_user_can_see_more_than_expected"><a class="anchor" href="#_a_user_can_see_more_than_expected"></a>A user can see more than expected</h3>
 <div class="paragraph">
-<p>Check whether the user is an RBAC administrator or has a role that the rules allow everything, whether the user owns the resources (see <code>owner-bypass.enabled</code>), and, for unauthenticated callers, what the rules allow the <code>$anonymous</code> role. A <code>READ</code> deny does not block writes: use <code>*</code> to hide a resource.</p>
+<p><strong>A user can see more than expected</strong></p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_apicurio_registry_does_not_start"><a class="anchor" href="#_apicurio_registry_does_not_start"></a>Apicurio Registry does not start</h3>
 <div class="paragraph">
-<p>Apicurio Registry fails to start when per-resource authorization is enabled and the access rules file path is not set, the file does not exist, or the file is not a valid rules file, including when it has rules for resource types Apicurio Registry does not enforce. The startup error names the file, and the line and problem of each error.</p>
+<p>Check the following conditions:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>Whether the user is an RBAC administrator, or has a role to which the rules allow every operation.</p>
+</li>
+<li>
+<p>Whether the user owns the resources. See <code>apicurio.auth.resource-based-authorization.owner-bypass.enabled</code>.</p>
+</li>
+<li>
+<p>For unauthenticated callers, what the rules allow the <code>$anonymous</code> role.</p>
+</li>
+<li>
+<p>Whether a <code>READ</code> deny is expected to hide the resource. A <code>READ</code> deny does not block writes; use <code>*</code> to hide a resource.</p>
+</li>
+</ul>
 </div>
-<div class="sect2">
-<h3 id="_access_rules_file_changes_do_not_take_effect"><a class="anchor" href="#_access_rules_file_changes_do_not_take_effect"></a>Access rules file changes do not take effect</h3>
+<div class="paragraph">
+<p><strong>Apicurio Registry does not start</strong></p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry fails to start when per-resource authorization is enabled and the access rules file path is not set, the file does not exist, or the file is not a valid rules file, including when it has rules for resource types that Apicurio Registry does not enforce. The startup error names the file, and the line and problem of each error.</p>
+</div>
+<div class="paragraph">
+<p><strong>Access rules file changes do not take effect</strong></p>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
 <p>Check that <code>apicurio.auth.resource-based-authorization.rules.reload-enabled</code> is not <code>false</code>.</p>
 </li>
 <li>
-<p>Check the logs for <code>Access rules reloaded successfully</code> or for a reload error. If the new file is invalid, the previous rules stay in effect.</p>
+<p>Check the logs for <code>Access rules reloaded successfully</code> or for a reload error. If the new file is not valid, the previous rules stay in effect.</p>
 </li>
 <li>
 <p>In Kubernetes, check that the ConfigMap is not mounted with <code>subPath</code>.</p>
 </li>
 </ol>
-</div>
 </div>
 </div>
 </div>
