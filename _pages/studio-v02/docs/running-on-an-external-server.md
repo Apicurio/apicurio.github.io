@@ -1,8 +1,6 @@
 ---
-title: "This project has moved to Apitomy"
+title: "Apicurio Studio (deprecated)"
 permalink: /studio-v02/docs/running-on-an-external-server
-layout: page
-redirect_to: https://www.apitomy.io
+redirect_to: /blog/2025/10/23/studio-fully-deprecated
+sitemap: false
 ---
-
-This project has moved to [Apitomy](https://www.apitomy.io).
