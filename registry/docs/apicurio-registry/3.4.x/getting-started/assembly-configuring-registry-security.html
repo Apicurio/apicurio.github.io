@@ -2303,10 +2303,22 @@ Kubernetes-native authentication is an <strong>experimental</strong> feature. Yo
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-When you deploy Apicurio Registry with the Operator, you can configure this feature with the <code>spec.app.auth.kubernetesAuth</code> fields of the <code>ApicurioRegistry3</code> custom resource: <code>enabled</code>, <code>apiAudiences</code>, <code>cacheExpiration</code>, and <code>groupMapping</code> with <code>adminGroups</code>, <code>developerGroups</code>, and <code>readOnlyGroups</code>. The Operator adds the <code>kubernetes</code> mechanism to the priority list and sets the role source automatically.
+When you deploy Apicurio Registry with the Operator, you can configure this feature with the <code>spec.app.auth.kubernetesAuth</code> fields of the <code>ApicurioRegistry3</code> custom resource: <code>enabled</code>, <code>apiAudiences</code>, <code>cacheExpiration</code>, and <code>groupMapping</code> with <code>adminGroups</code>, <code>developerGroups</code>, and <code>readOnlyGroups</code>. The Operator adds the <code>kubernetes</code> mechanism to the priority list, unless you already set the <code>APICURIO_AUTHN_MECHANISM_PRIORITY</code> environment variable, and, when <code>groupMapping</code> is configured, sets the role source to <code>kubernetes</code>.
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>The Operator does not enable the experimental features gate for this feature. When you deploy Apicurio Registry with the Operator, you must also add the <code>APICURIO_FEATURES_EXPERIMENTAL_ENABLED</code> environment variable with the value <code>true</code> to <code>spec.app.env</code>; otherwise, the Apicurio Registry pod fails at startup. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    env:
+      - name: APICURIO_FEATURES_EXPERIMENTAL_ENABLED
+        value: "true"</code></pre>
+</div>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
