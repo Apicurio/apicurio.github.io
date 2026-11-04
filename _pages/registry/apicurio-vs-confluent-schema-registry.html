@@ -1,0 +1,98 @@
+---
+title: "Apicurio Registry vs. Confluent Schema Registry"
+breadcrumb_title: "Apicurio Registry vs. Confluent Schema Registry"
+permalink: /registry/apicurio-vs-confluent-schema-registry/
+layout: page
+description: "Compare Apicurio Registry and Confluent Schema Registry: licensing, artifact types, storage, Confluent API compatibility, unsupported features and how to migrate."
+breadcrumbs:
+  - {name: "Apicurio Registry", url: "/registry/"}
+---
+
+{%- include registry/_docs-version.html -%}
+{%- assign docs = site.baseurl | append: "/registry/docs/apicurio-registry/" | append: registry_docs_version | append: "/getting-started/" -%}
+
+<div class="container content-page">
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+
+{% include breadcrumbs.html %}
+
+<h1>Apicurio Registry vs. Confluent Schema Registry</h1>
+
+<p class="lead-definition">
+    Apicurio Registry and Confluent Schema Registry both store and version schemas for Apache Kafka. Apicurio Registry
+    is an Apache 2.0 licensed CNCF project that also manages API definitions and AI artifacts, and it implements the
+    Confluent Schema Registry API, so most applications that use Confluent serializers can switch by changing one URL.
+</p>
+
+<h2>At a glance</h2>
+<table class="table table-striped">
+    <thead><tr><th></th><th>Apicurio Registry</th><th>Confluent Schema Registry</th></tr></thead>
+    <tbody>
+        <tr><td>License</td><td>Apache License 2.0</td><td>Confluent Community License for the self-managed component</td></tr>
+        <tr><td>Governance</td><td>CNCF Sandbox project, open community</td><td>Developed by Confluent, Inc.</td></tr>
+        <tr><td>Schema formats</td><td>Avro, Protobuf, JSON Schema</td><td>Avro, Protobuf, JSON Schema</td></tr>
+        <tr><td>Other artifact types</td><td>OpenAPI, AsyncAPI, GraphQL, Kafka Connect, OpenRPC, Thrift, WSDL, XML, XSD,
+            A2A agent cards, MCP tools, prompt templates, model schemas, and custom types</td><td>Not applicable</td></tr>
+        <tr><td>Storage</td><td>PostgreSQL, Apache Kafka, GitOps, KubernetesOps, in-memory H2</td><td>Kafka topic</td></tr>
+        <tr><td>Confluent client compatibility</td><td>Confluent Schema Registry API v7 and v8 under <code>/apis/ccompat/</code></td><td>Native</td></tr>
+        <tr><td>Native API</td><td>Apicurio Registry REST API v3 with groups, branches and labels</td><td>Not applicable</td></tr>
+        <tr><td>Web console</td><td>Included</td><td>Part of Confluent Control Center or Confluent Cloud</td></tr>
+        <tr><td>Kubernetes</td><td>Operator for Kubernetes and OpenShift</td><td>Confluent for Kubernetes</td></tr>
+    </tbody>
+</table>
+<p><small>Confluent product details change over time; check Confluent's documentation for the current state.</small></p>
+
+<h2>Using Confluent clients with Apicurio Registry</h2>
+<p>
+    Apicurio Registry serves the Confluent Schema Registry API at <code>/apis/ccompat/v7</code> and
+    <code>/apis/ccompat/v8</code>. The schemas, subjects, compatibility, config, mode and contexts APIs are supported,
+    with full support for Avro, JSON Schema and Protobuf. Point existing Confluent serializers at it:
+</p>
+<pre><code>schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
+<p>
+    When no compatibility rule is configured, the compatibility check endpoint defaults to <code>BACKWARD</code>, as
+    Confluent does. Schema registration only enforces compatibility once you configure a rule with
+    <code>PUT /config</code> or <code>PUT /config/{subject}</code>.
+</p>
+
+<h2>What is not supported through the Confluent API</h2>
+<table class="table table-striped">
+    <thead><tr><th>Confluent feature</th><th>Behavior in Apicurio Registry</th><th>Alternative</th></tr></thead>
+    <tbody>
+        <tr><td>Schema Linking and exporters</td><td><code>GET /exporters</code> returns an empty list; other exporter operations return an error</td><td>Import/export API, Kafka storage replication, or GitOps</td></tr>
+        <tr><td>Client-side field level encryption keys (KEKs, DEKs)</td><td>Endpoints not present</td><td>Application-level encryption or external key management</td></tr>
+        <tr><td>Cluster metadata API</td><td><code>/v1/metadata/*</code> not present</td><td>Apicurio Registry system API</td></tr>
+        <tr><td>Data contract rule enforcement</td><td><code>metadata</code> and <code>ruleSet</code> are accepted but neither stored nor enforced</td><td>Native data contracts (<code>apicurio.contracts.enabled=true</code>)</td></tr>
+    </tbody>
+</table>
+
+<h2>When to choose which</h2>
+<ul>
+    <li><strong>Choose Apicurio Registry</strong> if you want an Apache 2.0 licensed, vendor-neutral registry; if you need to
+        govern API definitions or AI agent artifacts alongside Kafka schemas; or if you want to store schemas in
+        PostgreSQL or Git rather than a Kafka topic.</li>
+    <li><strong>Stay on Confluent Schema Registry</strong> if you depend on Schema Linking, client-side field level
+        encryption or Confluent's data contract rule execution, or you use Confluent Cloud and want a fully managed
+        service from the same vendor.</li>
+</ul>
+
+<h2>Migrating from Confluent Schema Registry</h2>
+<ol>
+    <li>Export your schemas with the <a href="{{ site.baseurl }}/blog/2025/03/20/export-from-confluent">Confluent export tool</a>
+        and import them into Apicurio Registry.</li>
+    <li>Point your clients' <code>schema.registry.url</code> at <code>/apis/ccompat/v7</code>. Review the
+        <code>apicurio.ccompat.legacy-id-mode.enabled</code> setting so schema IDs match what your consumers expect.</li>
+    <li>Optionally move clients to the Apicurio Registry SerDes to use the native API.</li>
+</ol>
+
+<h2>Learn more</h2>
+<ul>
+    <li><a href="{{ docs }}assembly-confluent-schema-registry-compatibility.html">Confluent Schema Registry compatibility API documentation</a></li>
+    <li><a href="{{ docs }}assembly-using-kafka-client-serdes.html">Apicurio Registry Kafka client SerDes</a></li>
+    <li><a href="{{ site.baseurl }}/registry/">Apicurio Registry overview</a></li>
+</ul>
+
+</div>
+</div>
+</div>

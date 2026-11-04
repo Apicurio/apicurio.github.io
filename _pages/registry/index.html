@@ -1,20 +1,24 @@
 ---
-title: "Registry"
+title: "Open Source Schema Registry and API Registry"
 permalink: /registry/
 layout: page
+description: "Apicurio Registry is an open source, CNCF schema and API registry. Store, version, validate and govern Avro, Protobuf, JSON Schema, OpenAPI, AsyncAPI and AI agent artifacts."
+software_application: true
 ---
 
-{% assign latestRelease = site.data.registry.latestRelease %}
+{%- include registry/_docs-version.html -%}
+{%- assign latestRelease = site.data.registry.latestRelease -%}
+{%- assign docs = site.baseurl | append: "/registry/docs/apicurio-registry/" | append: registry_docs_version | append: "/getting-started/" -%}
 
 <div class="jumbotron registry">
     <div class="logoimg">
-        <img src="{{ site.baseurl }}/images/subprojects/apicurio_registry_logo_reverse.svg" height="75" alt="Apicurio Registry subproject logo">
+        <img src="{{ site.baseurl }}/images/subprojects/apicurio_registry_logo_reverse.svg" height="75" class="wordmark" alt="Apicurio Registry logo">
     </div>
     <div class="tagline tagline-1">
         <span>High performance, runtime registry</span>
     </div>
     <div class="tagline tagline-2">
-        <span>for API designs and schemas</span>
+        <span>for API designs, schemas and AI agents</span>
     </div>
 </div>
 
@@ -47,9 +51,9 @@ layout: page
 
     <div class="info">
         <span class="fa fa-fw fa-info"></span>
-        Looking for Apicurio Registry 2.x?  
-        It's been <a href="https://www.apicur.io/blog/2024/06/17/apicurio-registry-3">deprecated</a>, but you can still
-        <a href="{{ site.baseurl }}/registry-v2" target="_blank">find it here <span class="fa fa-fw fa-arrow-right"></span></a>
+        Looking for Apicurio Registry 2.x?
+        It has been <a href="{{ site.baseurl }}/blog/2024/06/17/apicurio-registry-3">deprecated</a>, but the
+        <a href="{{ site.baseurl }}/registry/docs/apicurio-registry/2.6.x/index.html">2.6.x documentation</a> is still available.
     </div>
 
 </div>
@@ -60,82 +64,160 @@ layout: page
             {%- include registry/_projnav.html -%}
         </div>
         <div class="col-md-9">
-            <div class="info">
+            <div class="info registry-overview">
                 <div class="row summary">
                     <div class="col-lg-10">
                         <h1 class="section-header first">What is Apicurio Registry?</h1>
                         <p>
-                            Apicurio Registry is a runtime server system that stores a specific set of artifacts as files. 
-                            Apicurio Registry enables you to add, update, and remove the artifacts from the store using a 
-                            remote REST API.
+                            Apicurio Registry is an open source schema registry and API registry. It is a runtime server
+                            that stores, versions, validates and governs the contracts your systems depend on: event
+                            schemas such as Apache Avro, Protobuf and JSON Schema; API definitions such as OpenAPI,
+                            AsyncAPI and GraphQL; and, more recently, AI agent cards, MCP tool definitions and LLM prompt
+                            templates. Producers, consumers, CI pipelines and AI agents read and write those artifacts
+                            through a REST API, a web console, a CLI, a Maven plugin and client SDKs.
+                        </p>
+                        <p>
+                            Apicurio Registry is licensed under the Apache License 2.0 and is a
+                            <a href="https://www.cncf.io/projects/apicurio-registry/">Cloud Native Computing Foundation (CNCF) Sandbox project</a>.
+                            It runs anywhere a container runs, and an operator installs and manages it on Kubernetes and OpenShift.
                         </p>
                     </div>
                 </div>
+
                 <div class="row summary">
                     <div class="col-lg-10">
-                        <h2 class="section-header">Apicurio Registry Use Cases</h2>
-                        <h3>API Registry</h3>
+                        <h2 class="section-header">Use cases</h2>
+
+                        <h3>Schema registry for Apache Kafka and event streaming</h3>
                         <p>
-                            The key use case for the Apicurio community, an API registry is a system that enables you to register 
-                            your API designs, for example, OpenAPI or AsyncAPI files, so that potential API consumers can do the 
-                            following:
+                            Data published to Kafka topics and message queues must be serialized and validated against a
+                            schema. Rather than packaging schemas in every application, register them once and reference
+                            them at runtime. Apicurio Registry ships Kafka serializers and deserializers (SerDes) for Avro,
+                            Protobuf and JSON Schema, and Kafka Connect converters, so producers and consumers resolve
+                            schemas automatically. A schema registry gives you:
                         </p>
                         <ul>
-                            <li>Browse or search the list of APIs available in production</li>
-                            <li>View details about a single available API</li>
-                            <li>Learn how to use an API using auto-generated documentation</li>
+                            <li>Producers and consumers decoupled from schema files</li>
+                            <li>Producers that can be upgraded without upgrading consumers</li>
+                            <li>A central record of every schema used in production</li>
+                            <li>Documentation of the data format each topic or queue expects</li>
+                            <li>Centralized control of data format and schema evolution through compatibility rules</li>
                         </ul>
-                        <h3>Schema Registry</h3>
+
+                        <h3>API registry</h3>
                         <p>
-                            In the messaging and event streaming world, data published to topics and queues often must 
-                            be serialized or validated using a schema, for example, Apache Avro, JSON Schema, or Google 
-                            Protocol Buffers. Schemas can be packaged in each application, but it is often a better 
-                            architectural pattern to register schemas in an external system and then reference them 
-                            from each application instead. A schema registry provides the following benefits:
+                            Register OpenAPI, AsyncAPI, GraphQL and other API designs so API consumers can browse and
+                            search the APIs available in production, inspect a single API, and generate client code from
+                            the stored definition. Versioning and content rules keep published APIs from drifting into
+                            invalid or breaking states.
                         </p>
-                        <ul>
-                            <li>Decoupling schemas from producers and consumers</li>
-                            <li>Potential to upgrade producers without upgrading consumers</li>
-                            <li>Central location to track all schemas used in production</li>
-                            <li>Document the data format required for each topic or queue</li>
-                            <li>Centralized control of data format and schema evolution</li>
-                        </ul>
+
+                        <h3>Agent registry and MCP registry for AI systems</h3>
+                        <p>
+                            AI agents need the same thing services need: a trustworthy place to discover what exists and
+                            what contract it follows. Apicurio Registry stores <a href="{{ site.baseurl }}/registry/ai/agent-registry/">A2A agent cards</a>,
+                            <a href="{{ site.baseurl }}/registry/ai/mcp-registry/">MCP server and tool definitions</a>, prompt templates and
+                            model schemas as versioned, validated artifacts, and serves them through standard discovery
+                            endpoints. See <a href="{{ site.baseurl }}/registry/ai/">Apicurio Registry for AI agents</a> for details.
+                        </p>
+
+                        <h3>Drop-in replacement for Confluent Schema Registry clients</h3>
+                        <p>
+                            Apicurio Registry implements the Confluent Schema Registry API (v7 and v8), so existing
+                            Confluent serializers and tools work by pointing <code>schema.registry.url</code> at
+                            <code>/apis/ccompat/v7</code>. See the
+                            <a href="{{ site.baseurl }}/registry/apicurio-vs-confluent-schema-registry/">Apicurio Registry and Confluent Schema Registry comparison</a>.
+                        </p>
                     </div>
                 </div>
+
                 <div class="row summary">
                     <div class="col-lg-10">
-                        <h2 class="section-header">Apicurio Registry Key Features</h2>
-                        <div class="key-feature">
-                            <div class="name">Storage and management of multiple artifact types</div>
-                            <div class="description">
-                                Apicurio Registry supports adding, removing, and updating the following artifact types:
-                                <ul>
-                                    <li>OpenAPI</li>
-                                    <li>AsyncAPI</li>
-                                    <li>GraphQL</li>
-                                    <li>Apache Avro</li>
-                                    <li>Google Protocol Buffers</li>
-                                    <li>JSON Schema</li>
-                                    <li>Kafka Connect schema</li>
-                                    <li>WSDL</li>
-                                    <li>XML Schema (XSD)</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="key-feature">
-                            <div class="name">Configurable content rules</div>
-                            <div class="description">
-                                You can control content evolution in Apicurio Registry by enabling content rules for validity, 
-                                compatibility, and integrity.
-                            </div>
-                        </div>
-                        <div class="key-feature">
-                            <div class="name">Multiple storage options</div>
-                            <div class="description">
-                                You can configure Apicurio Registry to store data in backend storage systems depending on the use case. 
-                                Storage options include Apache Kafka, PostgreSQL, or Microsoft SQL Server.
-                            </div>
-                        </div>
+                        <h2 class="section-header">Key features</h2>
+                        <table class="table table-striped feature-table">
+                            <thead>
+                                <tr><th>Feature</th><th>What you get</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Artifact types</td>
+                                    <td>Avro, Protobuf, JSON Schema, OpenAPI, AsyncAPI, GraphQL, Kafka Connect schema,
+                                        OpenRPC, Thrift, WSDL, XML and XSD, plus AI artifact types: A2A agent cards,
+                                        MCP tools, prompt templates and model schemas (MCP server definitions are added in 3.4).
+                                        You can also <a href="{{ site.baseurl }}/blog/2025/10/27/custom-artifact-types">add custom artifact types</a>.</td>
+                                </tr>
+                                <tr>
+                                    <td>Content rules</td>
+                                    <td>Validity, compatibility and integrity rules at global, group and artifact level.
+                                        Compatibility modes: BACKWARD, FORWARD and FULL, each with a transitive variant.</td>
+                                </tr>
+                                <tr>
+                                    <td>Kafka integration</td>
+                                    <td>Serializers and deserializers for Avro, Protobuf and JSON Schema, and Kafka Connect
+                                        converters for Avro, JSON Schema and Protobuf.</td>
+                                </tr>
+                                <tr>
+                                    <td>Confluent compatibility</td>
+                                    <td>Confluent Schema Registry API v7 and v8 under <code>/apis/ccompat/</code>.</td>
+                                </tr>
+                                <tr>
+                                    <td>Storage</td>
+                                    <td>PostgreSQL (recommended for production), Apache Kafka, GitOps and KubernetesOps,
+                                        and in-memory H2 for development.</td>
+                                </tr>
+                                <tr>
+                                    <td>Security</td>
+                                    <td>OpenID Connect authentication (for example Keycloak or Microsoft Entra ID) and
+                                        role-based authorization.</td>
+                                </tr>
+                                <tr>
+                                    <td>Tooling</td>
+                                    <td>Web console, REST API, CLI, Maven plugin and client SDKs.</td>
+                                </tr>
+                                <tr>
+                                    <td>AI agents</td>
+                                    <td>A2A agent registry, MCP server, MCP tool discovery and an AI Catalog / ARD discovery
+                                        endpoint. Several of these are experimental and disabled by default.</td>
+                                </tr>
+                                <tr>
+                                    <td>Deployment</td>
+                                    <td>Container images for Docker and Podman, and an operator for Kubernetes and OpenShift.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row summary">
+                    <div class="col-lg-10">
+                        <h2 class="section-header">How it works</h2>
+                        <p>
+                            Artifacts are organized into groups and carry a history of versions. Each new version is
+                            checked against the rules configured for it, so an incompatible schema change is rejected
+                            before it reaches a producer rather than after it breaks a consumer. Clients fetch artifacts
+                            by group, artifact and version, by content ID, or by global ID; the Kafka SerDes embed the
+                            ID in each message so consumers can resolve the exact schema used to write it.
+                        </p>
+                        <p>
+                            Artifacts can also be managed declaratively. With GitOps storage, Apicurio Registry reads
+                            its content from a Git repository; with KubernetesOps storage, from Kubernetes resources.
+                            Both let schema changes go through the same review process as code.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row summary">
+                    <div class="col-lg-10">
+                        <h2 class="section-header">Get started</h2>
+                        <ul>
+                            <li><a href="{{ site.baseurl }}/registry/getting-started/">Run Apicurio Registry with Docker</a> in a few minutes.</li>
+                            <li>Read the <a href="{{ docs }}assembly-intro-to-the-registry.html">introduction to Apicurio Registry</a>
+                                and the <a href="{{ docs }}assembly-intro-to-registry-rules.html">content rules</a> documentation.</li>
+                            <li>Configure the <a href="{{ docs }}assembly-using-kafka-client-serdes.html">Kafka client SerDes</a>.</li>
+                            <li>Follow the <a href="{{ docs }}assembly-agent-registry-quickstart.html">agent registry quick start</a>.</li>
+                            <li>Ask questions on <a href="https://cloud-native.slack.com/archives/C0BDWTC1DTM">CNCF Slack</a> or in
+                                <a href="{{ site.github_registry_url }}/discussions">GitHub Discussions</a>.</li>
+                        </ul>
                     </div>
                 </div>
             </div>

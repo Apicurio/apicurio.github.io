@@ -10,18 +10,35 @@
   .masthead {
 
     width: 1180px;
+    max-width: 100%;
+    padding: 0 15px;
     height: 96px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    @media screen and (max-width: 1024px) {
-    }
 
     .logo {
       width: 294px;
+      max-width: 60%;
       flex-shrink: 0;
       margin-right: 20px;
+
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+    }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: 1px solid #666;
+      border-radius: 4px;
+      color: white;
+      font-size: 20px;
+      padding: 4px 10px;
+      cursor: pointer;
     }
 
     .main-nav {
@@ -63,3 +80,47 @@
   }
 
 }
+
+// Mobile: collapse the navigation behind a toggle button.
+@media screen and (max-width: 768px) {
+  .masthead-container {
+    height: auto;
+    min-height: 72px;
+
+    .masthead {
+      height: auto;
+      min-height: 72px;
+      flex-wrap: wrap;
+
+      .nav-toggle {
+        display: block;
+      }
+
+      .main-nav {
+        display: none;
+        flex-basis: 100%;
+        padding-bottom: 10px;
+
+        .menu {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0;
+
+          li {
+            margin-left: 0;
+            padding: 8px 0;
+          }
+
+          li.nav-divider {
+            display: none;
+          }
+        }
+      }
+
+      .main-nav.open {
+        display: block;
+      }
+    }
+  }
+}
+

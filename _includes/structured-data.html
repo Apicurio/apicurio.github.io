@@ -1,0 +1,62 @@
+{%- comment -%}
+Structured data that jekyll-seo-tag does not emit.
+
+- Organization: on every page.
+- SoftwareApplication: on pages that set `software_application: true`.
+- BreadcrumbList: on pages that set `breadcrumbs`, a list of {name, url} items
+  (the current page is appended automatically).
+{%- endcomment -%}
+{%- include registry/_docs-version.html -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "{{ site.url }}/#organization",
+  "name": "Apicurio",
+  "url": "{{ site.url }}/",
+  "logo": "{{ site.logo | absolute_url }}",
+  "description": "Apicurio Registry is an open source schema and API registry and a Cloud Native Computing Foundation (CNCF) Sandbox project.",
+  "sameAs": [
+    "https://github.com/Apicurio",
+    "https://www.cncf.io/projects/apicurio-registry/",
+    "https://x.com/Apicurio"
+  ]
+}
+</script>
+{%- if page.software_application %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Apicurio Registry",
+  "url": "{{ site.url }}/registry/",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "Schema registry",
+  "operatingSystem": "Linux, Kubernetes, OpenShift, Docker",
+  "softwareVersion": "{{ registry_release.tag_name | remove_first: 'v' }}",
+  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+  "isAccessibleForFree": true,
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "downloadUrl": "{{ site.url }}/registry/getting-started/",
+  "sameAs": ["{{ site.github_registry_url }}"],
+  "softwareHelp": "{{ site.url }}/registry/docs/apicurio-registry/{{ registry_docs_version }}/index.html",
+  "image": "{{ '/images/opengraph.png' | absolute_url }}",
+  "description": {{ page.description | jsonify }},
+  "publisher": {"@id": "{{ site.url }}/#organization"}
+}
+</script>
+{%- endif %}
+{%- if page.breadcrumbs %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {%- for crumb in page.breadcrumbs %}
+    {"@type": "ListItem", "position": {{ forloop.index }}, "name": {{ crumb.name | jsonify }}, "item": "{{ crumb.url | absolute_url }}"},
+    {%- endfor %}
+    {"@type": "ListItem", "position": {{ page.breadcrumbs.size | plus: 1 }}, "name": {{ page.breadcrumb_title | default: page.title | jsonify }}, "item": "{{ page.url | absolute_url }}"}
+  ]
+}
+</script>
+{%- endif %}
