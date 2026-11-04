@@ -1,0 +1,41 @@
+---
+layout: page
+---
+{%- include registry/_docs-version.html -%}
+{%- assign topic = site.data.blog_topics[page.topic] -%}
+<div class="container content-page">
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+
+{% include breadcrumbs.html %}
+
+<h1>{{ topic.heading }}</h1>
+<p class="lead-definition">{{ topic.intro }}</p>
+
+<ul class="topic-posts">
+  {%- for url in topic.posts %}
+  {%- assign post = site.posts | where: "url", url | first %}
+  {%- if post %}
+  <li>
+    <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+    <span class="topic-post-date">{{ post.date | date: "%b %-d, %Y" }}</span>
+    {%- if post.description %}<p>{{ post.description }}</p>{% else %}<p>{{ post.excerpt | strip_html | truncatewords: 40 }}</p>{% endif %}
+  </li>
+  {%- endif %}
+  {%- endfor %}
+</ul>
+
+<p>
+  Reference documentation:
+  <a href="{{ site.baseurl }}/registry/docs/apicurio-registry/{{ registry_docs_version }}/getting-started/{{ topic.docs }}">{{ topic.docs_title }}</a>.
+</p>
+
+<p>Other topics:
+  {%- for t in site.data.blog_topics %}{% unless t[0] == page.topic %}
+  <a href="{{ site.baseurl }}/blog/topics/{{ t[0] }}/">{{ t[1].heading }}</a>{% unless forloop.last %} ·{% endunless %}
+  {%- endunless %}{% endfor %}
+</p>
+
+</div>
+</div>
+</div>

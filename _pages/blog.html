@@ -9,8 +9,13 @@ layout: page
     <div class="col-lg-10">
       <h1 class="section-header">Apicurio Blog <a style="font-size: 13px; color: #666" class="pull-right" href="/blog/feed.xml"><i class="fa fa-rss"></i></a></h1>
       <p>
-        Welcome to the official Apicurio blog! Read the following posts for the latest information on all Apicurio projects: 
-        Registry, Studio, Data Models, etc..., including new releases, tips and tricks, and other stuff we're dying to let you in on.
+        News, release announcements and tutorials from the Apicurio Registry maintainers and community.
+      </p>
+      <p class="blog-topics">
+        Browse by topic:
+        {%- for t in site.data.blog_topics %}
+        <a href="{{ site.baseurl }}/blog/topics/{{ t[0] }}/">{{ t[1].heading }}</a>{% unless forloop.last %} ·{% endunless %}
+        {%- endfor %}
       </p>
     </div>
   </div>
