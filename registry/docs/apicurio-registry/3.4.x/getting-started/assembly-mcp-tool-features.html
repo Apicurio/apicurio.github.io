@@ -1143,6 +1143,209 @@ The two schemas have opposite directions:</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="mcp-importing-tools_registry"><a class="anchor" href="#mcp-importing-tools_registry"></a>Importing tools from a live MCP server</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry can connect to a running MCP server, list its tools with <code>tools/list</code>, and publish each tool as an <code>MCP_TOOL</code> artifact, so that you do not need to write one artifact per tool by hand. Importing again after the server is redeployed shows which tool contracts changed, and configured rules reject changes that break them.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This feature is experimental. The registry makes outbound connections to the URL in the request, so it is disabled by default and connects only to hosts that you allow.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Experimental features are enabled: <code>apicurio.features.experimental.enabled=true</code>.</p>
+</li>
+<li>
+<p>MCP import is enabled: <code>apicurio.mcp-import.enabled=true</code>.</p>
+</li>
+<li>
+<p>The MCP server host is listed in <code>apicurio.mcp-import.allowed-hosts</code>. When this list is empty, which is the default, every host is refused.</p>
+</li>
+<li>
+<p>An <code>MCP_SERVER</code> artifact exists for the server, and you have write access to it and to the group that the tools are published to.</p>
+</li>
+<li>
+<p>The MCP server supports the Streamable HTTP transport. The <code>sse</code> and <code>stdio</code> transports are not supported.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Import the tools:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST http://localhost:8080/apis/registry/v3/groups/my-servers/artifacts/weather/mcp-import \
+  -H "Content-Type: application/json" \
+  -d '{
+        "url": "https://weather.apps.example.com/mcp",
+        "headers": { "Authorization": "Bearer &lt;token&gt;" },
+        "toolGroupId": "mcp-tools",
+        "dryRun": false
+      }'</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>url</code>: the MCP server endpoint. Required.</p>
+</li>
+<li>
+<p><code>headers</code>: HTTP headers to send to the MCP server, for example credentials. They are sent to the MCP server only, and are never stored, returned, logged, or audited. Headers that the transport sets itself, such as <code>Host</code>, <code>Content-Type</code>, <code>Accept</code>, and <code>Mcp-Session-Id</code>, are refused.</p>
+</li>
+<li>
+<p><code>toolGroupId</code>: the group for the <code>MCP_TOOL</code> artifacts. Defaults to the group of the <code>MCP_SERVER</code> artifact.</p>
+</li>
+<li>
+<p><code>dryRun</code>: when <code>true</code>, the server is contacted and the report is returned, but nothing is written.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Read the report. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "groupId": "my-servers",
+  "artifactId": "weather",
+  "status": "NEW_VERSION",
+  "version": "2",
+  "tools": [
+    { "name": "getWeather", "groupId": "mcp-tools", "artifactId": "weather.getWeather",
+      "version": "1", "status": "CREATED" }
+  ]
+}</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Each tool is stored as an <code>MCP_TOOL</code> artifact with the ID <code>&lt;server artifact ID&gt;.&lt;tool name&gt;</code>.</p>
+</li>
+<li>
+<p>The new <code>MCP_SERVER</code> version references the tools, with each reference named after its tool.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="mcp-importing-tools-results_registry"><a class="anchor" href="#mcp-importing-tools-results_registry"></a>Import results</h3>
+<div class="paragraph">
+<p>Each tool, and the <code>MCP_SERVER</code> artifact, has one of the following statuses:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CREATED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A new <code>MCP_TOOL</code> artifact was created.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NEW_VERSION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The tool&#8217;s definition changed, and a new version was added. For the server, a new version with different references was added.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UNCHANGED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A stored version already matches the tool&#8217;s definition. For the server, the latest version already has the same references, so no version was added.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REJECTED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A rule, such as <code>COMPATIBILITY</code>, rejected the new definition, and the causes list the violations. Nothing was written for the tool, and the new server version does not reference it, because no stored version matches what the server offers. A tool is also rejected when an artifact with its ID exists and is not an <code>MCP_TOOL</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REMOVED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The previous server version referenced the tool, but the server no longer lists it. The tool&#8217;s artifact is not changed or deleted, and the new server version does not reference it.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Each tool is published like any other version: rules, write hooks, authorization, and auditing apply to each tool. Before any tool is written, the import checks that the server lists no tool name twice and that you can write every existing tool artifact, so these failures leave nothing imported. A rule rejecting one tool does not stop the others. Tools are otherwise not imported atomically: if another error occurs partway through, tools that were already accepted stay stored. In a dry run, the report states whether a new server version would be added, but the server version is not checked against rules, because the tools it would reference do not exist yet.</p>
+</div>
+<div class="paragraph">
+<p>The new server version references exactly the imported tools. References that you added to an earlier version by hand are not carried over.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="mcp-importing-tools-security_registry"><a class="anchor" href="#mcp-importing-tools-security_registry"></a>Outbound connection security</h3>
+<div class="paragraph">
+<p>The registry applies the following restrictions before and while it connects to the MCP server:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The URL must use HTTPS, unless <code>apicurio.mcp-import.insecure-http.enabled=true</code>, and must not contain user information.</p>
+</li>
+<li>
+<p>The host must be allowed by <code>apicurio.mcp-import.allowed-hosts</code>. Each entry is a hostname (<code>mcp.example.com</code>), a domain wildcard (<code><strong>.example.com</code>, which does not match <code>example.com</code>), <code></strong></code> for any host, an IP address, or a CIDR range (<code>10.0.0.0/8</code>). A CIDR entry allows a host when every address the host resolves to is in a listed range.</p>
+</li>
+<li>
+<p>Every address that the host resolves to must not be a loopback, link-local, unspecified, multicast, reserved, or cloud metadata address, even when the allow-list permits the host. Loopback is allowed only with <code>apicurio.mcp-import.loopback.enabled=true</code>, for development and tests.</p>
+</li>
+<li>
+<p>Redirects are never followed.</p>
+</li>
+<li>
+<p>Each request times out after <code>apicurio.mcp-import.timeout.seconds</code>. Each message is limited to <code>apicurio.mcp-import.response.max-size</code> bytes, and the number of tools to <code>apicurio.mcp-import.tools.max-size</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Every refused host gets the same error message, so the endpoint does not reveal which hosts exist or resolve. A refused URL returns HTTP 400. An MCP server that cannot be reached, times out, sends a response that is too large or invalid, or lists too many tools returns HTTP 502. Read-only storage, such as GitOps or KubernetesOps, returns HTTP 409 before any connection is made, as does an import when the feature is disabled.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The HTTP client resolves the host again when it connects, so a host whose DNS answer changes between the check and the connection (DNS rebinding) is not detected. To limit this, allow hostnames whose DNS you control, or CIDR ranges.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The registry records the following Micrometer counters. They have no URL, host, or header values as tags, and dry runs are not counted in <code>apicurio.mcp.import.tools</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>apicurio.mcp.import.tools</code>, tagged <code>result</code> (<code>created</code>, <code>new-version</code>, <code>unchanged</code>, <code>rejected</code>, <code>removed</code>).</p>
+</li>
+<li>
+<p><code>apicurio.mcp.import.failures</code>, tagged <code>reason</code> (<code>host-denied</code>, <code>timeout</code>, <code>oversize</code>, <code>too-many-tools</code>, <code>protocol</code>).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="mcp-automatic-label-extraction_registry"><a class="anchor" href="#mcp-automatic-label-extraction_registry"></a>Automatic label extraction</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
