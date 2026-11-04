@@ -20,16 +20,16 @@ function fixSyntaxHighlighting () {
 }
 
 
-// Collapse the main navigation behind a toggle button on narrow screens
-function setupNavToggle () {
-  var toggle = document.querySelector('.nav-toggle');
+// Show and hide the collapsed navigation menu on narrow viewports
+function initNavToggle () {
+  var toggle = document.getElementById('nav-toggle');
   var nav = document.getElementById('main-nav');
   if (!toggle || !nav) {
     return;
   }
   toggle.addEventListener('click', function () {
-    var open = nav.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    var isOpen = nav.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
   });
 }
 
@@ -37,7 +37,7 @@ function setupNavToggle () {
 document.addEventListener('DOMContentLoaded', function () {
   fixPlatformLabels();
   fixSyntaxHighlighting();
-  setupNavToggle();
+  initNavToggle();
 });
 
 
