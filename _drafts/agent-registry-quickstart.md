@@ -5,6 +5,7 @@ description: "Run Apicurio Registry as an A2A agent registry with Docker Compose
 author: carlesarnal
 categories: registry ai agents a2a mcp
 ---
+{%- include registry/_docs-version.html -%}
 
 Once you have more than a handful of AI agents, something has to answer the question "which agent can do this?".
 That is the job of an [agent registry](/registry/ai/agent-registry/). This post walks through running Apicurio
@@ -121,11 +122,11 @@ The Apicurio Registry MCP server lets an LLM client work with the registry direc
 `host.docker.internal` lets the MCP server container reach the registry on your machine with Docker Desktop; on
 other setups, use whatever URL reaches the registry from inside a container. Restart Claude Desktop and ask "What
 groups are present in Apicurio Registry?". The MCP server starts in safe mode (`APICURIO_MCP_SAFE_MODE`); see the
-[MCP server documentation](/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-mcp-server-integration.html)
+[MCP server documentation](/registry/docs/apicurio-registry/{{ registry_docs_version }}/getting-started/assembly-mcp-server-integration.html)
 for what it allows.
 
 # Where to go next
 
-- [A2A protocol features](/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-a2a-features.html), including the visibility labels that control who can see which cards
-- [Agent discovery and multi-agent orchestration](/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-agent-discovery-patterns.html)
+- [A2A protocol features](/registry/docs/apicurio-registry/{{ registry_docs_version }}/getting-started/assembly-a2a-features.html), including the visibility labels that control who can see which cards
+- [Agent discovery and multi-agent orchestration](/registry/docs/apicurio-registry/{{ registry_docs_version }}/getting-started/assembly-agent-discovery-patterns.html)
 - [Apicurio Registry for AI agents](/registry/ai/)

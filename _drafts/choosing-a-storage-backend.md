@@ -5,6 +5,7 @@ description: "Apicurio Registry 3.x runs every storage variant from one image. C
 author: carlesarnal
 categories: registry storage postgresql kafka gitops
 ---
+{%- include registry/_docs-version.html -%}
 
 In Apicurio Registry 3.x, every storage option ships in the same container image, `apicurio/apicurio-registry`.
 Choosing one is a matter of configuration. This post compares the options and gives a short decision guide.
@@ -77,6 +78,6 @@ Both are experimental and need `APICURIO_FEATURES_EXPERIMENTAL_ENABLED=true`. Se
 
 # Further reading
 
-- [Installing Apicurio Registry using Docker](/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-installing-registry-docker.html)
-- [Configuring GitOps storage](/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-configuring-gitops-storage.html)
-- [Configuring KubernetesOps storage](/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-configuring-kubernetesops-storage.html)
+- [Installing Apicurio Registry using Docker](/registry/docs/apicurio-registry/{{ registry_docs_version }}/getting-started/assembly-installing-registry-docker.html)
+- [Configuring GitOps storage](/registry/docs/apicurio-registry/{{ registry_docs_version }}/getting-started/assembly-configuring-gitops-storage.html)
+- [Configuring KubernetesOps storage](/registry/docs/apicurio-registry/{{ registry_docs_version }}/getting-started/assembly-configuring-kubernetesops-storage.html)

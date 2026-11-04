@@ -5,6 +5,7 @@ description: "What BACKWARD, FORWARD, FULL and the transitive compatibility mode
 author: carlesarnal
 categories: registry schemas compatibility avro protobuf jsonschema
 ---
+{%- include registry/_docs-version.html -%}
 
 A schema registry's most useful job is saying "no": rejecting a schema change before it reaches a producer and
 breaks a consumer. Compatibility modes decide what gets rejected. This post explains each mode, shows which common
@@ -113,5 +114,5 @@ If you use Confluent clients through the compatibility API, note that the compat
 
 # Further reading
 
-- [Schema compatibility modes](/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-registry-compatibility-modes.html), with the full tables for every format
-- [Content rule reference](/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-rule-reference.html)
+- [Schema compatibility modes](/registry/docs/apicurio-registry/{{ registry_docs_version }}/getting-started/assembly-registry-compatibility-modes.html), with the full tables for every format
+- [Content rule reference](/registry/docs/apicurio-registry/{{ registry_docs_version }}/getting-started/assembly-rule-reference.html)

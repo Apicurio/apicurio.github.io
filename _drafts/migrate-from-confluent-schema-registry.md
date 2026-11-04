@@ -5,6 +5,7 @@ description: "A step-by-step migration from Confluent Schema Registry to Apicuri
 author: carlesarnal
 categories: registry confluent kafka migration
 ---
+{%- include registry/_docs-version.html -%}
 
 Apicurio Registry implements the Confluent Schema Registry REST API, so the serializers, Kafka Connect converters and
 tools you already use with Confluent keep working when you change one URL. This post is a checklist for doing that
@@ -87,5 +88,5 @@ because both APIs read the same data.
 
 # Further reading
 
-- [Confluent Schema Registry compatibility API documentation](/registry/docs/apicurio-registry/3.3.x/getting-started/assembly-confluent-schema-registry-compatibility.html)
+- [Confluent Schema Registry compatibility API documentation](/registry/docs/apicurio-registry/{{ registry_docs_version }}/getting-started/assembly-confluent-schema-registry-compatibility.html)
 - [Apicurio Registry vs. Confluent Schema Registry](/registry/apicurio-vs-confluent-schema-registry/)
