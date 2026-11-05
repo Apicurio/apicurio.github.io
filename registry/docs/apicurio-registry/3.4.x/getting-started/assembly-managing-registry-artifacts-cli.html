@@ -1425,6 +1425,76 @@ $ acr rule delete VALIDITY</code></pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="importing-mcp-tools-using-registry-cli_registry"><a class="anchor" href="#importing-mcp-tools-using-registry-cli_registry"></a>Importing tools from an MCP server using the CLI</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the CLI to import the tools of a running MCP server into an <code>MCP_SERVER</code> artifact. Each tool becomes an <code>MCP_TOOL</code> artifact, subject to the rules configured for it, and a new version of the <code>MCP_SERVER</code> artifact references the imported tools.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This command is experimental and subject to backwards-incompatible change or removal.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have configured at least one CLI context.</p>
+</li>
+<li>
+<p>The registry allows MCP imports from the server&#8217;s host, as described in "Importing tools from a live MCP server" in <a href="assembly-mcp-tool-features.html" class="page">MCP tool features</a>.</p>
+</li>
+<li>
+<p>An <code>MCP_SERVER</code> artifact exists for the server.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Optional: Preview the import without writing anything:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr mcp import weather --group my-servers --url https://weather.example.com/mcp --dry-run</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Import the tools:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr mcp import weather --group my-servers --url https://weather.example.com/mcp --tool-group mcp-tools</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command prints the result for each tool (<code>CREATED</code>, <code>NEW_VERSION</code>, <code>UNCHANGED</code>, <code>REJECTED</code> or <code>REMOVED</code>) and the new version of the <code>MCP_SERVER</code> artifact. For a rejected tool, it also prints each rule violation. A rejected tool is a reported result, not a failure, so the command still exits with code 0.</p>
+</div>
+</li>
+<li>
+<p>Optional: Send HTTP headers to the MCP server, for example credentials. Header values are not accepted as plain command-line options, because they would be kept in your shell history. Read them from a file, with one <code>Name: value</code> per line, or from an environment variable:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr mcp import weather --url https://weather.example.com/mcp --header-file mcp-headers.txt
+$ acr mcp import weather --url https://weather.example.com/mcp --header-env Authorization=MCP_AUTHORIZATION</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use <code>--header-file -</code> to read the headers from standard input. With <code>--verbose</code>, the CLI does not log this request, because its body carries the headers.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="synchronizing-gitops-using-registry-cli_registry"><a class="anchor" href="#synchronizing-gitops-using-registry-cli_registry"></a>Checking and synchronizing GitOps storage using the CLI</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">

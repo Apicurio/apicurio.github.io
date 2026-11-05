@@ -1729,6 +1729,68 @@ To disable a rule, click the trash icon next to the rule. If you do this and the
 </div>
 </div>
 <div class="sect1">
+<h2 id="importing-mcp-tools-using-console_registry"><a class="anchor" href="#importing-mcp-tools-using-console_registry"></a>Importing tools from an MCP server using the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the Apicurio Registry web console to import the tools of a running MCP server into an <code>MCP_SERVER</code> artifact. Each tool becomes an <code>MCP_TOOL</code> artifact, subject to the rules configured for it, and a new version of the <code>MCP_SERVER</code> artifact references the imported tools.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This feature is experimental and subject to backwards-incompatible change or removal.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry allows MCP imports, as described in "Importing tools from a live MCP server" in <a href="assembly-mcp-tool-features.html" class="page">MCP tool features</a>. The web console shows the <strong>Import tools</strong> button only when <code>apicurio.mcp-import.enabled</code> is <code>true</code> and the storage is not read-only.</p>
+</li>
+<li>
+<p>An <code>MCP_SERVER</code> artifact exists for the server, and you can write to it.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>On the <strong>Explore</strong> tab, open the <code>MCP_SERVER</code> artifact.</p>
+</li>
+<li>
+<p>Click <strong>Import tools</strong>.</p>
+</li>
+<li>
+<p>In the <strong>MCP server URL</strong> field, enter the Streamable HTTP endpoint of the MCP server.</p>
+</li>
+<li>
+<p>Optional: In the <strong>Tool group</strong> field, enter the group for the <code>MCP_TOOL</code> artifacts. By default, the server artifact&#8217;s group is used.</p>
+</li>
+<li>
+<p>Optional: Click <strong>Add header</strong> to send an HTTP header to the MCP server, for example credentials. Header values are sent to the MCP server only, and are not stored.</p>
+</li>
+<li>
+<p>Click <strong>Preview</strong> to see the result without writing anything, or click <strong>Import</strong>.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>The dialog lists each tool with its result: <code>CREATED</code>, <code>NEW_VERSION</code>, <code>UNCHANGED</code>, <code>REJECTED</code>, or <code>REMOVED</code>. For a rejected tool, it shows the rule violations. When you close the dialog after an import, the artifact page shows the new version.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="changing-artifact-owner-using-console_registry"><a class="anchor" href="#changing-artifact-owner-using-console_registry"></a>Changing an artifact owner using the Apicurio Registry web console</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
