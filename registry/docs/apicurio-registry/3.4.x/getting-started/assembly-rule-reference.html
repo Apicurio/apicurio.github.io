@@ -510,7 +510,7 @@
 <p><code>NO_CIRCULAR_REFERENCES</code>: Detect circular reference chains among artifacts.</p>
 </li>
 <li>
-<p><code>REFS_EXIST</code>: Detect if there are any references to non-existent artifacts.</p>
+<p><code>REFS_EXIST</code>: Detect if there are any references to non-existent artifacts. For the <code>AGENT_CARD</code>, <code>MCP_SERVER</code>, and <code>MCP_TOOL</code> artifact types, also detect references to artifact types that they are not allowed to reference.</p>
 </li>
 <li>
 <p><code>ALL_REFS_MAPPED</code>: Ensure that all artifact references are mapped.</p>
@@ -653,7 +653,7 @@
 <p>None</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Mapping detection not supported</p>
+<p>Full</p>
 </div></div></td>
 </tr>
 <tr>
@@ -712,6 +712,19 @@ embedded in <code>wsdl:types</code> by using the same resolution. For WSDL 2.0, 
 </tr>
 </table>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For Thrift artifacts, the <code>ALL_REFS_MAPPED</code> and <code>FULL</code> integrity levels check that every <code>include</code>
+directive is mapped to an artifact reference. An unmapped include fails with <code>Unmapped Thrift include detected.</code>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -741,6 +754,39 @@ embedded in <code>wsdl:types</code> by using the same resolution. For WSDL 2.0, 
 </div>
 <div class="paragraph">
 <p>The <code>SYNTAX_ONLY</code> level checks only that the content is well-formed JSON.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-rule-json-schema-validity-changes_registry"><a class="anchor" href="#registry-rule-json-schema-validity-changes_registry"></a>Changes to JSON Schema validity checking in Apicurio Registry 3.4</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Earlier versions of Apicurio Registry checked JSON Schema validity by loading the schema with a different library, based on the everit library for drafts 4, 6, and 7.
+If you used the <code>VALIDITY</code> rule with JSON Schema artifacts before version 3.4, note the following differences:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apicurio Registry now checks artifacts in draft 2019-09.
+The earlier checker rejected them at the <code>FULL</code> level with a message that ends with <code>JSON schema version 2019-09 is not supported yet.</code></p>
+</li>
+<li>
+<p>Apicurio Registry now validates a schema against the meta-schema of its draft, rather than only loading it, and rejects a schema that its draft forbids.
+For example, in draft 4, <code>exclusiveMinimum</code> is a boolean that requires <code>minimum</code>, and in draft 2020-12, <code>$dynamicAnchor</code> must not be empty.</p>
+</li>
+<li>
+<p>The <code>context</code> of each rule violation is now a JSON Pointer, such as <code>/properties/price/minimum</code>, instead of the earlier location that started with <code>#</code>.
+Update anything that matches the previous contexts.</p>
+</li>
+<li>
+<p>Apicurio Registry now reports all problems at once, at most one per location.
+The earlier checker reported one problem at a time.</p>
+</li>
+<li>
+<p>Apicurio Registry does not check stored versions again.
+The changes apply when you add content.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>

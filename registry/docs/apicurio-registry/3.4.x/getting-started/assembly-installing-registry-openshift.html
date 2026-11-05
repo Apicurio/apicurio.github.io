@@ -490,10 +490,13 @@ You can install more than one replica of Apicurio Registry depending on your env
 <div class="ulist">
 <ul>
 <li>
-<p><strong>2.x</strong>: Includes all minor and patch updates, such as 2.3.0 and 2.0.3. For example, an installation on 2.0.x upgrades to 2.3.x.</p>
+<p><strong>3.x</strong>: Rolling channel that includes all minor and patch updates, such as 3.3.4 and 3.4.0. For example, an installation on 3.3.x upgrades to 3.4.x. New installations use this channel by default.</p>
 </li>
 <li>
-<p><strong>2.0.x</strong>: Includes patch updates only, such as 2.0.1 and 2.0.2. For example, an installation on 2.0.x ignores 2.3.x.</p>
+<p><strong>3.&lt;minor&gt;.x</strong>, for example <strong>3.4.x</strong>: Includes patch updates only within that minor version, such as 3.4.1 and 3.4.2. For example, an installation on 3.3.x ignores 3.4.0.</p>
+<div class="paragraph">
+<p>For more information about the channels and about moving between them, see <a href="assembly-versioning-support-policy.html#olm-channels_registry" class="page">OLM channels</a>.</p>
+</div>
 </li>
 </ul>
 </div>
@@ -529,7 +532,110 @@ You can install more than one replica of Apicurio Registry depending on your env
 <p><a href="https://docs.openshift.com/container-platform/latest/operators/admin/olm-adding-operators-to-cluster.html">Adding Operators to an OpenShift cluster</a></p>
 </li>
 <li>
-<p><a href="https://github.com/Apicurio/apicurio-registry-operator">Apicurio Registry Operator community in GitHub</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/operator">Apicurio Registry Operator source code in GitHub</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-operator-manifests_registry"><a class="anchor" href="#installing-operator-manifests_registry"></a>Installing the Apicurio Registry Operator with installation manifests</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can install the Apicurio Registry Operator on a Kubernetes cluster without Operator Lifecycle Manager (OLM) by applying an installation manifest. The Apicurio Registry repository provides two manifests for each release in the <code>operator/install</code> directory:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>apicurio-registry-operator-&lt;version&gt;.yaml</code> installs the Apicurio Registry Operator with cluster-wide RBAC. The Apicurio Registry Operator watches <code>ApicurioRegistry3</code> resources in all namespaces.</p>
+</li>
+<li>
+<p><code>apicurio-registry-operator-namespaced-&lt;version&gt;.yaml</code> installs the Apicurio Registry Operator with namespace-scoped RBAC and a small ClusterRole that lets the Apicurio Registry Operator list <code>ApicurioRegistry3</code> resources and read the custom resource definition. The Apicurio Registry Operator watches only the namespace that it is deployed into. This least-privilege variant is available starting with version 3.3.2. You can apply it once per namespace, because it suffixes the names of its ClusterRole and ClusterRoleBinding with the namespace. All installations share the custom resource definition.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Both manifests contain the placeholder <code>PLACEHOLDER_NAMESPACE</code> wherever a namespace is required. You must replace the placeholder with the target namespace before you apply the manifest. The <code>-n</code> option of <code>kubectl</code> does not override a namespace that is already set in the manifest.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have cluster administrator access to a Kubernetes cluster.</p>
+</li>
+<li>
+<p>You have installed the <code>kubectl</code> command-line tool.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create the namespace for the Apicurio Registry Operator:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl create namespace apicurio-system</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Download the installation manifest for your version from the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/operator/install"><code>operator/install</code> directory</a> of the Apicurio Registry repository.</p>
+</li>
+<li>
+<p>Replace the namespace placeholder and apply the manifest. For the all-namespaces variant:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sed "s/PLACEHOLDER_NAMESPACE/apicurio-system/g" apicurio-registry-operator-&lt;version&gt;.yaml | kubectl apply -f -</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the single-namespace variant:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sed "s/PLACEHOLDER_NAMESPACE/apicurio-system/g" apicurio-registry-operator-namespaced-&lt;version&gt;.yaml | kubectl apply -f -</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that the Apicurio Registry Operator pod is running:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get pods -n apicurio-system</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The all-namespaces variant reads the <code>APICURIO_OPERATOR_WATCHED_NAMESPACES</code> environment variable from the <code>olm.targetNamespaces</code> annotation of the Apicurio Registry Operator pod. Outside OLM, the annotation is empty, so the Apicurio Registry Operator watches all namespaces. The single-namespace variant sets the variable to the namespace of the Apicurio Registry Operator.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you replace an all-namespaces installation with the single-namespace variant in the same namespace, the previous ClusterRole and ClusterRoleBinding remain and keep granting cluster-wide permissions to the Apicurio Registry Operator service account. Delete them after you apply the single-namespace manifest, but only when no all-namespaces installation remains on the cluster, because all all-namespaces installations share them:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl delete clusterrolebinding apicurio-registry-operator-clusterrolebinding
+kubectl delete clusterrole apicurio-registry-operator-clusterrole</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-implementing-multitenancy.html#multitenancy-namespace-per-tenant_registry" class="page">Deploying with namespace-per-tenant isolation</a></p>
 </li>
 </ul>
 </div>

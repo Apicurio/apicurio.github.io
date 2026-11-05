@@ -456,7 +456,7 @@ apicurio.mcp-registry.enabled=true</code></pre>
 <h2 id="mcp-registry-api-operations_registry"><a class="anchor" href="#mcp-registry-api-operations_registry"></a>MCP Registry API operations</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The MCP Registry API provides operations to publish a server definition, read a published version, and list published server versions.</p>
+<p>The MCP Registry API provides operations to publish a server definition, read and list published server versions, update their status, and soft delete them.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. MCP Registry API operations</caption>
@@ -481,12 +481,42 @@ apicurio.mcp-registry.enabled=true</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Read a server version</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /apis/mcp-registry/v0.1/servers/{serverName}/versions/{version}</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Returns one published version. The <code>serverName</code> path segment is the URL-encoded server name, for example <code>io.github.example%2Fweather</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns one published version. The <code>serverName</code> path segment is the URL-encoded server name, for example <code>io.github.example%2Fweather</code>. Use <code>latest</code> as the version to read the most recently published version.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read the latest server version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /apis/mcp-registry/v0.1/servers/{serverName}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the most recently published version of one server. Add <code>include_deleted=true</code> to include deleted versions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List the versions of a server</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /apis/mcp-registry/v0.1/servers/{serverName}/versions</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the published versions of one server, newest first, and HTTP 404 for an unknown server. Accepts the <code>cursor</code>, <code>limit</code>, and <code>include_deleted</code> query parameters.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">List server versions</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /apis/mcp-registry/v0.1/servers</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns all published server versions, newest first. Query parameters filter the list and page through it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update the status of a server version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PATCH /apis/mcp-registry/v0.1/servers/{serverName}/versions/{version}/status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets the status of one published version. The JSON request body contains a required <code>status</code> of <code>active</code>, <code>deprecated</code>, or <code>deleted</code>, and an optional <code>statusMessage</code> of up to 500 characters. Requires a concrete version, not <code>latest</code>. Returns HTTP 400 when the requested status and message match the current ones.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update the status of all server versions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PATCH /apis/mcp-registry/v0.1/servers/{serverName}/status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Applies the same status update, with the same request body, to every published version of the server. Returns <code>updatedCount</code> and the updated <code>servers</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete a server version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DELETE /apis/mcp-registry/v0.1/servers/{serverName}/versions/{version}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Soft deletes one published version by setting its status to <code>deleted</code>, and returns HTTP 200 with the updated record. Requires a concrete version, not <code>latest</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update a server version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PUT /apis/mcp-registry/v0.1/servers/{serverName}/versions/{version}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not supported. Returns HTTP 501. Publish a new version instead.</p></td>
 </tr>
 </tbody>
 </table>
@@ -545,6 +575,14 @@ apicurio.mcp-registry.enabled=true</code></pre>
 </div>
 <div class="paragraph">
 <p>To page through results, reuse <code>metadata.nextCursor</code> with the same filters. Both explicit and default page limits respect <code>apicurio.mcp-registry.max-page-size</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example status update request</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">curl -X PATCH 'http://localhost:8080/apis/mcp-registry/v0.1/servers/io.github.example%2Fweather/versions/1.0.0/status' \
+  -H 'Content-Type: application/json' \
+  -d '{"status": "deprecated", "statusMessage": "Superseded by version 2.0.0"}'</code></pre>
+</div>
 </div>
 </div>
 </div>

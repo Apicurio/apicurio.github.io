@@ -541,7 +541,7 @@ Contract "billing-contract" → contract.billing-contract.owner.team = billing-t
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>info.status</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contract.{contractId}.status</code> label (draft&#8594;DRAFT, active&#8594;STABLE, deprecated&#8594;DEPRECATED)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contract.{contractId}.status</code> label (draft&#8594;DRAFT, active&#8594;STABLE, deprecated or retired&#8594;DEPRECATED, any other value&#8594;DRAFT)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>info.dataClassification</code></p></td>
@@ -959,7 +959,7 @@ Each entry under <code>schemas[]</code> is independent. Projection and field met
 <p>When you submit an ODCS contract, its <code>quality.accuracy</code> rules are automatically projected as CEL domain rules on the referenced schema artifact.</p>
 </div>
 <div class="paragraph">
-<p>Contract rules are enforced both server-side, via the rule execution REST endpoint, and client-side, via Java Kafka SerDes integration.</p>
+<p>Contract rules are enforced both server-side, by the rule execution and migration REST endpoints, and client-side, by the Java Kafka SerDes, which evaluate a cached copy of the artifact-level ruleset locally.</p>
 </div>
 <div class="paragraph">
 <p>Rules are classified by kind:</p>
@@ -1015,6 +1015,9 @@ Each entry under <code>schemas[]</code> is independent. Projection and field met
 </dl>
 </div>
 <div class="paragraph">
+<p>In a CEL expression, each top-level field of the record is available as a variable with the same name, for example <code>totalAmount &gt; 0</code>. Reference nested fields by dot path, for example <code>address.zipCode != ""</code>. An expression that references a field that the record does not contain fails to compile. Apicurio Registry treats an evaluation error as a rule failure and applies the rule&#8217;s <code>onFailure</code> action.</p>
+</div>
+<div class="paragraph">
 <p>When a rule fails, one of the following actions occurs:</p>
 </div>
 <div class="dlist">
@@ -1033,6 +1036,76 @@ Each entry under <code>schemas[]</code> is independent. Projection and field met
 </dd>
 </dl>
 </div>
+<div class="paragraph">
+<p>Each rule in a <code>domainRules</code> or <code>migrationRules</code> list has the following fields:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Contract rule fields</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 66.6668%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rule name. Rules from different scopes are merged by name. Rules projected from an ODCS contract are named <code>odcs:{contractId}:{ruleName}</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kind</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CONDITION</code> or <code>TRANSFORM</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rule executor type: <code>CEL</code> or <code>JSONATA</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mode</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WRITE</code>, <code>READ</code>, <code>WRITEREAD</code>, <code>UPGRADE</code>, or <code>DOWNGRADE</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>expr</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The CEL or JSONata expression.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>params</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map of string parameters attached to the rule. ODCS projection sets <code>source</code> to <code>odcs:{contractId}:{contractVersion}</code> and <code>threshold</code> to the threshold of the ODCS accuracy rule (<code>1.0</code> when the ODCS rule has no threshold).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tags</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of string tags for categorizing the rule. You can search rules by tag across the registry.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>onSuccess</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Action associated with a passing rule: <code>NONE</code>, <code>ERROR</code>, or <code>DLQ</code>. The value is stored and returned with the rule; the rule execution engine does not act on it. ODCS projection sets <code>NONE</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>onFailure</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Action when the rule fails: <code>NONE</code>, <code>ERROR</code>, or <code>DLQ</code>. A failing rule with <code>onFailure=ERROR</code> stops the evaluation of the remaining rules.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>disabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When <code>true</code>, the rule is skipped.</p></td>
+</tr>
+</tbody>
+</table>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
@@ -1100,7 +1173,26 @@ Reverse transitions are not allowed.
 </div>
 </div>
 <div class="paragraph">
-<p>Promotion is enforced via the <code>POST /groups/{g}/artifacts/{a}/contract/promote</code> endpoint, which validates that the target stage follows the allowed progression. The promotion stage can also be set directly via the contract metadata API.</p>
+<p>Promotion is enforced through the <code>POST /groups/{groupId}/artifacts/{artifactId}/contract/promote</code> endpoint, which applies the following rules. Apicurio Registry rejects a request that breaks a rule with HTTP 400.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Promotion moves forward only. A request for the current stage or an earlier stage is rejected.</p>
+</li>
+<li>
+<p>Stages cannot be skipped. A contract in <code>DEV</code> must be promoted to <code>STAGE</code> before it can be promoted to <code>PROD</code>.</p>
+</li>
+<li>
+<p>Promotion to <code>PROD</code> requires the contract status to be <code>STABLE</code>.</p>
+</li>
+<li>
+<p>When the contract has no stage yet, the first promotion can target any stage, subject to the <code>STABLE</code> requirement for <code>PROD</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The promotion stage can also be set directly through the contract metadata API. That API validates only that the value is <code>DEV</code>, <code>STAGE</code>, or <code>PROD</code>, and does not apply the promotion rules.</p>
 </div>
 </div>
 </div>
@@ -1141,14 +1233,14 @@ Reverse transitions are not allowed.
   http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/contract/migrate \
   -H 'Content-Type: application/json' \
   -d '{
-    "sourceVersion": "1",
-    "targetVersion": "3",
+    "fromVersion": "1",
+    "toVersion": "3",
     "record": {"firstName": "John", "lastName": "Doe", "amount": 100}
   }'</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The service determines the direction (upgrade or downgrade), loads migration rules for each intermediate version, and chains the transforms sequentially.</p>
+<p>The service determines the direction (upgrade or downgrade), loads migration rules for each intermediate version, and chains the transforms sequentially. The response has the same fields as the rule execution response (<code>passed</code>, <code>violations</code>, <code>executedRules</code>, and <code>failedRules</code>); <code>transformedRecord</code> is present when at least one transform changed the record and contains the migrated record.</p>
 </div>
 <div class="paragraph">
 <p>Compatibility groups partition the version history for compatibility checking. Versions in different groups are not compared against each other during compatibility validation.</p>
@@ -1159,11 +1251,14 @@ Reverse transitions are not allowed.
 curl -X PUT \
   http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/contract/compatibility-group \
   -H 'Content-Type: application/json' \
-  -d '{"group": "v2-family"}'
+  -d '{"contractId": "orders-contract", "compatibilityGroup": "v2-family"}'
 
 # Get compatibility group
-curl http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/contract/compatibility-group</code></pre>
+curl "http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/contract/compatibility-group?contractId=orders-contract"</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Both requests require the contract ID. The <code>GET</code> request returns <code>{"compatibilityGroup": "v2-family"}</code>. You can also set the compatibility group with the <code>compatibilityGroup</code> field of the contract metadata API.</p>
 </div>
 </div>
 </div>
@@ -1177,7 +1272,7 @@ curl http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifac
 <p>Enable contract rule enforcement by setting these properties on your Kafka producer or consumer:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. SerDes contract rule properties</caption>
+<caption class="title">Table 5. SerDes contract rule properties</caption>
 <colgroup>
 <col style="width: 42.8571%;">
 <col style="width: 14.2857%;">
@@ -1192,33 +1287,63 @@ curl http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifac
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.contract-rules.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.serde.contract-rules.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enable contract rule execution during serialize/deserialize</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.contract-rules.fail-on-error</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.serde.contract-rules.fail-on-error</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When <code>true</code>, rule violations throw a <code>RuntimeException</code>. When <code>false</code>, violations are logged but serialization proceeds (for DLQ routing by the application)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When <code>true</code>, rule violations throw a <code>RuntimeException</code>. When <code>false</code>, violations are logged as warnings and serialization or deserialization proceeds</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.serde.contract-rules.cache.ttl.seconds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of seconds that a fetched ruleset is cached. After the entry expires, the ruleset is fetched again on the next message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.serde.contract-rules.migration.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by deserializers only. Enables inline schema migration when the schema version of a record differs from the target version</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.serde.contract-rules.migration.target-version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by deserializers only. The schema version to migrate records to. Migration runs only when both migration properties are set</p></td>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>The contract rules engine is a dependency of the SerDes libraries, so no additional dependency is required.</p>
+</div>
 <div class="paragraph">
 <p>Contract rule enforcement works as follows:</p>
 </div>
 <div class="dlist">
 <dl>
+<dt class="hdlist1">Ruleset cache</dt>
+<dd>
+<p>On the first message for an artifact, the SerDes fetch the artifact-level contract ruleset from the registry and cache it for <code>apicurio.registry.serde.contract-rules.cache.ttl.seconds</code>. No request is made to the registry per message. A ruleset change on the server takes effect in a client after the cached entry expires.</p>
+</dd>
+<dt class="hdlist1">Rule scope</dt>
+<dd>
+<p>The SerDes evaluate the artifact-level ruleset only. Global contract rules and version-level domain rules are applied only by the server-side rule execution endpoint.</p>
+</dd>
 <dt class="hdlist1">Producer (serializer)</dt>
 <dd>
-<p>After schema resolution and before serialization, the serializer calls the server-side rule execution endpoint with mode <code>WRITE</code>. If any <code>CONDITION</code> rule with <code>onFailure=ERROR</code> fails, serialization is rejected.</p>
+<p>After schema resolution and before serialization, the serializer evaluates the cached ruleset locally with mode <code>WRITE</code>. If any rule fails and <code>fail-on-error</code> is <code>true</code>, serialization is rejected.</p>
 </dd>
 <dt class="hdlist1">Consumer (deserializer)</dt>
 <dd>
-<p>After deserialization, the deserializer calls the rule execution endpoint with mode <code>READ</code>. This enables read-side validation rules.</p>
+<p>After deserialization, the deserializer evaluates the cached ruleset locally with mode <code>READ</code>. This enables read-side validation rules.</p>
+</dd>
+<dt class="hdlist1">Inline migration (deserializer)</dt>
+<dd>
+<p>When <code>migration.enabled</code> is <code>true</code> and <code>migration.target-version</code> is set, the deserializer compares the schema version of the record with the target version. When they differ, it loads the version-level ruleset of each version after the record&#8217;s version up to and including the target version, caches each ruleset for the same TTL, and runs its migration rules in <code>UPGRADE</code> or <code>DOWNGRADE</code> mode. A failing migration rule is handled in the same way as a failing domain rule.</p>
 </dd>
 <dt class="hdlist1">DLQ pattern</dt>
 <dd>
-<p>Set <code>fail-on-error=false</code> to allow serialization to proceed even when rules fail. Your application can inspect the violations and route the message to a dead letter queue.</p>
+<p>Set <code>fail-on-error=false</code> to allow serialization to proceed even when rules fail. Violations are logged as warnings, and routing the message to a dead letter queue is the responsibility of your application.</p>
 </dd>
 </dl>
 </div>
@@ -1237,13 +1362,21 @@ props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, AvroKafkaSerializer.clas
 KafkaProducer&lt;String, GenericRecord&gt; producer = new KafkaProducer&lt;&gt;(props);</code></pre>
 </div>
 </div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="data-contracts-audit_registry"><a class="anchor" href="#data-contracts-audit_registry"></a>Audit log</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The contract audit log records all contract operations for compliance and debugging.</p>
+<p>The contract audit log records contract metadata updates and status transitions for compliance and debugging.</p>
 </div>
 <div class="paragraph">
 <p>The audit log records the following operations:</p>
@@ -1251,25 +1384,22 @@ KafkaProducer&lt;String, GenericRecord&gt; producer = new KafkaProducer&lt;&gt;(
 <div class="ulist">
 <ul>
 <li>
-<p>Metadata updates (owner, classification, status changes)</p>
+<p>Metadata updates through the contract metadata API, recorded with the action <code>METADATA_UPDATED</code></p>
 </li>
 <li>
-<p>Ruleset configuration (create, update, delete)</p>
-</li>
-<li>
-<p>Status transitions, for example from <code>DRAFT</code> to <code>STABLE</code></p>
-</li>
-<li>
-<p>Contract submission and re-projection</p>
+<p>Status transitions through the contract status API, for example from <code>DRAFT</code> to <code>STABLE</code>, recorded with the action <code>STATUS_CHANGED</code> and the transition in <code>details</code></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Query the audit log for an artifact:</p>
+<p>The audit log does not record ruleset changes or ODCS contract submissions. Ruleset changes emit <code>CONTRACT_RULESET_CONFIGURED</code> events instead.</p>
+</div>
+<div class="paragraph">
+<p>Query the audit log for an artifact. The endpoint returns entries ordered by <code>createdOn</code>, newest first. Use the <code>offset</code> (default <code>0</code>) and <code>limit</code> (default <code>20</code>, maximum <code>500</code>) query parameters to page through them:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/contract/audit</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/contract/audit?offset=0&amp;limit=20"</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -1277,19 +1407,39 @@ KafkaProducer&lt;String, GenericRecord&gt; producer = new KafkaProducer&lt;&gt;(
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">[
   {
-    "action": "STATUS_TRANSITION",
-    "detail": "Status changed from DRAFT to STABLE",
-    "userId": "admin",
+    "auditId": 12,
+    "groupId": "my-group",
+    "artifactId": "my-artifact",
+    "version": null,
+    "action": "STATUS_CHANGED",
+    "principal": "admin",
+    "details": "DRAFT -&gt; STABLE",
     "createdOn": "2026-05-19T10:30:00Z"
   },
   {
-    "action": "RULESET_CONFIGURED",
-    "detail": "Contract ruleset updated",
-    "userId": "admin",
+    "auditId": 11,
+    "groupId": "my-group",
+    "artifactId": "my-artifact",
+    "version": null,
+    "action": "METADATA_UPDATED",
+    "principal": "admin",
+    "details": null,
     "createdOn": "2026-05-19T10:25:00Z"
   }
 ]</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Entries that share the same <code>createdOn</code> timestamp have no guaranteed order, so their position can differ between requests.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1297,10 +1447,13 @@ KafkaProducer&lt;String, GenericRecord&gt; producer = new KafkaProducer&lt;&gt;(
 <h2 id="data-contracts-search_registry"><a class="anchor" href="#data-contracts-search_registry"></a>Contract search</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Search for contracts across the registry using metadata filters.</p>
+<p>Search for contracts across the registry using metadata filters, and find contract rules by tag.</p>
+</div>
+<div class="paragraph">
+<p>The <code>GET /search/contracts</code> endpoint returns the artifacts that carry contract metadata labels. The response is a standard artifact search result with a <code>count</code> and a list of <code>artifacts</code>. The endpoint accepts the following query parameters and ignores any other parameter.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Contract search query parameters</caption>
+<caption class="title">Table 6. Contract search query parameters</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -1314,31 +1467,31 @@ KafkaProducer&lt;String, GenericRecord&gt; producer = new KafkaProducer&lt;&gt;(
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by lifecycle status (DRAFT, STABLE, DEPRECATED)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by lifecycle status (<code>DRAFT</code>, <code>STABLE</code>, <code>DEPRECATED</code>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ownerTeam</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Filter by owner team name</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>classification</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by data classification (for example, <code>CONFIDENTIAL</code> or <code>PUBLIC</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compatibilityGroup</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by compatibility group</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groupId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by group</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>offset</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of results to skip (default <code>0</code>)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifactId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by artifact</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>limit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of results (default <code>20</code>, maximum <code>1000</code>)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>limit</code> / <code>offset</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Pagination (default limit: 20, max: 500)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>order</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sort direction: <code>asc</code> or <code>desc</code> (default <code>desc</code>)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>orderby</code> / <code>order</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sort by field and direction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>orderby</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sort field: <code>name</code>, <code>createdOn</code>, or <code>modifiedOn</code> (default <code>createdOn</code>)</p></td>
 </tr>
 </tbody>
 </table>
@@ -1346,6 +1499,40 @@ KafkaProducer&lt;String, GenericRecord&gt; producer = new KafkaProducer&lt;&gt;(
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/apis/registry/v3/search/contracts?status=STABLE&amp;ownerTeam=orders-team&amp;limit=10"</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The <code>GET /search/contract/rules</code> endpoint returns every artifact-level or version-level contract rule that carries a given tag. The <code>tag</code> query parameter is required. Results include only rules on artifacts that you are allowed to read.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/apis/registry/v3/search/contract/rules?tag=pii"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Response</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">[
+  {
+    "groupId": "my-group",
+    "artifactId": "my-artifact",
+    "globalId": null,
+    "ruleCategory": "DOMAIN",
+    "rule": {
+      "name": "require-email",
+      "kind": "CONDITION",
+      "type": "CEL",
+      "mode": "WRITE",
+      "expr": "customerEmail != \"\"",
+      "tags": ["pii"],
+      "onFailure": "ERROR",
+      "disabled": false
+    }
+  }
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>globalId</code> identifies the version for a version-level rule and is <code>null</code> for an artifact-level rule. <code>ruleCategory</code> is <code>DOMAIN</code> or <code>MIGRATION</code>.</p>
 </div>
 </div>
 </div>
@@ -1359,7 +1546,7 @@ KafkaProducer&lt;String, GenericRecord&gt; producer = new KafkaProducer&lt;&gt;(
 <p>You can also manage the global contract ruleset in the Apicurio Registry web console. Click the <strong>Contract rules</strong> tab in the console navigation to add, delete, or clear global contract rules without calling the REST API directly.</p>
 </div>
 <div class="paragraph">
-<p>When rules are executed, they are merged from three scopes:</p>
+<p>When the rule execution endpoint runs domain rules, they are merged from three scopes:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1375,7 +1562,7 @@ KafkaProducer&lt;String, GenericRecord&gt; producer = new KafkaProducer&lt;&gt;(
 </ol>
 </div>
 <div class="paragraph">
-<p>If a rule with the same name exists at multiple levels, the most specific scope wins.</p>
+<p>If a rule with the same name exists at multiple levels, the most specific scope wins. This merge applies to the domain rules that the server-side rule execution endpoint runs. Migration rules are not merged across scopes: the migration endpoint and the deserializer load the migration rules of each version from that version&#8217;s ruleset. The Kafka SerDes evaluate the artifact-level ruleset only and do not apply global rules.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1389,7 +1576,7 @@ curl -X PUT \
       "kind": "CONDITION",
       "type": "CEL",
       "mode": "WRITE",
-      "expr": "size(record) &gt; 0",
+      "expr": "size(orderId) &gt; 0",
       "onFailure": "ERROR",
       "disabled": false
     }],
@@ -1403,6 +1590,14 @@ curl http://localhost:8080/apis/registry/v3/admin/contracts/ruleset
 curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</code></pre>
 </div>
 </div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-managing-registry-artifacts-ui.html#managing-global-contract-rules-using-console_registry" class="page">Managing global contract rules using the Apicurio Registry web console</a></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1412,7 +1607,7 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 <p>The Data Contracts REST API provides endpoints for managing ODCS contracts, contract metadata, and contract rulesets.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. ODCS contract REST API endpoints</caption>
+<caption class="title">Table 7. ODCS contract REST API endpoints</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1458,8 +1653,20 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>POST /groups/{groupId}/contracts</code> and <code>PUT /groups/{groupId}/contracts/{contractId}</code> endpoints store the ODCS contract without recording artifact references. For a contract registered this way, the <code>references=DEREFERENCE</code> and <code>references=REWRITE</code> options of the version content endpoint return the YAML unchanged. Reference resolution for <code>ODCS_CONTRACT</code> artifacts applies only to contracts registered through the generic artifact endpoints together with their references.
+</td>
+</tr>
+</table>
+</div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Contract metadata REST API endpoints</caption>
+<caption class="title">Table 8. Contract metadata REST API endpoints</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1481,12 +1688,12 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/metadata</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Create or update contract metadata</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create or update contract metadata. Fields: <code>status</code>, <code>ownerTeam</code>, <code>ownerDomain</code>, <code>supportContact</code>, <code>classification</code>, <code>stage</code>, and <code>compatibilityGroup</code>. Setting <code>stage</code> here does not apply the promotion rules</p></td>
 </tr>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. Contract ruleset REST API endpoints</caption>
+<caption class="title">Table 9. Contract ruleset REST API endpoints</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1521,7 +1728,7 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 <p>Version-level rulesets are also available at <code>&#8230;&#8203;/versions/2024.Q2/contract/ruleset</code>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. Contract status transition endpoint</caption>
+<caption class="title">Table 10. Contract status transition endpoint</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1543,7 +1750,7 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 10. Governance REST API endpoints</caption>
+<caption class="title">Table 11. Governance REST API endpoints</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1560,7 +1767,7 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/promote</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Promote the contract stage from DEV to STAGE to PROD. Body: <code>{"contractId": "&#8230;&#8203;", "targetStage": "STAGE"}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Promote the contract stage from DEV to STAGE to PROD. Body: <code>{"contractId": "&#8230;&#8203;", "targetStage": "STAGE"}</code>. Rejects backward or skipped stages, and <code>PROD</code> promotion of a contract whose status is not <code>STABLE</code>, with HTTP 400</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
@@ -1570,7 +1777,7 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 11. Rule execution REST API endpoints</caption>
+<caption class="title">Table 12. Rule execution REST API endpoints</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1592,12 +1799,12 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/migrate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Migrate a record between versions. Body: <code>{"sourceVersion": "1", "targetVersion": "3", "record": {&#8230;&#8203;}}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Migrate a record between versions. Body: <code>{"fromVersion": "1", "toVersion": "3", "record": {&#8230;&#8203;}}</code></p></td>
 </tr>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 12. Contract audit log REST API endpoint</caption>
+<caption class="title">Table 13. Contract audit log REST API endpoint</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1613,13 +1820,13 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/audit</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get contract audit log entries for an artifact</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/audit?offset=&amp;limit=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get contract audit log entries for an artifact (paginated, default 20, max 500, newest first)</p></td>
 </tr>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. Compatibility group REST API endpoints</caption>
+<caption class="title">Table 14. Compatibility group REST API endpoints</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1635,18 +1842,18 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/compatibility-group</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get the compatibility group for an artifact</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/compatibility-group?contractId=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the compatibility group for a contract. Returns <code>{"compatibilityGroup": "&#8230;&#8203;"}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/groups/{groupId}/artifacts/{artifactId}/contract/compatibility-group</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set the compatibility group for an artifact</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the compatibility group for a contract. Body: <code>{"contractId": "&#8230;&#8203;", "compatibilityGroup": "&#8230;&#8203;"}</code></p></td>
 </tr>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 14. Contract search REST API endpoint</caption>
+<caption class="title">Table 15. Contract search REST API endpoint</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1662,13 +1869,18 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/search/contracts?status=&amp;ownerTeam=&amp;classification=&amp;limit=&amp;offset=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/search/contracts?status=&amp;ownerTeam=&amp;compatibilityGroup=&amp;offset=&amp;limit=&amp;order=&amp;orderby=</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Search contracts across the registry</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/search/contract/rules?tag=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Search contract rules by tag across the registry</p></td>
 </tr>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 15. Global contract ruleset REST API endpoints</caption>
+<caption class="title">Table 16. Global contract ruleset REST API endpoints</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1784,7 +1996,7 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST \
   http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/versions/1/contract/execute \
   -H 'Content-Type: application/json' \
-  -d '{"mode": "WRITE", "record": {"message": {"totalAmount": 100, "status": "active"}}}'</code></pre>
+  -d '{"mode": "WRITE", "record": {"totalAmount": 100, "customerEmail": "jane@example.com"}}'</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -1792,6 +2004,9 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"passed": true, "violations": [], "executedRules": 2, "failedRules": 0}</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The example assumes that no global contract rules are configured. The execute endpoint merges the global ruleset into the evaluation, so a global rule that references a field missing from the record, such as <code>size(orderId) &gt; 0</code>, fails and the request is rejected.</p>
 </div>
 <div class="listingblock">
 <div class="title">Setting contract metadata directly</div>

@@ -591,7 +591,7 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 <p><strong>Explore</strong>: Browse the list of groups, click a group, and then click an artifact in the <strong>Artifacts in group</strong> list.</p>
 </li>
 <li>
-<p><strong>Search</strong>: Select <strong>Artifacts</strong> from the <strong>Search for</strong> menu to browse artifacts. You can filter the results by criteria such as <strong>Name</strong>, <strong>Group</strong>, <strong>Labels</strong>, or <strong>Global Id</strong>. When you filter by <strong>Type</strong>, select the value from a list instead of typing it. The <strong>State</strong> filter is available when you select <strong>Versions</strong> from <strong>Search for</strong>. For this filter, you also select the value from a list.</p>
+<p><strong>Search</strong>: Select <strong>Artifacts</strong> from the <strong>Search for</strong> menu to browse artifacts. You can filter the results by criteria such as <strong>Name</strong>, <strong>Group</strong>, <strong>Labels</strong>, or <strong>Global Id</strong>. The <strong>Name</strong> filter ignores letter case. When you filter by <strong>Type</strong>, select the value from a list instead of typing it. The <strong>State</strong> filter is available when you select <strong>Versions</strong> from <strong>Search for</strong>. For this filter, you also select the value from a list.</p>
 </li>
 <li>
 <p><strong>Dashboard</strong>: Click an artifact in the <strong>Recent Artifacts</strong> list.</p>
@@ -619,7 +619,7 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 <p><strong>Branches</strong>: Displays a list of branches for the artifact. The tab displays at least the <code>latest</code> branch and might display other generated branches depending on your configuration.</p>
 </li>
 <li>
-<p><strong>Contract</strong>: Displays the data contract metadata, quality score, contract rules, and audit log for the artifact.</p>
+<p><strong>Contract</strong>: Displays the data contract metadata, quality score, contract rules, and audit log for the artifact. When the artifact has a contract, you can also click <strong>Edit YAML</strong> or <strong>Edit ODCS Contract</strong> to edit the ODCS contract YAML and re-project it, click <strong>Change</strong> next to <strong>Status</strong> to mark the contract as stable or to deprecate it, and click <strong>Promote to DEV</strong>, <strong>Promote to STAGE</strong>, or <strong>Promote to PROD</strong> to move the contract to the next promotion stage. Promotion to <code>PROD</code> requires the <code>STABLE</code> status. The ODCS editing controls are hidden when the web console is in read-only mode.</p>
 </li>
 <li>
 <p><strong>Usage</strong>: Displays which client applications fetch each version of the artifact. The tab displays data only to administrators, and only when usage telemetry is enabled.</p>
@@ -647,7 +647,7 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 <p><strong>Content</strong>: Displays a read-only view of the full artifact version content. For JSON content, you can click <strong>JSON</strong> or <strong>YAML</strong> to display your preferred format.</p>
 </li>
 <li>
-<p><strong>References</strong>: Displays a read-only view of all artifacts referenced by this artifact version. You can also click <strong>View artifacts that reference this artifact version</strong>. To add references to a new artifact or version, use the <strong>Artifact References</strong> step when you create it.</p>
+<p><strong>References</strong>: Displays a read-only view of all artifacts referenced by this artifact version. You can also click <strong>View artifacts that reference this artifact version</strong>. Click <strong>Graph</strong> to display the references as a graph instead of a list, and use the <strong>Graph Depth</strong> slider to choose how many levels of references, from 1 to 5, the graph includes. To add references to a new artifact or version, use the <strong>Artifact References</strong> step when you create it.</p>
 <div class="imageblock">
 <div class="content">
 <img src="../assets-images/images/getting-started/registry-web-console-artifact-version.png" alt="Artifacts in Registry web console">
@@ -834,7 +834,7 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 <li>
 <p>Edit the content, and then click <strong>Save</strong>.</p>
 <div class="paragraph">
-<p>Studio provides dedicated editors for OpenAPI, AsyncAPI, and Protobuf, and a text editor for other types. Saving updates the same draft version. It does not publish the draft.</p>
+<p>Studio provides dedicated editors for OpenAPI, AsyncAPI, and Protobuf, a prompt template editor for <code>PROMPT_TEMPLATE</code> drafts, and a text editor for other types. The prompt template editor highlights <code>{{variable}}</code> placeholders and the <code>{{#if}}</code>, <code>{{else}}</code>, and <code>{{#unless}}</code> conditional blocks, and marks unsupported placeholder syntax, such as dotted names. The highlighting does not validate the content. Saving updates the same draft version. It does not publish the draft.</p>
 </div>
 </li>
 </ol>
@@ -886,7 +886,7 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 <li>
 <p>Optional: Turn on <strong>Dry run only</strong>, and then click <strong>Finalize (dry run)</strong> to check the content rules without publishing the version.</p>
 <div class="paragraph">
-<p>If the content violates a rule, correct the content in the editor and save it before trying again. A successful dry run leaves the version in the <code>DRAFT</code> state.</p>
+<p>If the content violates a rule, the web console displays the <strong>Invalid Content Error</strong> dialog. For a compatibility violation, the dialog lists each violation with its location and keeps the content that you submitted visible under <strong>Submitted content</strong>, so that you can copy it. Correct the content in the editor and save it before trying again. A successful dry run leaves the version in the <code>DRAFT</code> state.</p>
 </div>
 </li>
 <li>
@@ -1029,7 +1029,7 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 <li>
 <p>Click <strong>Change state</strong>.</p>
 <div class="paragraph">
-<p>When you publish a draft, Apicurio Registry applies the configured content rules. If the content violates a rule, the web console displays the <strong>Invalid Content Error</strong> dialog with the rule violations, and the version remains a draft.</p>
+<p>When you publish a draft, Apicurio Registry applies the configured content rules. If the content violates a rule, the web console displays the <strong>Invalid Content Error</strong> dialog with the rule violations, and the version remains a draft. For a compatibility violation, the dialog lists each violation with its location and keeps the content that you submitted visible under <strong>Submitted content</strong>, so that you can copy it.</p>
 </div>
 </li>
 </ol>
@@ -1729,6 +1729,87 @@ To disable a rule, click the trash icon next to the rule. If you do this and the
 </div>
 </div>
 <div class="sect1">
+<h2 id="managing-global-contract-rules-using-console_registry"><a class="anchor" href="#managing-global-contract-rules-using-console_registry"></a>Managing global contract rules using the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the Apicurio Registry web console to add and delete global contract rules, which the server-side rule execution endpoint applies to all artifacts.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running in your environment.</p>
+</li>
+<li>
+<p>You are logged in to the Apicurio Registry web console:</p>
+<div class="paragraph">
+<p><code>http://MY_REGISTRY_UI_URL/</code></p>
+</div>
+</li>
+<li>
+<p>When role-based authorization is enabled, you have administrator access.</p>
+</li>
+<li>
+<p>The web console is not in read-only mode.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Click the <strong>Contract rules</strong> tab.</p>
+<div class="paragraph">
+<p>The page lists the global <strong>Domain Rules</strong> and <strong>Migration Rules</strong>.</p>
+</div>
+</li>
+<li>
+<p>To add a rule, click <strong>Add domain rule</strong> or <strong>Add migration rule</strong>, and complete the following fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Name</strong>: A name for the rule. Required.</p>
+</li>
+<li>
+<p><strong>Kind</strong>: <strong>Condition (validate)</strong> or <strong>Transform (modify)</strong>.</p>
+</li>
+<li>
+<p><strong>Type</strong>: <strong>CEL</strong> or <strong>JSONata</strong>.</p>
+</li>
+<li>
+<p><strong>Mode</strong>: <strong>Write</strong>, <strong>Read</strong>, <strong>Write + Read</strong>, <strong>Upgrade</strong>, or <strong>Downgrade</strong>.</p>
+</li>
+<li>
+<p><strong>Expression</strong>: The CEL or JSONata expression. Required.</p>
+</li>
+<li>
+<p><strong>On Failure</strong>: <strong>Error (reject)</strong>, <strong>DLQ (dead letter queue)</strong>, or <strong>None (log only)</strong>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Add rule</strong>.</p>
+</li>
+<li>
+<p>To delete a rule, click the trash icon in its row.</p>
+</li>
+<li>
+<p>To delete every global contract rule, click <strong>Delete all global contract rules</strong>.</p>
+</li>
+</ol>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-data-contracts.html#data-contracts-global-rules_registry" class="page">Global contract rules</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="importing-mcp-tools-using-console_registry"><a class="anchor" href="#importing-mcp-tools-using-console_registry"></a>Importing tools from an MCP server using the Apicurio Registry web console</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -1785,6 +1866,100 @@ This feature is experimental and subject to backwards-incompatible change or rem
 <ul>
 <li>
 <p>The dialog lists each tool with its result: <code>CREATED</code>, <code>NEW_VERSION</code>, <code>UNCHANGED</code>, <code>REJECTED</code>, or <code>REMOVED</code>. For a rejected tool, it shows the rule violations. When you close the dialog after an import, the artifact page shows the new version.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="browsing-agent-cards-using-console_registry"><a class="anchor" href="#browsing-agent-cards-using-console_registry"></a>Browsing and registering agent cards using the Apicurio Registry web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can use the <strong>Agents</strong> tab of the Apicurio Registry web console to find the A2A agent cards that are stored as <code>AGENT_CARD</code> artifacts, and to register new agent cards by entering their content or by importing them from a URL.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This feature is experimental and subject to backwards-incompatible change or removal.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is started with <code>apicurio.features.experimental.enabled=true</code>, because the <strong>Agents</strong> tab is an experimental feature.</p>
+</li>
+<li>
+<p>The <strong>Agents</strong> tab is enabled. Set <code>apicurio.ui.features.agents.enabled=true</code> on the Apicurio Registry server, or, as an administrator, select <strong>Agents tab</strong> in the <strong>Web console settings</strong> on the <strong>Settings</strong> tab. The setting is dynamic, so you can change it at runtime, but the experimental features property must be set when Apicurio Registry starts.</p>
+</li>
+<li>
+<p>To register or edit agent cards, the web console is not in read-only mode and you have permission to create artifacts.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the Apicurio Registry web console, click the <strong>Agents</strong> tab.</p>
+<div class="paragraph">
+<p>The tab shows a card for each registered agent with its name, version, description, the URL and protocol binding of its first supported interface, its capabilities and skills, and its group, creation time, and owner.</p>
+</div>
+</li>
+<li>
+<p>To narrow the list, enter a name in <strong>Search by name</strong>, enter a skill ID in <strong>Filter by skill</strong>, or select <strong>Streaming</strong> or <strong>Push Notifications</strong> from the <strong>All Capabilities</strong> list, and then click <strong>Search</strong>.</p>
+</li>
+<li>
+<p>To open the <code>AGENT_CARD</code> artifact of an agent, click its card.</p>
+</li>
+<li>
+<p>To register an agent card by entering its content, click <strong>Create Agent</strong> and complete the <strong>Create Agent Card</strong> wizard:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>On the <strong>Agent Coordinates</strong> page, enter the <strong>Group ID</strong>, the <strong>Artifact ID</strong>, and the initial <strong>Version</strong>. When you leave the group ID empty, the web console uses the <code>default</code> group. When you leave the artifact ID empty, Apicurio Registry generates one.</p>
+</li>
+<li>
+<p>On the <strong>Agent Card Content</strong> page, enter the agent card. You can continue only when the card has a name, a description, a version, at least one supported interface with a URL, a protocol binding, and a protocol version, capabilities, and at least one skill.</p>
+</li>
+<li>
+<p>On the <strong>Metadata</strong> page, optionally enter the artifact <strong>Name</strong> and <strong>Description</strong>, and click <strong>Create</strong>.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>To import the agent card that an agent publishes, click <strong>Import Agent</strong> and complete the <strong>Import Agent from URL</strong> wizard:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>On the <strong>Agent Card URL</strong> page, enter the URL of the agent card, for example <code>https://agent.example.com/.well-known/agent.json</code>. The web console fetches the content and rejects it when it is not a JSON object with a <code>name</code> string, or when two skills share the same ID.</p>
+</li>
+<li>
+<p>On the <strong>Preview</strong> page, review the fetched agent card.</p>
+</li>
+<li>
+<p>On the <strong>Import Settings</strong> page, optionally enter the <strong>Group ID</strong> and the <strong>Artifact ID</strong>, and click <strong>Import</strong>. When you leave them empty, the web console uses the <code>default</code> group and Apicurio Registry generates an artifact ID.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>To edit an agent card, open a version of the <code>AGENT_CARD</code> artifact and select <strong>Edit Agent Card</strong> from the version actions menu. The action is shown when the web console is not in read-only mode and you have write access to the artifact. The web console saves the edited card as a new version of the artifact.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>The new or edited agent card appears on the <strong>Agents</strong> tab, and the <code>GET /.well-known/agents</code> endpoint returns it, as described in <a href="assembly-a2a-features.html#a2a-well-known-endpoints_registry" class="page">A2A well-known endpoints</a>.</p>
 </li>
 </ul>
 </div>

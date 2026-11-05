@@ -481,7 +481,7 @@ You can enable each feature independently with its configuration property.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether to enable the <code>/.well-known/ai-catalog.json</code> and <code>/.well-known/ard.json</code> endpoints</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether to enable the <code>/.well-known/ai-catalog.json</code> and <code>/.well-known/ard.json</code> endpoints (experimental)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.publisher-domain</code></p></td>
@@ -502,7 +502,7 @@ If you do not configure this property, Apicurio Registry uses the <code>X-Forwar
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ard.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether to enable the <code>POST /ard/search</code>, <code>GET /ard/agents</code>, and <code>POST /ard/explore</code> endpoints</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether to enable the <code>POST /ard/search</code>, <code>GET /ard/agents</code>, and <code>POST /ard/explore</code> endpoints (experimental)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ard.federation.default</code></p></td>
@@ -511,8 +511,23 @@ If you do not configure this property, Apicurio Registry uses the <code>X-Forwar
 Apicurio Registry implements only <code>none</code> (no federation) and does not include the value in any response.
 It accepts other values for compatibility with later versions, but these values do not change the behavior.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.features.experimental.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> to use experimental features such as AI Catalog publishing and ARD search</p></td>
+</tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>Both feature properties are experimental. To enable them, also set <code>apicurio.features.experimental.enabled=true</code>; without it, Apicurio Registry does not start:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.features.experimental.enabled=true
+apicurio.ai-catalog.enabled=true
+apicurio.ard.enabled=true</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -660,7 +675,7 @@ A crawler that retrieves only the static catalog can discover the search API fro
 <dd>
 <p>Apicurio Registry filters Agent Card entries by the <code>apicurio.agent.visibility</code> label with the same rules as <code>/.well-known/agents</code>.
 MCP tool entries have no visibility label, so Apicurio Registry always includes them.
-When neither OpenID Connect (OIDC) nor basic authentication is configured, Apicurio Registry applies no visibility filtering.</p>
+When no authentication mechanism (OIDC, basic, proxy header, Kubernetes, or form) is configured, Apicurio Registry applies no visibility filtering.</p>
 </dd>
 <dt class="hdlist1">Authorization</dt>
 <dd>
@@ -757,14 +772,36 @@ The endpoint also accepts <code>orderBy</code>, <code>pageSize</code>, and <code
 Apicurio Registry accepts <code>orderBy</code> for compatibility with ARD clients, but the parameter has no effect.
 Apicurio Registry returns Agent Card entries before MCP tool entries and orders each group newest first.
 <code>pageSize</code> defaults to 20, and Apicurio Registry clamps larger values to 500.
-The endpoint returns an AI Catalog document.
-When more results remain, the response includes a <code>nextPageToken</code> value that you can use to request the next page.</p>
+The response is an object with an <code>items</code> array of AI Catalog entries, in the same form as the entries of the catalog document, and a <code>total</code> count of all entries that match the filter.
+When more results remain, the response includes a <code>pageToken</code> value that you pass in the <code>pageToken</code> query parameter to request the next page.
+The last page has no <code>pageToken</code>.</p>
 <div class="listingblock">
 <div class="title">Example request</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -G "http://localhost:8080/.well-known/ard/agents" \
   --data-urlencode "filter=type=application/a2a-agent-card+json" \
   --data-urlencode "pageSize=10"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example response</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "items": [
+    {
+      "identifier": "urn:air:registry.example.com:8080:ai-agents:translator-agent",
+      "displayName": "Translation Agent",
+      "type": "application/a2a-agent-card+json",
+      "url": "http://registry.example.com:8080/.well-known/agents/ai-agents/translator-agent",
+      "description": "Translates text between languages",
+      "capabilities": ["translation"],
+      "version": "1.0.0",
+      "updatedAt": "2026-09-01T10:15:30Z",
+      "tags": ["apicurio.agent.visibility=public", "department=localization"]
+    }
+  ],
+  "total": 1
+}</code></pre>
 </div>
 </div>
 </dd>

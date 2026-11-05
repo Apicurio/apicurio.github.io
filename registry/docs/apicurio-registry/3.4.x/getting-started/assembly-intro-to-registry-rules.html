@@ -453,7 +453,7 @@
 <h2 id="registry-rules-apply_registry"><a class="anchor" href="#registry-rules-apply_registry"></a>When rules are applied</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Rules are applied only when content is added to Apicurio Registry. This includes the following REST operations:</p>
+<p>Rules are applied when content is added to Apicurio Registry, and when a draft version leaves the <code>DRAFT</code> state. This includes the following REST operations:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -463,10 +463,134 @@
 <li>
 <p>Adding an artifact version</p>
 </li>
+<li>
+<p>Changing the state of a <code>DRAFT</code> version, for example to finalize it</p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
+<p>Each of these operations also applies the rules when you set <code>dryRun=true</code>, and reports the result without storing anything. Adding an artifact or version in the <code>DRAFT</code> state does not apply the rules, unless the <code>apicurio.rest.draft.production-mode.enabled</code> property is set to <code>true</code>. Apicurio Registry applies the rules when you finalize the draft.</p>
+</div>
+<div class="paragraph">
+<p>The compatibility check endpoints of the Confluent-compatible API also apply the configured rules to the submitted schema, or check <code>BACKWARD</code> compatibility when no <code>COMPATIBILITY</code> rule is configured, without storing the content.</p>
+</div>
+<div class="paragraph">
 <p>If a rule is violated, Apicurio Registry returns an HTTP error. The response body includes the violated rule and a message showing what went wrong.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#registry-rules-violation-response_registry">Rule violation responses from the REST API</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-rules-violation-response_registry"><a class="anchor" href="#registry-rules-violation-response_registry"></a>Rule violation responses from the REST API</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When content that you submit violates a configured content rule, the Core Registry API v3 rejects the request and returns a problem details body that describes each violation.</p>
+</div>
+<div class="paragraph">
+<p>The following operations apply content rules and can return a rule violation response:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>POST /groups/{groupId}/artifacts</code>, which creates an artifact</p>
+</li>
+<li>
+<p><code>POST /groups/{groupId}/artifacts/{artifactId}/versions</code>, which creates an artifact version</p>
+</li>
+<li>
+<p><code>PUT /groups/{groupId}/artifacts/{artifactId}/versions/{versionExpression}/state</code>, when the version is in the <code>DRAFT</code> state, for example when you finalize a draft</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each of these operations also applies the rules when you set <code>dryRun=true</code>, and returns the same response without storing anything.</p>
+</div>
+<div class="paragraph">
+<p>The response has HTTP status <code>400</code>. If the <code>apicurio.rest.legacy-error-codes.enabled</code> property is set to <code>true</code>, the status is <code>409</code> instead. The response body has the following fields:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>title</code></dt>
+<dd>
+<p>A short summary of the violation.</p>
+</dd>
+<dt class="hdlist1"><code>detail</code></dt>
+<dd>
+<p>The summary, followed by each cause in the form <code>&lt;description&gt; at &lt;context&gt;</code>.</p>
+</dd>
+<dt class="hdlist1"><code>status</code></dt>
+<dd>
+<p>The HTTP status code.</p>
+</dd>
+<dt class="hdlist1"><code>name</code></dt>
+<dd>
+<p>The name of the error.</p>
+</dd>
+<dt class="hdlist1"><code>ruleViolation</code></dt>
+<dd>
+<p>The details of the violation:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ruleType</code>: the type of rule that was violated, one of <code>VALIDITY</code>, <code>COMPATIBILITY</code>, or <code>INTEGRITY</code>.</p>
+</li>
+<li>
+<p><code>causes</code>: one entry for each problem that the rule found, with a <code>description</code> sentence and a <code>context</code> that locates the problem in the content, for example a JSON Pointer.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>causes</code></dt>
+<dd>
+<p>The same list as <code>ruleViolation.causes</code>. This top-level field is deprecated and is kept for compatibility with earlier clients. Use <code>ruleViolation.causes</code> instead.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The following example shows the response when a new version of a JSON Schema artifact violates a <code>COMPATIBILITY</code> rule:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "status": 400,
+  "name": "RuleViolationException",
+  "title": "Incompatible artifact: my-schema [JSON], num of incompatible diffs: {1}, list of diff types: [The 'maxLength' string-length limit was decreased. at /properties/name/maxLength]",
+  "detail": "Incompatible artifact: my-schema [JSON], num of incompatible diffs: {1}, list of diff types: [The 'maxLength' string-length limit was decreased. at /properties/name/maxLength] Causes: The 'maxLength' string-length limit was decreased. at /properties/name/maxLength",
+  "ruleViolation": {
+    "ruleType": "COMPATIBILITY",
+    "causes": [
+      {
+        "description": "The 'maxLength' string-length limit was decreased.",
+        "context": "/properties/name/maxLength"
+      }
+    ]
+  },
+  "causes": [
+    {
+      "description": "The 'maxLength' string-length limit was decreased.",
+      "context": "/properties/name/maxLength"
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each cause can also declare the optional <code>code</code>, <code>direction</code>, <code>proposed</code>, and <code>existing</code> fields. These fields are defined in the API for a later release, and no built-in rule returns them yet. Treat them as optional in client code.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>

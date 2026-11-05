@@ -582,20 +582,32 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>model</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>model</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Model configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Model configuration. Stored, not interpreted by Apicurio Registry.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>authors</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>authors</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Contributors list</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contributors list. Stored, not interpreted by Apicurio Registry.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>tags</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>tags</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Categorization</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Categorization. Stored, not interpreted by Apicurio Registry.</p></td>
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Apicurio Registry accepts and stores the <code>templateFormat</code>, <code>model</code>, <code>authors</code>, and <code>tags</code> fields, but does not interpret them, and the JSON Schema served at <code>/.well-known/schemas/prompt-template/v1</code> does not declare them. Whatever <code>templateFormat</code> you set, the render endpoint applies only its own grammar: <code>{{variable}}</code> placeholders and the conditional blocks described in <a href="#llm-artifact-types-prompt-rendering-service_registry">Prompt rendering service</a>. Set <code>templateFormat</code> to <code>mustache</code>, the value that the shipped examples use.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock">
 <div class="title">PROMPT_TEMPLATE with Prompty-aligned fields</div>
 <div class="content">
@@ -611,7 +623,7 @@ tags:
   - sentiment
   - nlp
 
-templateFormat: mustache  # or jinja2, handlebars
+templateFormat: mustache
 
 # Model configuration (Prompty-aligned)
 model:
@@ -807,7 +819,7 @@ mcp:
 </tbody>
 </table>
 <div class="paragraph">
-<p>The <code>mcp/</code> module contains an MCP Server for registry prompts:</p>
+<p>The <code>mcp/</code> module is the Apicurio Registry MCP server. The following components of the module serve PROMPT_TEMPLATE artifacts as MCP prompts:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 7. MCP server components</caption>
@@ -838,6 +850,9 @@ mcp:
 <li>
 <p><a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a></p>
 </li>
+<li>
+<p><a href="assembly-mcp-server-integration.html#mcp-server-available-tools_registry" class="page">Available MCP tools</a></p>
+</li>
 </ul>
 </div>
 </div>
@@ -846,7 +861,7 @@ mcp:
 <h2 id="llm-artifact-types-mcp-tools-and-prompts_registry"><a class="anchor" href="#llm-artifact-types-mcp-tools-and-prompts_registry"></a>MCP tools and prompts</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The MCP Server exposes the following tools and prompts for working with prompt templates through the MCP protocol.</p>
+<p>The MCP Server exposes the following prompt-template tools and MCP prompts through the MCP protocol.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 8. MCP tools</caption>
@@ -891,6 +906,10 @@ mcp:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>render_registry_prompt</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Interactive prompt for rendering templates from the registry</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>create_new_artifact_version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Guided workflow for creating artifact versions of any type, including draft mode support and content iteration. This prompt is not specific to <code>PROMPT_TEMPLATE</code> artifacts.</p></td>
 </tr>
 </tbody>
 </table>
@@ -990,7 +1009,7 @@ mcp:
     // Prompty-aligned fields
     authors?: string[];         // Contributors list
     tags?: string[];            // Categorization tags
-    templateFormat?: string;    // 'mustache' | 'jinja2' | 'handlebars'
+    templateFormat?: string;    // Stored, not interpreted; use 'mustache'
     model?: ModelConfiguration; // Model configuration
 
     // Input/output definitions (Prompty: inputs/outputs)
@@ -1398,7 +1417,7 @@ interface Considerations {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Type validation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Validates that variable values match their defined types</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validates that variable values match their defined types. For the <code>integer</code> type, a whole-number decimal such as <code>5.0</code>, whether supplied by the caller or declared as a default, is accepted and rendered as <code>5</code>. A fractional value, or a whole number outside the 64-bit signed integer range, is reported as a type mismatch.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Required field checking</p></td>
@@ -1412,10 +1431,45 @@ interface Considerations {
 <td class="tableblock halign-left valign-top"><p class="tableblock">Range validation</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Validates numeric values against minimum/maximum constraints</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conditional blocks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Renders or removes <code>{{#if variable}}</code> and <code>{{#unless variable}}</code> blocks, depending on whether the variable has a truthy value</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
 <p>A variable placeholder is a word-character name with optional surrounding whitespace, so <code>{{name}}</code> and <code>{{ name }}</code> both resolve to the variable <code>name</code>. The render endpoint does not resolve a name that contains any other character, for example <code>{{user.name}}</code> or <code>{{my-var}}</code>, and leaves it in the rendered output as literal text. Earlier versions of the render endpoint resolved such names. The MCP prompt converter also resolved a placeholder such as <code>{{user.name}}</code> when you supplied an argument of the same name. Both now use the same grammar as the prompt template validity rule.</p>
+</div>
+<div class="paragraph">
+<p>The render endpoint also evaluates the following conditional blocks, where <code>variable</code> is a word-character name:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>{{#if variable}}...{{/if}}</code>: renders the content when the variable is truthy.</p>
+</li>
+<li>
+<p><code>{{#if variable}}...{{else}}...{{/if}}</code>: renders the first branch when the variable is truthy, and the second branch otherwise.</p>
+</li>
+<li>
+<p><code>{{#unless variable}}...{{/unless}}</code>: renders the content when the variable is falsy.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A value is truthy when it is present, is not <code>false</code>, and is not an empty string. The render endpoint resolves conditional blocks before it substitutes variable placeholders.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The MCP server tools <code>get_mcp_prompt</code> and <code>render_prompt_template</code>, and the <code>render_registry_prompt</code> MCP prompt, recognize only plain <code>{{#if variable}}...{{/if}}</code> blocks. They treat an if/else block as a plain if block: a truthy variable renders both branches and the literal <code>{{else}}</code>, and a falsy variable removes the whole block. They leave <code>{{#unless variable}}...{{/unless}}</code> blocks in the rendered text, and they substitute variable placeholders before they resolve conditional blocks.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>When validation fails, the response includes validation errors:</p>

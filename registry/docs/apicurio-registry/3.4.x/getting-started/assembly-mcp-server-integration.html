@@ -415,7 +415,7 @@
 <p>You can connect Large Language Model (LLM) clients such as Claude Desktop to Apicurio Registry by using the Apicurio Registry MCP server container, which acts as an adapter between LLM clients and Apicurio Registry.</p>
 </div>
 <div class="paragraph">
-<p>On the LLM side, the MCP server communicates by using stdio transport (standard input/output). On the Apicurio Registry side, it communicates by using HTTP or HTTPS to the Apicurio Registry REST API, configured through the <code>REGISTRY_URL</code> environment variable.</p>
+<p>On the LLM side, the MCP server communicates by using stdio transport (standard input/output) with locally launched clients such as Claude Desktop, or by using HTTP transport at <code>/mcp</code> with clients that connect over the network. HTTP transport is disabled by default. To enable it, set <code>apicurio.mcp.http.enabled=true</code> and configure inbound OIDC authentication, as described in <a href="#configuring-mcp-server-http-oauth_registry">Configuring MCP server HTTP transport with OAuth</a>. On the Apicurio Registry side, it communicates by using HTTP or HTTPS to the Apicurio Registry REST API, configured through the <code>REGISTRY_URL</code> environment variable.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -446,7 +446,7 @@ The Apicurio Registry MCP server connects LLM clients to a running Apicurio Regi
 <p>The Apicurio Registry MCP server container acts as an adapter between LLM clients and Apicurio Registry.</p>
 </div>
 <div class="paragraph">
-<p>On the LLM side, it communicates by using stdio transport (standard input/output). On the Apicurio Registry side, it communicates by using HTTP or HTTPS to the Apicurio Registry REST API, configured through the <code>REGISTRY_URL</code> environment variable.</p>
+<p>On the LLM side, it communicates by using stdio transport (standard input/output) with locally launched clients such as Claude Desktop, or by using HTTP transport at <code>/mcp</code> with clients that connect over the network. HTTP transport is disabled by default. To enable it, set <code>apicurio.mcp.http.enabled=true</code> and configure inbound OIDC authentication, as described in <a href="#configuring-mcp-server-http-oauth_registry">Configuring MCP server HTTP transport with OAuth</a>. On the Apicurio Registry side, it communicates by using HTTP or HTTPS to the Apicurio Registry REST API, configured through the <code>REGISTRY_URL</code> environment variable.</p>
 </div>
 <div class="paragraph">
 <p>When an LLM client sends a request, the MCP server converts that request into Apicurio Registry REST API calls, runs the operation, and returns the results to the LLM client. The LLM client prompts you for confirmation before each tool call.</p>
@@ -473,6 +473,15 @@ The Apicurio Registry MCP server connects LLM clients to a running Apicurio Regi
 </li>
 <li>
 <p><strong>Prompt templates</strong>: List, get, and render prompt templates stored in Apicurio Registry</p>
+</li>
+<li>
+<p><strong>Rules</strong>: Test whether proposed content passes the rules configured for an artifact</p>
+</li>
+<li>
+<p><strong>Agent and tool discovery</strong>: Discover A2A agent cards and MCP tool definitions stored in Apicurio Registry</p>
+</li>
+<li>
+<p><strong>ARD search</strong>: Search the Agentic Resource Discovery (ARD) index of Apicurio Registry</p>
 </li>
 </ul>
 </div>
@@ -847,6 +856,78 @@ The <code>latest</code> tag refers to the most recent stable release. For develo
 </tr>
 </tbody>
 </table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Rule tools</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tool name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>test_schema_rules</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tests whether proposed version content passes the validity, integrity, and compatibility rules configured for an artifact, without creating a version. If the content violates a rule, returns an explanation of the violation.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Agent and tool discovery tools</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tool name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>discover_agents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Searches the A2A agent cards stored in Apicurio Registry by name, skill ID, or capability. Each result includes the name, description, skills, capabilities, and URL of the agent.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_agent_card</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the full agent card JSON of a specific <code>AGENT_CARD</code> artifact.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>search_mcp_tools</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Searches the MCP tool definitions stored in Apicurio Registry by artifact name or artifact ID (partial match), or by input parameter name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_mcp_tool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the full MCP tool definition JSON, including the input schema, of a specific <code>MCP_TOOL</code> artifact.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The agent tools call the <code>/.well-known/agents</code> endpoints and the tool discovery tools call the <code>/.well-known/mcp-tools</code> endpoints, so A2A support (<code>apicurio.a2a.enabled=true</code>) or MCP tools support (<code>apicurio.mcp-tools.enabled=true</code>) must be enabled on the target Apicurio Registry instance. Otherwise, the tool call fails with an error.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. ARD search tools</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tool name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ard_search</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Searches the Agentic Resource Discovery (ARD) index of Apicurio Registry with a natural-language query and optional <code>type</code>, <code>tags</code>, <code>capabilities</code>, and <code>publisher</code> filters, and returns the matching A2A agents and MCP tools in the ARD entry format. Requires ARD support (<code>apicurio.ard.enabled=true</code>) on the target Apicurio Registry instance.</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>You can also use the following MCP prompts in Claude Desktop by clicking the <strong>+</strong> icon and selecting <strong>Add from Apicurio Registry</strong>:</p>
 </div>
@@ -889,7 +970,7 @@ The <code>latest</code> tag refers to the most recent stable release. For develo
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. General properties</caption>
+<caption class="title">Table 10. General properties</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 20%;">
@@ -932,7 +1013,7 @@ The <code>latest</code> tag refers to the most recent stable release. For develo
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. Authentication properties</caption>
+<caption class="title">Table 11. Authentication properties</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 20%;">
@@ -981,7 +1062,7 @@ The <code>latest</code> tag refers to the most recent stable release. For develo
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. HTTP transport properties</caption>
+<caption class="title">Table 12. HTTP transport properties</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 20%;">
@@ -1451,7 +1532,7 @@ QUARKUS_HTTP_CORS_ORIGINS=http://localhost:6274</code></pre>
 <p>Replace <code>&lt;path-to-log-dir&gt;</code> with the directory where you want to store the log file.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 10. Common issues</caption>
+<caption class="title">Table 13. Common issues</caption>
 <colgroup>
 <col style="width: 42.8571%;">
 <col style="width: 57.1429%;">

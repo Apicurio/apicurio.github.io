@@ -490,7 +490,7 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Compatibility API</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Schema compatibility checking against specific versions or all versions. Supports <code>verbose</code> and <code>normalize</code> parameters. Defaults to <code>BACKWARD</code> compatibility when you do not configure an explicit rule, matching the Confluent behavior.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schema compatibility checking against specific versions or all versions. Supports <code>verbose</code> and <code>normalize</code> parameters. When you set <code>verbose=true</code>, an incompatible result includes a <code>messages</code> array that explains each violation; otherwise the response contains only <code>is_compatible</code>. Defaults to <code>BACKWARD</code> compatibility when you do not configure an explicit rule, matching the Confluent behavior.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Config API</strong></p></td>
@@ -596,10 +596,73 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 <p>For most use cases, use the default content ID mode, because it matches the Confluent behavior where identical schemas share the same ID across subjects.</p>
 </div>
 <div class="paragraph">
+<p><strong>Schema format parameter</strong></p>
+</div>
+<div class="paragraph">
+<p>The <code>format</code> query parameter changes the representation of a returned schema. Apicurio Registry applies it on the following operations, in both <code>/apis/ccompat/v7</code> and <code>/apis/ccompat/v8</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>GET /schemas/ids/{id}</code></p>
+</li>
+<li>
+<p><code>GET /schemas/ids/{id}/schema</code></p>
+</li>
+<li>
+<p><code>POST /subjects/{subject}</code> (lookup by content)</p>
+</li>
+<li>
+<p><code>GET /subjects/{subject}/versions/{version}</code></p>
+</li>
+<li>
+<p><code>GET /subjects/{subject}/versions/{version}/schema</code></p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Supported format values</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Schema type</th>
+<th class="tableblock halign-left valign-top">Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resolved</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Avro</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inlines the content of the referenced schemas. When the schema has no references, the API returns the schema as re-serialized by the Avro parser.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ignore_extensions</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protobuf</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Removes the extension declarations from the schema.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>serialized</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protobuf</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the schema as a serialized Protobuf <code>FileDescriptor</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Any other value for an Avro or Protobuf schema returns HTTP <code>400</code> with the valid values listed in the error message. For JSON Schema, the parameter is ignored.</p>
+</div>
+<div class="paragraph">
+<p>When the <code>apicurio.rest.artifact.references.default-handling</code> property is set to <code>DEREFERENCE</code>, the <code>GET /schemas/ids/{id}</code> operation applies the <code>resolved</code> format to Avro schemas when the request has no <code>format</code> parameter.</p>
+</div>
+<div class="paragraph">
 <p><strong>Configuration properties</strong></p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Confluent compatibility API configuration</caption>
+<caption class="title">Table 7. Confluent compatibility API configuration</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 16.6666%;">
@@ -689,6 +752,25 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 </table>
 </div>
 <div class="paragraph">
+<p><strong>Compatibility check response</strong></p>
+</div>
+<div class="paragraph">
+<p>The <code>POST /compatibility/subjects/{subject}/versions/{version}</code> and <code>POST /compatibility/subjects/{subject}/versions</code> endpoints return <code>is_compatible</code>. When you set <code>verbose=true</code> and the schema is incompatible, the response also includes <code>messages</code>, with one entry for each rule violation in the form <code>&lt;description&gt; at &lt;context&gt;</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "is_compatible": false,
+  "messages": [
+    "The 'maxLength' string-length limit was decreased. at /properties/name/maxLength"
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Without <code>verbose=true</code>, or when the schema is compatible, the response omits <code>messages</code>. If the check cannot process the submitted schema, for example because the schema is not well formed or a reference cannot be resolved, the endpoint returns HTTP status 422 instead of a result.</p>
+</div>
+<div class="paragraph">
 <p><strong>Config response format</strong></p>
 </div>
 <div class="paragraph">
@@ -722,7 +804,7 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 <p>Error responses use Confluent-compatible error codes and message formats:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Error codes</caption>
+<caption class="title">Table 8. Error codes</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 50%;">
@@ -788,7 +870,7 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 <p>Apicurio Registry does not support the following Confluent Schema Registry features. Applications that rely on these features must use alternative approaches.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. Unsupported features</caption>
+<caption class="title">Table 9. Unsupported features</caption>
 <colgroup>
 <col style="width: 28.5714%;">
 <col style="width: 28.5714%;">
@@ -825,7 +907,7 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Data Contracts - Rules Enforcement</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The ccompat API accepts <code>metadata</code> and <code>ruleSet</code> fields in requests but does not enforce or store them. The API does not execute schema rules.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Use Apicurio Registry native Data Contracts feature (<code>apicurio.contracts.enabled=true</code>) for contract metadata and rulesets.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use the Apicurio Registry native Data Contracts feature for contract metadata and rulesets. For more information, see <a href="assembly-data-contracts.html#data-contracts_registry" class="page">Apicurio Registry data contracts</a>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -903,7 +985,7 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 <p>When you migrate from Confluent Schema Registry to Apicurio Registry, consider the following areas:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. Migration checklist</caption>
+<caption class="title">Table 10. Migration checklist</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -1006,7 +1088,7 @@ props.put("schema.registry.url", "http://apicurio-registry:8080/apis/ccompat/v7"
 <p>The Confluent Schema Registry export utility reads a Confluent Schema Registry through its REST API and writes the data as a ZIP file in the Apicurio Registry import format. Review how the utility maps Confluent Schema Registry data to Apicurio Registry before you migrate.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 10. Confluent Schema Registry data in the export file</caption>
+<caption class="title">Table 11. Confluent Schema Registry data in the export file</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
