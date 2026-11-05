@@ -412,7 +412,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can configure your Apicurio Registry deployment, including file-based secrets, HTTP caching, the web console, logging, health checks, observability, and the storage content cache.</p>
+<p>You can configure your Apicurio Registry deployment, including the experimental features gate, file-based secrets, HTTP caching, the web console, logging, health checks, observability, and the storage content cache.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -425,6 +425,48 @@ For a list of all available configuration options, see <a href="assembly-config-
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-experimental-features_registry"><a class="anchor" href="#registry-experimental-features_registry"></a>Experimental features</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry includes some features that are experimental. An experimental feature is disabled by default and can change or be removed in a later release. The <code>apicurio.features.experimental.enabled</code> configuration property is a global gate for all experimental features: Apicurio Registry does not start when an experimental feature is enabled while the gate is disabled.</p>
+</div>
+<div class="paragraph">
+<p>The gate is <code>false</code> by default. At startup, before it initializes storage, Apicurio Registry checks every experimental property and the configured storage kind. If an experimental feature is enabled and the gate is not, startup fails with the following message, which lists each enabled experimental property with its description:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>The following experimental features are enabled but the experimental features gate ('apicurio.features.experimental.enabled') is not enabled. Either enable the experimental features gate or disable the following properties: apicurio.a2a.enabled (Enable A2A protocol support)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To resolve the failure, set <code>apicurio.features.experimental.enabled=true</code>, or the <code>APICURIO_FEATURES_EXPERIMENTAL_ENABLED=true</code> environment variable, or disable the listed features.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Apicurio Registry 3.4 and later enforce the gate at startup. Releases 3.2 and 3.3 defined the property but did not check it, so a deployment that enabled an experimental feature without the gate started normally. Before you upgrade such a deployment, set the gate or disable the feature.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The Apicurio Registry configuration reference marks each experimental property with <em>(experimental)</em> at the end of its description, for example, <code>apicurio.a2a.enabled</code>, <code>apicurio.ai-catalog.enabled</code>, <code>apicurio.ard.enabled</code>, <code>apicurio.mcp-tools.enabled</code>, <code>apicurio.iceberg.enabled</code>, and <code>apicurio.usage.telemetry.enabled</code>. The GitOps and KubernetesOps storage variants, selected with <code>apicurio.storage.kind=gitops</code> or <code>apicurio.storage.kind=kubernetesops</code>, are also experimental and require the gate.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-config-reference.html" class="page">Apicurio Registry configuration reference</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>

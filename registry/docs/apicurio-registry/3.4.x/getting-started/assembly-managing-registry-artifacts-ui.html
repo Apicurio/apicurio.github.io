@@ -552,6 +552,18 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 </tr>
 </table>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The web console also enters read-only mode automatically when the storage is read-only: when Apicurio Registry uses a read-only storage variant such as GitOps or KubernetesOps storage, or when an administrator enables the <strong>Storage read-only mode</strong> setting. You do not need to set <code>REGISTRY_FEATURE_READ_ONLY</code> in these cases. The console shows a dismissible banner that states that the registry is in read-only mode; with GitOps storage, the banner also tells users to update the source Git repository. When the storage rejects a write request, the console shows the <strong>Read-Only Mode</strong> page.
+</td>
+</tr>
+</table>
+</div>
 </li>
 </ol>
 </div>
@@ -591,7 +603,7 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 <p><strong>Explore</strong>: Browse the list of groups, click a group, and then click an artifact in the <strong>Artifacts in group</strong> list.</p>
 </li>
 <li>
-<p><strong>Search</strong>: Select <strong>Artifacts</strong> from the <strong>Search for</strong> menu to browse artifacts. You can filter the results by criteria such as <strong>Name</strong>, <strong>Group</strong>, <strong>Labels</strong>, or <strong>Global Id</strong>. The <strong>Name</strong> filter ignores letter case. When you filter by <strong>Type</strong>, select the value from a list instead of typing it. The <strong>State</strong> filter is available when you select <strong>Versions</strong> from <strong>Search for</strong>. For this filter, you also select the value from a list.</p>
+<p><strong>Search</strong>: Select <strong>Artifacts</strong> from the <strong>Search for</strong> menu to browse artifacts. You can filter the results by criteria such as <strong>Name</strong>, <strong>Group</strong>, <strong>Labels</strong>, or <strong>Global Id</strong>. The <strong>Name</strong> filter matches any part of the artifact name or artifact ID and is not case-sensitive. To anchor the match, include the <code><strong></code> wildcard yourself, for example, <code>payment</strong></code> matches only names or artifact IDs that start with <code>payment</code>. The REST API <code>name</code> filter matches exactly by default. When you filter by <strong>Type</strong>, select the value from a list instead of typing it. The <strong>State</strong> filter is available when you select <strong>Versions</strong> from <strong>Search for</strong>. For this filter, you also select the value from a list.</p>
 </li>
 <li>
 <p><strong>Dashboard</strong>: Click an artifact in the <strong>Recent Artifacts</strong> list.</p>
@@ -683,6 +695,9 @@ Read-only mode disables all write operations in the Apicurio Registry web consol
 </li>
 <li>
 <p><a href="assembly-rule-reference.html">Apicurio Registry rule reference</a></p>
+</li>
+<li>
+<p><a href="assembly-managing-registry-artifacts-api.html#searching-artifacts-using-rest-api_registry" class="page">getting-started/assembly-managing-registry-artifacts-api.adoc#searching-artifacts-using-rest-api_registry</a></p>
 </li>
 <li>
 <p><a href="assembly-data-contracts.html" class="page">Apicurio Registry data contracts</a></p>

@@ -472,7 +472,7 @@ GitOps storage is an <strong>experimental</strong> feature. You must enable the 
 </ol>
 </div>
 <div class="paragraph">
-<p>Data flows in one direction only: from Git to the registry. REST API calls that would modify data are rejected with an HTTP <code>409</code> response. The registry requires no external database, because data is loaded into in-memory storage from Git.</p>
+<p>Data flows in one direction only: from Git to the registry. REST API calls that would modify data are rejected with an HTTP <code>409</code> response. The Apicurio Registry web console detects the read-only storage, switches to read-only mode automatically, and shows a banner that tells users to update the source Git repository. The registry requires no external database, because data is loaded into in-memory storage from Git.</p>
 </div>
 <div class="paragraph">
 <p><strong>Relationship of repositories and registry instances</strong></p>
@@ -505,6 +505,9 @@ GitOps storage is an <strong>experimental</strong> feature. You must enable the 
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
+<li>
+<p><a href="assembly-managing-registry-artifacts-ui.html#configuring-registry-ui_registry" class="page">getting-started/assembly-managing-registry-artifacts-ui.adoc#configuring-registry-ui_registry</a></p>
+</li>
 <li>
 <p><a href="https://github.com/Apicurio/apicurio-registry-gitops-example">Example GitOps repository</a></p>
 </li>
@@ -543,18 +546,21 @@ GitOps storage is an <strong>experimental</strong> feature. You must enable the 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>group-v0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An artifact group. Fields: <code>registryIds</code> (list), <code>groupId</code>, <code>description</code>, <code>rules</code>, and <code>createdOn</code>. Every group that an artifact references must be declared by a <code>group-v0</code> file; the registry does not create groups automatically.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An artifact group. Fields: <code>registryIds</code> (list), <code>groupId</code>, <code>description</code>, <code>labels</code>, <code>owner</code>, <code>artifactsType</code>, <code>rules</code>, <code>createdOn</code>, and <code>modifiedOn</code>. Every group that an artifact references must be declared by a <code>group-v0</code> file; the registry does not create groups automatically.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifact-v0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An artifact with its versions declared inline. Fields: <code>registryIds</code>, <code>groupId</code>, <code>artifactId</code>, <code>artifactType</code> (optional), <code>name</code>, <code>description</code>, <code>createdOn</code>, <code>rules</code>, <code>validatedUpTo</code>, and <code>versions</code>. Each version has <code>version</code>, <code>state</code>, and <code>content</code>, where <code>content</code> is a relative path to a schema file.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An artifact with its versions declared inline. Fields: <code>registryIds</code>, <code>groupId</code>, <code>artifactId</code>, <code>artifactType</code> (optional), <code>name</code>, <code>description</code>, <code>labels</code>, <code>owner</code>, <code>createdOn</code>, <code>modifiedOn</code>, <code>rules</code>, <code>validatedUpTo</code>, and <code>versions</code>. Each version has <code>version</code>, <code>state</code>, and <code>content</code>, where <code>content</code> is a relative path to a schema file. A version can also have <code>name</code>, <code>description</code>, <code>labels</code>, <code>owner</code>, <code>globalId</code>, <code>createdOn</code>, <code>modifiedOn</code>, and <code>contentMetadata</code>, which is a relative path to a <code>content-v0</code> file.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>content-v0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Optional content metadata, for explicit content identifiers and references.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional content metadata, for explicit content identifiers and references. Fields: <code>contentId</code>, <code>content</code> (relative path to the schema file), and <code>references</code> (list of entries with <code>groupId</code>, <code>artifactId</code>, <code>version</code>, and <code>name</code>). A version points to a <code>content-v0</code> file through its <code>contentMetadata</code> field, and the <code>content-v0</code> file points to the schema file through its own <code>content</code> field.</p></td>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>GitOps storage and KubernetesOps storage share the same data format. The field reference for KubernetesOps storage lists the type and description of the fields, except <code>createdOn</code>, <code>modifiedOn</code>, and <code>validatedUpTo</code>, which are described in the rules later in this section.</p>
+</div>
 <div class="paragraph">
 <p>The following example declares a registry configuration, a group, and an artifact. All three files are required: a load that references an undeclared group fails, and the registry does not become ready.</p>
 </div>
@@ -673,7 +679,7 @@ versions:
 <p>If <code>registryIds</code> is omitted or empty on a group or artifact, any registry instance loads it.</p>
 </li>
 <li>
-<p>Timestamps such as <code>createdOn</code> are optional. When omitted, the Git commit time is used. Supported formats are ISO 8601, with or without a time zone or as a date only, and Unix milliseconds.</p>
+<p>The <code>createdOn</code> and <code>modifiedOn</code> timestamps on groups, artifacts, and versions are optional. When omitted, the Git commit time is used. Supported formats are ISO 8601, with or without a time zone or as a date only, and Unix milliseconds.</p>
 </li>
 <li>
 <p>The optional <code>validatedUpTo</code> field on an artifact controls rule validation during a load. When unset, only the latest version is validated, against all preceding versions. When set to a version identifier, versions up to and including that version are not re-validated. When the value matches no version, all versions are validated.</p>
@@ -681,6 +687,14 @@ versions:
 <li>
 <p>The optional <code>peers</code> list on the registry configuration declares peer registries. Each entry has <code>peerId</code> (lowercase letters, digits, <code>.</code>, <code><em></code>, and <code>-</code> only; must be unique and cannot be <code>local</code>, which is reserved), <code>url</code>, optional <code>name</code> and <code>description</code>, <code>enabled</code> (defaults to <code>true</code> when omitted), and an optional <code>credentialSecretRef</code>, which is a reference to a credential and never a secret value itself. The full <code>peers</code> list is replaced on every load: omitting the key, or setting it to an empty list, removes all previously loaded peers.
 For the peer URL policy, the federation properties, and the peer management REST API, see <a href="assembly-a2a-features.html#a2a-peer-registries</em>registry" class="page">Peer registries for federation</a>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-configuring-kubernetesops-storage.html#kubernetesops-field-reference_registry" class="page">getting-started/assembly-configuring-kubernetesops-storage.adoc#kubernetesops-field-reference_registry</a></p>
 </li>
 </ul>
 </div>
@@ -945,7 +959,7 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>repoId</code> value must match the directory name of a configured repository; identifiers that you assign with <code>APICURIO_GITOPS_REPOS_N_ID</code> are not recognized by the sync container. An unknown value fails the created task instead of rejecting the request. The response contains a <code>taskId</code>.</p>
+<p>The <code>repoId</code> value must be the identifier of a configured repository. The registry rejects a missing or unconfigured value with an HTTP <code>400</code> response that lists the configured repository identifiers. The value must also match the directory name of the repository, because the sync container resolves <code>repoId</code> by directory name: the registry accepts an identifier that you assign with <code>APICURIO_GITOPS_REPOS_N_ID</code>, but the created task then fails with an <code>Unknown repoId</code> error. The response contains a <code>taskId</code>.</p>
 </div>
 </li>
 <li>
@@ -1276,7 +1290,7 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>syncState</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Current state: <code>INITIALIZING</code>, <code>IDLE</code>, <code>LOADING</code>, <code>SWITCHING</code>, or <code>ERROR</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Current state: <code>INITIALIZING</code>, <code>IDLE</code>, <code>LOADING</code>, <code>SWITCHING</code>, or <code>ERROR</code>. The state is <code>ERROR</code> after a failed load and also after a failed poll of the data source, for example when the registry cannot read the local Git clone. When a later poll succeeds, the state returns to <code>IDLE</code> only if no load errors remain; otherwise it stays <code>ERROR</code> and keeps reporting the load errors.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>lastSuccessfulSync</code></p></td>
@@ -1292,7 +1306,7 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>errors</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Structured load errors. Each error has a <code>detail</code> message and, where available, a <code>source</code> repository identifier and a <code>context</code> file path.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Structured errors from the last failed load and from the last failed poll. Each load error has a <code>detail</code> message and, where available, a <code>source</code> repository identifier and a <code>context</code> file path. A poll error has only a <code>detail</code> message, which starts with <code>Poll failed:</code>. Load errors from the last failed load remain listed through later successful polls until a load succeeds.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>sources</code></p></td>
@@ -1301,7 +1315,7 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 </tbody>
 </table>
 <div class="paragraph">
-<p>If a load fails because of a data error, for example malformed metadata, a missing content file, or a rule violation, the registry does not retry the same commit. Push a new commit that fixes the problem to trigger a fresh load. Transient errors are retried on the next poll.</p>
+<p>If a load fails because of a data error, for example malformed metadata, a missing content file, or a rule violation, the registry does not retry the same commit. Push a new commit that fixes the problem to trigger a fresh load. The registry reports a transient error, including a failed poll of the data source, in the status as <code>ERROR</code> with an <code>errors</code> entry, and retries it on the next poll.</p>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>

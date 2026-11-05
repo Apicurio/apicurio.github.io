@@ -615,6 +615,114 @@ Database schema migrations run automatically on startup and do not require manua
 </div>
 </div>
 <div class="sect1">
+<h2 id="deprecated-configuration-properties_registry"><a class="anchor" href="#deprecated-configuration-properties_registry"></a>Deprecated configuration properties</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry retires a configuration property in two phases, so that a deployment keeps working after an upgrade to a release that deprecates one of its properties.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Deprecated</dt>
+<dd>
+<p>The property is still accepted and does not stop startup. At startup, Apicurio Registry logs a warning that names the property, the version that deprecated it, the version that removes it, and the replacement property, if one exists:</p>
+<div class="listingblock">
+<div class="content">
+<pre>Property 'apicurio.kafkasql.ssl.keystore.location' is deprecated since 3.1.0 and will be removed in 4.0.0. Use 'apicurio.kafkasql.security.ssl.keystore.location' instead.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you configure both the deprecated property and its replacement, the replacement takes precedence, and the warning changes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Both 'apicurio.kafkasql.ssl.keystore.location' (deprecated since 3.1.0) and 'apicurio.kafkasql.security.ssl.keystore.location' are configured. 'apicurio.kafkasql.security.ssl.keystore.location' will take precedence.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a deprecated property without a replacement, the warning states what Apicurio Registry does instead.</p>
+</div>
+</dd>
+<dt class="hdlist1">Removed</dt>
+<dd>
+<p>Apicurio Registry does not start while a removed property is configured. It logs an error for each removed property and fails with an <code>IllegalStateException</code> that lists all of them, for example: <code>The following configuration properties were removed and are no longer supported: Property 'apicurio.kafkasql.ssl.keystore.location' was removed in 4.0.0. Use 'apicurio.kafkasql.security.ssl.keystore.location' instead.</code> Remove or replace the property before you upgrade to the release that removes it.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>No property is in the removed phase in this release. The following table lists the deprecated properties.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Deprecated configuration properties</caption>
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Deprecated property</th>
+<th class="tableblock halign-left valign-top">Replacement</th>
+<th class="tableblock halign-left valign-top">Deprecated since</th>
+<th class="tableblock halign-left valign-top">Removed in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.compat.json-schema.use-apitomy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None. The property has no effect: Apicurio Registry always checks JSON Schema compatibility with Apitomy Data Models.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.dead-threshold-days</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None. The property has no effect: Apicurio Registry classifies a version whose last fetch is older than <code>apicurio.usage.stale-threshold-days</code> as <code>DEAD</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.ssl.truststore.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.security.ssl.truststore.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.ssl.keystore.location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.security.ssl.keystore.location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.ssl.keystore.type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.security.ssl.keystore.type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.ssl.keystore.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.security.ssl.keystore.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.ssl.key.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.security.ssl.key.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-config-reference.html" class="page">Apicurio Registry configuration reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="patch-upgrades_registry"><a class="anchor" href="#patch-upgrades_registry"></a>Performing patch upgrades</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
