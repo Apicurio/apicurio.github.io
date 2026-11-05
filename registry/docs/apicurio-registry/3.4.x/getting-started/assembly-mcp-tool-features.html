@@ -483,9 +483,6 @@ Storing an <code>MCP_TOOL</code> definition in Apicurio Registry provides govern
 <li>
 <p><code>/.well-known/mcp-tools/{groupId}/{artifactId}</code> (retrieve tool)</p>
 </li>
-<li>
-<p><code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> (find compatible tools)</p>
-</li>
 </ul>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
@@ -790,7 +787,7 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by artifact name or artifact ID (partial match). The filter does not match the <code>name</code> field inside the tool definition, so set the artifact name to the tool name when you create the artifact.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by tool name (partial match)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>parameter</code></p></td>
@@ -865,10 +862,6 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 <p>The response is the MCP tool definition JSON document.</p>
 </div>
 <div class="paragraph">
-<p>The <code>GET /.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoint returns the registered MCP tool definitions that can receive the structured output of the specified tool as their input. It accepts an optional <code>version</code> query parameter, which defaults to the latest version, and the <code>offset</code> and <code>limit</code> pagination parameters.
-For the rules that the comparison applies, see <a href="assembly-agent-discovery-patterns.html#well-known-endpoint-architecture_registry" class="page">Well-known endpoint architecture</a>.</p>
-</div>
-<div class="paragraph">
 <p>The <code>GET /.well-known/schemas/mcp-tool/v1</code> endpoint retrieves the JSON Schema for MCP tool definitions. You can use the schema for IDE autocompletion and validation.</p>
 </div>
 <div class="listingblock">
@@ -908,7 +901,6 @@ For the rules that the comparison applies, see <a href="assembly-agent-discovery
   -d '{
     "artifactId": "weather-tool",
     "artifactType": "MCP_TOOL",
-    "name": "get_weather",
     "firstVersion": {
       "version": "1.0.0",
       "content": {
@@ -1130,7 +1122,7 @@ The two schemas have opposite directions:</p>
 <p>Schema annotations (<code>title</code>, <code>description</code>, <code>default</code>, <code>examples</code>, <code>$comment</code>, <code>deprecated</code>, <code>readOnly</code>, and <code>writeOnly</code>) do not enforce compatibility constraints. Default values do not fill missing inputs.</p>
 </div>
 <div class="paragraph">
-<p>References (<code>$ref</code>, <code>$dynamicRef</code>, <code>$recursiveRef</code>, identifiers and definition containers), composition (<code>allOf</code>, <code>anyOf</code>, <code>oneOf</code>, <code>not</code>), conditionals, dependencies, tuple schemas, <code>prefixItems</code>, <code>contains</code>, <code>unevaluated*</code>, <code>pattern</code>, <code>patternProperties</code>, <code>format</code>, and other unlisted keywords are outside this publication rule&#8217;s supported subset. They are not silently discarded. If either compared schema uses one, even unchanged, the comparison fails with HTTP 422. No reference is fetched or resolved. This deliberately narrower contract does not change the JSON artifact checker or the <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoint described in <a href="#mcp-well-known-endpoints_registry">Well-known endpoints</a>.</p>
+<p>References (<code>$ref</code>, <code>$dynamicRef</code>, <code>$recursiveRef</code>, identifiers and definition containers), composition (<code>allOf</code>, <code>anyOf</code>, <code>oneOf</code>, <code>not</code>), conditionals, dependencies, tuple schemas, <code>prefixItems</code>, <code>contains</code>, <code>unevaluated*</code>, <code>pattern</code>, <code>patternProperties</code>, <code>format</code>, and other unlisted keywords are outside this publication rule&#8217;s supported subset. They are not silently discarded. If either compared schema uses one, even unchanged, the comparison fails with HTTP 422. No reference is fetched or resolved. This deliberately narrower contract does not change the JSON artifact checker or cross-tool chaining endpoint.</p>
 </div>
 <div class="paragraph">
 <p>A known incompatible change returns HTTP 400 with a rule-violation context prefixed by <code>/inputSchema</code> or <code>/outputSchema</code>. For example, narrowing an input string reports <code>/inputSchema/properties/query/maxLength</code>. Input BACKWARD contexts point into the new schema; output BACKWARD contexts point into the old schema because its accepted outputs are the comparison target. FORWARD reverses those locations; FULL can report both. Invalid or unsupported schemas return HTTP 422. Neither rejection creates the candidate version or changes previously accepted content.</p>
@@ -1145,7 +1137,7 @@ The two schemas have opposite directions:</p>
 <p>Earlier MCP tool checking compared only top-level input types, property names, and requiredness; output changes and nested constraint changes were unchecked. Version 3.4 checks the supported subset above and changes those results. Making an input optional is now backward compatible. Adding a typed optional input to an open schema is no longer automatically accepted. Stored versions are not rewritten; unsupported schemas in existing versions can prevent subsequent publication under an enabled compatibility rule.</p>
 </div>
 <div class="paragraph">
-<p>For a release-safety demonstration, publish a tool whose input <code>query</code> is a string with <code>maxLength: 10</code>, enable <code>BACKWARD</code>, and propose <code>maxLength: 5</code>. Expect HTTP 400 and unchanged old content. Propose <code>maxLength: 20</code> and expect acceptance. For an output schema, the direction is reversed. This demonstrates publication-time schema enforcement only; it is not evidence of runtime admission, authenticated invocation, or full feature graduation.</p>
+<p>For a release-safety demonstration, publish a tool whose input <code>query</code> is a string with <code>maxLength: 10</code>, enable <code>BACKWARD</code>, and propose <code>maxLength: 5</code>. Expect HTTP 400 and unchanged old content. Propose <code>maxLength: 20</code> and expect acceptance. For an output schema, the direction is reversed. Use a disposable registry and retain the rule configuration, exact versions, responses, and retrieved content as evidence for the agent-registry graduation work (#10294). This demonstrates publication-time schema enforcement only; it is not evidence of runtime admission, authenticated invocation, or full feature graduation.</p>
 </div>
 </div>
 </div>

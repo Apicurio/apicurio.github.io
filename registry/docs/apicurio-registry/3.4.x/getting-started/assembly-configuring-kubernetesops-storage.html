@@ -600,7 +600,7 @@ KubernetesOps storage is an <strong>experimental</strong> feature. You must enab
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_FEATURES_EXPERIMENTAL_ENABLED</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must be set to <code>true</code> to enable KubernetesOps storage.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must be set to <code>true</code> to enable KubernetesOps storage. This feature is currently experimental.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_STORAGE_KIND</code></p></td>
@@ -651,11 +651,6 @@ KubernetesOps storage is an <strong>experimental</strong> feature. You must enab
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_POLLING_STORAGE_FILE_SUFFIXES</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry,ar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Comma-separated list of file suffixes that identify registry metadata files. Each suffix is combined with extensions (<code>.yaml</code>, <code>.yml</code>, <code>.json</code>) to form the full pattern. For example, suffix <code>registry</code> matches <code><strong>.registry.yaml</code>, <code></strong>.registry.yml</code>, and <code>*.registry.json</code>. Data keys that do not match a recognized suffix are treated as raw content files.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_POLLING_STORAGE_SOURCE_LABEL_KEY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>system:source</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Label key that Apicurio Registry uses to tag loaded groups and artifacts with the identifier of their source. Set to an empty string to disable the label.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1033,8 +1028,7 @@ data:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>peers</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">list of peers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Peer registries for federated search. Each peer has <code>peerId</code> (required; lowercase letters, digits, <code>.</code>, <code><em></code>, and <code>-</code> only; must be unique and cannot be <code>local</code>, which is reserved), <code>url</code> (required), optional <code>name</code> and <code>description</code>, <code>enabled</code> (boolean, defaults to <code>true</code> when omitted), and an optional <code>credentialSecretRef</code> (a reference to a credential, never a secret value). The full list is replaced on every load: omitting the field, or setting it to an empty list, removes all previously loaded peers.
-For the peer URL policy, the federation properties, and the peer management REST API, see <a href="assembly-a2a-features.html#a2a-peer-registries</em>registry" class="page">Peer registries for federation</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Peer registries for federated search. Each peer has <code>peerId</code> (required; lowercase letters, digits, <code>.</code>, <code>_</code>, and <code>-</code> only; must be unique and cannot be <code>local</code>, which is reserved), <code>url</code> (required), optional <code>name</code> and <code>description</code>, <code>enabled</code> (boolean, defaults to <code>true</code> when omitted), and an optional <code>credentialSecretRef</code> (a reference to a credential, never a secret value). The full list is replaced on every load: omitting the field, or setting it to an empty list, removes all previously loaded peers.</p></td>
 </tr>
 </tbody>
 </table>

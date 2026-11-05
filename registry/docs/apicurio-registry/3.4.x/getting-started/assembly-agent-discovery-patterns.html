@@ -496,7 +496,7 @@
 <p>The <code>/.well-known/agent.json</code> endpoint returns the Apicurio Registry instance agent card, which represents the registry itself as an A2A agent. This endpoint requires no authentication.</p>
 </div>
 <div class="paragraph">
-<p>The <code>/.well-known/agents</code> and <code>/.well-known/agents/{groupId}/{artifactId}</code> endpoints operate on agent cards that you store in Apicurio Registry as <code>AGENT_CARD</code> artifacts. The search endpoint requires no authentication. When any authentication mechanism (OIDC, basic, proxy header, Kubernetes, or form) is enabled, the search endpoint returns only the agent cards that the caller has permission to view, based on the <code>apicurio.agent.visibility</code> label. The <code>/.well-known/agents/{groupId}/{artifactId}</code> endpoint requires read-level authorization.</p>
+<p>The <code>/.well-known/agents</code> and <code>/.well-known/agents/{groupId}/{artifactId}</code> endpoints operate on agent cards that you store in Apicurio Registry as <code>AGENT_CARD</code> artifacts. The search endpoint requires no authentication. When OIDC or basic authentication is enabled, the search endpoint returns only the agent cards that the caller has permission to view, based on the <code>apicurio.agent.visibility</code> label. The <code>/.well-known/agents/{groupId}/{artifactId}</code> endpoint requires read-level authorization.</p>
 </div>
 <div class="paragraph">
 <p>The <code>/.well-known/mcp-tools</code>, <code>/.well-known/mcp-tools/{groupId}/{artifactId}</code>, and <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoints operate on MCP tool definitions that you store in Apicurio Registry as <code>MCP_TOOL</code> artifacts. These endpoints require read-level authorization and are available only when MCP tools support is enabled.</p>
@@ -794,7 +794,7 @@ String prompt = context.buildPrompt("Original: {{original}}\nSentiment: {{sentim
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A2A support is disabled</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">404</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Verify that <code>apicurio.a2a.enabled</code> is set to <code>true</code> in the Apicurio Registry configuration. Because A2A support is experimental, <code>apicurio.features.experimental.enabled</code> must also be <code>true</code>; without it, Apicurio Registry does not start.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify that <code>apicurio.a2a.enabled</code> is set to <code>true</code> in the Apicurio Registry configuration.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Agent card not found</p></td>

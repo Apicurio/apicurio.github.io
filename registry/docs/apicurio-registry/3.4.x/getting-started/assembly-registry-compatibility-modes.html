@@ -510,7 +510,7 @@ Use <code>BACKWARD</code> when you want to ensure that updated consumers can pro
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKWARD_TRANSITIVE</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Clients using the new artifact can read data that all previously added artifacts wrote.
-Unlike <code>BACKWARD</code>, which checks only against the latest version that is not disabled, <code>BACKWARD_TRANSITIVE</code> checks against every prior version that is not disabled.</p></td>
+Unlike <code>BACKWARD</code>, which checks only against the latest version, <code>BACKWARD_TRANSITIVE</code> checks against every prior version.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>FORWARD</code></p></td>
@@ -520,7 +520,7 @@ Use <code>FORWARD</code> when you want to ensure that existing consumers can pro
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>FORWARD_TRANSITIVE</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Clients using all previously added artifacts can read data that the new artifact writes.
-Unlike <code>FORWARD</code>, which checks only against the latest version that is not disabled, <code>FORWARD_TRANSITIVE</code> checks against every prior version that is not disabled.</p></td>
+Unlike <code>FORWARD</code>, which checks only against the latest version, <code>FORWARD_TRANSITIVE</code> checks against every prior version.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>FULL</code></p></td>
@@ -541,8 +541,8 @@ Both old and new consumers can read data that either the old or new version of t
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The <code>BACKWARD</code> and <code>FORWARD</code> modes compare the proposed schema only with the most recently added version that is not in the <code>DISABLED</code> state.
-The transitive modes (<code>BACKWARD_TRANSITIVE</code>, <code>FORWARD_TRANSITIVE</code>, and <code>FULL_TRANSITIVE</code>) compare the proposed schema against all existing versions that are not disabled, which provides stricter validation but restricts the changes you can make.
+The <code>BACKWARD</code> and <code>FORWARD</code> modes compare the proposed schema only with the most recently added version.
+The transitive modes (<code>BACKWARD_TRANSITIVE</code>, <code>FORWARD_TRANSITIVE</code>, and <code>FULL_TRANSITIVE</code>) compare the proposed schema against all existing versions, which provides stricter validation but restricts the changes you can make.
 </td>
 </tr>
 </table>
@@ -944,10 +944,8 @@ The earlier checker compared <code>oneOf</code> like <code>anyOf</code>, and acc
 See <strong>Known over-strict verdicts</strong> in "What the JSON Schema compatibility check reports".</p>
 </li>
 <li>
-<p>The <code>apicurio.compat.json-schema.use-apitomy</code> configuration property, which selected the new checker in version 3.3, no longer has any effect, and is deprecated since version 3.4.
-Setting it to <code>false</code> does not restore the earlier checker.
-If it is set, Apicurio Registry logs a warning at startup.
-The property is scheduled for removal in version 4.0. After it is removed, a configuration that still sets it prevents Apicurio Registry from starting, so remove it from your configuration before you upgrade.</p>
+<p>The <code>apicurio.compat.json-schema.use-apitomy</code> configuration property, which selected the new checker in version 3.3, no longer has any effect, and is deprecated.
+If it is set, Apicurio Registry logs a warning at startup.</p>
 </li>
 </ul>
 </div>

@@ -596,15 +596,12 @@ namespace level. It is the recommended approach for most production environments
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Install the operator in a dedicated namespace. By default, it watches all namespaces. The installation manifest contains the <code>PLACEHOLDER_NAMESPACE</code> placeholder, which you must replace with the target namespace before you apply the manifest, because the <code>-n</code> option does not override a namespace that is set in the manifest:</p>
+<p>Install the operator in a dedicated namespace. By default, it watches all namespaces:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl create namespace apicurio-system
-sed "s/PLACEHOLDER_NAMESPACE/apicurio-system/g" operator/install/install.yaml | kubectl apply -f -</code></pre>
+kubectl apply -f operator/install/install.yaml -n apicurio-system</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>For the single-namespace installation variant, see <a href="assembly-installing-registry-openshift.html#installing-operator-manifests_registry" class="page">Installing the Apicurio Registry Operator with installation manifests</a>.</p>
 </div>
 </li>
 <li>

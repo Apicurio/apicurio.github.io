@@ -453,7 +453,7 @@
 <h2 id="starting-registry-with-agent-features_registry"><a class="anchor" href="#starting-registry-with-agent-features_registry"></a>Starting Apicurio Registry with agent features</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can start Apicurio Registry with agent features enabled by using Docker Compose. Because A2A support and the <strong>Agents</strong> tab of the web console are experimental features, you must enable the experimental features flag together with the A2A flag and the Agents tab flag.</p>
+<p>You can start Apicurio Registry with agent features enabled by using Docker Compose. Because A2A support is an experimental feature, you must enable the experimental features flag and the A2A flag.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -484,7 +484,6 @@ services:
     environment:
       APICURIO_FEATURES_EXPERIMENTAL_ENABLED: "true"
       APICURIO_A2A_ENABLED: "true"
-      APICURIO_UI_FEATURES_AGENTS_ENABLED: "true"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/health/live"]
       interval: 10s
@@ -599,7 +598,7 @@ The <code>latest</code> tag refers to the most recent stable release. For develo
       "version": "1.0.0",
       "content": {
         "contentType": "application/json",
-        "content": "{\"name\": \"Customer Support Agent\", \"description\": \"Handles customer inquiries, analyzes sentiment, and generates responses\", \"version\": \"1.0.0\", \"supportedInterfaces\": [{\"url\": \"http://support-agent:9001\", \"protocolBinding\": \"http+json\", \"protocolVersion\": \"1.0\"}], \"provider\": {\"organization\": \"Acme Corp\", \"url\": \"https://acme.example.com\"}, \"skills\": [{\"id\": \"sentiment-analysis\", \"name\": \"Sentiment Analysis\", \"description\": \"Analyzes customer message sentiment\", \"tags\": [\"sentiment\"]}, {\"id\": \"response-generation\", \"name\": \"Response Generation\", \"description\": \"Generates context-aware customer responses\", \"tags\": [\"support\"]}], \"capabilities\": {\"streaming\": false, \"pushNotifications\": false}, \"defaultInputModes\": [\"text\"], \"defaultOutputModes\": [\"text\"]}"
+        "content": "{\"name\": \"Customer Support Agent\", \"description\": \"Handles customer inquiries, analyzes sentiment, and generates responses\", \"version\": \"1.0.0\", \"supportedInterfaces\": [{\"url\": \"http://support-agent:9001\", \"protocolBinding\": \"http+json\", \"protocolVersion\": \"1.0\"}], \"provider\": {\"organization\": \"Acme Corp\", \"url\": \"https://acme.example.com\"}, \"skills\": [{\"id\": \"sentiment-analysis\", \"name\": \"Sentiment Analysis\", \"description\": \"Analyzes customer message sentiment\"}, {\"id\": \"response-generation\", \"name\": \"Response Generation\", \"description\": \"Generates context-aware customer responses\"}], \"capabilities\": {\"streaming\": false, \"pushNotifications\": false}, \"defaultInputModes\": [\"text\"], \"defaultOutputModes\": [\"text\"]}"
       }
     }
   }'</code></pre>
@@ -678,7 +677,7 @@ The <code>latest</code> tag refers to the most recent stable release. For develo
 </div>
 </div>
 <div class="paragraph">
-<p>You can also browse registered agent cards on the <strong>Agents</strong> tab of the Apicurio Registry web console at <code><a href="http://localhost:8888" class="bare">http://localhost:8888</a></code>.</p>
+<p>You can also browse registered agent cards by using the Apicurio Registry web console at <code><a href="http://localhost:8888" class="bare">http://localhost:8888</a></code>.</p>
 </div>
 </li>
 </ol>
@@ -755,7 +754,7 @@ Claude Desktop is officially supported on macOS and Windows. Linux support is av
 <li>
 <p>Verify the connection by asking Claude a question about Apicurio Registry, for example: "What groups are present in Apicurio Registry?"</p>
 <div class="paragraph">
-<p>The MCP server provides tools for working with groups, artifacts, versions, configuration properties, prompt templates, and rules in Apicurio Registry, and for discovering the A2A agents and MCP tools stored in it.</p>
+<p>The MCP server provides tools for working with groups, artifacts, versions, and configuration properties in Apicurio Registry.</p>
 </div>
 </li>
 </ol>
