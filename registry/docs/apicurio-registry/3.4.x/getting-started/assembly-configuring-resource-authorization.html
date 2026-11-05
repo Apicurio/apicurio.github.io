@@ -412,7 +412,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Per-resource authorization controls access to individual groups and artifacts. For example, Alice can write artifacts in group <code>team-a</code> and read <code>shared</code>, but cannot see <code>team-b</code>. You define the rules in a file, and Apicurio Registry applies them to every API, including search and list results.</p>
+<p>Per-resource authorization controls access to individual groups and artifacts. For example, you can allow Alice to write artifacts in <code>team-a</code> and read artifacts in <code>shared</code>, without granting access to <code>team-b</code>. You define access rules in a file. Apicurio Registry combines these rules with configured role and ownership checks, and filters search and list results. Administrator and owner bypasses affect the outcome, as described in this guide.</p>
 </div>
 </div>
 </div>
@@ -420,10 +420,10 @@
 <h2 id="resource-authorization-overview_registry"><a class="anchor" href="#resource-authorization-overview_registry"></a>Per-resource authorization overview</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Per-resource authorization adds a fine-grained layer on top of role-based access control (RBAC), so that you can restrict which groups and artifacts each user or role can read, write, or administer. Apicurio Registry applies the rules to direct requests and to search and list results.</p>
+<p>Per-resource authorization restricts which groups and artifacts each user or role can read, write, or administer. It can be used with optional role-based access control (RBAC) and owner-only authorization (OBAC).</p>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry applies two layers of authorization:</p>
+<p>The following checks have distinct purposes:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -431,12 +431,15 @@
 <p><strong>Role-based access control (RBAC):</strong> coarse-grained global roles (<code>sr-readonly</code>, <code>sr-developer</code>, <code>sr-admin</code>), typically assigned by an identity provider such as Keycloak.</p>
 </li>
 <li>
-<p><strong>Per-resource authorization:</strong> fine-grained access to individual groups and artifacts, defined in an access rules file and evaluated after RBAC.</p>
+<p><strong>Owner-only authorization (OBAC):</strong> when enabled, restricts writes to owned or unowned resources. Group ownership restrictions require a separate setting.</p>
+</li>
+<li>
+<p><strong>Per-resource authorization:</strong> fine-grained access to individual groups and artifacts, defined in an access rules file and evaluated after enabled RBAC and OBAC checks, unless an administrator or owner bypass applies.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>A request must pass both layers. Access rules restrict within what RBAC allows and never allow more than the role of the user permits.</p>
+<p>A request must pass every applicable check. With RBAC enabled, an access rule cannot override a role denial. RBAC is disabled by default (<code>apicurio.auth.role-based-authorization=false</code>) and is not a prerequisite for access rules. Authentication must be enabled separately.</p>
 </div>
 <div class="paragraph">
 <p>The access rules file uses the Kroxylicious ACL rules format, which Kroxylicious and StreamsHub also use. Apicurio Registry reads the file with the Kroxylicious rules parser and evaluates it itself, with the semantics described in this guide.</p>
@@ -450,7 +453,7 @@
 <p><strong>Point access</strong> (reading, writing, or deleting a specific group or artifact): Apicurio Registry matches the identity and roles of the user against the rules for the addressed resource.</p>
 </li>
 <li>
-<p><strong>Search and lists:</strong> Apicurio Registry translates the rules that apply to the user into the storage query, so results contain exactly the resources the user can read, and page sizes and total counts are accurate. A resource never appears in search results unless direct read access to it would also be allowed.</p>
+<p><strong>Search and lists:</strong> for paginated searches, Apicurio Registry translates supported access rules into the storage query before selecting and counting the page. Counts and offsets apply to the filtered result set. Regular-expression rules and indexed searches have the limitations described below; results from separate requests are not a shared snapshot.</p>
 </li>
 </ul>
 </div>
@@ -468,7 +471,7 @@
 <h2 id="enabling-resource-authorization_registry"><a class="anchor" href="#enabling-resource-authorization_registry"></a>Enabling per-resource authorization</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You enable per-resource authorization by pointing Apicurio Registry at an access rules file. After you enable it, Apicurio Registry checks every request against the rules in that file, in addition to RBAC.</p>
+<p>You enable per-resource authorization by pointing Apicurio Registry at an access rules file. Protected resource operations then use the rules alongside other enabled checks. Administrator and owner bypasses still apply.</p>
 </div>
 <div class="paragraph">
 <p>A complete Docker Compose example with Keycloak, including a script that verifies the expected access, is available in the <code>distro/docker-compose/in-memory-with-authz-grants/</code> directory of the Apicurio Registry source repository.</p>
@@ -477,7 +480,7 @@
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You have enabled authentication in Apicurio Registry by using OpenID Connect (OIDC), HTTP basic authentication, or proxy header authentication.</p>
+<p>You have enabled authentication in Apicurio Registry, for example with OpenID Connect (OIDC), HTTP basic authentication, or proxy header authentication. The authentication check also recognizes Kubernetes and form authentication when configured.</p>
 </li>
 <li>
 <p>You have an access rules file in the Kroxylicious ACL rules format that ends with <code>otherwise deny;</code>.</p>
@@ -498,9 +501,12 @@
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
-  apicurio.auth.resource-based-authorization.enabled: "true"
-  apicurio.auth.resource-based-authorization.rules.path: "/opt/apicurio/authz/access.rules"</code></pre>
+  APICURIO_AUTH_RESOURCE_BASED_AUTHORIZATION_ENABLED: "true"
+  APICURIO_AUTH_RESOURCE_BASED_AUTHORIZATION_RULES_PATH: "/opt/apicurio/authz/access.rules"</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>These environment variables configure the feature and file path only; they do not enable authentication. If authentication is disabled, Apicurio Registry warns at startup and bypasses authorization even when resource-based authorization is enabled.</p>
 </div>
 </li>
 <li>
@@ -515,7 +521,13 @@
 <div class="title">Verification</div>
 <ul>
 <li>
-<p>Send a request that the rules deny, and check that Apicurio Registry rejects it with HTTP <code>403</code> and logs an <code>authz.denied</code> message to the <code>io.apicurio.registry.audit.authz</code> logger.</p>
+<p>Use an authenticated caller whose role permits the operation, who is not an administrator, and who does not own the target. Confirm an allowed read succeeds and a denied read returns <code>403</code> with an <code>authz.denied</code> entry in <code>io.apicurio.registry.audit.authz</code>. If an earlier RBAC or OBAC check rejects the request, there might be no ACL audit entry.</p>
+</li>
+<li>
+<p>Search as the same caller and check both the visible artifact IDs and the filtered count. Use exact or prefix rules for this check.</p>
+</li>
+<li>
+<p>If testing anonymous access, enable anonymous reads and add an explicit <code>$anonymous</code> role rule. An anonymous point read denied by the interceptor returns <code>401</code>, not <code>403</code>.</p>
 </li>
 </ul>
 </div>
@@ -525,7 +537,7 @@
 <h2 id="resource-authorization-configuration_registry"><a class="anchor" href="#resource-authorization-configuration_registry"></a>Per-resource authorization configuration properties</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The following configuration properties control per-resource authorization. Per-resource authorization requires authentication (OIDC, HTTP basic, or proxy header authentication) to be enabled.</p>
+<p>The following properties control per-resource authorization. Authentication is configured independently; enabling the feature does not enable an authentication mechanism or RBAC.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Per-resource authorization properties</caption>
@@ -565,7 +577,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.auth.resource-based-authorization.owner-bypass.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Lets the recorded owner of an artifact or group access it regardless of the access rules.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lets an authenticated recorded owner bypass access rules for the owned artifact or group. Earlier RBAC checks still apply.</p></td>
 </tr>
 </tbody>
 </table>
@@ -573,7 +585,10 @@
 <p><strong>Automatic reloading</strong></p>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry checks the access rules file for changes at the interval set by <code>apicurio.auth.resource-based-authorization.rules.reload-every</code> and applies changes without a restart. If the changed file is not valid, Apicurio Registry logs an error and keeps using the previously loaded rules.</p>
+<p>Apicurio Registry checks the file&#8217;s modification time at the interval set by <code>apicurio.auth.resource-based-authorization.rules.reload-every</code>. A valid changed file is applied without restart. If loading a changed file fails, Apicurio Registry keeps the last successfully loaded rules and logs the failure once for that modification time. Correcting the file must also update its modification time. A missing or non-regular file during polling leaves the last rules active without a reload-error message; deleting the file does not revoke access.</p>
+</div>
+<div class="paragraph">
+<p>Each replica loads and polls its own file. All replicas must receive the update, and polling plus volume-projection delays can postpone its effect. The interval is not a guaranteed cluster-wide revocation deadline, and a request making several authorization checks can overlap a reload. The polling job is registered only when the feature and reload are both enabled.</p>
 </div>
 </div>
 </div>
@@ -581,7 +596,7 @@
 <h2 id="resource-authorization-grants_registry"><a class="anchor" href="#resource-authorization-grants_registry"></a>Access rules file format</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The access rules file lists who can do what, one rule per line, in the Kroxylicious ACL rules format. Apicurio Registry validates the file as a whole and rejects it if any rule is not valid.</p>
+<p>The access rules file lists who can do what as semicolon-terminated rules in the Kroxylicious ACL rules format. Rules can span lines. Apicurio Registry validates the file as a whole and rejects it if any rule is not valid.</p>
 </div>
 <div class="paragraph">
 <p>The following example is a complete access rules file. The file ends with <code>otherwise deny;</code>:</p>
@@ -612,6 +627,9 @@ otherwise deny;</code></pre>
 <p><code>deny</code> rules must come before <code>allow</code> rules, and the file must end with <code>otherwise deny;</code>. Lines starting with <code>//</code> are comments.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>User and role principals are different types: a user named <code>ops</code> does not match a role named <code>ops</code>. ACL role principals come from the authenticated security identity&#8217;s roles. RBAC can use a different role source (token, application, header, or Kubernetes), so verify both mappings when using a non-default RBAC role source. With the pinned Kroxylicious 0.25.1 parser, use the <code>$anonymous</code> role instead of the proposal&#8217;s <code>anonymous User</code> syntax, and use <code>//</code> rather than block comments.</p>
 </div>
 <div class="paragraph">
 <p>You select names with the following selectors:</p>
@@ -661,7 +679,7 @@ otherwise deny;</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The <code>config.admin_roles</code> setting of earlier development versions has no equivalent. To give a role full access, allow it every operation on every resource: <code>allow Role with name = "ops" to * Artifact with name *;</code> and the same for <code>Group</code>.
+The JSON grants format, its <code>config.admin_roles</code> setting, and the <code>grants.path</code>/<code>grants.reload-<strong></code> properties belong to superseded development versions. Use ACL rules and <code>rules.</strong></code> properties instead. Allowing a role every operation with <code>allow Role with name = "ops" to * Artifact with name *;</code> and the equivalent <code>Group</code> rule allows the ACL layer only; it does not bypass enabled RBAC or OBAC. A shared rules format also does not mean an arbitrary mixed-system file can be loaded: Apicurio Registry rejects rules for resource types it does not enforce.
 </td>
 </tr>
 </table>
@@ -693,6 +711,9 @@ The <code>config.admin_roles</code> setting of earlier development versions has 
 </div>
 <div class="paragraph">
 <p><code>ADMIN</code> implies <code>WRITE</code>, and <code>WRITE</code> implies <code>READ</code>; <code>*</code> means all three. The operation required by each API operation matches its RBAC level: reads require <code>READ</code>, and changes, including deletes, require <code>WRITE</code>. A few operations require <code>ADMIN</code>, such as dropping Iceberg namespaces, tables, and views.</p>
+</div>
+<div class="paragraph">
+<p>Versions, branches, and comments normally use their artifact&#8217;s access rules. Ownership transfer has additional checks and is not simply an <code>ADMIN</code> operation in core v3. A dry run can relax the role check on supported endpoints but does not universally reduce the required access-rule operation to <code>READ</code>.</p>
 </div>
 <div class="paragraph">
 <p><strong>Group rules and artifact rules</strong></p>
@@ -730,10 +751,13 @@ allow User with name = "alice" to * Artifact with name like "team-a/*";</code></
 </div>
 </div>
 <div class="paragraph">
+<p>These rules allow the ACL layer; enabled RBAC and OBAC can still restrict the user. Group rules do not cascade to artifacts. A group deny does not hide its artifacts from global artifact search. Conversely, listing artifacts within a group requires group read access even if individual artifacts can be read directly.</p>
+</div>
+<div class="paragraph">
 <p><strong>Deny rules</strong></p>
 </div>
 <div class="paragraph">
-<p>If a deny rule matches, Apicurio Registry denies access even if an allow rule also matches. Deny rules apply to search results as well as direct access.</p>
+<p>Within ACL evaluation, a matching deny takes precedence over an allow. Deny selectors also apply to search queries. Administrator bypasses and the enabled owner bypass can skip the ACL restriction, including its denies.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -742,7 +766,7 @@ allow User with name = "alice" to WRITE Artifact with name like "team-a/*";</cod
 </div>
 </div>
 <div class="paragraph">
-<p>Alice can read and write all artifacts in <code>team-a</code> except <code>team-a/secret-schema</code>.</p>
+<p>Assuming Alice has no administrator or owner bypass and her enabled RBAC/OBAC checks permit it, she can read and write all artifacts in <code>team-a</code> except <code>team-a/secret-schema</code>.</p>
 </div>
 <div class="paragraph">
 <p>A deny rule denies its operations and the operations they imply:</p>
@@ -759,6 +783,9 @@ allow User with name = "alice" to WRITE Artifact with name like "team-a/*";</cod
 <p>Denying <code>READ</code> blocks reads but not writes: <code>WRITE</code> implies <code>READ</code>, but <code>READ</code> does not imply <code>WRITE</code>. Use <code>*</code> to hide a resource.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>These results describe the access rules themselves. To ensure a deny applies to an owner, disable <code>apicurio.auth.resource-based-authorization.owner-bypass.enabled</code>. A read-only allow must not overlap another allow granting the same caller write or admin access if the intention is to make the resource read-only.</p>
 </div>
 </div>
 </div>
@@ -829,6 +856,56 @@ allow User with name = "alice" to WRITE Artifact with name like "team-a/*";</cod
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>Built-in embedded-schema extraction plans its content and coordinates before writing. It exposes the planned content to rule evaluation and commits only after rules and pre-publication checks pass, outside dry runs. A concurrent write that takes a planned coordinate is rejected rather than silently changing the reference. This is not a transaction guarantee for arbitrary third-party write hooks.</p>
+</div>
+<div class="paragraph">
+<p>Raw content can contain reference names, and an outbound graph can show the coordinates of an unreadable target. Resource authorization does not promise to conceal every mention of a resource name. A root artifact&#8217;s read permission does not grant read access to the content of its dependencies.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resource-authorization-permissions_registry"><a class="anchor" href="#resource-authorization-permissions_registry"></a>Caller permissions in v3 search and list results</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With resource-based authorization enabled, each <code>SearchedArtifact</code>, <code>SearchedVersion</code>, and <code>SearchedGroup</code> returned by v3 search and list operations includes a <code>permissions</code> object. For example, an item can include:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "permissions": {
+    "read": true,
+    "write": false,
+    "admin": false
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The flags describe whether the caller passes authorization at the corresponding level for that resource:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>read</code>: read-level access.</p>
+</li>
+<li>
+<p><code>write</code>: write-level access, which core artifact deletes normally require as well as metadata changes.</p>
+</li>
+<li>
+<p><code>admin</code>: admin-level access, for example an Iceberg drop. It does not mean "can transfer ownership" or "can perform every deletion".</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This field is included in artifact, group, version, content-based, and contract searches returning these types, and in group, artifact, version, and branch-version lists. It is omitted when resource-based authorization is disabled and is not added to v2 results. A version reports its artifact&#8217;s permissions, using the artifact owner rather than the version creator. A page is evaluated with at most one access-rules call for permission reporting; empty or bypassed pages need none.</p>
+</div>
+<div class="paragraph">
+<p>The flags are advisory. They do not replace filtering or authorize a subsequent request. Ownership transfers, rules, state, mutability settings, referenced/generated artifacts, and bulk operations can impose additional checks. For example, <code>write: true</code> on a group does not guarantee permission to delete every artifact in it. Policy or ownership can also change after a result is returned. Clients must handle failed operations even when a flag is <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>An owning developer with RBAC enabled can receive <code>read: true</code>, <code>write: true</code>, and <code>admin: false</code>. With RBAC disabled, an eligible owner bypass can permit admin-level access too. Do not infer permission flags from a role name alone. The presence of the API field does not by itself imply that a particular UI version uses it to hide actions.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -836,6 +913,9 @@ allow User with name = "alice" to WRITE Artifact with name like "team-a/*";</cod
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>The following examples show access rules for common deployment patterns. Each example is a complete rules file, or the rules to add before <code>otherwise deny;</code>.</p>
+</div>
+<div class="paragraph">
+<p>For rule fragments, import the used types with <code>from io.apicurio.authz import Artifact, Group, Role;</code>, put all denies before all allows, and end the combined file with <code>otherwise deny;</code>. The examples describe ACL decisions: enabled RBAC/OBAC may restrict them and administrator/owner bypasses may permit additional access. To use the file as the sole resource-level authority for non-administrators, disable owner bypass. With RBAC enabled, users requiring writes also need an appropriate Registry role.</p>
 </div>
 <div class="paragraph">
 <p><strong>Multi-team isolation</strong></p>
@@ -909,7 +989,10 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
 <p><strong>Search and regular expressions</strong></p>
 </div>
 <div class="paragraph">
-<p><code>matching</code> rules work for direct access, but search cannot evaluate them. A user whose rules use <code>matching</code> for a resource type gets no search results for that type. Use <code>=</code>, <code>in</code>, or <code>like</code> for resources that must be searchable.</p>
+<p><code>matching</code> rules work for direct access, but SQL and Elasticsearch search cannot evaluate them. If a restricted caller&#8217;s relevant read scope contains a <code>matching</code> selector, the rules contribute no search results for that resource type, including resources matched by other exact or prefix allows. Eligible owned resources can still appear through owner bypass; without that bypass, the result is empty. Administrator bypasses are unaffected. Use <code>=</code>, <code>in</code>, or <code>like</code> for resources that must be searchable.</p>
+</div>
+<div class="paragraph">
+<p>For supported scopes, authorization filtering takes place before pagination. Indexed searches additionally depend on index freshness and the ownership cap described below. Separate queries do not share a policy/data snapshot, so a direct read and a search issued at different times can disagree after an update.</p>
 </div>
 </div>
 </div>
@@ -920,32 +1003,38 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
 <p>Per-resource authorization is one of several authorization features in Apicurio Registry. The order in which Apicurio Registry evaluates them determines which callers bypass the access rules, and how owner access, anonymous access, and administrator access interact with the rules.</p>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry authorizes requests in the following order:</p>
+<p>For authenticated protected requests, the main checks are:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>Authentication
+  → Trusted proxy authorization        (only a proxy-header-authenticated request, when enabled)
   → Admin override                     (bypasses everything below)
-  → RBAC                                (role check; skipped for reads when anonymous or
-                                         authenticated read access applies)
+  → RBAC                                (when enabled; authenticated read access skips the read-role check)
   → Owner-only authorization (OBAC)     (when enabled)
   → Per-resource authorization          (RBAC admins, and by default resource owners, bypass it)</code></pre>
 </div>
 </div>
 <div class="paragraph">
+<p>Anonymous callers have a separate path: unprotected operations are permitted, and protected reads require anonymous-read access plus applicable access rules. Other anonymous operations are rejected. If no authentication backend is enabled, authorization is bypassed. Application-managed role-mapping endpoints also have a configuration guard requiring application-managed RBAC before the general bypasses.</p>
+</div>
+<div class="paragraph">
 <p><strong>RBAC</strong></p>
 </div>
 <div class="paragraph">
-<p>RBAC administrators bypass per-resource authorization. A user with the <code>sr-readonly</code> role can never write, whatever the access rules say. To control write access with rules, give users the <code>sr-developer</code> role and use rules to choose which resources they can change.</p>
+<p>With RBAC enabled, RBAC administrators bypass per-resource authorization, and a user whose only Registry role is <code>sr-readonly</code> cannot write regardless of an ACL allow. Give users requiring writes the <code>sr-developer</code> role and use rules to choose the resources. With RBAC disabled, the <code>sr-admin</code> role name alone does not grant a bypass: configure admin override if that is intended. RBAC role names are configurable.</p>
 </div>
 <div class="paragraph">
 <p><strong>Resource owners</strong></p>
 </div>
 <div class="paragraph">
-<p>By default, the recorded owner of an artifact or group has access to it whatever the access rules, whether or not owner-only authorization (<code>apicurio.auth.owner-only-authorization</code>) is enabled. Set <code>apicurio.auth.resource-based-authorization.owner-bypass.enabled</code> to <code>false</code> to make the access rules the only per-resource authority. Owners also see their own resources in search results and can read content used by their artifacts. With the Elasticsearch search index, searches that require the index (content and structure searches) include at most 1000 of the owned artifacts of the caller that are not otherwise covered by the rules. A resource without a recorded owner does not grant this exception to anyone.</p>
+<p>By default, an authenticated recorded owner bypasses access rules for the owned artifact or group, independently of owner-only authorization (<code>apicurio.auth.owner-only-authorization</code>). Earlier role checks still apply: owning a resource does not make a read-only role writable when RBAC is enabled. Set <code>apicurio.auth.resource-based-authorization.owner-bypass.enabled</code> to <code>false</code> to require an ACL allow from owners too. Missing resources, anonymous callers, and resources without an owner do not qualify for this bypass.</p>
 </div>
 <div class="paragraph">
-<p>When owner-only authorization is enabled, it applies as well to resources named in a request body, such as Iceberg rename targets and published MCP servers: only the owner can change them, even if rules allow other users.</p>
+<p>Owners can see owned resources in search and read content used by owned artifacts. With Elasticsearch, the query receives at most 1000 owned artifact names resolved from primary storage, in addition to the names the rules permit. Owned artifacts outside that set can be omitted unless the rules also allow them. Index freshness can also affect results. Versions use their artifact&#8217;s owner for access checks.</p>
+</div>
+<div class="paragraph">
+<p>Owner-only authorization is a separate write restriction, also applied to body-addressed targets such as Iceberg rename targets and published MCP servers. It permits missing or unowned resources, and exempts RBAC administrators. Groups are restricted by ownership only when <code>apicurio.auth.owner-only-authorization.limit-group-access=true</code>. Disabling owner bypass does not disable owner-only authorization, or vice versa.</p>
 </div>
 <div class="paragraph">
 <p>The creator of an artifact becomes its owner, but creating it requires <code>write</code> on both the group and the artifact name, so the owner bypass cannot be used to get around a deny on that name.</p>
@@ -959,7 +1048,7 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
 <div class="ulist">
 <ul>
 <li>
-<p>With <code>apicurio.auth.authenticated-read-access.enabled</code>, any authenticated user can read, even without a registry role, but only the resources the rules allow them.</p>
+<p>With <code>apicurio.auth.authenticated-read-access.enabled</code>, authenticated callers skip the read-role check, even without a Registry role. Resource rules and their applicable bypasses still decide access; write/admin role checks are unchanged.</p>
 </li>
 <li>
 <p>With <code>apicurio.auth.anonymous-read-access.enabled</code>, unauthenticated callers get the role <code>$anonymous</code>. They can read only what the rules allow to that role, for example:</p>
@@ -969,7 +1058,7 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
 </div>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry answers other reads by unauthenticated callers with <code>401</code>.</p>
+<p>An anonymous point read denied by the interceptor returns <code>401</code>. Indirect checks after that gate, such as a denied referenced artifact while dereferencing, can return <code>403</code>. This artifact rule alone does not allow reading or listing the <code>public</code> group itself; add a <code>READ Group</code> rule if that is required.</p>
 </div>
 </li>
 </ul>
@@ -978,7 +1067,7 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
 <p><strong>Registry-wide reports</strong></p>
 </div>
 <div class="paragraph">
-<p>Reports that cover the whole registry and cannot be filtered per resource, such as the GitOps status and validation tasks, are available only to callers who are not restricted by the access rules (administrators).</p>
+<p>When resource-based authorization is enforced, reports that cannot be filtered per resource, such as GitOps status and validation tasks, require a caller-wide bypass, such as an administrator. An ACL rule allowing every artifact does not itself grant that bypass. The endpoint&#8217;s other authentication and role checks also apply.</p>
 </div>
 <div class="paragraph">
 <p><strong>Admin override and trusted proxy authorization</strong></p>
@@ -1023,10 +1112,13 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.operation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>read</code>, <code>write</code>, or <code>admin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The lowercased authorization level: <code>read</code>, <code>write</code>, <code>admin</code>, or <code>adminorowner</code> where used</p></td>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>The counter measures recorded ACL decisions, not HTTP requests. A request can check several resources, while administrator/owner bypasses and rejections by earlier role checks need not record any ACL decision. Search permission reporting does not record ACL-decision metrics or denial audit entries because it is not an access attempt.</p>
+</div>
 <div class="paragraph">
 <p><strong>Audit log</strong></p>
 </div>
@@ -1058,7 +1150,10 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>RBAC:</strong> does the role of the user allow the operation? <code>sr-readonly</code> users cannot write.</p>
+<p><strong>RBAC:</strong> if enabled, does the role provider allow the operation? A read-only Registry role alone cannot authorize a write.</p>
+</li>
+<li>
+<p><strong>Owner-only authorization:</strong> is the caller permitted to write this owned resource? For a group, check <code>owner-only-authorization.limit-group-access</code> too.</p>
 </li>
 <li>
 <p><strong>Operation:</strong> does the operation of the rule cover the request? Changes and deletes require <code>WRITE</code>.</p>
@@ -1092,6 +1187,9 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
 <p>Whether the user is an RBAC administrator, or has a role to which the rules allow every operation.</p>
 </li>
 <li>
+<p>Whether authentication is enabled, admin override applies, or a trusted proxy-header request bypasses local authorization.</p>
+</li>
+<li>
 <p>Whether the user owns the resources. See <code>apicurio.auth.resource-based-authorization.owner-bypass.enabled</code>.</p>
 </li>
 <li>
@@ -1120,9 +1218,27 @@ allow User with name = "contractor" to READ Group with name = "team-a";</code></
 <p>Check the logs for <code>Access rules reloaded successfully</code> or for a reload error. If the new file is not valid, the previous rules stay in effect.</p>
 </li>
 <li>
+<p>Check that the file exists, is a regular file, and has a new modification time. Removing it does not clear previously loaded rules.</p>
+</li>
+<li>
 <p>In Kubernetes, check that the ConfigMap is not mounted with <code>subPath</code>.</p>
 </li>
+<li>
+<p>Check every replica&#8217;s mounted file and reload logs; replicas do not share one in-memory rules instance.</p>
+</li>
 </ol>
+</div>
+<div class="paragraph">
+<p><strong>A resource is readable directly but missing from a list</strong></p>
+</div>
+<div class="paragraph">
+<p>Check whether the list requires a group grant in addition to an artifact grant, whether the relevant scope contains a <code>matching</code> selector, and whether an indexed query is affected by index freshness or the owned-artifact cap. Also check the ordinary search filters and pagination parameters.</p>
+</div>
+<div class="paragraph">
+<p><strong>A permission flag is true but an operation fails</strong></p>
+</div>
+<div class="paragraph">
+<p>Check the exact operation&#8217;s authorization level and any additional checks, including ownership transfer, writes to other artifacts, state, rules, and mutability settings. A permission flag reflects the result when the page was generated, not a guarantee for a later request.</p>
 </div>
 </div>
 </div>
