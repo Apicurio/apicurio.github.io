@@ -412,7 +412,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can use Apicurio Registry as a central registry for AI agents, prompt templates, and model schemas. You start Apicurio Registry with agent features enabled, register an agent card, discover agents by skill, and connect Claude Desktop by using the Model Context Protocol (MCP).</p>
+<p>You can use Apicurio Registry as a central registry for AI agents, MCP servers and tools, and prompt templates. In about five minutes, you start Apicurio Registry with a demo catalog, discover agents and tools, connect an AI assistant by using the Model Context Protocol (MCP), and see a compatibility rule reject an incompatible tool change.</p>
 </div>
 </div>
 </div>
@@ -445,127 +445,39 @@
 <li>
 <p><code>MCP_TOOL</code>: MCP tool definition that describes a tool, its input parameters, and its output schema</p>
 </li>
+<li>
+<p><code>MCP_SERVER</code>: MCP server definition that references the <code>MCP_TOOL</code> artifacts of the tools it provides</p>
+</li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="starting-registry-with-agent-features_registry"><a class="anchor" href="#starting-registry-with-agent-features_registry"></a>Starting Apicurio Registry with agent features</h2>
+<h2 id="starting-agent-registry-quickstart_registry"><a class="anchor" href="#starting-agent-registry-quickstart_registry"></a>Starting the agent registry quick start</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can start Apicurio Registry with agent features enabled by using Docker Compose. Because A2A support is an experimental feature, you must enable the experimental features flag and the A2A flag.</p>
+<p>You can start Apicurio Registry with the agent features enabled, the web console, and a demo catalog by using one Docker Compose command. The stack stores its data in PostgreSQL, so the catalog survives a restart.</p>
 </div>
-<div class="ulist">
-<div class="title">Prerequisites</div>
-<ul>
-<li>
-<p>Docker and Docker Compose are installed</p>
-</li>
-<li>
-<p><code>curl</code> is installed</p>
-</li>
-</ul>
-</div>
-<div class="olist arabic">
-<div class="title">Procedure</div>
-<ol class="arabic">
-<li>
-<p>Create a <code>docker-compose.yml</code> file with the following content:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">version: '3.8'
-
-services:
-  apicurio-registry:
-    image: quay.io/apicurio/apicurio-registry:latest
-    container_name: agent-registry
-    ports:
-      - "8080:8080"
-    environment:
-      APICURIO_FEATURES_EXPERIMENTAL_ENABLED: "true"
-      APICURIO_A2A_ENABLED: "true"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/health/live"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
-
-  apicurio-registry-ui:
-    image: quay.io/apicurio/apicurio-registry-ui:latest
-    container_name: agent-registry-ui
-    ports:
-      - "8888:8080"
-    environment:
-      REGISTRY_API_URL: "http://localhost:8080/apis/registry/v3"
-    depends_on:
-      apicurio-registry:
-        condition: service_healthy</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
+<div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-The <code>latest</code> tag refers to the most recent stable release. For development builds, use the <code>latest-snapshot</code> tag. For a specific version, use the version number as the tag, for example <code>3.3.0</code>.
+The quick start stack is for local evaluation only. It has no authentication, and its database password is a fixed demo value. The agent features are experimental, and the stack uses the <code>latest-snapshot</code> images, which contain the most recent development build.
 </td>
 </tr>
 </table>
 </div>
-</li>
-<li>
-<p>Start the services:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker compose up -d</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Wait for the services to start.</p>
-</li>
-</ol>
-</div>
-<div class="olist arabic">
-<div class="title">Verification</div>
-<ol class="arabic">
-<li>
-<p>Verify that Apicurio Registry is running:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://localhost:8080/apis/registry/v3/system/info</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Verify that the A2A endpoint is active by retrieving the Apicurio Registry agent card:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://localhost:8080/.well-known/agent.json</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The response contains the agent card for the Apicurio Registry instance, including its built-in skills such as <code>schema-validation</code>, <code>schema-search</code>, <code>artifact-management</code>, <code>compatibility-check</code>, and <code>agent-discovery</code>.</p>
-</div>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="registering-an-agent-card_registry"><a class="anchor" href="#registering-an-agent-card_registry"></a>Registering an agent card</h2>
-<div class="sectionbody">
-<div class="paragraph _abstract">
-<p>You can register an agent card as an <code>AGENT_CARD</code> artifact in Apicurio Registry. After registration, other AI agents and orchestrators can discover the agent by using the well-known endpoints.</p>
-</div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Apicurio Registry is running with agent features enabled</p>
+<p>Docker with Docker Compose v2 is installed</p>
+</li>
+<li>
+<p><code>git</code> and <code>curl</code> are installed</p>
 </li>
 </ul>
 </div>
@@ -573,36 +485,23 @@ The <code>latest</code> tag refers to the most recent stable release. For develo
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Create a group to organize your agent cards:</p>
+<p>Clone the Apicurio Registry repository and change to its directory:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST "http://localhost:8080/apis/registry/v3/groups" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "groupId": "ai-agents",
-    "description": "AI agent cards"
-  }'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone https://github.com/Apicurio/apicurio-registry.git
+cd apicurio-registry</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Register an agent card artifact in the group:</p>
+<p>Start the stack:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST "http://localhost:8080/apis/registry/v3/groups/ai-agents/artifacts" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "artifactId": "customer-support-agent",
-    "artifactType": "AGENT_CARD",
-    "firstVersion": {
-      "version": "1.0.0",
-      "content": {
-        "contentType": "application/json",
-        "content": "{\"name\": \"Customer Support Agent\", \"description\": \"Handles customer inquiries, analyzes sentiment, and generates responses\", \"version\": \"1.0.0\", \"supportedInterfaces\": [{\"url\": \"http://support-agent:9001\", \"protocolBinding\": \"http+json\", \"protocolVersion\": \"1.0\"}], \"provider\": {\"organization\": \"Acme Corp\", \"url\": \"https://acme.example.com\"}, \"skills\": [{\"id\": \"sentiment-analysis\", \"name\": \"Sentiment Analysis\", \"description\": \"Analyzes customer message sentiment\"}, {\"id\": \"response-generation\", \"name\": \"Response Generation\", \"description\": \"Generates context-aware customer responses\"}], \"capabilities\": {\"streaming\": false, \"pushNotifications\": false}, \"defaultInputModes\": [\"text\"], \"defaultOutputModes\": [\"text\"]}"
-      }
-    }
-  }'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker compose -f distro/docker-compose/ai-agent-registry/docker-compose.yml up -d</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The stack starts PostgreSQL, Apicurio Registry with the agent features enabled, and the web console. A <code>seed</code> container then loads the demo catalog into the <code>demo</code> group and exits.</p>
 </div>
 </li>
 </ol>
@@ -611,34 +510,53 @@ The <code>latest</code> tag refers to the most recent stable release. For develo
 <div class="title">Verification</div>
 <ol class="arabic">
 <li>
-<p>Verify that the agent card is available through the well-known agents endpoint:</p>
+<p>Check that the demo catalog is loaded:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://localhost:8080/.well-known/agents</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker compose -f distro/docker-compose/ai-agent-registry/docker-compose.yml logs seed</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The response includes the registered agent card with its skills and capabilities.</p>
+<p>The output ends with <code>Demo catalog ready in group 'demo'.</code> The catalog contains the following artifacts:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>weather</code>: an <code>MCP_SERVER</code> that references its <code>get_forecast</code> tool</p>
+</li>
+<li>
+<p><code>weather.get_forecast</code>: an <code>MCP_TOOL</code> with a <code>BACKWARD</code> compatibility rule</p>
+</li>
+<li>
+<p><code>translator-agent</code> and <code>sentiment-agent</code>: <code>AGENT_CARD</code> artifacts</p>
+</li>
+<li>
+<p><code>support-reply</code>: a <code>PROMPT_TEMPLATE</code></p>
+<div class="paragraph">
+<p>The seed container loads only the artifacts that do not exist yet, so restarting the stack does not change the catalog.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Open the web console at <code><a href="http://localhost:8888" class="bare">http://localhost:8888</a></code> and browse the <code>demo</code> group. The <strong>Agents</strong> tab lists the two agent cards.</p>
 </li>
 </ol>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="discovering-agents_registry"><a class="anchor" href="#discovering-agents_registry"></a>Discovering agents</h2>
+<h2 id="exploring-demo-catalog_registry"><a class="anchor" href="#exploring-demo-catalog_registry"></a>Discovering agents and tools in the demo catalog</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can discover registered agents by searching with query parameters such as agent name, skill ID, or capability. Apicurio Registry also exposes its own agent card at a dedicated well-known endpoint.</p>
+<p>AI agents and orchestrators find agents and tools in Apicurio Registry through well-known discovery endpoints, without knowing the group or artifact ID in advance.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Apicurio Registry is running with agent features enabled</p>
-</li>
-<li>
-<p>At least one agent card is registered</p>
+<p>The quick start stack is running</p>
 </li>
 </ul>
 </div>
@@ -646,38 +564,46 @@ The <code>latest</code> tag refers to the most recent stable release. For develo
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Search for agents by name:</p>
+<p>Find the agents that have a translation skill:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/.well-known/agents?name=Customer"</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Search for agents by skill ID:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/.well-known/agents?skill=sentiment-analysis"</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Retrieve a specific agent card by group and artifact ID:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/.well-known/agents/ai-agents/customer-support-agent"</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>View the Apicurio Registry built-in agent card:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://localhost:8080/.well-known/agent.json</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/.well-known/agents?skill=translation"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can also browse registered agent cards by using the Apicurio Registry web console at <code><a href="http://localhost:8888" class="bare">http://localhost:8888</a></code>.</p>
+<p>The response lists the <code>translator-agent</code> agent card.</p>
+</div>
+</li>
+<li>
+<p>Retrieve the Agentic Resource Discovery (ARD) catalog, which lists every agent and tool that Apicurio Registry publishes:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://localhost:8080/.well-known/ard.json</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Search the catalog by name:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST http://localhost:8080/.well-known/ard/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": {"text": "transla"}}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>results</code> list contains the <strong>Translation Agent</strong>.</p>
+</div>
+</li>
+<li>
+<p>List the tools that the <code>weather</code> MCP server provides:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://localhost:8080/apis/registry/v3/groups/demo/artifacts/weather/versions/1/references</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The server version references <code>weather.get_forecast</code> version <code>1</code>.</p>
 </div>
 </li>
 </ol>
@@ -685,31 +611,19 @@ The <code>latest</code> tag refers to the most recent stable release. For develo
 </div>
 </div>
 <div class="sect1">
-<h2 id="connecting-claude-desktop-via-mcp_registry"><a class="anchor" href="#connecting-claude-desktop-via-mcp_registry"></a>Connecting Claude Desktop by using MCP</h2>
+<h2 id="connecting-ai-assistant-via-mcp_registry"><a class="anchor" href="#connecting-ai-assistant-via-mcp_registry"></a>Connecting an AI assistant by using MCP</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can connect Claude Desktop to Apicurio Registry by using the MCP server. After you configure Claude Desktop, you can interact with Apicurio Registry artifacts, search for schemas, and manage agent cards by using natural language.</p>
+<p>You can connect an MCP client, such as Claude Desktop or an IDE assistant, to the Apicurio Registry MCP server. The MCP server runs as a container that the client starts and talks to over standard input and output, and it reaches Apicurio Registry through the Docker network of the quick start stack.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>Apicurio Registry is running (on <code>localhost:8080</code>)</p>
+<p>The quick start stack is running</p>
 </li>
 <li>
-<p>Claude Desktop is installed (macOS or Windows)</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Claude Desktop is officially supported on macOS and Windows. Linux support is available through community builds. For installation details, see the <a href="https://claude.ai/download">Claude Desktop download page</a>.
-</td>
-</tr>
-</table>
-</div>
+<p>An MCP client that can start a local command, such as Claude Desktop</p>
 </li>
 </ul>
 </div>
@@ -717,47 +631,135 @@ Claude Desktop is officially supported on macOS and Windows. Linux support is av
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>In Claude Desktop, open the MCP configuration file by navigating to <strong>File</strong> &gt; <strong>Settings</strong> &gt; <strong>Developer</strong> &gt; <strong>Edit Config</strong>.</p>
-</li>
-<li>
-<p>Add the Apicurio Registry MCP server to the configuration file:</p>
+<p>Add the Apicurio Registry MCP server to the MCP configuration of your client. In Claude Desktop, open <strong>Settings</strong> &gt; <strong>Developer</strong> &gt; <strong>Edit Config</strong>:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "mcpServers": {
-    "Apicurio Registry (docker)": {
+    "apicurio-registry": {
       "command": "docker",
       "args": [
-        "run",
-        "-i",
-        "--rm",
-        "-e", "REGISTRY_URL=&lt;registry-url&gt;",
-        "quay.io/apicurio/apicurio-registry-mcp-server:latest"
+        "run", "-i", "--rm",
+        "--network", "ai-agent-registry_default",
+        "-e", "REGISTRY_URL=http://apicurio-registry:8080",
+        "-e", "QUARKUS_OIDC_TENANT_ENABLED=false",
+        "quay.io/apicurio/apicurio-registry-mcp-server:latest-snapshot"
       ]
     }
   }
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Replace <code>&lt;registry-url&gt;</code> with the URL of your Apicurio Registry instance. For local development with Docker Compose, use <code>http://localhost:8080</code>. For OpenShift deployments, use the route URL of your Apicurio Registry instance.</p>
-</div>
 </li>
 <li>
-<p>Restart Claude Desktop by selecting <strong>File</strong> &gt; <strong>Exit</strong> and reopening the application.</p>
+<p>Restart the client.</p>
 </li>
 </ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Ask the assistant a question about the catalog, for example: "Which agents in Apicurio Registry can translate?"</p>
+<div class="paragraph">
+<p>The assistant uses the MCP server tools, such as <code>search_artifacts</code>, and answers with the Translation Agent.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rejecting-incompatible-tool-change_registry"><a class="anchor" href="#rejecting-incompatible-tool-change_registry"></a>Seeing a compatibility rule reject an incompatible tool change</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>A registry is more than a catalog: rules decide which changes are accepted. The demo <code>weather.get_forecast</code> tool has a <code>BACKWARD</code> compatibility rule, so a new version must accept every call that the previous version accepted. In this procedure, you try to make a new parameter required, which would break existing callers.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The quick start stack is running</p>
+</li>
+<li>
+<p>You are in the root directory of the Apicurio Registry repository</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Try to create version <code>2</code> of the tool, which adds a required <code>units</code> parameter:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST http://localhost:8080/apis/registry/v3/groups/demo/artifacts/weather.get_forecast/versions \
+  -H "Content-Type: application/json" \
+  -d @distro/docker-compose/ai-agent-registry/test/get-forecast-v2-incompatible.json</code></pre>
+</div>
+</div>
+</li>
+</ul>
 </div>
 <div class="olist arabic">
 <div class="title">Verification</div>
 <ol class="arabic">
 <li>
-<p>Verify the connection by asking Claude a question about Apicurio Registry, for example: "What groups are present in Apicurio Registry?"</p>
+<p>Apicurio Registry rejects the version with HTTP status <code>400</code>. The response names each incompatible change, including <code>A property was made 'required'.</code> at <code>/inputSchema/required/1</code>.</p>
+</li>
+<li>
+<p>Check that the accepted version is unchanged:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://localhost:8080/apis/registry/v3/groups/demo/artifacts/weather.get_forecast/versions</code></pre>
+</div>
+</div>
 <div class="paragraph">
-<p>The MCP server provides tools for working with groups, artifacts, versions, and configuration properties in Apicurio Registry.</p>
+<p>The tool has only version <code>1</code>. Agents that use this tool keep getting the definition that they were built against.</p>
 </div>
 </li>
 </ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="importing-tools-from-running-mcp-server_registry"><a class="anchor" href="#importing-tools-from-running-mcp-server_registry"></a>Importing tools from a running MCP server</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Instead of writing <code>MCP_TOOL</code> artifacts by hand, you can import the tools of a running MCP server, and import them again when the server changes. The same compatibility rules apply, so an incompatible tool change is rejected on import.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Importing tools from a running MCP server is planned for Apicurio Registry 3.4 and is not available in released versions. For the planned behavior, see <a href="assembly-mcp-tool-features.html" class="page">MCP tool definition features</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="stopping-agent-registry-quickstart_registry"><a class="anchor" href="#stopping-agent-registry-quickstart_registry"></a>Stopping the quick start stack</h2>
+<div class="sectionbody">
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>Stop the stack and keep the catalog:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker compose -f distro/docker-compose/ai-agent-registry/docker-compose.yml down</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To also delete the catalog, add the <code>-v</code> option. The next <code>up</code> loads the demo catalog again.</p>
+</div>
+</li>
+</ul>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
