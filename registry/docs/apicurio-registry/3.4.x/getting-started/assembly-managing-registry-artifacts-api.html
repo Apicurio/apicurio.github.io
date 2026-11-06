@@ -761,6 +761,10 @@ An <code>xs:import</code> element that specifies only a <code>namespace</code>, 
 reference mapping.</p>
 </div>
 <div class="paragraph">
+<p>For the full list of artifact types that support references, and what each type supports, see
+<a href="assembly-artifact-reference.html#registry-artifact-type-reference-support_registry" class="page">Artifact reference support by type</a>.</p>
+</div>
+<div class="paragraph">
 <p>Use the Core Registry API v3 to add and retrieve an artifact reference in Apicurio Registry.</p>
 </div>
 <div class="paragraph">
@@ -812,7 +816,9 @@ reference mapping.</p>
 <p>In some situations, having an artifact&#8217;s content with the referenced content inlined might be helpful. For those situations, the Core Registry API v3 supports the <em>references parameter</em> in certain operations.</p>
 </div>
 <div class="paragraph">
-<p>This support is currently implemented for Avro, JSON Schema, Protobuf, OpenAPI, and AsyncAPI when the parameter is present in a particular API operation. XSD and WSDL artifacts support the parameter with <code>REWRITE</code> only; requesting <code>DEREFERENCE</code> for XSD or WSDL returns HTTP <code>400</code>. The parameter is not supported in other schema types.</p>
+<p>Support for <code>DEREFERENCE</code> and <code>REWRITE</code> varies by artifact type. For the types that support each value, see
+<a href="assembly-artifact-reference.html#registry-artifact-type-reference-support_registry" class="page">Artifact reference support by type</a>.
+<code>DEREFERENCE</code> resolves references transitively. If the reference graph is deeper than <code>apicurio.storage.references.max-depth</code> (default <code>100</code>), the request returns HTTP <code>409</code>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -821,13 +827,11 @@ reference mapping.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<code>references=REWRITE</code> is currently supported for JSON Schema, OpenAPI, AsyncAPI, XSD, and WSDL.
-For XSD and WSDL artifacts, <code>REWRITE</code> replaces each mapped <code>schemaLocation</code> or <code>location</code> value with the
-Apicurio Registry content URL of the referenced artifact.
 For Avro and Protobuf artifacts, requesting <code>references=REWRITE</code> returns HTTP <code>400</code>
 (<code>DereferencingNotSupportedException</code>).
 For XSD and WSDL artifacts, requesting <code>references=DEREFERENCE</code> returns HTTP <code>400</code>
-(<code>DereferencingNotSupportedException</code>).
+(<code>DereferencingNotSupportedException</code>). For those types, <code>REWRITE</code> replaces each mapped <code>schemaLocation</code> or
+<code>location</code> value with the Apicurio Registry content URL of the referenced artifact.
 </td>
 </tr>
 </table>
@@ -874,6 +878,20 @@ hostname on which Apicurio Registry is deployed. For example: <code>http://local
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"artifact":{"owner":"","createdOn":"2024-09-26T16:27:38Z","modifiedBy":"","modifiedOn":"2024-09-26T16:27:38Z","artifactType":"AVRO","groupId":"my-group","artifactId":"ItemId"},"version":{"version":"1.0.0","owner":"","createdOn":"2024-09-26T16:27:38Z","artifactType":"AVRO","globalId":2,"state":"ENABLED","groupId":"my-group","contentId":2,"artifactId":"ItemId"}}</code></pre>
 </div>
+</div>
+</li>
+<li>
+<p>Optional: Before you register the <code>Item</code> schema, use the <code>/content/references</code> operation to find the reference names that you must map:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST "MY-REGISTRY-URL/apis/registry/v3/content/references?artifactType=AVRO" \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer $ACCESS_TOKEN" \
+   --data '{"content":"{\"namespace\":\"com.example.common\",\"name\":\"Item\",\"type\":\"record\",\"fields\":[{\"name\":\"itemId\",\"type\":\"com.example.common.ItemId\"}]}","contentType":"application/json"}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The response lists each reference found in the content, with only the <code>name</code> field set. For this schema, the name is <code>com.example.common.ItemId</code>. If you omit the <code>artifactType</code> parameter, Apicurio Registry detects the type from the content.</p>
 </div>
 </li>
 <li>
@@ -930,6 +948,14 @@ hostname on which Apicurio Registry is deployed. For example: <code>http://local
 </div>
 </li>
 <li>
+<p>Optional: To list the versions that reference a version instead, add the <code>refType=INBOUND</code> query parameter. The following request lists the versions that reference <code>ItemId</code> version <code>1.0.0</code>, including the <code>Item</code> artifact that you created:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -H "Authorization: Bearer $ACCESS_TOKEN" "MY-REGISTRY-URL/apis/registry/v3/groups/my-group/artifacts/ItemId/versions/1.0.0/references?refType=INBOUND"</code></pre>
+</div>
+</div>
+</li>
+<li>
 <p>Retrieve the dereferenced (inlined) schema content:</p>
 <div class="listingblock">
 <div class="content">
@@ -945,7 +971,9 @@ hostname on which Apicurio Registry is deployed. For example: <code>http://local
 </div>
 </div>
 <div class="paragraph">
-<p>This support is currently implemented only for Avro, Protobuf, OpenAPI, AsyncAPI, and JSON Schema artifacts when the <code>dereference</code> parameter is specified in the API operation. This parameter is not supported for any other artifact types. For XSD and WSDL artifacts, dereferencing returns HTTP <code>400</code>.</p>
+<p>For the artifact types that support <code>references=DEREFERENCE</code>, see
+<a href="assembly-artifact-reference.html#registry-artifact-type-reference-support_registry" class="page">Artifact reference support by type</a>.
+For XSD and WSDL artifacts, dereferencing returns HTTP <code>400</code>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -966,7 +994,7 @@ For Protobuf artifacts, dereferencing content is supported only when all the sch
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Some artifact types (for example, JSON Schema) allow circular dependencies, but Apicurio Registry does not support them.
+Apicurio Registry stores circular references between artifact versions. Reference resolution stops at a version that is already in the graph. The reference graph operation reports cycles in the <code>metadata.hasCycles</code> field. To reject circular references when you create a version, set the <code>INTEGRITY</code> rule to <code>NO_CIRCULAR_REFERENCES</code> or <code>FULL</code>.
 </td>
 </tr>
 </table>
@@ -1064,7 +1092,8 @@ A larger graph can take longer to retrieve.</p>
 <p><code>metadata</code> contains <code>totalNodes</code>, <code>totalEdges</code>, <code>maxDepth</code>, and <code>hasCycles</code>.</p>
 <div class="paragraph">
 <p>The graph reports the references traversed within the requested depth.
-A <code>hasCycles</code> value of <code>false</code> does not rule out cycles beyond that depth.</p>
+A <code>hasCycles</code> value of <code>false</code> does not rule out cycles beyond that depth.
+Cycle detection compares artifacts, not versions. A chain that passes through two versions of the same artifact also counts as a cycle.</p>
 </div>
 </li>
 </ul>
@@ -1189,6 +1218,14 @@ $ curl "http://localhost:8080/apis/registry/v3/search/artifacts?labels=env*:prod
 </div>
 <div class="paragraph">
 <p>The <code>description</code> filter is different: it always matches substrings.</p>
+</div>
+</li>
+<li>
+<p>To ignore letter case in the <code>name</code> filter, set the <code>nameCaseInsensitive</code> parameter to <code>true</code>. The parameter defaults to <code>false</code> and applies to the artifact and version search endpoints:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/apis/registry/v3/search/artifacts?name=*Payment*&amp;nameCaseInsensitive=true"</code></pre>
+</div>
 </div>
 </li>
 <li>

@@ -510,7 +510,7 @@
 <p><code>NO_CIRCULAR_REFERENCES</code>: Detect circular reference chains among artifacts.</p>
 </li>
 <li>
-<p><code>REFS_EXIST</code>: Detect if there are any references to non-existent artifacts.</p>
+<p><code>REFS_EXIST</code>: Detect if there are any references to non-existent artifacts. For <code>AGENT_CARD</code>, <code>MCP_SERVER</code>, and <code>MCP_TOOL</code> artifacts, also detect references to artifact types that they cannot reference.</p>
 </li>
 <li>
 <p><code>ALL_REFS_MAPPED</code>: Ensure that all artifact references are mapped.</p>
@@ -653,7 +653,7 @@
 <p>None</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Mapping detection not supported</p>
+<p>Full</p>
 </div></div></td>
 </tr>
 <tr>
@@ -708,6 +708,19 @@ not require a mapping. At the <code>FULL</code> validity level, Apicurio Registr
 the mapped artifact references and never fetches them from the network or file system. An unmapped location
 fails with <code>Unresolved reference: &lt;location&gt;</code>. For WSDL 1.1, <code>FULL</code> validity also compiles the schemas
 embedded in <code>wsdl:types</code> by using the same resolution. For WSDL 2.0, <code>FULL</code> validity checks syntax only.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For Thrift artifacts, the <code>ALL_REFS_MAPPED</code> and <code>FULL</code> integrity levels require a mapped artifact
+reference for every <code>include</code> directive. An unmapped include fails with <code>Unmapped Thrift include detected.</code>
 </td>
 </tr>
 </table>
