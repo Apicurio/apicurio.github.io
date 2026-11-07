@@ -42,8 +42,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 // The support chat widget is not needed to render the page, and it is served from an
-// origin without an SLA. Load it on the first user interaction, or once the browser is
-// idle after the page has loaded, whichever comes first.
+// origin without an SLA. Load it only on the first user interaction, so a visit that never
+// interacts does not download it.
 (function () {
   var CHAT_WIDGET_URL = 'https://carnalca-apicurio-support-chat.hf.space/chat-widget.js';
   var TRIGGER_EVENTS = ['pointerdown', 'keydown', 'scroll', 'touchstart'];
@@ -65,13 +65,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
   TRIGGER_EVENTS.forEach(function (name) {
     window.addEventListener(name, loadChatWidget, { once: true, passive: true });
-  });
-
-  window.addEventListener('load', function () {
-    if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(loadChatWidget, { timeout: 5000 });
-    } else {
-      setTimeout(loadChatWidget, 3000);
-    }
   });
 })();
