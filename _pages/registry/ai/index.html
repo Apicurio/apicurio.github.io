@@ -1,0 +1,100 @@
+---
+title: "Apicurio Registry for AI Agents: Agent Registry, MCP and LLM Artifacts"
+breadcrumb_title: "AI agents"
+permalink: /registry/ai/
+layout: page
+description: "Use Apicurio Registry as an agent registry and MCP registry: store A2A agent cards, MCP tools and servers, prompt templates and model schemas, and discover them through standard endpoints."
+breadcrumbs:
+  - {name: "Apicurio Registry", url: "/registry/"}
+---
+
+{%- include registry/_docs-version.html -%}
+{%- assign docs = site.baseurl | append: "/registry/docs/apicurio-registry/" | append: registry_docs_version | append: "/getting-started/" -%}
+
+<div class="container content-page">
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+
+{% include breadcrumbs.html %}
+
+<h1>Apicurio Registry for AI agents</h1>
+
+<p class="lead-definition">
+    Apicurio Registry stores the contracts AI systems depend on (agent cards, MCP tool and server definitions, prompt
+    templates and model schemas) as versioned, validated artifacts, and lets agents discover them through standard
+    endpoints. It applies the same governance it already gives Avro, Protobuf and OpenAPI: version history, validity
+    and compatibility rules, access control and an audit trail.
+</p>
+
+<h2>Why a registry for AI artifacts</h2>
+<p>
+    A schema registry exists because producers and consumers must agree on a contract, and that contract changes over
+    time. Multi-agent systems have the same problem. An orchestrator needs to know which agents exist and which skills
+    they offer; an LLM client needs the input schema of each MCP tool; a team needs to know which version of a prompt is
+    running in production. When those contracts live in code or in ad hoc configuration, a renamed tool parameter or a
+    removed agent skill breaks callers at runtime.
+</p>
+
+<table class="table table-striped">
+    <thead><tr><th>Schema registry concept</th><th>AI equivalent in Apicurio Registry</th></tr></thead>
+    <tbody>
+        <tr><td>API and event contracts</td><td>Agent cards, MCP tool and server definitions</td></tr>
+        <tr><td>Schema validation</td><td>Validation of agent cards, tool input schemas, prompt templates and model schemas</td></tr>
+        <tr><td>Compatibility rules</td><td>Breaking-change detection on MCP tool input schemas and other AI artifacts</td></tr>
+        <tr><td>Service discovery</td><td>Agent discovery over <code>/.well-known/</code> endpoints and the AI Catalog</td></tr>
+        <tr><td>Governance and audit</td><td>Versioned history, labels, access control</td></tr>
+    </tbody>
+</table>
+
+<h2>Capabilities</h2>
+
+<h3>Agent registry (A2A)</h3>
+<p>
+    Store A2A agent cards as <code>AGENT_CARD</code> artifacts and search them by name, skill, capability and
+    input or output mode through <code>/.well-known/agents</code>. Apicurio Registry also publishes its own agent card
+    at <code>/.well-known/agent.json</code>. Read <a href="{{ site.baseurl }}/registry/ai/agent-registry/">What is an agent registry?</a>
+    or the <a href="{{ docs }}assembly-a2a-features.html">A2A features documentation</a>.
+</p>
+
+<h3>MCP server and MCP registry</h3>
+<p>
+    The Apicurio Registry MCP server lets an LLM client such as Claude Desktop search, read and create artifacts through
+    the Model Context Protocol. Separately, Apicurio Registry stores MCP tool definitions as <code>MCP_TOOL</code>
+    artifacts, and version 3.4 adds a Developer Preview of the MCP Registry API for publishing MCP server definitions.
+    Read <a href="{{ site.baseurl }}/registry/ai/mcp-registry/">What is an MCP registry?</a> or the
+    <a href="{{ docs }}assembly-mcp-server-integration.html">MCP server integration documentation</a>.
+</p>
+
+<h3>LLM artifact types</h3>
+<p>
+    <code>PROMPT_TEMPLATE</code> artifacts hold prompt templates with typed variables, and Apicurio Registry can render
+    them on the server. <code>MODEL_SCHEMA</code> artifacts describe the inputs and outputs of AI and ML models. Both are
+    validated and versioned like any other artifact. See the
+    <a href="{{ docs }}assembly-llm-artifact-types-implementation.html">LLM artifact types guide</a>.
+</p>
+
+<h3>AI Catalog and ARD discovery</h3>
+<p>
+    Apicurio Registry can publish a read-only catalog of its agent cards and MCP tools at
+    <code>/.well-known/ai-catalog.json</code>, and supports search through Agentic Resource Discovery (ARD) endpoints.
+    See <a href="{{ docs }}assembly-ai-catalog-ard.html">AI Catalog and ARD discovery</a>.
+</p>
+
+<div class="callout">
+    <strong>Feature status.</strong> A2A support, MCP tool definitions and the MCP Registry API are experimental and
+    require <code>apicurio.features.experimental.enabled=true</code> plus the feature's own flag. The AI Catalog and ARD
+    endpoints are disabled by default. Check the documentation for your version before relying on them in production.
+</div>
+
+<h2>Get started</h2>
+<ul>
+    <li><a href="{{ docs }}assembly-agent-registry-quickstart.html">Agent registry quick start</a></li>
+    <li><a href="{{ docs }}assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a></li>
+    <li><a href="{{ docs }}assembly-mcp-tool-features.html">MCP tool definition features</a></li>
+    <li><a href="{{ site.baseurl }}/blog/2026/02/05/apicurio-registry-ai-natural-evolution">Apicurio Registry goes AI-native</a> (announcement)</li>
+    <li><a href="{{ site.baseurl }}/blog/2025/07/08/introducing-mcp-server-for-apicurio-registry-3">Introducing the MCP server for Apicurio Registry 3</a></li>
+</ul>
+
+</div>
+</div>
+</div>

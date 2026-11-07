@@ -1,0 +1,93 @@
+---
+title: "What Is an MCP Registry? Discovering MCP Servers and Tools"
+breadcrumb_title: "What is an MCP registry?"
+permalink: /registry/ai/mcp-registry/
+layout: page
+description: "An MCP registry is a catalog of Model Context Protocol servers and tools that clients query to find and install them. Learn how Apicurio Registry stores MCP tools and server definitions and acts as an MCP server."
+breadcrumbs:
+  - {name: "Apicurio Registry", url: "/registry/"}
+  - {name: "AI agents", url: "/registry/ai/"}
+---
+
+{%- include registry/_docs-version.html -%}
+{%- assign docs = site.baseurl | append: "/registry/docs/apicurio-registry/" | append: registry_docs_version | append: "/getting-started/" -%}
+{%- assign docs34 = site.baseurl | append: "/registry/docs/apicurio-registry/3.4.x/getting-started/" -%}
+
+<div class="container content-page">
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+
+{% include breadcrumbs.html %}
+
+<h1>What is an MCP registry?</h1>
+
+<p class="lead-definition">
+    An <strong>MCP registry</strong> is a catalog of <a href="https://modelcontextprotocol.io/">Model Context Protocol</a>
+    (MCP) servers and the tools they expose. Each server is described by a manifest (<code>server.json</code>) that says
+    what it is, which version it is, and how to run or reach it. MCP clients, and the people configuring them, query the
+    registry to find servers instead of collecting install instructions by hand.
+</p>
+
+<h2>Why MCP needs a registry</h2>
+<p>
+    MCP gives an LLM application a standard way to call external tools. As the number of MCP servers grows, two
+    problems appear. Discovery: a client has to learn which servers exist and how to install or connect to them.
+    Change control: a tool's input schema is a contract, and a renamed or removed parameter breaks every prompt and
+    agent that calls it. A registry addresses both by keeping server and tool definitions in one versioned, searchable
+    place.
+</p>
+
+<h2>Three ways Apicurio Registry works with MCP</h2>
+<p>These are related but separate features, and it helps to keep them apart:</p>
+<table class="table table-striped">
+    <thead><tr><th>Feature</th><th>What it does</th><th>Status</th></tr></thead>
+    <tbody>
+        <tr>
+            <td>MCP tool definitions</td>
+            <td>Stores MCP tool definitions as <code>MCP_TOOL</code> artifacts, validates them against the MCP specification,
+                detects breaking changes in tool input schemas, and serves them at <code>/.well-known/mcp-tools</code>.</td>
+            <td>Experimental</td>
+        </tr>
+        <tr>
+            <td>MCP Registry API</td>
+            <td>Implements the upstream MCP Registry API (v0.1) under <code>/apis/mcp-registry/v0.1</code>, storing each
+                <code>server.json</code> manifest as an <code>MCP_SERVER</code> artifact.</td>
+            <td>Developer Preview in 3.4</td>
+        </tr>
+        <tr>
+            <td>Apicurio Registry MCP server</td>
+            <td>Exposes Apicurio Registry itself to LLM clients such as Claude Desktop, with tools to search, read and create
+                groups, artifacts and versions.</td>
+            <td>Available</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Publishing and listing MCP servers</h2>
+<p>
+    With the MCP Registry API enabled, a server is published with <code>POST /apis/mcp-registry/v0.1/publish</code> and
+    listed with <code>GET /apis/mcp-registry/v0.1/servers</code>. A reverse-DNS server name such as
+    <code>io.github.example/weather</code> maps to group <code>io.github.example</code> and artifact <code>weather</code>,
+    so MCP servers are governed with the same versioning and access control as the rest of your artifacts.
+</p>
+<pre><code>curl "http://localhost:8080/apis/mcp-registry/v0.1/servers?version=latest&amp;search=weather"</code></pre>
+
+<div class="callout">
+    MCP tool definitions and the MCP Registry API are experimental and disabled by default. Both need
+    <code>apicurio.features.experimental.enabled=true</code>, plus <code>apicurio.mcp-tools.enabled=true</code> or
+    <code>apicurio.mcp-registry.enabled=true</code> respectively.
+</div>
+
+<h2>Learn more</h2>
+<ul>
+    <li><a href="{{ docs }}assembly-mcp-tool-features.html">MCP tool definition features</a></li>
+    <li><a href="{{ docs34 }}assembly-mcp-registry-api.html">MCP Registry API (Developer Preview, 3.4)</a></li>
+    <li><a href="{{ docs }}assembly-mcp-server-integration.html">MCP server integration</a></li>
+    <li><a href="{{ site.baseurl }}/blog/2025/07/08/introducing-mcp-server-for-apicurio-registry-3">Introducing the MCP server for Apicurio Registry 3</a></li>
+    <li><a href="{{ site.baseurl }}/registry/ai/agent-registry/">What is an agent registry?</a></li>
+    <li><a href="{{ site.baseurl }}/registry/ai/">Apicurio Registry for AI agents</a></li>
+</ul>
+
+</div>
+</div>
+</div>
