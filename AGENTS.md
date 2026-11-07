@@ -12,6 +12,7 @@ It is published with GitHub Pages from the `main` branch. The `CNAME` is `www.ap
 - `./_serve.sh` builds and serves the site in a container at http://localhost:8180.
 - Without the script: `docker run --rm -v "$PWD":/srv -w /srv ruby:2.7 sh -c "gem install bundler:2.1.4 && bundle install && bundle exec jekyll build"`.
 - Only plugins in the `plugins` list of `_config.yml` are available. GitHub Pages does not run custom Ruby plugins.
+- `Gemfile.lock` pins `github-pages` 206 (jekyll-seo-tag 2.6.1), while GitHub Pages builds with the version listed at https://pages.github.com/versions/ (232 with jekyll-seo-tag 2.8.0 as of November 2026). A local build can differ from the deployed site, so check plugin output such as JSON-LD against the live page or a build with that `github-pages` version.
 
 ## Layout
 
