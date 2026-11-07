@@ -1258,6 +1258,56 @@ These features provide early access to upcoming product features, enabling custo
 <dd>
 <p>Set the <code>&lt;autoRefs&gt;</code> option to true to automatically detect and register all references to artifacts in the same directory. You can register multiple artifact references in this way.</p>
 </dd>
+<dt class="hdlist1"><code>autoRefsNamingStrategy</code></dt>
+<dd>
+<p>Optional. Controls how the artifact IDs of automatically registered references are derived.
+<code>LEGACY</code> (default) keeps the naming used by earlier plug-in versions.
+<code>DEFAULT</code> registers each Avro reference in a group named after its Avro namespace (or in the parent group if the schema has no namespace), with the simple schema name as artifact ID.
+All other references are registered in the parent group, with an artifact ID equal to the normalized location of the referenced file relative to the indexed directory (the directory of the parent file, or the <code>protoPaths</code> directories when set).
+The <code>avroAutoRefsNamingStrategy</code> option applies only with <code>LEGACY</code>; <code>DEFAULT</code> ignores it.
+You can also set this option on the command line, for example, <code>-Dartifacts.autoRefsNamingStrategy=DEFAULT</code>.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Switching an existing build from <code>LEGACY</code> to <code>DEFAULT</code> changes the artifact IDs of non-Avro referenced artifacts, for example, <code>./common/foo.json</code> becomes <code>common/foo.json</code>.
+It also changes the coordinates of Avro referenced artifacts whenever <code>LEGACY</code> used the <code>INHERIT_PARENT_GROUP</code> Avro mode, which is the default for non-Avro parent artifacts such as AsyncAPI documents.
+For example, group <code>parent</code> with artifact ID <code>com.example.Money</code> becomes group <code>com.example</code> with artifact ID <code>Money</code>.
+The next build therefore registers new artifacts instead of new versions of the existing ones.
+Only switch when you are prepared to migrate consumers to the new artifact IDs.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Even with the <code>LEGACY</code> naming strategy, the reference detection behaves differently from earlier plug-in versions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>dryRun</code> works without setting <code>ifExists</code>.</p>
+</li>
+<li>
+<p>With <code>dryRun</code>, only artifacts whose references all point to artifacts that already exist in Apicurio Registry are sent for validation.
+Artifacts that reference other artifacts of the same build are not sent, because those dependencies are not persisted in a dry run; the plug-in logs a warning for each skipped artifact.</p>
+</li>
+<li>
+<p>Avro schemas that do not declare a namespace are indexed and can be referenced.</p>
+</li>
+<li>
+<p>GraphQL, XSD, and WSDL files are indexed in addition to the other supported types.</p>
+</li>
+<li>
+<p>All unresolved references are reported together in a single error, instead of failing on the first one.</p>
+</li>
+</ul>
+</div>
+</dd>
 </dl>
 </div>
 </li>
@@ -1277,6 +1327,138 @@ These features provide early access to upcoming product features, enabling custo
 </li>
 <li>
 <p><a href="assembly-configuring-kafka-client-serdes.html">Configuring Kafka serializers/deserializers in Java clients</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registering-artifact-references-using-java_registry"><a class="anchor" href="#registering-artifact-references-using-java_registry"></a>Registering schemas with references from Java</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The reference detection used by the Maven plug-in <code>autoRefs</code> option is also available as a Java library.
+You can use it to register a root schema together with all the schemas it references, in dependency order, from your own application or build tool.</p>
+</div>
+<div class="paragraph">
+<p>The functionality is split into two artifacts:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>apicurio-registry-schema-util-references</code> (package <code>io.apicurio.registry.content.refs.resolve</code>) builds a registration plan from a set of schema sources, without contacting Apicurio Registry.</p>
+</li>
+<li>
+<p><code>apicurio-registry-java-sdk-references</code> (package <code>io.apicurio.registry.client.refs</code>) executes a plan against Apicurio Registry by using the Java SDK. It depends on the planning library transitively.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have a Java project that uses the Apicurio Registry Java SDK.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Add the dependencies to your <code>pom.xml</code> file.
+The <code>apicurio-registry-java-sdk-references</code> artifact excludes the SDK HTTP adapters, so you must also depend on <code>apicurio-registry-java-sdk</code> together with an HTTP adapter, for example, the default Vert.x adapter or the JDK adapter (<code>apicurio-registry-java-sdk-adapter-jdk</code>):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+    &lt;artifactId&gt;apicurio-registry-java-sdk-references&lt;/artifactId&gt;
+    &lt;version&gt;${apicurio-registry.version}&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.apicurio&lt;/groupId&gt;
+    &lt;artifactId&gt;apicurio-registry-java-sdk&lt;/artifactId&gt;
+    &lt;version&gt;${apicurio-registry.version}&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Collect the schema sources, describe the root artifact, and register it:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">RegistryClient client = ...;
+
+// Index all schema files under one or more directories...
+SchemaSourceSet sources = SchemaSourceSet.fromDirectories(
+        List.of(Path.of("src/main/resources/schemas")), SchemaSourceSet.DEFAULT_FILTER);
+// ...or provide the content in memory
+SchemaSourceSet inMemory = SchemaSourceSet.of(
+        InMemorySchemaSource.of("order.json", orderJson, "application/json"),
+        InMemorySchemaSource.of("common/address.json", addressJson, "application/json"));
+
+RootArtifact root = RootArtifact.of("order.json", "my-group", "Order");
+
+PlanOptions options = PlanOptions.builder()
+        .namingStrategy(DefaultNamingStrategy.INSTANCE) // the default
+        .existingArtifacts(List.of(
+                new ExistingArtifact("https://example.com/money.json", "shared", "Money", "latest")))
+        .build();
+
+// One-liner with default registrar settings
+RegistrationResult result = ReferenceRegistrar.register(client, inMemory, root, options);
+
+// Or configure the registrar explicitly
+RegistrationResult result2 = ReferenceRegistrar.builder(client)
+        .ifExists(IfArtifactExists.FIND_OR_CREATE_VERSION)
+        .build()
+        .execute(ReferenceResolver.plan(List.of(root), sources, options));</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>SchemaSourceSet</code></dt>
+<dd>
+<p>The schemas that references can resolve to. Locations are normalized, relative paths.</p>
+</dd>
+<dt class="hdlist1"><code>RootArtifact</code></dt>
+<dd>
+<p>The schema to register and its coordinates. Referenced schemas are registered as separate artifacts.</p>
+</dd>
+<dt class="hdlist1"><code>namingStrategy</code></dt>
+<dd>
+<p><code>DefaultNamingStrategy</code> (default) registers Avro references in the group of their namespace (or the parent group when there is none) with the simple name as artifact ID, and other references in the parent group with their normalized location as artifact ID. <code>LegacyNamingStrategy</code> reproduces the naming used by the Maven plug-in <code>LEGACY</code> setting.</p>
+</dd>
+<dt class="hdlist1"><code>existingArtifacts</code></dt>
+<dd>
+<p>Maps reference names to artifacts that already exist in Apicurio Registry instead of local sources. A <code>null</code> or <code>latest</code> version is resolved to the latest version at registration time.</p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Behavior</div>
+<ul>
+<li>
+<p>Planning fails with <code>UnresolvedReferencesException</code>, listing every reference that could not be resolved, and with <code>ReferenceCycleException</code> when the references form a cycle.</p>
+</li>
+<li>
+<p>When you call <code>dryRun(true)</code> on the builder, requests are sent with the Apicurio Registry <code>dryRun</code> option, so nothing is persisted. <code>RegistrationResult.isDryRun()</code> reports this.
+Because dry-run artifacts are not persisted, an artifact that references another artifact of the same plan cannot be validated: it is not sent, and neither is anything that depends on it.
+Such artifacts are reported through <code>RegistrationListener.onSkipped()</code> and <code>RegistrationResult.skipped()</code>; <code>RegistrationResult.registered()</code> contains only the artifacts that were actually validated.
+References to <code>existingArtifacts</code> do not cause an artifact to be skipped.
+In a dry run, a <code>409 Conflict</code> response is always reported as a failure; existing draft versions are never updated or promoted.</p>
+</li>
+<li>
+<p>If registering an artifact fails, <code>ReferenceRegistrar</code> throws a <code>RegistrationException</code>. Use <code>failed()</code> to get the artifact that failed, <code>problem()</code> to get the Apicurio Registry error, and <code>partialResult()</code> to get the artifacts that were already registered.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#adding-artifact-references-automatically-using-maven-plugin_registry">Adding artifact references automatically using the Apicurio Registry Maven plug-in</a></p>
 </li>
 </ul>
 </div>
