@@ -458,15 +458,24 @@
 <div class="ulist">
 <ul>
 <li>
-<p>Adding an artifact</p>
+<p>Adding an artifact with a first version</p>
 </li>
 <li>
-<p>Adding an artifact version</p>
+<p>Adding an artifact version, including with <code>ifExists=CREATE_VERSION</code></p>
+</li>
+<li>
+<p>Publishing a draft version, that is, changing its state from <code>DRAFT</code></p>
+</li>
+<li>
+<p>Checking a change with <code>dryRun=true</code>, which applies the rules without saving the content</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>If a rule is violated, Apicurio Registry returns an HTTP error. The response body includes the violated rule and a message showing what went wrong.</p>
+<p>Rules are not applied when a draft version is created, unless <code>apicurio.rest.draft.production-mode.enabled</code> is <code>true</code>, and are never applied when the content of a draft version is edited; they are applied when the draft is published. Rules are not applied to imported data, and changing a rule does not check the versions that are already stored.</p>
+</div>
+<div class="paragraph">
+<p>If a rule is violated, Apicurio Registry returns HTTP error <code>400</code>, and does not store the content. The response body includes <code>ruleViolation.ruleType</code>, the violated rule, and <code>ruleViolation.causes</code>, a list of causes, each with a <code>description</code> and a <code>context</code> that shows what went wrong and where. To return HTTP error <code>409</code> instead, as before version 3.3.0, set <code>apicurio.rest.legacy-error-codes.enabled</code> to <code>true</code>.</p>
 </div>
 </div>
 </div>
@@ -485,9 +494,15 @@
 <p>Group-specific rules have the next highest priority</p>
 </li>
 <li>
-<p>Global rules have the lowest priority</p>
+<p>Global rules have the next highest priority</p>
+</li>
+<li>
+<p>Default global rules, configured with the <code>apicurio.rules.global.*</code> application properties, have the lowest priority</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry evaluates this order separately for each rule type. When an artifact is created, it has no artifact-specific rules yet, so its first version is checked against the group-specific, global, and default global rules.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -510,7 +525,7 @@ If a rule is configured at a higher level (e.g. at the global level), but you wa
 <p>Each rule has a name and configuration information. Apicurio Registry maintains the list of rules for each artifact, each group, and the list of global rules. Each rule in the list consists of a name and configuration for the rule implementation.</p>
 </div>
 <div class="paragraph">
-<p>When a rule is executed, it is provided with the content of the current version of the artifact (if one exists) and the new version of the artifact being added. The rule implementation returns either passes or fails depending on whether the artifact passes the rule. If not, Apicurio Registry reports the reason why in an HTTP error response. Some rules might not use the previous version of the content. For example, compatibility rules use previous versions, but syntax or semantic validity rules do not.</p>
+<p>When a rule is executed, it is provided with the content of the existing versions of the artifact (if any exist) and the new version of the artifact being added. Versions in the <code>DISABLED</code> state are not provided; versions in the <code>DEPRECATED</code> state are. The rule implementation returns either passes or fails depending on whether the artifact passes the rule. If not, Apicurio Registry reports the reason why in an HTTP error response. Some rules might not use the previous version of the content. For example, compatibility rules use previous versions, but syntax or semantic validity rules do not.</p>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
