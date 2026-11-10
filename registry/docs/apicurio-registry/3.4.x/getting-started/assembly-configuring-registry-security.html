@@ -1937,7 +1937,7 @@ Even with <code>client_credentials</code> working, the tokens <strong>do not inc
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-All authentication and authorization options in Apicurio Registry are disabled by default. Before enabling the OpenID Connect or HTTP basic options, you must first set the <code>QUARKUS_OIDC_TENANT_ENABLED</code> option to <code>true</code>. Proxy header and Kubernetes-native authentication do not require OpenID Connect.
+All authentication and authorization options in Apicurio Registry are disabled by default. OpenID Connect, and HTTP basic authentication that exchanges client credentials for a token, require <code>QUARKUS_OIDC_TENANT_ENABLED</code> set to <code>true</code>. HTTP basic authentication against users configured in Apicurio Registry (<code>QUARKUS_HTTP_AUTH_BASIC</code> with a Quarkus identity provider such as <code>QUARKUS_SECURITY_USERS_EMBEDDED_*</code>), proxy header authentication, and Kubernetes-native authentication do not require OpenID Connect.
 </td>
 </tr>
 </table>
@@ -2089,10 +2089,7 @@ All authentication and authorization options in Apicurio Registry are disabled b
 </tbody>
 </table>
 <div class="paragraph">
-<p><strong>Apicurio Registry HTTP basic client credentials cache expiry.</strong> You can also configure the HTTP basic client credentials cache expiry time. By default, when you use HTTP basic authentication, Apicurio Registry caches JWT tokens and does not issue a new token when there is no need. You can configure the cache expiry time for JWT tokens, which is set to 10 mins by default.</p>
-</div>
-<div class="paragraph">
-<p>When you use Keycloak, set this configuration to your Keycloak JWT expiry time minus one minute. For example, if you have the expiry time set to <code>5</code> mins in Keycloak, set the following configuration option to <code>4</code> mins:</p>
+<p><strong>Apicurio Registry HTTP basic client credentials cache expiry.</strong> You can also configure the HTTP basic client credentials cache expiry time. By default, when you use HTTP basic authentication, Apicurio Registry caches JWT tokens and does not issue a new token when there is no need. A token is cached until it expires, minus <code>cache-expiration-offset</code> seconds, so you do not need to match the expiry time of your identity provider. <code>cache-expiration</code> is the lifetime in minutes used only when the expiry of a token cannot be read:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 15. Configuration for HTTP basic client credentials cache expiry</caption>
@@ -2115,10 +2112,19 @@ All authentication and authorization options in Apicurio Registry are disabled b
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTHN_BASIC_CLIENT_CREDENTIALS_CACHE_EXPIRATION</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.authn.basic-client-credentials.cache-expiration</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_AUTHN_BASIC_CLIENT_CREDENTIALS_CACHE_EXPIRATION_OFFSET</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.authn.basic-client-credentials.cache-expiration-offset</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>10</code></p></td>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>Tokens are cached until they expire, minus the offset in seconds. The expiration in minutes is used only when the expiry of a token cannot be read. Failed exchanges are cached for 60 seconds.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2264,7 +2270,7 @@ APICURIO_AUTHN_PROXY_HEADER_GROUPS=X-Forwarded-Groups</code></pre>
 <div class="title">Verification</div>
 <ul>
 <li>
-<p>A request that includes the user name header is authenticated as that user. A request without the header receives a <code>401</code> response with the <code>WWW-Authenticate: Proxy authentication required</code> challenge, unless another enabled mechanism authenticates it.</p>
+<p>A request that includes the user name header is authenticated as that user. A request without the header is not authenticated by this mechanism: the next mechanism in the chain is tried, and if none authenticates it, the request is anonymous. It then receives a <code>401</code> response only for operations that require authentication.</p>
 </li>
 </ul>
 </div>
