@@ -1584,7 +1584,7 @@ $ acr gitops sync --wait --output-type json</code></pre>
 <p>The server has <code>apicurio.gitops.validate.enabled=true</code>.</p>
 </li>
 <li>
-<p>The repository ID is configured on the server, and the server can fetch the Git revision.</p>
+<p>The repository ID is configured on the server, and the GitOps sync container runs next to the server. The sync container fetches the Git revision.</p>
 </li>
 <li>
 <p>You have administrator access when authorization is enabled.</p>
@@ -1602,7 +1602,7 @@ $ acr gitops sync --wait --output-type json</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Replace <code>primary</code> with the configured repository ID. The CLI waits for the validation task to finish and displays its result, resource counts, and errors. The default timeout is 300 seconds.</p>
+<p>Replace <code>primary</code> with the ID of a repository configured on the server. The ID defaults to the repository directory name from <code>apicurio.gitops.repo.dir</code> or <code>apicurio.gitops.repos.N.dir</code>. <code>apicurio.gitops.repo.dir</code> defaults to <code>default</code>. The GitOps sync container matches the repository ID against the directory name. The server rejects an unconfigured repository ID with an HTTP <code>400</code> response that lists the configured IDs. The CLI waits for the validation task to finish and displays its result, resource counts, and errors. The default timeout is 300 seconds.</p>
 </div>
 </li>
 <li>
@@ -1641,7 +1641,7 @@ $ acr gitops sync --wait --output-type json</code></pre>
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="assembly-configuring-gitops-storage.html" class="page">Configuring Apicurio Registry with GitOps storage</a></p>
+<p><a href="assembly-configuring-gitops-storage.html#validating-gitops-changes_registry" class="page">getting-started/assembly-configuring-gitops-storage.adoc#validating-gitops-changes_registry</a></p>
 </li>
 </ul>
 </div>
@@ -1686,7 +1686,7 @@ $ acr gitops sync --wait --output-type json</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>validate</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--repo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Required repository ID from the server configuration, not a repository URL.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required repository ID from the server configuration, not a repository URL. The server rejects an unconfigured repository ID with an HTTP <code>400</code> response.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>validate</code></p></td>
