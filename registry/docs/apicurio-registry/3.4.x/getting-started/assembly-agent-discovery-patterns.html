@@ -476,6 +476,11 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns the registered MCP tool definitions that can receive the structured output of the specified tool as their input. Accepts an optional <code>version</code> query parameter and supports pagination with <code>offset</code> and <code>limit</code> parameters.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatibility</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the verdict of comparing the structured output of the specified tool with the input of each registered MCP tool definition, with the reasons and limitations that decide it. Accepts optional <code>version</code> and <code>verdict</code> query parameters and supports pagination with <code>offset</code> and <code>limit</code> parameters.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/schemas/{type}/{version}</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns the JSON schema for a specific LLM artifact type. Supported types are <code>prompt-template</code>, <code>model-schema</code>, and <code>mcp-tool</code>, each with version <code>v1</code>.</p></td>
@@ -499,7 +504,7 @@
 <p>The <code>/.well-known/agents</code> and <code>/.well-known/agents/{groupId}/{artifactId}</code> endpoints operate on agent cards that you store in Apicurio Registry as <code>AGENT_CARD</code> artifacts. The search endpoint requires no authentication. When OIDC or basic authentication is enabled, the search endpoint returns only the agent cards that the caller has permission to view, based on the <code>apicurio.agent.visibility</code> label. The <code>/.well-known/agents/{groupId}/{artifactId}</code> endpoint requires read-level authorization.</p>
 </div>
 <div class="paragraph">
-<p>The <code>/.well-known/mcp-tools</code>, <code>/.well-known/mcp-tools/{groupId}/{artifactId}</code>, and <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoints operate on MCP tool definitions that you store in Apicurio Registry as <code>MCP_TOOL</code> artifacts. These endpoints require read-level authorization and are available only when MCP tools support is enabled.</p>
+<p>The <code>/.well-known/mcp-tools</code>, <code>/.well-known/mcp-tools/{groupId}/{artifactId}</code>, <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code>, and <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatibility</code> endpoints operate on MCP tool definitions that you store in Apicurio Registry as <code>MCP_TOOL</code> artifacts. These endpoints require read-level authorization and are available only when MCP tools support is enabled. Apicurio Registry also serves them under <code>/apis/registry/v3/well-known/mcp-tools</code>, which is where the generated SDK clients call them.</p>
 </div>
 <div class="paragraph">
 <p>The <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoint compares the <code>outputSchema</code> of the specified tool with the <code>inputSchema</code> of each candidate tool, as if the whole output object were passed to the candidate. A candidate is returned only when the comparison proves that it accepts every output that the <code>outputSchema</code> permits:</p>
@@ -528,6 +533,49 @@
 </div>
 <div class="paragraph">
 <p>The <code>format</code> keyword is evaluated on neither schema. A candidate that uses <code>format</code> in its <code>inputSchema</code> is not returned, because <code>format</code> might reject values that the comparison accepts. A <code>format</code> in the <code>outputSchema</code> of the specified tool is ignored instead, because it only narrows the values that the tool produces, and no keyword that the comparison evaluates constrains the contents of a value.</p>
+</div>
+<div class="paragraph">
+<p>The <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatibility</code> endpoint makes the same comparison and returns every compared candidate with its <code>verdict</code>. A <code>COMPATIBLE</code> candidate is one that the <code>/compatible</code> endpoint returns. An <code>INCOMPATIBLE</code> candidate lists in <code>reasons</code> the mismatches that rule it out, each with a JSON Pointer into both tool definitions. An <code>INDETERMINATE</code> candidate lists in <code>limitations</code> what prevented the comparison from deciding, such as a keyword that the comparison does not evaluate. To return only some verdicts, set the <code>verdict</code> query parameter to <code>COMPATIBLE</code>, <code>INCOMPATIBLE</code>, or <code>INDETERMINATE</code>, and repeat it to select more than one. By default, all three verdicts are returned. When the <code>outputSchema</code> of the specified tool is absent or cannot be compared, no candidate is compared, and the top-level <code>limitations</code> field explains why, for example with <code>SOURCE_HAS_NO_OUTPUT_SCHEMA</code>.</p>
+</div>
+<div class="paragraph">
+<p>Both endpoints compare the specified tool with at most the 500 newest MCP tools, by creation date. The <code>/compatibility</code> response reports the coverage of that scan in the following fields:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>candidateTotal</code>: the number of MCP tools in Apicurio Registry, including the specified tool. When per-resource authorization is enabled, only the tools that the caller can read are counted.</p>
+</li>
+<li>
+<p><code>evaluated</code>: the number of candidates compared with the specified tool. A tool that is deleted during the scan, or that has no enabled or deprecated version, is skipped.</p>
+</li>
+<li>
+<p><code>scanLimit</code>: the maximum number of MCP tools that are scanned.</p>
+</li>
+<li>
+<p><code>complete</code>: <code>false</code> when older MCP tools were not compared because only the newest <code>scanLimit</code> tools are scanned. A <code>true</code> value reports the coverage of the scan, not that every verdict is conclusive.</p>
+</li>
+<li>
+<p><code>totals</code>: the number of compared candidates with each verdict, before the <code>verdict</code> filter.</p>
+</li>
+<li>
+<p><code>count</code>: the number of candidates that match the <code>verdict</code> filter, before pagination.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Both endpoints page their results with <code>offset</code> and <code>limit</code>, which the <code>/compatibility</code> endpoint applies after the <code>verdict</code> filter. An <code>offset</code> or <code>limit</code> sent without a value takes its default, 0 or 20. A negative <code>offset</code> is treated as 0, a negative <code>limit</code> as 1, and a <code>limit</code> above 1000 as 1000, including values outside the 32-bit integer range. An <code>offset</code> or <code>limit</code> that is not a number is rejected with a <code>404</code> error, which the conversion of the request parameters returns before the endpoint runs. An unknown <code>verdict</code> value is rejected with a <code>400</code> error.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The <code>offset</code> and <code>limit</code> parameters of the <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoint now follow these rules. Earlier versions of Apicurio Registry returned one tool for a <code>limit</code> of 0, where an empty page is now returned, and returned an error for an <code>offset</code> or <code>limit</code> sent without a value or outside the 32-bit integer range, or for a <code>limit</code> close to the 32-bit maximum combined with a non-zero <code>offset</code>, where the values now take their defaults or are normalized.
+</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock important">
 <table>
