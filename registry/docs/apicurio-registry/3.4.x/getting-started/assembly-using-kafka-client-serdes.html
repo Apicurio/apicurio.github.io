@@ -634,7 +634,7 @@
 <p><strong>DefaultSchemaResolver interface</strong></p>
 </div>
 <div class="paragraph">
-<p>The default schema resolver locates and identifies the specific version of the schema registered under the artifact reference provided by the artifact resolver strategy. Every version of every artifact has a single globally unique identifier that can be used to retrieve the content of that artifact. This global ID is included in every Kafka message so that a deserializer can properly fetch the schema from Apicurio Registry.</p>
+<p>The default schema resolver locates and identifies the specific version of the schema registered under the artifact reference provided by the artifact resolver strategy. Every schema has an ID that can be used to retrieve it: by default the content ID, which identical schemas share. This ID is included in every Kafka message, in the payload or in a header, so that a deserializer can fetch the schema from Apicurio Registry. Set <code>apicurio.registry.use-id</code> to <code>globalId</code> to send the global ID, unique to each artifact version, instead.</p>
 </div>
 <div class="paragraph">
 <p>The default schema resolver can look up an existing artifact version, or it can register one if not found, depending on which strategy is used. You can also provide your own strategy by creating a custom Java class that implements <code>io.apicurio.registry.resolver.SchemaResolver</code>. However, it is recommended to use the <code>DefaultSchemaResolver</code> and specify configuration properties instead.</p>
@@ -651,11 +651,15 @@
 <dl>
 <dt class="hdlist1"><code>RecordIdStrategy</code></dt>
 <dd>
-<p>Avro-specific strategy that uses the full name of the schema.</p>
+<p>Avro-specific strategy that uses the namespace of the schema as the group ID and its name as the artifact ID.</p>
 </dd>
 <dt class="hdlist1"><code>TopicRecordIdStrategy</code></dt>
 <dd>
-<p>Avro-specific strategy that uses the topic name and the full name of the schema.</p>
+<p>Avro-specific strategy that uses the namespace of the schema as the group ID, and the topic name and the name of the schema as the artifact ID.</p>
+</dd>
+<dt class="hdlist1"><code>QualifiedRecordIdStrategy</code></dt>
+<dd>
+<p>Avro-specific strategy that uses the full name of the schema as the artifact ID, in the <code>default</code> group.</p>
 </dd>
 <dt class="hdlist1"><code>TopicIdStrategy</code></dt>
 <dd>
@@ -701,20 +705,20 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.use-id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the serializer to write the specified ID to Kafka and instructs the deserializer to use this ID to find the schema.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs the serializer to write the specified ID to Kafka and instructs the deserializer to use this ID to find the schema. Valid values are <code>contentId</code> and <code>globalId</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentId</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.auto-register</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Specify whether the serializer tries to create an artifact in the registry. The JSON Schema serializer does not support this.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specify whether the serializer tries to create an artifact in the registry. Because a JSON Schema cannot be derived from the data, the JSON Schema serializer supports this only when it has an explicit schema: from <code>apicurio.registry.artifact.schema.location</code>, or from Kafka headers when <code>apicurio.registry.headers.enabled</code> and <code>apicurio.registry.use-schema-from-headers</code> are <code>true</code>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.check-period-ms</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Specify how long to cache the global ID in milliseconds. If not configured, the global ID is fetched every time.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specify how long, in milliseconds, to cache the results of schema lookups by group ID and artifact ID. Lookups by ID are cached without expiry.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30000</code></p></td>
 </tr>
 </tbody>
 </table>

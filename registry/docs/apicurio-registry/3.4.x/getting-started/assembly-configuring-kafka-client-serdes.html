@@ -486,7 +486,7 @@ For example, you can change it from the default ID format <code>Integer</code>, 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class SerdeBasedConverter&lt;S, T&gt; extends SchemaResolverConfigurer&lt;S, T&gt; implements Converter, Closeable {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class SerdeBasedConverter&lt;S, T&gt; implements Converter, Closeable {
 
    public static final String REGISTRY_CONVERTER_SERIALIZER_PARAM = "apicurio.registry.converter.serializer";
    public static final String REGISTRY_CONVERTER_DESERIALIZER_PARAM = "apicurio.registry.converter.deserializer";</code></pre>
@@ -1016,7 +1016,7 @@ configured, the behavior is a no-op and the SerDes add no trace headers.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.headers.handler</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Fully qualified Java class name that implements <code>HeadersHandler</code> and writes and reads the artifact identifier to and from the Kafka message headers.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.apicurio.registry.serde.headers.DefaultHeadersHandler</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.apicurio.registry.serde.kafka.headers.DefaultHeadersHandler</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ID_HANDLER</code></p></td>
@@ -1192,9 +1192,9 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
     // Configure the Apicurio Registry location
     props.putIfAbsent(SerdeConfig.REGISTRY_URL, REGISTRY_URL);
 
-    // No other configuration needed because the schema globalId the deserializer uses is sent
-    // in the payload. The deserializer extracts the globalId and uses it to look up the schema
-    // from the registry.
+    // No other configuration needed because the schema ID the deserializer uses (the content ID by
+    // default) is sent in the payload. The deserializer extracts the ID and uses it to look up the
+    // schema from the registry.
 
     // Create the Kafka consumer
     KafkaConsumer&lt;Long, GenericRecord&gt; consumer = new KafkaConsumer&lt;&gt;(props);
@@ -1282,15 +1282,15 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 <div class="ulist">
 <ul>
 <li>
-<p><code>io.apicurio.registry.serde.Default4ByteIdHandler</code>: Stores the ID as a 4-byte integer</p>
+<p><code>io.apicurio.registry.serde.Default4ByteIdHandler</code>: Stores the ID as a 4-byte integer. This is the default, and the format used by Confluent SerDe classes.</p>
 </li>
 <li>
-<p><code>io.apicurio.registry.serde.Legacy8ByteIdHandler</code>: Stores the ID as an 8-byte long</p>
+<p><code>io.apicurio.registry.serde.Legacy8ByteIdHandler</code>: Stores the ID as an 8-byte long, as Apicurio Registry 2.x did by default.</p>
+</li>
+<li>
+<p><code>io.apicurio.registry.serde.OptimisticFallbackIdHandler</code>: Writes 4 bytes, and reads both 4-byte and 8-byte IDs. Use it in consumers while producers move from 8-byte to 4-byte IDs.</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>Apicurio Registry represents the schema ID as a long, but for legacy reasons, or for compatibility with other registries or SerDe classes, you might want to use 4 bytes when sending the ID.</p>
 </div>
 <div class="paragraph">
 <p><strong>Avro datum provider</strong></p>
