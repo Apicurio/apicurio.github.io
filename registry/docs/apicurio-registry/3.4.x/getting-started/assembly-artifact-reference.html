@@ -1136,6 +1136,36 @@ Without the property, each API retains its existing default behavior.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="registry-reference-identity-lifecycle_registry"><a class="anchor" href="#registry-reference-identity-lifecycle_registry"></a>How references affect content identity and deletion</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>References are stored with the content, not with the artifact version, and they are part of the content&#8217;s identity:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A reference always points to an exact artifact version. It does not follow the latest version. To use a new version of a referenced artifact, create a new version of the referencing artifact.</p>
+</li>
+<li>
+<p>Both the content hash and the canonical hash include the references. The same content with different references is stored as different content, with a different content ID.</p>
+</li>
+<li>
+<p>A version in the <code>DISABLED</code> state can still be resolved as a reference.</p>
+</li>
+<li>
+<p>In the core REST API, deleting an artifact or version that other versions reference is allowed. The references remain listed, but they can no longer be resolved, so dereferencing the referencing content fails. Check the inbound references (<code>refType=INBOUND</code>) before deleting. The Confluent-compatible API refuses to delete referenced subjects and versions.</p>
+</li>
+<li>
+<p>Without an <code>INTEGRITY</code> rule, a reference can point to an artifact version that does not exist yet. Configure <code>INTEGRITY</code> with <code>FULL</code> or <code>REFS_EXIST</code> to reject such references.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For a runnable demonstration, see the <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/schema-references">schema-references example</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="registry-artifact-metadata_registry"><a class="anchor" href="#registry-artifact-metadata_registry"></a>Apicurio Registry artifact metadata</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
