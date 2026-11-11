@@ -852,6 +852,13 @@ configured, the behavior is a no-op and the SerDes add no trace headers.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.apicurio.registry.serde.strategy.TopicIdStrategy</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REFERENCE_NAMING_STRATEGY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.reference-naming-strategy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers only. Fully qualified Java class name that implements <code>ReferenceNamingStrategy</code> and decides the <code>groupId</code> and <code>artifactId</code> under which schemas referenced by another schema are auto-registered. The reference name is not changed. <code>io.apicurio.registry.resolver.strategy.NamespaceGroupReferenceNamingStrategy</code> registers each referenced schema in a group named after its Avro namespace or Protobuf package.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.apicurio.registry.resolver.strategy.DefaultReferenceNamingStrategy</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>EXPLICIT_ARTIFACT_GROUP_ID</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.artifact.group-id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers only. Sets the <code>groupId</code> used for querying or creating an artifact. Overrides the <code>groupId</code> returned by the <code>ArtifactResolverStrategy</code>.</p></td>
@@ -1442,6 +1449,48 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 <p>When you use these schemas with Avro SerDes, Apicurio Registry creates two artifacts, one for the <code>TradeKey</code> schema and one for the <code>Exchange</code> schema. Whenever a message that uses the <code>TradeKey</code> schema is serialized or deserialized, both schemas are retrieved, allowing you to split your definitions into different files.</p>
 </div>
 <div class="paragraph">
+<p><strong>Choosing where referenced schemas are registered</strong></p>
+</div>
+<div class="paragraph">
+<p>When a serializer auto-registers a schema that references other schemas, it also registers the referenced
+schemas. By default, each referenced schema is registered in the group that the artifact resolver strategy
+chooses for it, or in the group set by <code>apicurio.registry.artifact.group-id</code>, and its artifact ID is the
+reference name, for example <code>com.example.Address</code> for an Avro record or <code>common/address.proto</code> for a Protobuf
+import.</p>
+</div>
+<div class="paragraph">
+<p>To register referenced schemas elsewhere, set <code>apicurio.registry.reference-naming-strategy</code>. For example,
+<code>io.apicurio.registry.resolver.strategy.NamespaceGroupReferenceNamingStrategy</code> registers the Avro record
+<code>com.example.Address</code> as artifact <code>Address</code> in group <code>com.example</code>, and the Protobuf import
+<code>common/address.proto</code> with package <code>example.common</code> as artifact <code>common/address.proto</code> in group
+<code>example.common</code>. Avro schemas registered this way are also found when you create an artifact with
+<code>autoReferences</code> set to <code>true</code>, because Apicurio Registry also looks for an Avro reference in the group named after
+its namespace. Protobuf imports are matched only in the group of the artifact that you create, so for a
+Protobuf dependency in another group, list the reference explicitly.</p>
+</div>
+<div class="paragraph">
+<p>You can also implement <code>io.apicurio.registry.resolver.strategy.ReferenceNamingStrategy</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.apicurio.registry.resolver.strategy.ReferenceCoordinates;
+import io.apicurio.registry.resolver.strategy.ReferenceNamingContext;
+import io.apicurio.registry.resolver.strategy.ReferenceNamingStrategy;
+
+public class SharedGroupStrategy implements ReferenceNamingStrategy {
+    @Override
+    public ReferenceCoordinates name(ReferenceNamingContext context) {
+        return new ReferenceCoordinates("shared-types", context.referenceName());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The strategy is not used when <code>apicurio.registry.dereference-schema</code> is <code>true</code> for Avro, because the schema is
+registered without references. JSON Schema SerDes do not auto-register referenced schemas (see
+<a href="https://github.com/Apicurio/apicurio-registry/issues/11051" class="bare">https://github.com/Apicurio/apicurio-registry/issues/11051</a>).</p>
+</div>
+<div class="paragraph">
 <p><strong>Custom logical type conversions for the Avro Kafka Connect converter</strong></p>
 </div>
 <div class="paragraph">
@@ -1918,6 +1967,11 @@ COMMAND = 4;
 </div>
 <div class="paragraph">
 <p>In this example, Apicurio Registry stores two Protobuf artifacts, one for <code>TableInfo</code> and one for <code>Mode</code>. However, because <code>Mode</code> is part of <code>TableInfo</code>, whenever <code>TableInfo</code> is fetched to check a message in the SerDes, <code>Mode</code> is also returned as an artifact referenced by <code>TableInfo</code>.</p>
+</div>
+<div class="paragraph">
+<p>To choose the group and artifact ID under which imported Protobuf files are registered, set
+<code>apicurio.registry.reference-naming-strategy</code>, as described for Avro in
+<a href="#registry-serdes-types-avro_registry">Avro SerDes configuration</a> under "Choosing where referenced schemas are registered".</p>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
