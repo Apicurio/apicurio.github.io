@@ -4,6 +4,9 @@ title: "Apicurio Registry - JSON Schema dereference"
 date:   2024-05-14 16:00:00
 author: carles
 categories: registry openapi jsonchema asyncapi avro
+superseded_by: /blog/2025/11/25/registry-dereference-v3
+sitemap: false
+canonical_url: https://www.apicur.io/blog/2025/11/25/registry-dereference-v3
 ---
 
 Apicurio Registry allows to manage artifacts with references as shown in the [documentation](https://www.apicur.io/registry/docs/apicurio-registry/2.5.x/getting-started/assembly-managing-registry-artifacts-api.html).

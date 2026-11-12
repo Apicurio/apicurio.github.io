@@ -1,0 +1,99 @@
+---
+title: "What Is an Agent Registry? A2A Agent Cards and Agent Discovery"
+breadcrumb_title: "What is an agent registry?"
+permalink: /registry/ai/agent-registry/
+layout: page
+description: "An agent registry is a catalog of AI agents and their capabilities that other agents query to discover who can do what. Learn how Apicurio Registry stores and serves A2A agent cards."
+breadcrumbs:
+  - {name: "Apicurio Registry", url: "/registry/"}
+  - {name: "AI agents", url: "/registry/ai/"}
+---
+
+{%- include registry/_docs-version.html -%}
+{%- assign docs = site.baseurl | append: "/registry/docs/apicurio-registry/" | append: registry_docs_version | append: "/getting-started/" -%}
+
+<div class="container content-page">
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+
+{% include breadcrumbs.html %}
+
+<h1>What is an agent registry?</h1>
+
+<p class="lead-definition">
+    An <strong>agent registry</strong> is a catalog of AI agents and the capabilities they expose. Each agent publishes a
+    machine-readable description of itself (in the A2A protocol, an <em>agent card</em>), and other agents or
+    orchestrators query the registry to find an agent that has the skill, input format or capability they need.
+</p>
+
+<h2>Why agents need a registry</h2>
+<p>
+    A single agent can hard-code the addresses of the tools it calls. A system of many agents cannot: agents are added,
+    upgraded and retired independently, and an orchestrator has to choose among them at runtime. Without a registry,
+    every caller keeps its own copy of what each agent can do, and those copies drift. An agent registry gives the
+    system one source of truth, the same role a service registry plays for microservices and a schema registry plays
+    for event-driven systems.
+</p>
+
+<h2>What an agent card contains</h2>
+<p>
+    The <a href="https://a2a-protocol.org/">Agent2Agent (A2A) protocol</a> defines the agent card, a JSON document that
+    describes an agent. A card typically includes:
+</p>
+<ul>
+    <li>the agent's name, description, version and provider;</li>
+    <li>the URL where the agent can be reached;</li>
+    <li>its <strong>skills</strong>, the tasks it can perform;</li>
+    <li>its <strong>capabilities</strong>, such as streaming or push notifications;</li>
+    <li>the input and output modes it accepts, such as <code>text</code> or <code>application/json</code>;</li>
+    <li>the authentication it requires.</li>
+</ul>
+<p>
+    By convention, an agent serves its own card at <code>/.well-known/agent.json</code>. A registry collects many cards in
+    one place so they can be searched.
+</p>
+
+<h2>Agent registry vs. service registry vs. schema registry</h2>
+<table class="table table-striped">
+    <thead><tr><th></th><th>Service registry</th><th>Schema registry</th><th>Agent registry</th></tr></thead>
+    <tbody>
+        <tr><td>Stores</td><td>Network locations of service instances</td><td>Data and API contracts</td><td>Agent cards: identity, skills, capabilities</td></tr>
+        <tr><td>Queried by</td><td>Load balancers, clients</td><td>Producers, consumers, CI</td><td>Orchestrators and other agents</td></tr>
+        <tr><td>Typical question</td><td>"Where is service X?"</td><td>"What does this message look like?"</td><td>"Which agent can do task Y?"</td></tr>
+        <tr><td>Change control</td><td>Health checks</td><td>Compatibility rules</td><td>Versioning and validation of cards</td></tr>
+    </tbody>
+</table>
+
+<h2>Apicurio Registry as an agent registry</h2>
+<p>
+    Apicurio Registry stores agent cards as <code>AGENT_CARD</code> artifacts, so each card is validated and versioned
+    alongside your other schemas and API definitions. With A2A support enabled, it provides:
+</p>
+<ul>
+    <li><code>GET /.well-known/agents</code>, which searches registered cards by <code>name</code> (with <code>*</code>
+        wildcards), <code>skill</code>, <code>capability</code>, <code>inputMode</code> and <code>outputMode</code>;</li>
+    <li><code>GET /.well-known/agents/{groupId}/{artifactId}</code>, which returns a single card;</li>
+    <li><code>GET /.well-known/agent.json</code>, Apicurio Registry's own agent card, which advertises skills such as
+        schema validation, schema search and compatibility checking;</li>
+    <li>visibility labels that control which cards each caller can see when authentication is enabled.</li>
+</ul>
+<p>Example search for agents that can translate and support streaming:</p>
+<pre><code>curl "http://localhost:8080/.well-known/agents?skill=translation&amp;capability=streaming:true"</code></pre>
+
+<div class="callout">
+    A2A support is experimental and disabled by default. Enable it with
+    <code>APICURIO_FEATURES_EXPERIMENTAL_ENABLED=true</code> and <code>APICURIO_A2A_ENABLED=true</code>.
+</div>
+
+<h2>Learn more</h2>
+<ul>
+    <li><a href="{{ docs }}assembly-agent-registry-quickstart.html">Agent registry quick start</a></li>
+    <li><a href="{{ docs }}assembly-a2a-features.html">A2A protocol features in Apicurio Registry</a></li>
+    <li><a href="{{ docs }}assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a></li>
+    <li><a href="{{ site.baseurl }}/registry/ai/mcp-registry/">What is an MCP registry?</a></li>
+    <li><a href="{{ site.baseurl }}/registry/ai/">Apicurio Registry for AI agents</a></li>
+</ul>
+
+</div>
+</div>
+</div>

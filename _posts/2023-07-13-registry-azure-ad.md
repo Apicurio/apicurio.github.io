@@ -4,6 +4,9 @@ title: "Securing Apicurio Registry 2.4.x using Azure Entra ID"
 date:   2023-07-13 12:00:00
 author: carles
 categories: blog registry security
+superseded_by: /blog/2024/09/23/registry-azure-entraid-tutorial
+sitemap: false
+canonical_url: https://www.apicur.io/blog/2024/09/23/registry-azure-entraid-tutorial
 ---
 
 Hey everyone, in recent Apicurio Registry versions we've introduced support for securing the application using different OpenID Connect (OIDC) servers, and not just Keycloak. In this blog post, I will explain how to configure the application to secure it using Microsoft Azure Entra ID.

@@ -25,10 +25,22 @@ collections:
 defaults:
     - {scope: {type: docs}, values: {layout: docs}}
     - {scope: {type: posts}, values: {layout: post, permalink: '/blog/:year/:month/:day/:title'}}
-    - {scope: {path: ""}, values: {image: {path: /images/opengraph.png, width: 1200, height: 630}}}
+    # A plain path, not a {path, width, height} hash: jekyll-seo-tag (2.6.1 locally, 2.8.0 on
+    # GitHub Pages) emits the hash as "@type": "imageObject" (lowercase), which is invalid schema.org.
+    - {scope: {path: ""}, values: {image: /images/opengraph.png}}
+    # Generated Maven site pages for every plugin release: thin, near-duplicate content.
+    - {scope: {path: "registry/maven-plugin"}, values: {sitemap: false}}
+    # Antora output: copied as static files, so jekyll-sitemap would list every docs version with
+    # the checkout time as lastmod. The docs publish their own sitemap, referenced from robots.txt.
+    - {scope: {path: "registry/docs"}, values: {sitemap: false}}
 exclude:
     - node_modules
     - README.md
+    - AGENTS.md
+    - Dockerfile
+    - _serve.sh
+    - _startup.sh
+    - project.properties
     - LICENSE.md
     - CNAME
     - Gemfile
@@ -39,6 +51,13 @@ exclude:
     - spec
 include:
     - _pages
+logo: /images/apicurio-logo-square.png
+social:
+    name: Apicurio Registry
+    links:
+        - https://github.com/Apicurio/apicurio-registry
+        - https://www.cncf.io/projects/apicurio-registry/
+        - https://x.com/Apicurio
 twitter_username: Apicurio
 twitter:
     username: Apicurio

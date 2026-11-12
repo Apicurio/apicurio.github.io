@@ -13,6 +13,17 @@ layout: page
         <span class="tags"><i class="fa fa-tags"></i> {{ page.categories | array_to_sentence_string }}</span>
       </header>
 
+      {%- if page.superseded_by %}
+      {%- assign newer = site.posts | where: "url", page.superseded_by | first %}
+      {%- endif %}
+      {%- if newer %}
+      <div class="post-superseded">
+        <span class="fa fa-fw fa-info-circle"></span>
+        This post has been superseded by
+        <a href="{{ site.baseurl }}{{ newer.url }}">{{ newer.title }}</a>, which covers the current version of Apicurio Registry.
+      </div>
+      {%- endif %}
+
       <article class="post-content">
         {{ content }}
       </article>
