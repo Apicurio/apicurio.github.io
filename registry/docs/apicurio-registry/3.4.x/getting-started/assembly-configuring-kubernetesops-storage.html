@@ -614,7 +614,7 @@ KubernetesOps storage is an <strong>experimental</strong> feature. You must enab
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_KUBERNETESOPS_NAMESPACE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Current namespace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The namespace of the Kubernetes client (the pod&#8217;s namespace), or <code>default</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes namespace to watch for ConfigMaps.</p></td>
 </tr>
 <tr>
@@ -720,7 +720,7 @@ spec:
 <p>ConfigMaps must have the registry ID label (for example, <code>apicurio.io/registry-id: my-registry</code>)</p>
 </li>
 <li>
-<p>Each data entry key is treated as a relative path (for example, <code>test/artifact.registry.yaml</code>)</p>
+<p>Each data entry key is a file name (for example, <code>artifact.registry.yaml</code>); Kubernetes does not allow <code>/</code> in keys. The registry treats it as the path <code>&lt;ConfigMap name&gt;/&lt;key&gt;</code>, so file names only need to be unique within a ConfigMap, and <code>content:</code> references resolve relative to it: <code>content: schema.avsc</code> refers to the key <code>schema.avsc</code> of the same ConfigMap.</p>
 </li>
 <li>
 <p>Metadata files (registry, group, artifact, content definitions) should use a recognized file suffix in their data key name. By default, the suffixes <code>registry</code> and <code>ar</code> are recognized, matching patterns such as <code><strong>.registry.yaml</code>, <code></strong>.registry.yml</code>, <code><strong>.registry.json</code>, and <code></strong>.ar.yaml</code>. Using recognized suffixes enables better error reporting when files fail to parse. Data keys that do not match a recognized suffix are treated as raw content files (for example, schema data).</p>
@@ -928,7 +928,7 @@ data:
     versions:
       - version: "1"
         state: ENABLED
-        content: content/address.avsc
+        content: address.avsc
 
   artifact-customer.registry.yaml: |
     $type: artifact-v0
@@ -939,19 +939,19 @@ data:
     versions:
       - version: "1"
         state: ENABLED
-        content: content/customer.avsc
+        content: customer.avsc
         contentMetadata: content-customer.registry.yaml
 
   content-customer.registry.yaml: |
     $type: content-v0
-    content: content/customer.avsc
+    content: customer.avsc
     references:
       - groupId: com.example.refs
         artifactId: address
         version: "1"
         name: com.example.refs.Address
 
-  content/address.avsc: |
+  address.avsc: |
     {
       "type": "record",
       "name": "Address",
@@ -962,7 +962,7 @@ data:
       ]
     }
 
-  content/customer.avsc: |
+  customer.avsc: |
     {
       "type": "record",
       "name": "Customer",
