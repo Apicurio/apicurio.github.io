@@ -824,6 +824,9 @@
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>When per-resource authorization is enabled (<code>apicurio.auth.resource-based-authorization.enabled</code>), discovery shows only agents in artifacts that the caller&#8217;s access rules allow them to read, before the visibility label is applied. An <code>entitled</code> agent is then visible only to callers who can read its group or artifact, and a <code>public</code> agent in a group the caller cannot read is hidden as well, including from unauthenticated clients. The visibility label narrows what callers with read access discover. It never grants access.</p>
+</div>
 <div class="listingblock">
 <div class="title">Visibility label example</div>
 <div class="content">
@@ -841,7 +844,7 @@
 <p><strong>Groups</strong> act as organizational namespaces</p>
 </li>
 <li>
-<p><strong>Entitling a client</strong> = granting read access to the group containing the Agent Card artifacts</p>
+<p><strong>Entitling a client</strong> = granting read access to the group containing the Agent Card artifacts. Registry roles grant read access to all groups. To entitle a client to specific groups only, enable per-resource authorization and grant <code>READ</code> on those groups in the access rules</p>
 </li>
 <li>
 <p><strong>Client authentication</strong> happens in an external identity provider, such as Keycloak or another OIDC provider</p>
