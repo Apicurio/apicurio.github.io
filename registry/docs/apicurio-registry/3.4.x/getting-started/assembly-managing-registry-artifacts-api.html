@@ -820,6 +820,14 @@ reference mapping.</p>
 <a href="assembly-artifact-reference.html#registry-artifact-type-reference-support_registry" class="page">Artifact reference support by type</a>.
 <code>DEREFERENCE</code> resolves references transitively. If the reference graph is deeper than <code>apicurio.storage.references.max-depth</code> (default <code>100</code>), the request returns HTTP <code>409</code>.</p>
 </div>
+<div class="paragraph">
+<p>The references parameter is supported when you get the content of an artifact version, and when you get
+content by global ID, content ID, or content hash (<code>/ids/globalIds/{globalId}</code>,
+<code>/ids/contentIds/{contentId}</code>, and <code>/ids/contentHashes/{contentHash}</code>). Content IDs and content hashes
+are shared by every version with the same content, so Apicurio Registry uses the artifact type of one of those
+versions to dereference or rewrite the content. If no version uses the content any more, the content is still
+returned as stored, but <code>DEREFERENCE</code> and <code>REWRITE</code> can return HTTP <code>404</code>.</p>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
