@@ -453,6 +453,36 @@
 </div>
 </div>
 <div class="sect1">
+<h2 id="agent-data-and-feature-flags_registry"><a class="anchor" href="#agent-data-and-feature-flags_registry"></a>Agent data and feature flags</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The agent features are experimental and each one has its own configuration property, such as <code>apicurio.a2a.enabled</code> or <code>apicurio.mcp-tools.enabled</code>. The flags control the feature endpoints only. They do not control how Apicurio Registry stores agent artifacts.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The AI and ML artifact types are always available. You can create, version, reference and search these artifacts through the core REST API, whether or not any agent feature is enabled.</p>
+</li>
+<li>
+<p>When you disable a feature, its endpoints stop responding: the <code>/.well-known</code> discovery endpoints and the MCP Registry API return <code>404</code>, and importing tools from an MCP server returns <code>409</code>. Apicurio Registry does not delete, hide or change any stored artifact, version, reference or label.</p>
+</li>
+<li>
+<p>Labels that a feature maintains, such as <code>apicurio.mcp-registry.<strong></code> and <code>apicurio.a2a.openapi-agent-card.</strong></code>, are kept when you update artifact metadata, even while the feature is disabled. The <code>apicurio.agent.visibility</code> label is a user label and is not changed.</p>
+</li>
+<li>
+<p>Artifacts that Apicurio Registry creates for you remain ordinary artifacts. For example, the input and output schemas embedded in a <code>MODEL_SCHEMA</code> or <code>PROMPT_TEMPLATE</code> artifact are registered as separate artifacts, such as <code>&lt;artifactId&gt;-input-schema</code>.</p>
+</li>
+<li>
+<p>If you enable a feature flag without setting <code>apicurio.features.experimental.enabled=true</code>, Apicurio Registry fails to start, rather than silently disabling the feature.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When an experimental feature becomes supported, changes incompatibly or is removed, the release notes describe the change. Stored agent artifacts stay readable through the core REST API.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="starting-agent-registry-quickstart_registry"><a class="anchor" href="#starting-agent-registry-quickstart_registry"></a>Starting the agent registry quick start</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
