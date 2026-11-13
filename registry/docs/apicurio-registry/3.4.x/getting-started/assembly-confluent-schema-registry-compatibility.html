@@ -498,7 +498,7 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Mode API</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Global and subject-level mode management (<code>READWRITE</code>, <code>READONLY</code>, <code>READONLY_OVERRIDE</code>, <code>IMPORT</code>). Supports <code>force</code> parameter for mode changes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global and subject-level mode management (<code>READWRITE</code>, <code>READONLY</code>, <code>READONLY_OVERRIDE</code>, <code>IMPORT</code>). Supports <code>force</code> parameter for mode changes. Apicurio Registry stores and returns the mode but does not currently enforce it: writes succeed in <code>READONLY</code> mode. To block writes, enable the storage read-only mode (<code>apicurio.storage.read-only.enabled</code>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Contexts API</strong></p></td>
@@ -1048,6 +1048,9 @@ props.put("schema.registry.url", "http://apicurio-registry:8080/apis/ccompat/v7"
 </li>
 <li>
 <p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/confluent-compatibility">Confluent compatibility example</a>: Confluent clients and tools against Apicurio Registry, with self-checks.</p>
 </li>
 <li>
 <p><a href="https://docs.confluent.io/platform/current/schema-registry/develop/api.html">Confluent Schema Registry API Reference</a></p>
