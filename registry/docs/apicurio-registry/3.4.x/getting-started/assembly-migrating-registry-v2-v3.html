@@ -497,6 +497,9 @@ For general versioning policy, upgrade guidance within the 3.x series, and rollb
 <li>
 <p>A dedicated Branch API enables multitrack artifact development.</p>
 </li>
+<li>
+<p>A change rejected by a rule returns HTTP <code>400 Bad Request</code>; 2.6.3 returned <code>409 Conflict</code>. To keep <code>409</code> for clients that depend on it, set <code>apicurio.rest.legacy-error-codes.enabled=true</code>.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1514,6 +1517,9 @@ You must use the export and import procedure for migration. Apicurio Registry 3.
 </li>
 <li>
 <p><a href="https://access.redhat.com/documentation/en-us/red_hat_integration/2024.q2/html-single/service_registry_user_guide/index">Apicurio Registry User Guide</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/v2-to-v3-migration">v2 to v3 migration example</a>: migrates a seeded 2.6.3 server with these scripts and checks that every version keeps its IDs, state, content, and references.</p>
 </li>
 </ul>
 </div>
@@ -3670,6 +3676,10 @@ export IMPORT_FILE="registry-export.zip"
 <dd>
 <p>Import file path (default: <code>registry-export.zip</code>)</p>
 </dd>
+<dt class="hdlist1"><code>REQUIRE_EMPTY_REGISTRY</code></dt>
+<dd>
+<p>Set to <code>false</code> to import into a registry that already has data (default: <code>true</code>)</p>
+</dd>
 </dl>
 </div>
 <div class="paragraph">
@@ -3678,13 +3688,10 @@ export IMPORT_FILE="registry-export.zip"
 <div class="ulist">
 <ul>
 <li>
-<p>The import adds to existing data and does not replace it.</p>
+<p>By default, the registry refuses an import unless it is empty (HTTP 409), and the script stops before importing. Set <code>REQUIRE_EMPTY_REGISTRY=false</code> to add to existing data; the import never replaces data.</p>
 </li>
 <li>
-<p>The script warns if the registry already contains artifacts.</p>
-</li>
-<li>
-<p>Import into an empty v3 registry for best results.</p>
+<p>The import keeps the global IDs and content IDs of the export, so that Kafka messages serialized against 2.6.3 still resolve to the same schemas.</p>
 </li>
 </ul>
 </div>
@@ -3741,6 +3748,10 @@ export AUTH_CLIENT_SECRET="your-secret"
 <dt class="hdlist1"><code>REGISTRY_VERSION</code></dt>
 <dd>
 <p>Registry version to test (default: <code>v3</code>)</p>
+</dd>
+<dt class="hdlist1"><code>MANAGEMENT_URL</code></dt>
+<dd>
+<p>Base URL of the health endpoints (default: <code>REGISTRY_URL</code>). Apicurio Registry 3.x serves them on the management port, <code>9000</code> by default, for example <code><a href="http://registry.example.com:9000" class="bare">http://registry.example.com:9000</a></code>.</p>
 </dd>
 </dl>
 </div>
