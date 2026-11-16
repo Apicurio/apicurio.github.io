@@ -1310,12 +1310,30 @@ This feature is experimental. The registry makes outbound connections to the URL
 <p>Redirects are never followed.</p>
 </li>
 <li>
-<p>Each request times out after <code>apicurio.mcp-import.timeout.seconds</code>. Each message is limited to <code>apicurio.mcp-import.response.max-size</code> bytes, and the number of tools to <code>apicurio.mcp-import.tools.max-size</code>.</p>
+<p>Each request times out after <code>apicurio.mcp-import.timeout.seconds</code>, and listing all the tools must finish within <code>apicurio.mcp-import.total-timeout.seconds</code>. Each message is limited to <code>apicurio.mcp-import.response.max-size</code> bytes, the listed tool definitions together to <code>apicurio.mcp-import.tools.max-total-size</code> bytes, and the number of tools to <code>apicurio.mcp-import.tools.max-size</code>.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>Every refused host gets the same error message, so the endpoint does not reveal which hosts exist or resolve. A refused URL returns HTTP 400. An MCP server that cannot be reached, times out, sends a response that is too large or invalid, or lists too many tools returns HTTP 502. Read-only storage, such as GitOps or KubernetesOps, returns HTTP 409 before any connection is made, as does an import when the feature is disabled.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Private network addresses, such as <code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, <code>192.168.0.0/16</code>, <code>100.64.0.0/10</code> and <code>fc00::/7</code>, are allowed when the allow-list permits the host. If you list <code>*</code>, any user who can write the MCP server artifact can make Apicurio Registry connect to services on its internal network. List the hostnames or CIDR ranges of your MCP servers instead.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Each connection attempt is recorded in the audit log as the <code>mcpImportTarget</code> action, with the group, the artifact, the target host and port, the outcome and, on failure, the reason. The URL path and query and the request headers are not recorded, because they can contain credentials.</p>
+</div>
+<div class="paragraph">
+<p>The import trusts the certificate authorities in the JVM default trust store. To import from an MCP server whose certificate is issued by an internal certificate authority, add that authority to a trust store and point the JVM at it, for example <code>JAVA_OPTS_APPEND=-Djavax.net.ssl.trustStore=/path/to/truststore.p12 -Djavax.net.ssl.trustStorePassword=&#8230;&#8203;</code>, rather than enabling <code>apicurio.mcp-import.insecure-http.enabled</code>. A trust store set this way replaces the default one for every outbound connection that uses the JVM default.</p>
 </div>
 <div class="admonitionblock note">
 <table>
