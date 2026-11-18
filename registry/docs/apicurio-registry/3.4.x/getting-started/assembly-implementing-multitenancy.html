@@ -417,6 +417,18 @@
 <div class="paragraph">
 <p>The Apicurio Registry Operator reconciles each CR into an independent set of Kubernetes resources. This approach provides strong isolation between tenants at the infrastructure level. It uses Kubernetes-native mechanisms for security, resource management, and network segmentation.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Apicurio Registry 3.x has no built-in tenant concept: the tenant ID, tenant manager, and per-tenant storage of Apicurio Registry 2.x were removed and are not planned to return. For lighter isolation inside one instance, see <a href="#multitenancy-lightweight-group-isolation_registry">Lightweight isolation with groups</a>.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -464,14 +476,17 @@ for each CR:</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Apicurio Registry backend (REST API) component</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Deployment, Service, Ingress, NetworkPolicy, PodDisruptionBudget</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deployment, Service, and NetworkPolicy. An Ingress when <code>spec.app.ingress.host</code> is set. A PodDisruptionBudget when there is more than one replica, or autoscaling can go above one. A HorizontalPodAutoscaler when autoscaling is enabled.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Apicurio Registry web console component</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Deployment, Service, Ingress, NetworkPolicy, PodDisruptionBudget</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deployment, Service, NetworkPolicy, and PodDisruptionBudget. An Ingress when <code>spec.ui.ingress.host</code> is set. A HorizontalPodAutoscaler when autoscaling is enabled.</p></td>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>NetworkPolicies and PodDisruptionBudgets can be disabled per component with <code>networkPolicy.enabled: false</code> and <code>podDisruptionBudget.enabled: false</code>.</p>
+</div>
 <div class="paragraph">
 <p>Each CR instance is completely independent. Resources are named using the pattern
 <code>{cr-name}-{component}-{resource-type}</code> and labeled with instance-specific selectors to prevent any
@@ -486,7 +501,7 @@ cross-tenant interference.</p>
 <p><strong>Compute isolation</strong>: Separate Deployments and Pods per tenant</p>
 </li>
 <li>
-<p><strong>Network isolation</strong>: Separate Services, Ingresses, and optional NetworkPolicies per tenant</p>
+<p><strong>Network isolation</strong>: Separate Services, Ingresses, and NetworkPolicies per tenant</p>
 </li>
 <li>
 <p><strong>Storage isolation</strong>: Each tenant can use a separate database or Kafka cluster</p>
@@ -552,7 +567,7 @@ namespace level. It is the recommended approach for most production environments
 </dd>
 <dt class="hdlist1">Pattern C: Operator per namespace</dt>
 <dd>
-<p>Each namespace has its own operator instance. The instance is restricted to watching only that namespace by using the <code>APICURIO_OPERATOR_WATCHED_NAMESPACES</code> environment variable.</p>
+<p>Each namespace has its own operator instance, installed with <code>operator/install/install-namespaced.yaml</code>. The instance is restricted to watching only that namespace by using the <code>APICURIO_OPERATOR_WATCHED_NAMESPACES</code> environment variable. The <code>ApicurioRegistry3</code> CustomResourceDefinition is shared by the whole cluster, so all operator instances must be the same version.</p>
 <div class="listingblock">
 <div class="content">
 <pre>Cluster
@@ -813,9 +828,10 @@ topics.</p>
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-When using KafkaSQL, ensure that each tenant uses separate Kafka topics. The default topic name
-<code>kafkasql-journal</code> is the same for all instances. Configure separate topic names by using the
-<code>APICURIO_KAFKASQL_TOPIC</code> environment variable if tenants share a Kafka cluster.
+When using KafkaSQL, ensure that each tenant uses separate Kafka topics. The default topic names,
+<code>kafkasql-journal</code> and <code>kafkasql-snapshots</code>, are the same for all instances. If tenants share a Kafka cluster,
+set separate topic names with the <code>APICURIO_KAFKASQL_TOPIC</code> and <code>APICURIO_KAFKASQL_SNAPSHOTS_TOPIC</code>
+environment variables in <code>spec.app.env</code>, and use Kafka ACLs so that each tenant&#8217;s principal can access only its own topics.
 </td>
 </tr>
 </table>
@@ -1102,6 +1118,9 @@ artifacts and groups they own.</p>
 </ul>
 </div>
 <div class="paragraph">
+<p>Owner-only authorization limits writes only: every authenticated user can still read and search all groups. To hide one tenant&#8217;s groups from another, including in search results and counts, also enable per-resource authorization with an access rules file that grants each tenant its own groups. See <a href="assembly-configuring-resource-authorization.html" class="page">Configuring per-resource authorization</a>.</p>
+</div>
+<div class="paragraph">
 <p>The following table compares the advantages and limitations of this approach:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -1123,7 +1142,7 @@ artifacts and groups they own.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Faster tenant provisioning (create a group, not a deployment)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No separate storage per tenant</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No separate storage, instance configuration, or limits per tenant (content rules can still be set per group or artifact)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Single deployment to monitor and upgrade</p></td>
@@ -1137,7 +1156,7 @@ artifacts and groups they own.</p>
 </table>
 <div class="paragraph">
 <p>This configuration is suitable for development environments, internal teams, or scenarios where tenants do not
-require strict data or infrastructure isolation.</p>
+require strict data or infrastructure isolation. A first-class tenant inside one instance, with its own configuration and limits, is not available yet.</p>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
@@ -1147,6 +1166,9 @@ require strict data or infrastructure isolation.</p>
 </li>
 <li>
 <p><a href="assembly-configuring-registry-security.html" class="page">Configuring Apicurio Registry security options</a></p>
+</li>
+<li>
+<p><a href="assembly-configuring-resource-authorization.html" class="page">Configuring per-resource authorization</a></p>
 </li>
 <li>
 <p><a href="assembly-operator-config-reference.html" class="page">Apicurio Registry Operator configuration reference</a></p>
