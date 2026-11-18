@@ -1614,7 +1614,7 @@ spec:
 </tbody>
 </table>
 <div class="paragraph">
-<p>The autoscaling configuration is available on both <code>spec.app.autoscaling</code> and <code>spec.ui.autoscaling</code>. If you set both <code>replicas</code> and <code>autoscaling</code> on a component, the Apicurio Registry Operator reports a validation error condition and ignores the <code>replicas</code> field. The Apicurio Registry Operator also manages a PodDisruptionBudget when autoscaling is enabled with <code>maxReplicas</code> greater than 1.</p>
+<p>The autoscaling configuration is available on both <code>spec.app.autoscaling</code> and <code>spec.ui.autoscaling</code>. If you set both <code>replicas</code> and <code>autoscaling</code> on a component, the Apicurio Registry Operator reports a validation error condition and ignores the <code>replicas</code> field. The Apicurio Registry Operator also manages a PodDisruptionBudget when autoscaling is enabled and can go above one pod: <code>maxReplicas</code> greater than 1 (<code>maxReplicas</code> defaults to <code>minReplicas</code>).</p>
 </div>
 </div>
 </div>
@@ -1622,7 +1622,7 @@ spec:
 <h2 id="configuring-poddisruptionbudget_registry"><a class="anchor" href="#configuring-poddisruptionbudget_registry"></a>PodDisruptionBudget configuration</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>The operator creates PodDisruptionBudget resources by default. To manage PodDisruptionBudget manually, disable the operator-managed PodDisruptionBudget.</p>
+<p>The operator creates a PodDisruptionBudget for the Apicurio Registry application and for the web console when that component can have more than one pod: with autoscaling enabled, a <code>maxReplicas</code> above one (it defaults to <code>minReplicas</code>); otherwise, more than one replica. A budget for a single pod would allow no voluntary disruption, and block node drains. To manage PodDisruptionBudget manually, disable the operator-managed PodDisruptionBudget.</p>
 </div>
 <div class="listingblock">
 <div class="content">
