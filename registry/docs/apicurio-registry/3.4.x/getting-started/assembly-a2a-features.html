@@ -1487,10 +1487,10 @@ metadata:
 <h2 id="a2a-multi-agent-workflow-example_registry"><a class="anchor" href="#a2a-multi-agent-workflow-example_registry"></a>Multi-agent workflow example</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can chain context across multiple agents in a pipeline. The <code>a2a-real-world-integration</code> example in the Apicurio Registry repository demonstrates this pattern.</p>
+<p>You can chain context across multiple agents in a pipeline: each agent&#8217;s output becomes part of the next agent&#8217;s input. The <code>agent-registry</code> example in the Apicurio Registry repository runs such a pipeline with Quarkus LangChain4j applications:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. Context chaining pipeline</caption>
+<caption class="title">Table 9. Briefing pipeline in the agent-registry example</caption>
 <colgroup>
 <col style="width: 14.2857%;">
 <col style="width: 42.8571%;">
@@ -1499,52 +1499,50 @@ metadata:
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Step</th>
-<th class="tableblock halign-left valign-top">Input context</th>
+<th class="tableblock halign-left valign-top">Input</th>
 <th class="tableblock halign-left valign-top">Output</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1. Sentiment agent</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{{original}}</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{"sentiment": "very_negative", "urgency": "critical"}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1. Weather tool (MCP)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A city</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fictional weather data</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2. Issue analyzer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{{original}}</code> + <code>{{sentiment}}</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{"priority": "P1", "issue_type": "delayed_delivery"}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2. Summarizer agent (A2A)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The weather data</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A short factual paragraph</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3. Response generator</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{{original}}</code> + <code>{{sentiment}}</code> + <code>{{analysis}}</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{"response": "Dear customer, I sincerely apologize&#8230;&#8203;"}</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4. Translation agent</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{{response}}</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{"translated": "Estimado cliente, le pido disculpas&#8230;&#8203;"}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3. Translator agent (A2A)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The summary</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The summary in French</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>To run the example application locally, clone the Apicurio Registry repository and run the following commands:</p>
+<p>The orchestrator does not know the agents' URLs: the summarizer and translator publish their Agent Cards to Apicurio Registry when they start, and the orchestrator discovers them, and the MCP server, by role.</p>
+</div>
+<div class="paragraph">
+<p>To run the example locally, clone the Apicurio Registry repository and follow its guide:</p>
 </div>
 <div class="listingblock">
 <div class="title">Example commands</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd examples/a2a-real-world-integration
-docker-compose up -d
-mvn clean compile exec:java</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd examples/agent-registry
+docker compose up -d
+./demo.sh</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The Web UI is available at <code>localhost:9000</code>.</p>
+<p>The orchestrator&#8217;s dashboard is available at <code>localhost:11020</code>.</p>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/a2a-real-world-integration">a2a-real-world-integration example</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/agent-registry">agent-registry example</a></p>
 </li>
 </ul>
 </div>

@@ -728,7 +728,7 @@ See <a href="assembly-ai-catalog-ard.html" class="page">AI Catalog and ARD disco
 </ul>
 </div>
 <div class="paragraph">
-<p>The <code>examples/a2a-real-world-integration</code> example in the Apicurio Registry repository shows context chaining with four agents that process a customer complaint:</p>
+<p>For example, a pipeline that handles a customer complaint can run four agents in turn:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -747,20 +747,7 @@ See <a href="assembly-ai-catalog-ard.html" class="page">AI Catalog and ARD disco
 </ol>
 </div>
 <div class="paragraph">
-<p>Each step stores its output under a context key. Subsequent steps reference previous outputs by using <code>{{variable}}</code> template placeholders. A <code>WorkflowContext</code> object tracks the original message and all agent outputs:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">WorkflowContext context = new WorkflowContext();
-context.originalMessage = customerMessage;
-
-// After each step completes:
-context.agentOutputs.put("sentiment", sentimentResult);
-context.agentOutputs.put("analysis", analysisResult);
-
-// Build prompt for the next step:
-String prompt = context.buildPrompt("Original: {{original}}\nSentiment: {{sentiment}}");</code></pre>
-</div>
+<p>The orchestrator stores each step&#8217;s output under a key, and builds the next agent&#8217;s input from the original message and the earlier outputs. The <code>agent-registry</code> example in the Apicurio Registry repository runs a pipeline of this kind, in which the orchestrator discovers each agent in Apicurio Registry by role: <a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/agent-registry">agent-registry example</a>.</p>
 </div>
 </div>
 </div>
