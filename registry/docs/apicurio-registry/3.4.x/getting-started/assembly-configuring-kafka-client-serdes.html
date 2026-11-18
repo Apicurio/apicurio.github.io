@@ -896,9 +896,23 @@ configured, the behavior is a no-op and the SerDes add no trace headers.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DEREFERENCE_SCHEMA</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.dereference-schema</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Configures the SerDes to dereference the schema. After the schema is registered, this property instructs the SerDes to request the dereferenced schema from the server. It also instructs the serializer to dereference the schema before registering it in Apicurio Registry, but this is only supported for Avro.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers, unless overridden by <code>apicurio.registry.serializer.dereference-schema</code> or <code>apicurio.registry.deserializer.dereference-schema</code>. Configures the serializer to dereference the schema before registering it in Apicurio Registry (Avro only), and the deserializer to request dereferenced schemas from Apicurio Registry.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SERIALIZER_DEREFERENCE_SCHEMA</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.serializer.dereference-schema</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers only. Overrides <code>apicurio.registry.dereference-schema</code>: whether the serializer registers the schema dereferenced, without references. Only supported for Avro.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>apicurio.registry.dereference-schema</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DESERIALIZER_DEREFERENCE_SCHEMA</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.deserializer.dereference-schema</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by deserializers only. Overrides <code>apicurio.registry.dereference-schema</code>: whether the deserializer requests dereferenced schemas instead of fetching each reference separately. Lookups by content ID or content hash are only dereferenced when this property is set explicitly; they require both the Apicurio Registry server and the SerDes to be 3.4.0 or later, and do not apply to Protobuf, which keeps fetching references.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>apicurio.registry.dereference-schema</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTO_REGISTER_ARTIFACT_IF_EXISTS</code></p></td>
@@ -986,6 +1000,25 @@ configured, the behavior is a no-op and the SerDes add no trace headers.</p>
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>apicurio.registry.dereference-schema</code> alone keeps its previous behavior: deserializers only dereference
+lookups by global ID. To also dereference lookups by content ID or content hash, which is the default
+(<code>apicurio.registry.use-id</code> is <code>contentId</code>), set <code>apicurio.registry.deserializer.dereference-schema</code> to <code>true</code>
+explicitly. This requires a Apicurio Registry server at version 3.4.0 or later, because earlier servers ignore the
+dereference request on those lookups. Content-ID and content-hash dereferencing does not apply to Protobuf,
+which keeps fetching references. The deserialized data is the same. When one resolver is shared between a
+serializer and a deserializer, as in Kafka Connect, and the two sides use different dereference values, a
+cached schema can be in either form, dereferenced or with references. Both forms decode to the same data.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p><strong>Configuration to read and write registry artifacts in Kafka</strong></p>
 </div>
