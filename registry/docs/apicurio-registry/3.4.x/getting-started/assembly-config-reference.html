@@ -261,6 +261,9 @@
     <a class="nav-link" href="assembly-mcp-registry-api.html">MCP Registry API (Developer Preview)</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-agent-inventory-sync.html">Syncing agents and MCP servers from inventory sources</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-agent-discovery-patterns.html">Agent discovery and multi-agent orchestration</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -1894,6 +1897,48 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.agent-inventory.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable keeping groups in sync with inventories of agents and MCP servers, such as MCPServer and AgentCard resources in Kubernetes and agents registered in Google Cloud Agent Registry <em>(experimental)</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.agent-inventory.google.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="https://agentregistry.googleapis.com" class="bare">https://agentregistry.googleapis.com</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Base URL of the Google Cloud Agent Registry API read by the GOOGLE_AGENT_REGISTRY inventory source</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.agent-inventory.items.max-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of items an inventory source may list for one sync. A sync of a source listing more is refused, so an unexpectedly large inventory cannot flood the group</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.agent-inventory.kubernetes.agent-card.group</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agent.rossoctl.dev</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">API group of the AgentCard resources read by the KUBERNETES_AGENT_CARDS inventory source. The default is the group of the Rossoctl operator, formerly Kagenti; set agent.kagenti.dev for clusters running an older Kagenti operator</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.agent-inventory.kubernetes.namespaces</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;list&lt;string&gt;&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes namespaces that an inventory sync may read MCPServer and AgentCard resources from, as a comma-separated list. When empty, Kubernetes inventory sources are refused. The registry&#8217;s service account needs permission to list these resources in each namespace</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.agent-inventory.timeout.seconds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Timeout, in seconds, for each request to Google Cloud Agent Registry during a sync, including reading the response. Kubernetes inventory sources use the timeouts of the Kubernetes client (quarkus.kubernetes-client.request-timeout)</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp-import.allowed-hosts</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;list&lt;string&gt;&gt;</code></p></td>
