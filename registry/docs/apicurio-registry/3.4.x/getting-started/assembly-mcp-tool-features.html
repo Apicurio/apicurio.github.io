@@ -873,6 +873,35 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 </div>
 </div>
 <div class="sect1">
+<h2 id="mcp-tool-visibility_registry"><a class="anchor" href="#mcp-tool-visibility_registry"></a>MCP tool visibility</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>MCP tool definitions are not subject to the <code>apicurio.agent.visibility</code> discovery filter described in <a href="assembly-a2a-features.html#a2a-visibility-model_registry" class="page">Agent visibility model</a>. This is a deliberate design decision, not a gap: filtering <code>/.well-known/mcp-tools</code> would only imply a protection that does not exist, because tool discovery returns exactly the tools the caller can already find through the core search API.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>apicurio.agent.visibility</code> and its <code>apicurio.a2a.default-visibility</code> fallback apply only to Agent Card discovery (<code>GET /.well-known/agents</code>, and Agent Card entries in AI Catalog and ARD responses). They have no effect on MCP tool discovery.</p>
+</li>
+<li>
+<p><code>GET /.well-known/mcp-tools</code>, the compatible-tools endpoint (<code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code>), and MCP tool entries in AI Catalog and ARD responses return every MCP tool that the caller is authorized to see, unfiltered by visibility.</p>
+</li>
+<li>
+<p>The visibility label is a discovery-only hint, not access control, for both agents and tools: callers can retrieve artifacts they are authorized to read directly through the core v3 API or find them through <code>/apis/registry/v3/search</code>, regardless of their visibility labels. Per-resource authorization, when enabled, still restricts access and search results. An MCP tool artifact can still carry an <code>apicurio.agent.visibility</code> label, but Apicurio Registry does not act on it when serving MCP tool discovery requests.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-a2a-features.html#a2a-visibility-model_registry" class="page">Agent visibility model</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="creating-mcp-tool-artifact_registry"><a class="anchor" href="#creating-mcp-tool-artifact_registry"></a>Creating an MCP tool artifact</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
