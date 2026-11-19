@@ -466,6 +466,18 @@ This view requires no schema migration or additional artifact types.</p>
 <p>AI Catalog publishing and ARD search are disabled by default.
 You can enable each feature independently with its configuration property.</p>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+To enable all the agent registry discovery features at once (A2A, MCP tools, the MCP Registry API, the AI Catalog, ARD, and the web console&#8217;s <strong>Agents</strong> tab), set <code>apicurio.features.experimental.enabled=true</code> and <code>apicurio.agents.enabled=true</code>. A feature&#8217;s own property, such as <code>apicurio.a2a.enabled</code>, still takes precedence, so you can turn a single feature off. Features that connect to other servers, such as importing tools from MCP servers, are not included and must be enabled separately.
+</td>
+</tr>
+</table>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. AI Catalog and ARD configuration properties</caption>
 <colgroup>
@@ -483,7 +495,7 @@ You can enable each feature independently with its configuration property.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value of <code>apicurio.agents.enabled</code>, <code>false</code> by default</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Whether to enable the <code>/.well-known/ai-catalog.json</code> and <code>/.well-known/ard.json</code> endpoints</p></td>
 </tr>
 <tr>
@@ -493,29 +505,25 @@ You can enable each feature independently with its configuration property.</p>
 If you do not configure this property, Apicurio Registry uses the <code>X-Forwarded-Host</code> header if present, otherwise the request host and port.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.host-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.instance.name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Apicurio Registry</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Display name for this registry instance, reported as the catalog&#8217;s <code>host.displayName</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.spec-version</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The AI Catalog specification version reported in the catalog document</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.host-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Not set</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated since 3.4.0. Use <code>apicurio.instance.name</code>, which takes precedence when both are set.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ard.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value of <code>apicurio.agents.enabled</code>, <code>false</code> by default</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Whether to enable the <code>POST /ard/search</code>, <code>GET /ard/agents</code>, and <code>POST /ard/explore</code> endpoints</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ard.federation.default</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Reserved for the ARD federation mode.
-Apicurio Registry implements only <code>none</code> (no federation) and does not include the value in any response.
-It accepts other values for compatibility with later versions, but these values do not change the behavior.</p></td>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>The catalog document reports AI Catalog specification version <code>1.0</code>, the version Apicurio Registry implements. The properties <code>apicurio.ai-catalog.spec-version</code> and <code>apicurio.ard.federation.default</code> are deprecated since 3.4.0 and have no effect.</p>
+</div>
 </div>
 </div>
 <div class="sect1">

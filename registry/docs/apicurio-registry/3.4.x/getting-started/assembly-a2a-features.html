@@ -516,6 +516,18 @@
 <div class="paragraph _abstract">
 <p>You can control A2A features by using the following configuration properties.</p>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+To enable all the agent registry discovery features at once (A2A, MCP tools, the MCP Registry API, the AI Catalog, ARD, and the web console&#8217;s <strong>Agents</strong> tab), set <code>apicurio.features.experimental.enabled=true</code> and <code>apicurio.agents.enabled=true</code>. A feature&#8217;s own property, such as <code>apicurio.a2a.enabled</code>, still takes precedence, so you can turn a single feature off. Features that connect to other servers, such as importing tools from MCP servers, are not included and must be enabled separately.
+</td>
+</tr>
+</table>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. A2A configuration properties</caption>
 <colgroup>
@@ -533,13 +545,18 @@
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value of <code>apicurio.agents.enabled</code>, <code>false</code> by default</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enable or disable A2A protocol support</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.agent.name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.instance.name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Apicurio Registry</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the registry as an A2A agent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the registry as an A2A agent, and in the AI Catalog</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.agent.name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Not set</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated since 3.4.0. Use <code>apicurio.instance.name</code>, which takes precedence when both are set.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.agent.description</code></p></td>
@@ -1676,10 +1693,11 @@ client.groups().byGroupId("ai-agents").artifacts()
 <dl>
 <dt class="hdlist1">A2A endpoints return 404</dt>
 <dd>
-<p>Set <code>apicurio.a2a.enabled=true</code> in your configuration:</p>
+<p>Set <code>apicurio.agents.enabled=true</code>, which enables all agent discovery features, or <code>apicurio.a2a.enabled=true</code> alone. Check that <code>apicurio.a2a.enabled</code> is not set to <code>false</code>, which takes precedence:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.a2a.enabled=true</code></pre>
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.features.experimental.enabled=true
+apicurio.agents.enabled=true</code></pre>
 </div>
 </div>
 </dd>

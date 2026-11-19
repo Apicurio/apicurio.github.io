@@ -1329,6 +1329,62 @@ correct probe ports for operator-managed deployments.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="ha-upgrade-native-id-sequences_registry"><a class="anchor" href="#ha-upgrade-native-id-sequences_registry"></a>Upgrading SQL storage to native ID sequences</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Database schema version 115 replaces the row-locked <code>sequences</code> table, which allocated global IDs, content
+IDs, and comment IDs, with native database sequences on PostgreSQL and SQL Server, and with <code>AUTO_INCREMENT</code>
+ticket tables on MySQL. Apicurio Registry applies this schema upgrade automatically on startup. H2 and KafkaSQL
+storage are not affected.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Rolling updates</dt>
+<dd>
+<p>The schema upgrade deliberately drops the <code>sequences</code> table so that older replicas cannot allocate duplicate
+IDs. As a result, replicas running a release earlier than schema version 115 fail write requests as soon as
+any upgraded replica has migrated the schema. Read requests are unaffected. Complete the rollout promptly.</p>
+</dd>
+<dt class="hdlist1">Database version requirements</dt>
+<dd>
+<p>SQL Server 2017 or later is required, because Apicurio Registry reads <code>sys.sequences.last_used_value</code>.</p>
+</dd>
+<dt class="hdlist1">Database privileges</dt>
+<dd>
+<p>Apicurio Registry does not run any DDL at runtime for ID allocation. The database user that runs the schema upgrade
+creates the new objects. If Apicurio Registry connects at runtime with a different, less privileged user, grant the
+following privileges:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>PostgreSQL: <code>USAGE</code>, <code>SELECT</code>, and <code>UPDATE</code> on the three ID sequences. Apicurio Registry calls <code>nextval</code>, reads
+<code>last_value</code>, and calls <code>setval</code> when it resets the sequences.</p>
+</li>
+<li>
+<p>SQL Server: <code>UPDATE</code> on the three ID sequences.</p>
+</li>
+<li>
+<p>MySQL: <code>INSERT</code>, <code>DELETE</code>, and <code>SELECT</code> on the ID ticket tables. Apicurio Registry prunes consumed ticket rows
+hourly.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">ID ordering</dt>
+<dd>
+<p>A <code>globalId</code> value is unique, but under concurrent writes it no longer strictly follows commit order. To
+determine the newest version of an artifact, use the version order rather than comparing <code>globalId</code> values.</p>
+</dd>
+<dt class="hdlist1">Imports that preserve IDs</dt>
+<dd>
+<p>Run imports that preserve existing IDs while no other writes are in progress. On PostgreSQL, resetting the
+sequences while other clients allocate IDs has a small window in which an ID can be issued twice.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="ha-backup-restore_registry"><a class="anchor" href="#ha-backup-restore_registry"></a>Backup and restore procedures</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">

@@ -542,7 +542,7 @@ Storing an <code>MCP_TOOL</code> definition in Apicurio Registry provides govern
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp-tools.enabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value of <code>apicurio.agents.enabled</code>, <code>false</code> by default</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enables or disables MCP tool definition support (experimental)</p></td>
 </tr>
 <tr>
@@ -560,6 +560,18 @@ Storing an <code>MCP_TOOL</code> definition in Apicurio Registry provides govern
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">apicurio.features.experimental.enabled=true
 apicurio.mcp-tools.enabled=true</code></pre>
 </div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+To enable all the agent registry discovery features at once (A2A, MCP tools, the MCP Registry API, the AI Catalog, ARD, and the web console&#8217;s <strong>Agents</strong> tab), set <code>apicurio.features.experimental.enabled=true</code> and <code>apicurio.agents.enabled=true</code>. A feature&#8217;s own property, such as <code>apicurio.a2a.enabled</code>, still takes precedence, so you can turn a single feature off. Features that connect to other servers, such as importing tools from MCP servers, are not included and must be enabled separately.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1333,13 +1345,13 @@ This feature is experimental. The registry makes outbound connections to the URL
 <div class="ulist">
 <ul>
 <li>
-<p>The URL must use HTTPS, unless <code>apicurio.mcp-import.insecure-http.enabled=true</code>, and must not contain user information.</p>
+<p>The URL must use HTTPS, unless <code>apicurio.mcp-import.insecure-http.enabled=true</code> (which defaults to <code>apicurio.outbound.insecure-http.enabled</code>, shared with federation), and must not contain user information.</p>
 </li>
 <li>
 <p>The host must be allowed by <code>apicurio.mcp-import.allowed-hosts</code>. Each entry is a hostname (<code>mcp.example.com</code>), a domain wildcard (<code><strong>.example.com</code>, which does not match <code>example.com</code>), <code></strong></code> for any host, an IP address, or a CIDR range (<code>10.0.0.0/8</code>). A CIDR entry allows a host when every address the host resolves to is in a listed range.</p>
 </li>
 <li>
-<p>Every address that the host resolves to must not be a loopback, link-local, unspecified, multicast, reserved, or cloud metadata address, even when the allow-list permits the host. Loopback is allowed only with <code>apicurio.mcp-import.loopback.enabled=true</code>, for development and tests.</p>
+<p>Every address that the host resolves to must not be a loopback, link-local, unspecified, multicast, reserved, or cloud metadata address, even when the allow-list permits the host. Loopback is allowed only with <code>apicurio.mcp-import.loopback.enabled=true</code> (which defaults to <code>apicurio.outbound.loopback.enabled</code>, shared with federation), for development and tests.</p>
 </li>
 <li>
 <p>Redirects are never followed.</p>

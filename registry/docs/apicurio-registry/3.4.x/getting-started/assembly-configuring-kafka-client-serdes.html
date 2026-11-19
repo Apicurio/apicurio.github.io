@@ -916,7 +916,7 @@ configured, the behavior is a no-op and the SerDes add no trace headers.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DESERIALIZER_DEREFERENCE_SCHEMA</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.deserializer.dereference-schema</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used by deserializers only. Overrides <code>apicurio.registry.dereference-schema</code>: whether the deserializer requests dereferenced schemas instead of fetching each reference separately. Lookups by content ID or content hash are only dereferenced when this property is set explicitly; they require both the Apicurio Registry server and the SerDes to be 3.4.0 or later, and do not apply to Protobuf, which keeps fetching references.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by deserializers only. Overrides <code>apicurio.registry.dereference-schema</code>: whether the deserializer requests dereferenced schemas instead of fetching each reference separately. Lookups by content ID or content hash are only dereferenced when this property is set explicitly; they require both the Apicurio Registry server and the SerDes to be 3.4.0 or later.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The value of <code>apicurio.registry.dereference-schema</code></p></td>
 </tr>
@@ -1017,8 +1017,7 @@ configured, the behavior is a no-op and the SerDes add no trace headers.</p>
 lookups by global ID. To also dereference lookups by content ID or content hash, which is the default
 (<code>apicurio.registry.use-id</code> is <code>contentId</code>), set <code>apicurio.registry.deserializer.dereference-schema</code> to <code>true</code>
 explicitly. This requires a Apicurio Registry server at version 3.4.0 or later, because earlier servers ignore the
-dereference request on those lookups. Content-ID and content-hash dereferencing does not apply to Protobuf,
-which keeps fetching references. The deserialized data is the same. When one resolver is shared between a
+dereference request on those lookups. The deserialized data is the same. When one resolver is shared between a
 serializer and a deserializer, as in Kafka Connect, and the two sides use different dereference values, a
 cached schema can be in either form, dereferenced or with references. Both forms decode to the same data.
 </td>

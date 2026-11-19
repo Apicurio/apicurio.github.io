@@ -504,17 +504,10 @@
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.agent.name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Apicurio Registry</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the registry agent for A2A discovery</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.agent.protocol-version</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A2A protocol version supported by the registry agent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated since 3.4.0, use apicurio.instance.name, which takes precedence. Name of the registry agent for A2A discovery</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.agent.provider.organization</code></p></td>
@@ -554,9 +547,9 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable A2A protocol support <em>(experimental)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable A2A protocol support. Defaults to apicurio.agents.enabled <em>(experimental)</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.openapi-integration.enabled</code></p></td>
@@ -571,6 +564,13 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Update the generated Agent Card whenever its source OpenAPI artifact is updated</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.agents.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable the agent registry&#8217;s discovery features: A2A agent discovery, MCP tool discovery, the MCP Registry API, the AI Catalog, ARD, and the web console&#8217;s Agents tab. Each of them can still be turned on or off with its own property, which takes precedence. Features that connect to other servers (apicurio.mcp-import.enabled, apicurio.agent-inventory.enabled, apicurio.federation.enabled) are not included and must be enabled separately <em>(experimental)</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -599,16 +599,16 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.3.3</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable the AI Catalog well-known discovery endpoint <em>(experimental)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable the AI Catalog well-known discovery endpoint. Defaults to apicurio.agents.enabled <em>(experimental)</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.host-name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Apicurio Registry</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.3.3</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Display name for this registry instance, reported as the AI Catalog host</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated since 3.4.0, use apicurio.instance.name, which takes precedence. Display name for this registry instance, reported as the AI Catalog host</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.publisher-domain</code></p></td>
@@ -616,13 +616,6 @@
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.3.3</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The publisher domain segment used when building 'urn:air:' identifiers for AI Catalog entries. When not configured, the domain is derived from the incoming request&#8217;s host and port.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.spec-version</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.3.3</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The AI Catalog specification version reported in the catalog document</p></td>
 </tr>
 </tbody>
 </table>
@@ -710,16 +703,9 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ard.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.3.3</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable the ARD (Agentic Resource Discovery) well-known API endpoints <em>(experimental)</em></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ard.federation.default</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>none</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.3.3</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Default ARD federation mode advertised by this registry. Only 'none' (no federation) is currently implemented.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable the ARD (Agentic Resource Discovery) well-known API endpoints. Defaults to apicurio.agents.enabled <em>(experimental)</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -1271,16 +1257,16 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.peer.insecure-http.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allow peer registry URLs that use plain HTTP instead of HTTPS. Server-wide: applies to every peer, whether created through the admin API or loaded declaratively</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow peer registry URLs that use plain HTTP instead of HTTPS. Server-wide: applies to every peer, whether created through the admin API or loaded declaratively. Defaults to apicurio.outbound.insecure-http.enabled</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.peer.loopback.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allow peer registry URLs that point at a loopback address or a localhost name, for development and tests. Server-wide: applies to every peer, whether created through the admin API or loaded declaratively</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow peer registry URLs that point at a loopback address or a localhost name, for development and tests. Server-wide: applies to every peer, whether created through the admin API or loaded declaratively. Defaults to apicurio.outbound.loopback.enabled</p></td>
 </tr>
 </tbody>
 </table>
@@ -1542,6 +1528,20 @@
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.3.1</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Comma-separated list of enabled SSL/TLS protocol versions (e.g. TLSv1.2,TLSv1.3). When not set, the JVM/Quarkus defaults apply. Invalid values will cause TLS handshake failures at runtime.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.outbound.insecure-http.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default for the features that connect to other servers: allow URLs that use plain HTTP instead of HTTPS. Used by apicurio.mcp-import.insecure-http.enabled and apicurio.federation.peer.insecure-http.enabled when they are not set</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.outbound.loopback.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default for the features that connect to other servers: allow URLs that point at a loopback address or a localhost name, for development and tests. Used by apicurio.mcp-import.loopback.enabled and apicurio.federation.peer.loopback.enabled when they are not set</p></td>
 </tr>
 </tbody>
 </table>
@@ -1956,16 +1956,16 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp-import.insecure-http.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allow MCP server URLs that use plain HTTP instead of HTTPS when importing</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow MCP server URLs that use plain HTTP instead of HTTPS when importing. Defaults to apicurio.outbound.insecure-http.enabled</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp-import.loopback.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allow MCP server URLs that point at a loopback address or a localhost name when importing, for development and tests. The host must still be allowed by apicurio.mcp-import.allowed-hosts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow MCP server URLs that point at a loopback address or a localhost name when importing, for development and tests. The host must still be allowed by apicurio.mcp-import.allowed-hosts. Defaults to apicurio.outbound.loopback.enabled</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp-import.max-concurrent</code></p></td>
@@ -2019,9 +2019,9 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp-registry.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable the MCP Registry API (Developer Preview) <em>(experimental)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable the MCP Registry API (Developer Preview). Defaults to apicurio.agents.enabled <em>(experimental)</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp-registry.max-page-size</code></p></td>
@@ -2033,9 +2033,9 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.mcp-tools.enabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.0.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable MCP tool definition discovery endpoints <em>(experimental)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable MCP tool definition discovery endpoints. Defaults to apicurio.agents.enabled <em>(experimental)</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -3037,6 +3037,13 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enable experimental features. When disabled, any experimental feature that is individually enabled will prevent the application from starting.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.instance.name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>optional&lt;string&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Display name of this registry instance in discovery documents, such as the A2A Agent Card and the AI Catalog. Defaults to Apicurio Registry. Replaces apicurio.a2a.agent.name and apicurio.ai-catalog.host-name, and takes precedence over them</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -3181,7 +3188,7 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean [dynamic]</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.2.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enabled to show the Agents tab in the UI <em>(experimental)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enabled to show the Agents tab in the UI. Defaults to apicurio.agents.enabled <em>(experimental)</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ui.features.breadcrumbs</code></p></td>
