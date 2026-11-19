@@ -531,7 +531,7 @@ cd apicurio-registry</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The stack starts PostgreSQL, Apicurio Registry with the agent features enabled, and the web console. A <code>seed</code> container then loads the demo catalog into the <code>demo</code> group and exits.</p>
+<p>The stack starts PostgreSQL, Apicurio Registry with the agent features enabled, the web console, and a demo MCP server for importing tools. A <code>seed</code> container then loads the demo catalog into the <code>demo</code> group and exits.</p>
 </div>
 </li>
 </ol>
@@ -758,6 +758,61 @@ cd apicurio-registry</code></pre>
 <div class="paragraph _abstract">
 <p>Instead of writing <code>MCP_TOOL</code> artifacts by hand, you can import the tools of a running MCP server, and import them again when the server changes. The same compatibility rules apply, so an incompatible tool change is rejected on import.</p>
 </div>
+<div class="paragraph">
+<p>The stack includes a demo MCP server, <code>weather-mcp</code>, which only Apicurio Registry can reach. Its <code>/mcp</code> endpoint lists <code>get_forecast</code>, as registered in the demo catalog, and a new tool, <code>get_alerts</code>. Its <code>/mcp-v2</code> endpoint plays the same server after a breaking change: <code>get_forecast</code> now requires a <code>units</code> property.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Import the tools of the running server into the <code>weather</code> MCP server artifact:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST http://localhost:8080/apis/registry/v3/groups/demo/artifacts/weather/mcp-import \
+  -H "Content-Type: application/json" \
+  -d '{"url": "http://weather-mcp:8000/mcp"}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The report lists each tool. <code>get_alerts</code> is <code>CREATED</code> as the <code>weather.get_alerts</code> artifact. <code>get_forecast</code> is <code>UNCHANGED</code>, because version <code>1</code> already has the same definition. The <code>weather</code> server artifact gets version <code>2</code>, which references both tools.</p>
+</div>
+</li>
+<li>
+<p>Check what a redeployed server with a breaking change would do, without writing anything:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST http://localhost:8080/apis/registry/v3/groups/demo/artifacts/weather/mcp-import \
+  -H "Content-Type: application/json" \
+  -d '{"url": "http://weather-mcp:8000/mcp-v2", "dryRun": true}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>get_forecast</code> is <code>REJECTED</code> by the <code>BACKWARD</code> compatibility rule, and its causes include <code>A property was made 'required'.</code> Callers that send only <code>city</code> would break.</p>
+</div>
+</li>
+<li>
+<p>Import again from the unchanged server:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST http://localhost:8080/apis/registry/v3/groups/demo/artifacts/weather/mcp-import \
+  -H "Content-Type: application/json" \
+  -d '{"url": "http://weather-mcp:8000/mcp"}'</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>The report&#8217;s <code>status</code> and every tool&#8217;s <code>status</code> are <code>UNCHANGED</code>: importing again from the same server writes nothing.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The stack allows imports only from <code>weather-mcp</code>, over plain HTTP, because it runs on the stack&#8217;s private network. For the settings, the import results, and the outbound connection rules, see <a href="assembly-mcp-tool-features.html" class="page">MCP tool definition features</a>.</p>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -765,7 +820,7 @@ cd apicurio-registry</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Importing tools from a running MCP server is planned for Apicurio Registry 3.4 and is not available in released versions. For the planned behavior, see <a href="assembly-mcp-tool-features.html" class="page">MCP tool definition features</a>.
+Importing tools from a running MCP server is available from Apicurio Registry 3.4.
 </td>
 </tr>
 </table>

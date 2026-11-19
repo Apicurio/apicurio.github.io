@@ -613,7 +613,7 @@ Contract "billing-contract" → contract.billing-contract.owner.team = billing-t
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0.95 to below 1.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DLQ</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The violation is recorded and evaluation continues. No dead letter queue routing is implemented.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The violation is recorded and evaluation continues. The Kafka SerDes send the record to the dead letter queue topic.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Below 0.95</p></td>
@@ -1084,12 +1084,12 @@ Each entry under <code>schemas[]</code> is independent. Projection and field met
 </dd>
 <dt class="hdlist1"><code>DLQ</code></dt>
 <dd>
-<p>Evaluation continues with the next rule. No dead letter queue routing is implemented.</p>
+<p>Evaluation continues with the next rule. In the Kafka SerDes, the record is sent to the dead letter queue topic.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>How a failed result affects Kafka clients depends on the SerDes <code>fail-on-error</code> setting, not on the <code>onFailure</code> action.</p>
+<p>How a failed result affects Kafka clients depends on the SerDes <code>fail-on-error</code> setting, except for <code>DLQ</code>: see <a href="#data-contracts-serdes_registry">Kafka SerDes integration</a>.</p>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
@@ -1280,6 +1280,11 @@ curl "http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifa
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Target version for deserializer migration</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.serde.contract-rules.dlq.topic</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Topic that receives the records failing a rule with <code>onFailure: DLQ</code>. The serializer or deserializer sends them with a producer created from its own client configuration (bootstrap servers, security settings), then throws <code>ContractRuleViolationException</code>. Without this property, such a failure is an error</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -1293,7 +1298,7 @@ curl "http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifa
 </dd>
 <dt class="hdlist1">Record conversion</dt>
 <dd>
-<p>Avro generic records and JSON Schema records (<code>JsonNode</code> or a configured Java class) are converted to maps field by field: Avro enums and strings become strings, unions their value, bytes and fixed ISO-8859-1 strings, and logical types keep their underlying type (a <code>date</code> is an int). Other records are converted by parsing the JSON output of their <code>toString()</code> method.</p>
+<p>Avro generic records and JSON Schema records (<code>JsonNode</code> or a configured Java class) are converted to maps field by field: Avro enums and strings become strings, unions their value, bytes and fixed ISO-8859-1 strings, and logical types keep their underlying type (a <code>date</code> is an int). Protobuf messages are converted through their canonical JSON form (proto field names). Other records are converted by parsing the JSON output of their <code>toString()</code> method.</p>
 </dd>
 <dt class="hdlist1">Producer (serializer)</dt>
 <dd>
@@ -1309,7 +1314,11 @@ curl "http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifa
 </dd>
 <dt class="hdlist1">Results</dt>
 <dd>
-<p><code>TRANSFORM</code> output of domain rules is not applied to the record. No dead letter queue routing is implemented; with <code>fail-on-error=false</code>, violations are only logged.</p>
+<p>The output of <code>TRANSFORM</code> domain rules replaces the record: the serializer writes the transformed record, and the deserializer returns the output of <code>READ</code> transforms. It is converted back to the record&#8217;s type, as for migration: an Avro generic record of the schema, JSON Schema data of the same type, or a Protobuf message of the same type (Protobuf <code>READ</code> transforms keep the message type, so they apply even though Protobuf migrations do not). Avro specific records are written or returned unchanged.</p>
+</dd>
+<dt class="hdlist1">Dead letter queue</dt>
+<dd>
+<p>When a failed rule has <code>onFailure: DLQ</code>, the record (as serialized, or as read) is sent to the <code>dlq.topic</code> with the headers <code>apicurio.contract-rules.source-topic</code> and <code>apicurio.contract-rules.violations</code>, and a <code>ContractRuleViolationException</code> naming the topic is thrown, whatever <code>fail-on-error</code>: the record does not reach the original topic or the application. Other failures throw <code>ContractRuleViolationException</code> with <code>fail-on-error=true</code>, and are only logged with <code>fail-on-error=false</code>.</p>
 </dd>
 </dl>
 </div>
