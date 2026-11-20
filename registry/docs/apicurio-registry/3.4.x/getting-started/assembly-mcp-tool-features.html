@@ -1255,6 +1255,9 @@ This feature is experimental. The registry makes outbound connections to the URL
 <li>
 <p><code>dryRun</code>: when <code>true</code>, the server is contacted and the report is returned, but nothing is written.</p>
 </li>
+<li>
+<p><code>async</code>: when <code>true</code>, the import runs in the background, for servers with many tools whose import can take longer than an HTTP client or gateway waits. See <a href="#mcp-importing-tools-async_registry">Importing in the background</a>. Cannot be combined with <code>dryRun</code>.</p>
+</li>
 </ul>
 </div>
 </li>
@@ -1335,6 +1338,32 @@ This feature is experimental. The registry makes outbound connections to the URL
 </div>
 <div class="paragraph">
 <p>The new server version references exactly the imported tools. References that you added to an earlier version by hand are not carried over.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="mcp-importing-tools-async_registry"><a class="anchor" href="#mcp-importing-tools-async_registry"></a>Importing in the background</h3>
+<div class="paragraph">
+<p>With <code>"async": true</code>, the request is checked as a synchronous import is (the feature, the storage, the <code>MCP_SERVER</code> artifact, write access, the headers, the URL, and the concurrent import limit), and a refused import returns the same error. The import then runs in the background, as the caller, and the response is HTTP 202 with the status of the import and a <code>Location</code> header naming its status URL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl http://localhost:8080/apis/registry/v3/groups/my-servers/artifacts/weather/mcp-import/status</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{ "state": "COMPLETED", "startedOn": "2026-11-20T10:15:30Z", "finishedOn": "2026-11-20T10:16:12Z",
+  "version": "2", "counts": { "CREATED": 498, "UNCHANGED": 2 } }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>state</code> is <code>RUNNING</code>, <code>COMPLETED</code>, or <code>FAILED</code>. A completed import reports the server version and the number of tools by status, but not the per-tool report: read the tool artifacts or the server version references for the details. A failed import reports a fixed <code>reason</code>; tools written before the failure stay stored.</p>
+</div>
+<div class="paragraph">
+<p>The status URL reports the last import into the artifact, synchronous or not; dry runs are not recorded. While the recorded import into an artifact is running, another import into it, synchronous or not, returns HTTP 409 with <code>An import into this MCP server is already running.</code>; dry runs are allowed. The check reads the labels before writing them, so two registry instances that start imports into one artifact at the same moment can both start; each then records only its own status. It needs read access to the artifact, and returns HTTP 404 when no import was recorded. The status is kept in labels of the <code>MCP_SERVER</code> artifact under <code>apicurio.mcp-import.</code>, so every registry instance reports the same status. Editing the artifact labels keeps them unless you send them. An import still <code>RUNNING</code> that has not reported progress for longer than <code>apicurio.mcp-import.total-timeout.seconds</code> plus <code>apicurio.mcp-import.timeout.seconds</code>, for example because the registry instance running it stopped, is reported as <code>FAILED</code>.</p>
+</div>
+<div class="paragraph">
+<p>A background import has no HTTP request, so it cannot read roles from a request header: with <code>apicurio.auth.role-source=header</code>, use synchronous imports.</p>
 </div>
 </div>
 <div class="sect2">
