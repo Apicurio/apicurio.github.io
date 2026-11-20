@@ -1268,6 +1268,76 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Allow peer registry URLs that point at a loopback address or a localhost name, for development and tests. Server-wide: applies to every peer, whether created through the admin API or loaded declaratively. Defaults to apicurio.outbound.loopback.enabled</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.breaker.delay-ms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time in milliseconds an open circuit breaker waits before letting a call through to a peer registry again</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.breaker.failure-ratio</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.5</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Share of recent calls to a peer registry that must have failed for its circuit breaker to open</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.breaker.request-volume-threshold</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>4</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of recent calls to a peer registry that must have been made before its circuit breaker can open</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.deadline-ms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time in milliseconds a federated search may take in total. Peers that have not answered by then are reported as deadline_exceeded</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.max-concurrent-calls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>64</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of peer registry calls in progress at once, across all federated searches, from the name lookup until the answer has been read or the call cancelled. Calls beyond it are reported as capacity_exceeded</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.max-peers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>16</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of peer registries one federated search queries. Enabling more through the peer management API is refused. If more are enabled anyway, for example after this value was lowered or through declarative loading, a search queries the first ones in peer id order and reports the rest as capacity_exceeded</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.max-response-bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1048576</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum size in bytes of the response accepted from one peer registry. Larger responses are discarded</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.max-searches-per-caller</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of federated searches one caller can have in progress at once. A search beyond it still searches this registry, but calls no peer and reports every peer as capacity_exceeded. Authenticated callers are told apart by principal name and anonymous callers by network address, so all anonymous callers behind a proxy that does not forward the client address share one limit. A search calls every enabled peer, up to max-peers, so with the defaults one caller can hold at most 32 of the 64 peer calls (max-concurrent-calls)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.peer-timeout-ms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time in milliseconds a single peer registry has to answer a federated search</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.per-source-limit.max</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>100</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.4.0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Upper bound for the perSourceLimit a federated search may ask for</p></td>
+</tr>
 </tbody>
 </table>
 </div>
