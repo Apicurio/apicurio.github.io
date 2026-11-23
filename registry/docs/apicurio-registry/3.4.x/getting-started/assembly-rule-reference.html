@@ -431,7 +431,7 @@
 <h2 id="registry-rule-types_registry"><a class="anchor" href="#registry-rule-types_registry"></a>Apicurio Registry content rule types</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can specify <code>VALIDITY</code>, <code>COMPATIBILITY</code>, and <code>INTEGRITY</code> rule types to govern content evolution in Apicurio Registry. These rule types apply to global rules, group-specific rules, and artifact-specific rules.</p>
+<p>You can specify <code>VALIDITY</code>, <code>COMPATIBILITY</code>, <code>INTEGRITY</code>, and <code>GOVERNANCE</code> rule types to govern content evolution in Apicurio Registry. These rule types apply to global rules, group-specific rules, and artifact-specific rules.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Apicurio Registry content rule types</caption>
@@ -524,8 +524,59 @@
 </ul>
 </div></div></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GOVERNANCE</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Checks the data contract metadata of an artifact when you add a version. The possible configuration values for this rule are as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>FULL</code>: The <code>BASIC</code> checks apply. The contract must also have a data classification and a support contact. A contract in the <code>PROD</code> stage must have the <code>STABLE</code> status.</p>
+</li>
+<li>
+<p><code>BASIC</code>: The contract must have an owner team, and the contract status must not be <code>DEPRECATED</code>.</p>
+</li>
+<li>
+<p><code>NONE</code>: All contract metadata checks are disabled.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-rule-governance_registry"><a class="anchor" href="#registry-rule-governance_registry"></a>Governance rule</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The <code>GOVERNANCE</code> rule checks the data contract metadata of an artifact when you add a version. It does not check the content of the version.</p>
+</div>
+<div class="paragraph">
+<p>The rule reads the contract metadata from the artifact labels whose keys start with <code>contract.</code>, for any artifact type. An artifact that has no such label passes the rule at every level. If an artifact has more than one contract, the rule checks the metadata of only one contract. For more information about data contracts, see
+<a href="assembly-data-contracts.html" class="page">Apicurio Registry data contracts</a>.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry applies the rule when you add a version to an existing artifact or publish a draft version. It does not apply the rule when you create an artifact by using the REST API, the CLI, or the web console.</p>
+</div>
+<div class="paragraph">
+<p>If the rule rejects a version, each cause in the rule violation response has the key of the checked label as its <code>context</code>, for example <code>contract.orders-contract.owner.team</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can configure the rule at the global, group, or artifact level by using the REST API or the CLI. The web console does not show the <code>GOVERNANCE</code> rule. The following request sets the rule to <code>BASIC</code> for one artifact:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST \
+  http://localhost:8080/apis/registry/v3/groups/my-group/artifacts/my-artifact/rules \
+  -H 'Content-Type: application/json' \
+  -d '{"ruleType": "GOVERNANCE", "config": "BASIC"}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The equivalent CLI command is <code>acr artifact rule create GOVERNANCE --config BASIC --group my-group --artifact my-artifact</code>.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
