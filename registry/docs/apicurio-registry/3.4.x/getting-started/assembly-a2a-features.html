@@ -595,8 +595,8 @@ To enable all the agent registry discovery features at once (A2A, MCP tools, the
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.agent.protocol-version</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A2A protocol version reported in the Agent Card and in its supported interfaces</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Not set</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated since 3.4.0. The property has no effect. The Agent Card reports A2A protocol version <code>1.0</code>, the version that Apicurio Registry implements.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.agent.documentation-url</code></p></td>
@@ -736,6 +736,11 @@ To enable all the agent registry discovery features at once (A2A, MCP tools, the
 <td class="tableblock halign-left valign-top"><p class="tableblock">integer</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Pagination limit (default: 20, maximum: 500)</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>publicOnly</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When <code>true</code>, return only Agent Cards with <code>public</code> visibility, whoever the caller is, even when authentication is disabled (default: <code>false</code>)</p></td>
+</tr>
 </tbody>
 </table>
 <div class="listingblock">
@@ -776,6 +781,9 @@ To enable all the agent registry discovery features at once (A2A, MCP tools, the
 </div>
 <div class="paragraph">
 <p>The <code>count</code> field is the total number of matching Agent Cards, not the number of entries in the current page. The <code>skills</code> array lists skill IDs only. To get skill names and descriptions, retrieve the full Agent Card from <code>/.well-known/agents/{groupId}/{artifactId}</code>.</p>
+</div>
+<div class="paragraph">
+<p>When Apicurio Registry applies <code>publicOnly=true</code>, the response contains the <code>publicOnly</code> field with the value <code>true</code>. A registry version that does not support the parameter ignores it and omits the field, so check for the field if you depend on the filter.</p>
 </div>
 </dd>
 <dt class="hdlist1">GET /.well-known/agents/{groupId}/{artifactId}</dt>
@@ -906,7 +914,7 @@ To enable all the agent registry discovery features at once (A2A, MCP tools, the
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-When no authentication mechanism is configured (OIDC, basic, proxy header, Kubernetes, or form), Apicurio Registry skips visibility filtering and all agents are visible to all users.
+When no authentication mechanism is configured (OIDC, basic, proxy header, Kubernetes, or form), Apicurio Registry skips visibility filtering and all agents are visible to all users, unless a <code>GET /.well-known/agents</code> request sets <code>publicOnly=true</code>.
 </td>
 </tr>
 </table>
@@ -924,6 +932,314 @@ for details.
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="a2a-federated-agent-search_registry"><a class="anchor" href="#a2a-federated-agent-search_registry"></a>Federated agent search</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>With federated agent search, one request searches the Agent Cards of this registry and of its enabled peer registries. The response names the source of each agent and reports an outcome for every source, so a slow or unavailable peer does not fail the search.</p>
+</div>
+<div class="paragraph">
+<p>A peer registry is another registry that an administrator registers with this registry, for example through the <code>/apis/registry/v3/admin/peers</code> REST API. Apicurio Registry searches only the peers that are enabled.</p>
+</div>
+<div class="paragraph">
+<p>To use federated agent search, enable A2A protocol support and set <code>apicurio.federation.enabled=true</code>. The <code>apicurio.agents.enabled</code> property does not enable federation.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>apicurio.federation.enabled</code> is an experimental property. You must also set <code>apicurio.features.experimental.enabled=true</code> to use it.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>GET /apis/registry/v3/search/federated</code> endpoint requires read-level authorization. It accepts the <code>name</code>, <code>skill</code>, <code>capability</code>, <code>inputMode</code>, and <code>outputMode</code> parameters of <code>GET /.well-known/agents</code> and applies them to every source. It does not accept <code>offset</code> or <code>limit</code>. The <code>perSourceLimit</code> parameter sets the maximum number of agents that each source returns, and defaults to 20. Apicurio Registry lowers a value above <code>apicurio.federation.search.per-source-limit.max</code> to that maximum.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example request</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/apis/registry/v3/search/federated?skill=translation&amp;perSourceLimit=10"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example response: FederatedAgentSearchResults</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "agents": [
+    {
+      "source": "local",
+      "groupId": "ai-agents",
+      "artifactId": "translator-agent",
+      "name": "Translation Agent",
+      "skills": ["translation"],
+      "owner": "alice"
+    },
+    {
+      "source": "eu-registry",
+      "groupId": "ai-agents",
+      "artifactId": "translator-agent",
+      "name": "Translation Agent",
+      "skills": ["translation"]
+    }
+  ],
+  "sources": [
+    {
+      "source": "local",
+      "outcome": "ok",
+      "count": 1,
+      "truncated": false
+    },
+    {
+      "source": "eu-registry",
+      "outcome": "ok",
+      "count": 1,
+      "truncated": false
+    },
+    {
+      "source": "us-registry",
+      "outcome": "failed",
+      "reason": "timeout",
+      "count": 0,
+      "truncated": false
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each entry in <code>agents</code> has a <code>source</code> field and the agent fields that <code>GET /.well-known/agents</code> returns, which are <code>groupId</code>, <code>artifactId</code>, <code>name</code>, <code>description</code>, <code>supportedInterfaces</code>, <code>skills</code>, <code>capabilities</code>, <code>createdOn</code>, and <code>owner</code>. The example shows only some of them. The agents of this registry come first, with the source <code>local</code>, followed by the agents of each peer in peer ID order. An agent from a peer has no <code>owner</code> field. If two sources return an agent with the same group ID and artifact ID, the response contains both.</p>
+</div>
+<div class="paragraph">
+<p>The search of this registry applies the visibility rules of the caller. Apicurio Registry calls each peer at <code>/.well-known/agents</code> with <code>publicOnly=true</code> and without credentials, so a peer returns only Agent Cards with <code>public</code> visibility. An Agent Card without the <code>apicurio.agent.visibility</code> label is public only if the peer sets <code>apicurio.a2a.default-visibility</code> to <code>public</code>. A peer that keeps the default value, <code>entitled</code>, returns only the Agent Cards whose label has the value <code>public</code>, even when authentication is disabled on the peer. Apicurio Registry never sends the credentials of the caller to a peer.</p>
+</div>
+<div class="paragraph">
+<p>The <code>sources</code> array has one entry for this registry and one for each enabled peer.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Fields of a <code>sources</code> entry</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>source</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>local</code> for this registry, or the ID of the peer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>outcome</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ok</code>, <code>deadline_exceeded</code>, <code>unsupported</code>, or <code>failed</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reason</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Why Apicurio Registry could not search the peer. Present only when the outcome is <code>failed</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of agents from this source in the response</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>truncated</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> when the source reported more matching agents than it returned</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Only an administrator sees which peer is which and why a peer failed. The example response is what an administrator receives. For federated search, an administrator is a caller that has the administrator role while role-based authorization is enabled, or a caller that the admin override (<code>apicurio.auth.admin-override.*</code>) identifies as an administrator. For any other caller, the <code>source</code> of a peer is <code>peer-1</code>, <code>peer-2</code>, and so on, numbered in peer ID order within the response, and the <code>reason</code> field is absent. When authentication is disabled, every caller sees the peer IDs and the reasons.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Source outcomes</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Outcome</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ok</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The source answered, and its agents are in the response.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deadline_exceeded</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The search reached <code>apicurio.federation.search.deadline-ms</code> before the peer answered.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unsupported</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The peer has no agent search endpoint, or its response did not confirm the <code>publicOnly</code> filter. Apicurio Registry discards the response.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>failed</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry could not search the peer. The <code>reason</code> field says why.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Failure reasons</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Reason</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unauthorized</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The peer answered with HTTP 401 or 403.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unreachable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry could not connect to the peer, or the address of the peer is not allowed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The peer did not answer within <code>apicurio.federation.search.peer-timeout-ms</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>peer_error</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The peer answered with a server error or with a redirect. Apicurio Registry does not follow redirects.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>invalid_response</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The response of the peer was malformed, too large, inconsistent, or not JSON. Apicurio Registry also reports this reason when the peer answers with an HTTP status that no other reason or outcome covers, for example 400 or 429.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>circuit_open</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The circuit breaker of the peer is open, and Apicurio Registry did not call the peer.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>capacity_exceeded</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry did not call the peer because a limit on peer calls was reached. The configuration properties table describes the limits that you can set.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Apicurio Registry calls the peers in parallel while it searches its own Agent Cards. The endpoint returns HTTP 200 whenever the search of this registry succeeds, even if some or all peers fail, so check <code>sources</code> to see which peers answered.</p>
+</div>
+<div class="paragraph">
+<p>Each peer has its own circuit breaker, which counts connection failures, timeouts, and server error or redirect responses as failures. While the circuit breaker of a peer is open, Apicurio Registry does not call that peer.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. Error responses</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">400</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>perSourceLimit</code> is below 1, or the request carries the <code>X-Federation-Hop</code> header that Apicurio Registry adds to its calls to peers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">404</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A2A protocol support is not enabled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">409</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Federation is not enabled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">503</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The search of this registry did not finish within <code>apicurio.federation.search.deadline-ms</code></p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. Federated search configuration properties</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.deadline-ms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time in milliseconds that a federated search can take in total</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.peer-timeout-ms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time in milliseconds that one peer has to answer. The value must be lower than <code>apicurio.federation.search.deadline-ms</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.per-source-limit.max</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>100</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Highest value that <code>perSourceLimit</code> can have</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.max-peers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>16</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of peers that one search queries. The peer management API refuses to enable more peers. If more peers are enabled anyway, for example after you lower this value, a search queries the first ones in peer ID order and reports the others as <code>failed</code> with the reason <code>capacity_exceeded</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.max-searches-per-caller</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of federated searches that one caller can have in progress at once. A search beyond the limit still searches this registry, but calls no peer and reports every peer as <code>failed</code> with the reason <code>capacity_exceeded</code>. Apicurio Registry identifies an authenticated caller by principal name and an anonymous caller by network address.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.max-concurrent-calls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>64</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of calls to peers in progress at once, across all federated searches. Apicurio Registry reports a peer whose call exceeds the limit as <code>failed</code> with the reason <code>capacity_exceeded</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.max-response-bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1048576</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum size in bytes of the response that Apicurio Registry accepts from one peer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.breaker.request-volume-threshold</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>4</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of recent calls to a peer that Apicurio Registry must have made before the circuit breaker of the peer can open</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.breaker.failure-ratio</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.5</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Share of the recent calls to a peer that must have failed for the circuit breaker of the peer to open</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.search.breaker.delay-ms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time in milliseconds that an open circuit breaker waits before it lets a call through to the peer again</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>When federation is enabled, Apicurio Registry checks these values at startup and does not start if a value is out of range.</p>
 </div>
 </div>
 </div>
@@ -1018,7 +1334,7 @@ for details.
 <p>Apicurio Registry detects the extension, assembles a valid Agent Card from it, and stores it as a companion artifact.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Enabling OpenAPI-to-Agent-Card auto-generation</caption>
+<caption class="title">Table 11. Enabling OpenAPI-to-Agent-Card auto-generation</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 16.6666%;">
@@ -1106,7 +1422,7 @@ servers:
 <p>Apicurio Registry marks the companion artifact and its source OpenAPI artifact with <code>apicurio.a2a.openapi-agent-card.*</code> labels:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Provenance and sync labels</caption>
+<caption class="title">Table 12. Provenance and sync labels</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -1296,7 +1612,7 @@ servers:
 <p>Artifact references record which tools, servers, models, and prompts an agent uses, and which tools an MCP server provides. The references are registry metadata: Agent Card and <code>server.json</code> content is not changed.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. Allowed reference targets</caption>
+<caption class="title">Table 13. Allowed reference targets</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -1524,7 +1840,7 @@ metadata:
 <p>You can chain context across multiple agents in a pipeline: each agent&#8217;s output becomes part of the next agent&#8217;s input. The <code>agent-registry</code> example in the Apicurio Registry repository runs such a pipeline with Quarkus LangChain4j applications:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. Briefing pipeline in the agent-registry example</caption>
+<caption class="title">Table 14. Briefing pipeline in the agent-registry example</caption>
 <colgroup>
 <col style="width: 14.2857%;">
 <col style="width: 42.8571%;">
