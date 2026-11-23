@@ -572,7 +572,10 @@ The class must have a public no-argument constructor and must be available on th
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>{"type": "webhook", "url": "&#8230;&#8203;", "headers": {&#8230;&#8203;}}</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An HTTP endpoint that Apicurio Registry calls with a JSON request that describes the operation, including the content, resolved references, and rule level. The endpoint returns a JSON response.
 The optional <code>headers</code> are intended to be sent with every request, for example, for authentication, but the current version does not send them: protect the endpoint at the network level.
-Webhooks work with the standard container image but add a network round trip to every operation.</p></td>
+Webhooks work with the standard container image but add a network round trip to every operation.
+By default, each webhook call has a connect timeout of 5 seconds and a read timeout of 10 seconds.
+To change these values, set the <code>apicurio.artifact-types.webhooks.connect-timeout.seconds</code> and <code>apicurio.artifact-types.webhooks.read-timeout.seconds</code> properties.
+Apicurio Registry stops waiting for a webhook call after 10 seconds, so a timeout greater than 10 seconds has no effect.</p></td>
 </tr>
 </tbody>
 </table>

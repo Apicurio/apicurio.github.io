@@ -791,7 +791,7 @@ apicurio.registry.tls.truststore.type=PKCS12</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-These properties configure server trust only. Client certificate (mutual TLS) configuration is not available through the SerDes properties.
+These properties configure server trust only. For mutual TLS, also configure a client key store by using the <code>apicurio.registry.tls.keystore.location</code> property. Alternatively, provide a PEM client certificate and private key by using the <code>apicurio.registry.tls.client-certificate</code> and <code>apicurio.registry.tls.client-key</code> properties.
 </td>
 </tr>
 </table>
@@ -961,6 +961,41 @@ configured, the behavior is a no-op and the SerDes add no trace headers.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Optional wall-clock budget (milliseconds) for one schema-cache load retry loop. Checked before each re-attempt; it does not interrupt an in-flight cache attempt (that attempt may still run a full HTTP client retry ladder and request timeouts). <code>0</code> means unlimited. Recommended when <code>apicurio.registry.retry.transient-errors=true</code> to bound blocking on Kafka <code>Producer.send()</code> / Connect polls.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Duration, non-negative Number, or integer String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLIENT_RETRY_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.client.retry.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. Specifies whether the HTTP client that calls the registry retries a request that fails with a connection error or a socket timeout.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLIENT_RETRY_MAX_ATTEMPTS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.client.retry.max-attempts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. The maximum number of times that the HTTP client retries a request. Valid values are <code>1</code> to <code>1000</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>positive Number, or integer String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLIENT_RETRY_DELAY_MS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.client.retry.delay-ms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. The delay before the first HTTP client retry (milliseconds). Must be greater than <code>0</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Duration, positive Number, or integer String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>250</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLIENT_RETRY_BACKOFF_MULTIPLIER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.client.retry.backoff-multiplier</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. The factor that multiplies the HTTP client retry delay after each retry. Must be greater than <code>1.0</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number, or decimal String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLIENT_RETRY_MAX_DELAY_MS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.registry.client.retry.max-delay-ms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used by serializers and deserializers. The maximum delay between HTTP client retries (milliseconds). Must be greater than <code>0</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Duration, positive Number, or integer String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10000</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>FAULT_TOLERANT_REFRESH</code></p></td>
@@ -1251,7 +1286,7 @@ private static KafkaConsumer&lt;Long, GenericRecord&gt; createKafkaConsumer() {
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Simple Avro example</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/kafka-serdes">kafka-serdes example</a></p>
 </li>
 </ul>
 </div>
@@ -1557,13 +1592,13 @@ registered without references. JSON Schema SerDes do not auto-register reference
 <div class="title">Additional resources</div>
 <ul>
 <li>
-<p><a href="https://github.com/Apicurio/apicurio-registry/blob/main/serdes/avro-serde/src/main/java/io/apicurio/registry/serde/avro/AvroSerdeConfig.java">AvroSerdeConfig Java class</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/blob/main/serdes/generic/serde-common-avro/src/main/java/io/apicurio/registry/serde/avro/AvroSerdeConfig.java">AvroSerdeConfig Java class</a></p>
 </li>
 <li>
-<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Simple Avro example</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/kafka-serdes">kafka-serdes example</a></p>
 </li>
 <li>
-<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">SerDes with references example</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/schema-references">schema-references example</a></p>
 </li>
 </ul>
 </div>
@@ -1748,10 +1783,10 @@ KafkaProducer&lt;String, MessageBean&gt; producer =
 <p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/serdes/kafka/jsonschema-serde">JSON Schema SerDes module</a></p>
 </li>
 <li>
-<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Simple JSON Schema example</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/kafka-serdes">kafka-serdes example</a></p>
 </li>
 <li>
-<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">SerDes with references example</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/schema-references">schema-references example</a></p>
 </li>
 </ul>
 </div>
@@ -2021,10 +2056,10 @@ COMMAND = 4;
 <p><a href="#registry-serdes-types-avro_registry">Avro SerDes configuration</a></p>
 </li>
 <li>
-<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">Protobuf Bean and Protobuf Find Latest examples</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/kafka-serdes">kafka-serdes example</a></p>
 </li>
 <li>
-<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples">SerDes with references example</a></p>
+<p><a href="https://github.com/Apicurio/apicurio-registry/tree/main/examples/schema-references">schema-references example</a></p>
 </li>
 </ul>
 </div>

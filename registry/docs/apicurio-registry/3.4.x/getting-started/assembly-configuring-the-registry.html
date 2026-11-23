@@ -879,7 +879,7 @@ Before you configure OpenTelemetry, ensure that you have installed Apicurio Regi
 </div>
 </div>
 <div class="paragraph">
-<p>In production environments, configure trace sampling to reduce processing overhead and control the volume of trace data:</p>
+<p>When OpenTelemetry is enabled, Apicurio Registry samples 10% of traces by default to reduce processing overhead and control the volume of trace data. To change the sampling ratio, set the <code>QUARKUS_OTEL_TRACES_SAMPLER_ARG</code> environment variable:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
 <caption class="title">Table 4. Environment variables for trace sampling</caption>
@@ -896,11 +896,11 @@ Before you configure OpenTelemetry, ensure that you have installed Apicurio Regi
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OTEL_TRACES_SAMPLER</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The sampling strategy. Use <code>parentbased_traceidratio</code> for production.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The sampling strategy. This build-time property is set to <code>parentbased_traceidratio</code> in the Apicurio Registry build. You cannot change it at runtime.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_OTEL_TRACES_SAMPLER_ARG</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The sampling ratio (0.0 to 1.0). A value of <code>0.1</code> samples 10% of traces.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The sampling ratio (0.0 to 1.0). Default is <code>0.1</code>, which samples 10% of traces.</p></td>
 </tr>
 </tbody>
 </table>
