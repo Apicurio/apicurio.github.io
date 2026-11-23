@@ -450,9 +450,13 @@ Storing an <code>MCP_TOOL</code> definition in Apicurio Registry provides govern
 <dd>
 <p>Ensure that tool definitions conform to the MCP specification.</p>
 </dd>
-<dt class="hdlist1">Compatibility checking</dt>
+<dt class="hdlist1">Version compatibility</dt>
 <dd>
-<p>Detect breaking changes in tool input schemas.</p>
+<p>Detect breaking changes in the input and output schemas of a tool when you publish a new version of it.</p>
+</dd>
+<dt class="hdlist1">Cross-tool compatibility</dt>
+<dd>
+<p>Find the tools whose input can take the output of another tool.</p>
 </dd>
 <dt class="hdlist1">Discovery</dt>
 <dd>
@@ -486,6 +490,15 @@ Storing an <code>MCP_TOOL</code> definition in Apicurio Registry provides govern
 <li>
 <p><code>/.well-known/mcp-tools/{groupId}/{artifactId}</code> (retrieve tool)</p>
 </li>
+<li>
+<p><code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> (find the tools that accept the output of a tool)</p>
+</li>
+<li>
+<p><code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatibility</code> (explain the cross-tool compatibility of a tool)</p>
+</li>
+<li>
+<p><code>/.well-known/schemas/mcp-tool/v1</code> (retrieve the JSON Schema for tool definitions)</p>
+</li>
 </ul>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
@@ -500,7 +513,10 @@ Storing an <code>MCP_TOOL</code> definition in Apicurio Registry provides govern
 <p>Version management</p>
 </li>
 <li>
-<p>Validation and compatibility checking</p>
+<p>Validation and version compatibility checking</p>
+</li>
+<li>
+<p>Cross-tool compatibility</p>
 </li>
 </ul>
 </div></div></td>
@@ -780,7 +796,10 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 <h2 id="mcp-well-known-endpoints_registry"><a class="anchor" href="#mcp-well-known-endpoints_registry"></a>Well-known endpoints</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can search for and retrieve MCP tool definitions by using the following well-known endpoints.</p>
+<p>You can search for, retrieve, and compare MCP tool definitions by using the following well-known endpoints.</p>
+</div>
+<div class="paragraph">
+<p>The <code>/.well-known/mcp-tools</code> endpoints are available only when MCP tools support is enabled, and require read-level authorization. Apicurio Registry also serves them under <code>/apis/registry/v3/well-known/mcp-tools</code>, which is where the generated SDK clients call them.</p>
 </div>
 <div class="paragraph">
 <p>The <code>GET /.well-known/mcp-tools</code> endpoint searches for registered MCP tool definitions with filtering support. It accepts the following query parameters:</p>
@@ -875,6 +894,205 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 </div>
 <div class="paragraph">
 <p>The response is the MCP tool definition JSON document.</p>
+</div>
+<div class="paragraph">
+<p>The <code>GET /.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoint returns the registered MCP tools whose <code>inputSchema</code> accepts every output that the <code>outputSchema</code> of the specified tool permits. These are the tools with the <code>COMPATIBLE</code> verdict described in <a href="#mcp-cross-tool-compatibility_registry">Cross-tool compatibility</a>. The specified tool itself is never returned, and no tools are returned when its <code>outputSchema</code> is absent or cannot be compared. The endpoint accepts the <code>groupId</code> and <code>artifactId</code> path parameters and the following query parameters:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version of the specified tool to compare (defaults to latest)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>offset</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pagination offset (default: 0)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>limit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pagination limit (default: 20)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">Example request</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/.well-known/mcp-tools/orders/get-order/compatible"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Response: <code>McpCompatibleToolsResults</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "count": 1,
+  "tools": [
+    {
+      "groupId": "orders",
+      "artifactId": "send-receipt",
+      "owner": "",
+      "createdOn": 1794940649173,
+      "parameters": [
+        "orderId",
+        "total"
+      ]
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>GET /.well-known/mcp-tools/{groupId}/{artifactId}/compatibility</code> endpoint makes the same comparison and returns every compared tool with its verdict, and with the reasons and limitations that decide it. The endpoint accepts the <code>groupId</code> and <code>artifactId</code> path parameters and the following query parameters:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version of the specified tool to compare (defaults to latest)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>verdict</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string (repeatable)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Return only the tools with this verdict: <code>COMPATIBLE</code>, <code>INCOMPATIBLE</code>, or <code>INDETERMINATE</code>. Repeat the parameter to select more than one. By default, all three verdicts are returned.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>offset</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pagination offset, applied after the <code>verdict</code> filter (default: 0)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>limit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pagination limit, applied after the <code>verdict</code> filter (default: 20)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">Example request</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/apis/registry/v3/well-known/mcp-tools/orders/get-order/compatibility?verdict=INCOMPATIBLE&amp;verdict=INDETERMINATE"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Response: <code>McpToolCompatibilityResults</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "candidateTotal": 4,
+  "evaluated": 3,
+  "scanLimit": 500,
+  "complete": true,
+  "totals": {
+    "compatible": 1,
+    "incompatible": 1,
+    "indeterminate": 1
+  },
+  "count": 2,
+  "limitations": [],
+  "results": [
+    {
+      "tool": {
+        "groupId": "orders",
+        "artifactId": "convert-currency",
+        "owner": "",
+        "createdOn": 1794940649237,
+        "parameters": [
+          "total",
+          "currency"
+        ]
+      },
+      "verdict": "INDETERMINATE",
+      "reasons": [],
+      "limitations": [
+        {
+          "code": "UNSUPPORTED_KEYWORD",
+          "side": "CONSUMER",
+          "pointer": "/inputSchema/properties/currency/enum",
+          "message": "'enum' is not evaluated yet"
+        }
+      ]
+    },
+    {
+      "tool": {
+        "groupId": "orders",
+        "artifactId": "schedule-delivery",
+        "owner": "",
+        "createdOn": 1794940649203,
+        "parameters": [
+          "orderId",
+          "address"
+        ]
+      },
+      "verdict": "INCOMPATIBLE",
+      "reasons": [
+        {
+          "code": "REQUIRED_NOT_GUARANTEED",
+          "producerPointer": "/outputSchema/required",
+          "consumerPointer": "/inputSchema/required/1",
+          "message": "Required input 'address' is not declared by the producer"
+        }
+      ],
+      "limitations": []
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the fields of the response and the codes of reasons and limitations, see <a href="#mcp-cross-tool-compatibility-reference_registry">Cross-tool compatibility reference</a>.</p>
+</div>
+<div class="paragraph">
+<p>Both endpoints page their results with <code>offset</code> and <code>limit</code>. An <code>offset</code> or <code>limit</code> sent without a value takes its default, 0 or 20. A negative <code>offset</code> is treated as 0, a negative <code>limit</code> as 1, and a <code>limit</code> above 1000 as 1000, including values outside the 32-bit integer range. An <code>offset</code> or <code>limit</code> that is not a number is rejected with a <code>404</code> error, which the conversion of the request parameters returns before the endpoint runs. An unknown <code>verdict</code> value is rejected with a <code>400</code> error. Both endpoints return a <code>404</code> error when MCP tools support is disabled, when the specified tool or version does not exist, or when the artifact is not an <code>MCP_TOOL</code>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The <code>offset</code> and <code>limit</code> parameters of the <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoint now follow these rules. Earlier versions of Apicurio Registry returned one tool for a <code>limit</code> of 0, where an empty page is now returned, and returned an error for an <code>offset</code> or <code>limit</code> sent without a value or outside the 32-bit integer range, or for a <code>limit</code> close to the 32-bit maximum combined with a non-zero <code>offset</code>, where the values now take their defaults or are normalized.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoint now returns a different set of tools than earlier versions of Apicurio Registry, which returned any candidate whose <code>inputSchema</code> declared every property in the <code>outputSchema</code> of the specified tool. A candidate that ignores part of the output is now returned. A candidate is no longer returned when it requires an input that the <code>outputSchema</code> does not require, when it rejects a value that the output can contain, such as <code>null</code>, or when the comparison cannot evaluate part of either schema. Structure nested inside a property is now compared as well, so a candidate whose nested types or nested required inputs do not match the output is no longer returned.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The <code>GET /.well-known/schemas/mcp-tool/v1</code> endpoint retrieves the JSON Schema for MCP tool definitions. You can use the schema for IDE autocompletion and validation.</p>
@@ -1031,7 +1249,7 @@ If you already use the <code>FULL</code> validity level for MCP tool definitions
 </div>
 </div>
 <div class="sect1">
-<h2 id="mcp-compatibility-checking_registry"><a class="anchor" href="#mcp-compatibility-checking_registry"></a>Compatibility checking</h2>
+<h2 id="mcp-compatibility-checking_registry"><a class="anchor" href="#mcp-compatibility-checking_registry"></a>Version compatibility checking</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>When a <code>COMPATIBILITY</code> rule is configured, Apicurio Registry compares the <code>inputSchema</code> and optional <code>outputSchema</code> of successive <code>MCP_TOOL</code> versions with the same Apitomy Data Models checker used for JSON Schema artifacts.
@@ -1172,7 +1390,7 @@ The two schemas have opposite directions:</p>
 <p>A known incompatible change returns HTTP 400 with a rule-violation context prefixed by <code>/inputSchema</code> or <code>/outputSchema</code>. For example, narrowing an input string reports <code>/inputSchema/properties/query/maxLength</code>. Input BACKWARD contexts point into the new schema; output BACKWARD contexts point into the old schema because its accepted outputs are the comparison target. FORWARD reverses those locations; FULL can report both. Invalid or unsupported schemas return HTTP 422. Neither rejection creates the candidate version or changes previously accepted content.</p>
 </div>
 <div class="paragraph">
-<p>The engine can conservatively reject changes that accept the same values, especially when several constraints interact. A passing schema check is not proof of behavioral equivalence, runtime conformance, successful invocation, or compatibility between two different tools.</p>
+<p>The engine can conservatively reject changes that accept the same values, especially when several constraints interact. A passing schema check is not proof of behavioral equivalence, runtime conformance, successful invocation, or compatibility between two different tools. To find out whether the output of one tool can be passed to the input of another tool, see <a href="#mcp-cross-tool-compatibility_registry">Cross-tool compatibility</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1183,6 +1401,532 @@ The two schemas have opposite directions:</p>
 <div class="paragraph">
 <p>For a release-safety demonstration, publish a tool whose input <code>query</code> is a string with <code>maxLength: 10</code>, enable <code>BACKWARD</code>, and propose <code>maxLength: 5</code>. Expect HTTP 400 and unchanged old content. Propose <code>maxLength: 20</code> and expect acceptance. For an output schema, the direction is reversed. Use a disposable registry and retain the rule configuration, exact versions, responses, and retrieved content as evidence for the agent-registry graduation work (#10294). This demonstrates publication-time schema enforcement only; it is not evidence of runtime admission, authenticated invocation, or full feature graduation.</p>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-cross-tool-compatibility_registry"><a class="anchor" href="#mcp-cross-tool-compatibility_registry"></a>Cross-tool compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Cross-tool compatibility tells you whether an MCP tool can take the output of another MCP tool as its input. Apicurio Registry compares the <code>outputSchema</code> of the tool that produces the output, the producer, with the <code>inputSchema</code> of each other MCP tool, the consumer, as if the whole output object were passed to the consumer as its input.</p>
+</div>
+<div class="paragraph">
+<p>Cross-tool compatibility is a different question from version compatibility. Version compatibility compares successive versions of one tool when you publish a new version, and a <code>COMPATIBILITY</code> rule rejects a version that breaks it. Cross-tool compatibility compares two different tools when you ask for it, through the <code>compatible</code> and <code>compatibility</code> well-known endpoints or the <strong>Compatible tools</strong> tab of the web console, and never rejects or changes any content.</p>
+</div>
+<div class="paragraph">
+<p>Each comparison has one of the following verdicts:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>COMPATIBLE</code></dt>
+<dd>
+<p>The comparison proves that the consumer accepts every output that the <code>outputSchema</code> of the producer permits.</p>
+</dd>
+<dt class="hdlist1"><code>INCOMPATIBLE</code></dt>
+<dd>
+<p>The producer can emit an output that the consumer rejects. The result lists each mismatch in <code>reasons</code>.</p>
+</dd>
+<dt class="hdlist1"><code>INDETERMINATE</code></dt>
+<dd>
+<p>The comparison cannot decide, for example because a schema uses a keyword that the comparison does not evaluate. The result lists what prevented a decision in <code>limitations</code>. An indeterminate consumer might accept every output, or might reject some, so it is never treated as compatible.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>A consumer is compatible only when all of the following conditions hold:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Every input that the consumer requires is also required by the <code>outputSchema</code>. A property that the producer declares but does not require might be missing from an output.</p>
+</li>
+<li>
+<p>The type of each property in the output, and of everything nested inside it, is accepted by the consumer.</p>
+</li>
+<li>
+<p>Any property that the output can contain, but that the consumer does not declare, is allowed by the <code>additionalProperties</code> of the consumer. Such properties are accepted unless the consumer restricts them, for example with <code>additionalProperties: false</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>null</code> is a value like any other. A property that can be <code>null</code> is accepted only by a consumer that also accepts <code>null</code>, so an output property of type <code>["string", "null"]</code> is not accepted where the consumer declares <code>string</code>.</p>
+</div>
+<div class="paragraph">
+<p>An object in the <code>outputSchema</code> that declares <code>properties</code>, but does not set <code>additionalProperties</code>, can emit properties that it does not declare, with any value. When the verdict depends on the producer emitting only the properties that the object declares, the comparison does not assume that it does. It reports a <code>PRODUCER_OBJECT_OPEN</code> limitation on that object, and the verdict is never <code>COMPATIBLE</code>: it is <code>INDETERMINATE</code>, or <code>INCOMPATIBLE</code> when another mismatch rules the consumer out. To get a decided verdict, set <code>additionalProperties</code> on the objects of the <code>outputSchema</code>, for example to <code>false</code>.</p>
+</div>
+<div class="paragraph">
+<p>An <code>outputSchema</code> that declares no <code>type</code> permits values other than objects, because <code>properties</code>, <code>required</code>, and <code>additionalProperties</code> apply only to objects. A consumer whose <code>inputSchema</code> declares a <code>type</code> rejects those values, so it is not compatible with such a producer. The same applies to any node nested inside the schema that declares object or array keywords without a <code>type</code>.</p>
+</div>
+<div class="paragraph">
+<p>An output that leaves its structure unconstrained is not accepted by a consumer that constrains it. A node that declares <code>type: array</code> without <code>items</code> permits elements of any type, and a node that declares <code>type: object</code> without <code>properties</code> or <code>additionalProperties</code> permits properties with any value, so a consumer that constrains the elements or the properties of that node is not compatible. The reverse is compatible: a consumer that leaves them unconstrained accepts an output that constrains them.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-cross-tool-compatibility-reference_registry"><a class="anchor" href="#mcp-cross-tool-compatibility-reference_registry"></a>Cross-tool compatibility reference</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The cross-tool comparison evaluates part of each schema, and reports what it found and what it could not evaluate. The following sections describe the evaluated keywords, the reasons and limitations in a result, and the fields of the <code>compatibility</code> response.</p>
+</div>
+<div class="sect2">
+<h3 id="_evaluated_keywords"><a class="anchor" href="#_evaluated_keywords"></a>Evaluated keywords</h3>
+<div class="paragraph">
+<p>The comparison evaluates <code>type</code>, <code>properties</code>, <code>required</code>, <code>additionalProperties</code>, and an <code>items</code> given as a single schema, at every level of each schema. Annotations, such as <code>title</code>, <code>description</code>, <code>default</code>, <code>examples</code>, and <code>$comment</code>, do not affect the result. Any other keyword, such as <code>enum</code>, <code>minimum</code>, <code>oneOf</code>, or <code>$ref</code>, is not evaluated. It is reported as an <code>UNSUPPORTED_KEYWORD</code> limitation at its JSON Pointer rather than ignored. The only exceptions are <code>$schema</code> on the schema root, which declares the dialect, and a <code>format</code> in the <code>outputSchema</code> of the producer, as described in <a href="#mcp-cross-tool-compatibility-limitations_registry">Known limitations of cross-tool compatibility</a>.</p>
+</div>
+<div class="paragraph">
+<p>The comparison evaluates these keywords as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A node that declares <code>integer</code> is accepted where the consumer declares <code>number</code>, but a node that declares <code>number</code> is not accepted where the consumer declares <code>integer</code>.</p>
+</li>
+<li>
+<p>A <code>type</code> given as an array, which lists several types, is evaluated on every node inside a schema, but not on the schema root. A union of every JSON type accepts any value.</p>
+</li>
+<li>
+<p>A <code>type</code> array that lists no types, that lists a name that is not a JSON type, or that lists the same type twice is not valid JSON Schema. It is reported as an <code>UNSUPPORTED_KEYWORD</code> limitation rather than repaired.</p>
+</li>
+<li>
+<p><code>items</code> is evaluated as a single schema, including <code>true</code> and <code>false</code>. An array of schemas is reported as an <code>UNSUPPORTED_KEYWORD</code> limitation.</p>
+</li>
+<li>
+<p>Objects and arrays are compared to five levels below the schema root. A <code>properties</code>, <code>items</code>, or <code>additionalProperties</code> that nests deeper is not evaluated, and is reported as a <code>DEPTH_LIMIT_REACHED</code> limitation.</p>
+</li>
+<li>
+<p>A schema that does not declare <code>$schema</code> is treated as JSON Schema 2020-12, which is the default dialect in the MCP specification. A schema that declares JSON Schema draft-04, draft-06, draft-07, 2019-09, or 2020-12 is compared. A <code>$schema</code> that is not a string, or that declares any other dialect, is reported as an <code>UNSUPPORTED_DIALECT</code> limitation, and nothing in that schema is compared.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_reasons"><a class="anchor" href="#_reasons"></a>Reasons</h3>
+<div class="paragraph">
+<p>An <code>INCOMPATIBLE</code> result lists in <code>reasons</code> each mismatch that rules the consumer out. Each reason has the following fields:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>code</code>: one of the codes in the following table. Later versions of Apicurio Registry can add codes.</p>
+</li>
+<li>
+<p><code>producerPointer</code>: a JSON Pointer into the producer tool definition, starting with <code>/outputSchema</code>, to the part of the output that the consumer does not accept.</p>
+</li>
+<li>
+<p><code>consumerPointer</code>: a JSON Pointer into the consumer tool definition, starting with <code>/inputSchema</code>, to the part of the input that rejects it.</p>
+</li>
+<li>
+<p><code>message</code>: a description of the mismatch.</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Reason codes</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Code</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REQUIRED_NOT_GUARANTEED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The consumer requires an input that the producer does not guarantee to emit, because the <code>outputSchema</code> does not require it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TYPE_NOT_ACCEPTED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The producer can emit a value of a type that the consumer does not accept.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ADDITIONAL_PROPERTY_NOT_ACCEPTED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The producer can emit a property that the <code>additionalProperties</code> of the consumer rejects.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VALUE_NOT_ACCEPTED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The producer can emit a value that the consumer does not accept, for a reason that no other code describes. The message is the description of the difference that the comparison engine reports.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_limitations"><a class="anchor" href="#_limitations"></a>Limitations</h3>
+<div class="paragraph">
+<p>An <code>INDETERMINATE</code> result lists in <code>limitations</code> what prevented the comparison from deciding. An <code>INCOMPATIBLE</code> result can list limitations too, when a mismatch outside them rules the consumer out. Each limitation has the following fields:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>code</code>: one of the codes in the following table. Later versions of Apicurio Registry can add codes.</p>
+</li>
+<li>
+<p><code>side</code>: <code>PRODUCER</code> when the limitation is in the producer tool definition, or <code>CONSUMER</code> when it is in the consumer tool definition.</p>
+</li>
+<li>
+<p><code>pointer</code>: a JSON Pointer into the tool definition on that side, for example <code>/inputSchema/properties/currency/enum</code>.</p>
+</li>
+<li>
+<p><code>message</code>: a description of the limitation.</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Limitation codes</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Code</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UNSUPPORTED_DIALECT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The schema declares a <code>$schema</code> that is not a string, or a dialect that is not supported. Nothing in that schema is compared.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UNSUPPORTED_KEYWORD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The schema uses a keyword that the comparison does not evaluate, or gives <code>type</code> or <code>items</code> in a form that the comparison does not evaluate.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PRODUCER_OBJECT_OPEN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The verdict depends on the producer emitting only the properties that an object declares, and that object does not set <code>additionalProperties</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DEPTH_LIMIT_REACHED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The schema nests objects or arrays more than five levels below its root.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>COMPARISON_FAILED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A tool definition or a schema could not be read or compared, for example because a tool definition is not valid JSON, or because a tool declares no <code>inputSchema</code> object.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SOURCE_HAS_NO_OUTPUT_SCHEMA</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The specified tool declares no <code>outputSchema</code>, so no tool is compared with it. This limitation appears only in the top-level <code>limitations</code> field.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>An <code>UNSUPPORTED_DIALECT</code>, <code>UNSUPPORTED_KEYWORD</code>, or <code>DEPTH_LIMIT_REACHED</code> limitation covers the schema node that carries it. A mismatch at or below that node is not reported as a reason, because the part of the schema that was not evaluated could change it. A mismatch elsewhere is still reported, and makes the verdict <code>INCOMPATIBLE</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_response_fields"><a class="anchor" href="#_response_fields"></a>Response fields</h3>
+<div class="paragraph">
+<p>The <code>compatibility</code> endpoint returns the following fields:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. <code>McpToolCompatibilityResults</code> fields</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>candidateTotal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of MCP tools in Apicurio Registry, including the specified tool.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>evaluated</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of tools compared with the specified tool. Each tool is compared at its latest enabled or deprecated version. A tool that has no enabled or deprecated version, or that is deleted during the scan, is skipped.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scanLimit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum number of MCP tools that are scanned, the newest by creation date.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>complete</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> when every MCP tool other than the specified tool was scanned, and <code>false</code> when older MCP tools were not compared because only the newest <code>scanLimit</code> tools are scanned. A <code>true</code> value reports the coverage of the scan, not that every verdict is conclusive.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totals</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of compared tools with each verdict, in <code>compatible</code>, <code>incompatible</code>, and <code>indeterminate</code>, before the <code>verdict</code> filter.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of compared tools that match the <code>verdict</code> filter, before pagination.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>limitations</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Why no tool was compared, when the <code>outputSchema</code> of the specified tool is absent or cannot be compared, for example <code>SOURCE_HAS_NO_OUTPUT_SCHEMA</code>. No scan runs in that case, so <code>candidateTotal</code>, <code>evaluated</code>, and every count are 0. Otherwise, the field is empty.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>results</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One page of the compared tools that match the <code>verdict</code> filter, newest first. Each result has the <code>tool</code>, with the same fields as a search result, its <code>verdict</code>, and its <code>reasons</code> and <code>limitations</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>When per-resource authorization is enabled, Apicurio Registry scans and counts only the MCP tools that the caller can read, so <code>candidateTotal</code>, <code>evaluated</code>, <code>totals</code>, <code>count</code>, and the results of the <code>compatible</code> endpoint leave out the other tools. If the read access of a caller to artifacts uses a <code>matching</code> rule, search cannot evaluate it, so the access rules contribute no tools to the scan, and only tools that the caller owns can still be compared through the owner bypass. For more information, see the <strong>Search and regular expressions</strong> note in <a href="assembly-configuring-resource-authorization.html#resource-authorization-use-cases_registry" class="page">Access rules examples for common use cases</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-cross-tool-compatibility-limitations_registry"><a class="anchor" href="#mcp-cross-tool-compatibility-limitations_registry"></a>Known limitations of cross-tool compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Cross-tool compatibility answers a bounded question. Consider the following limitations when you rely on its results.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Scan window</dt>
+<dd>
+<p>The <code>compatible</code> and <code>compatibility</code> endpoints compare the specified tool with at most the newest <code>scanLimit</code> MCP tools, 500, by creation date. As newer tools are registered, an older tool can leave this window and stop appearing in the results, although neither tool changed. The <code>complete</code> field of the <code>compatibility</code> response is then <code>false</code>. A <code>true</code> value reports that every other MCP tool was scanned, not that every verdict is conclusive, because <code>INDETERMINATE</code> results can remain. The <code>compatible</code> endpoint does not report its coverage, so use the <code>compatibility</code> endpoint to check it.</p>
+</dd>
+<dt class="hdlist1">Bounded comparison</dt>
+<dd>
+<p>The comparison evaluates a bounded projection of each schema: the keywords that <a href="#mcp-cross-tool-compatibility-reference_registry">Cross-tool compatibility reference</a> lists, to five levels below the root. It compares the projection as JSON Schema draft-07, in which these keywords mean the same as in every supported dialect. It is not general JSON Schema 2020-12 compatibility support, even for schemas that declare 2020-12. Any other keyword, except an annotation or a <code>format</code> in the <code>outputSchema</code> of the producer, is reported as a limitation rather than ignored, so a pair whose schemas use one is never reported as <code>COMPATIBLE</code>.</p>
+</dd>
+<dt class="hdlist1">Producer <code>format</code></dt>
+<dd>
+<p>A <code>format</code> in the <code>outputSchema</code> of the producer is not evaluated, and is not reported as a limitation, so it does not prevent a <code>COMPATIBLE</code> verdict. This is safe because <code>format</code> only narrows the strings that the producer emits, and no keyword that the comparison evaluates constrains the contents of a string, so no verdict depends on it. A <code>format</code> in the <code>inputSchema</code> of the consumer is reported as an <code>UNSUPPORTED_KEYWORD</code> limitation, because it might reject values that the comparison accepts.</p>
+</dd>
+<dt class="hdlist1"><code>$ref</code></dt>
+<dd>
+<p>A <code>$ref</code> is not resolved in either schema, and no referenced schema is fetched. Each <code>$ref</code> is reported as an <code>UNSUPPORTED_KEYWORD</code> limitation, which covers the schema node that carries it. Keywords next to a <code>$ref</code> are ignored in JSON Schema draft-07 and earlier, but apply in 2019-09 and 2020-12, the MCP default, so no mismatch at or below that node decides the verdict in either case.</p>
+</dd>
+<dt class="hdlist1">Unsatisfiable producer</dt>
+<dd>
+<p>When a property that the <code>outputSchema</code> requires has a subschema that no value satisfies, such as <code>false</code>, the producer cannot emit any output, so every consumer accepts all of its outputs. The comparison does not detect this, and can report such a pair as <code>INCOMPATIBLE</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-finding-compatible-tools_registry"><a class="anchor" href="#mcp-finding-compatible-tools_registry"></a>Finding the tools that can take the output of a tool</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can find the MCP tools that can take the output of a tool as their input, and see why the other tools cannot, by using the <code>compatible</code> and <code>compatibility</code> well-known endpoints. In this example, an order tool returns an order, and three other tools might take that order as their input.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>Apicurio Registry is installed and running.</p>
+</li>
+<li>
+<p>MCP tools support is enabled (<code>apicurio.mcp-tools.enabled=true</code> and <code>apicurio.features.experimental.enabled=true</code>).</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create the tool that produces the output, with an <code>outputSchema</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST "http://localhost:8080/apis/registry/v3/groups/orders/artifacts" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "artifactId": "get-order",
+    "artifactType": "MCP_TOOL",
+    "firstVersion": {
+      "content": {
+        "contentType": "application/json",
+        "content": "{\"name\": \"get_order\", \"description\": \"Get an order by its ID\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"orderId\": {\"type\": \"string\"}}, \"required\": [\"orderId\"]}, \"outputSchema\": {\"type\": \"object\", \"properties\": {\"orderId\": {\"type\": \"string\"}, \"total\": {\"type\": \"number\"}, \"currency\": {\"type\": \"string\"}}, \"required\": [\"orderId\", \"total\", \"currency\"], \"additionalProperties\": false}}"
+      }
+    }
+  }'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>outputSchema</code> sets <code>additionalProperties</code> to <code>false</code>, so an order contains only the properties that it declares, and the comparison can decide without a <code>PRODUCER_OBJECT_OPEN</code> limitation.</p>
+</div>
+</li>
+<li>
+<p>Create the tools that might take an order as their input, in the same way. Use the artifact IDs <code>send-receipt</code>, <code>schedule-delivery</code>, and <code>convert-currency</code>, with the following tool definitions:</p>
+<div class="listingblock">
+<div class="title"><code>send-receipt</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "name": "send_receipt",
+  "description": "Email the receipt of an order",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "orderId": {
+        "type": "string"
+      },
+      "total": {
+        "type": "number"
+      }
+    },
+    "required": [
+      "orderId"
+    ]
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><code>schedule-delivery</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "name": "schedule_delivery",
+  "description": "Schedule the delivery of an order",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "orderId": {
+        "type": "string"
+      },
+      "address": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "orderId",
+      "address"
+    ]
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><code>convert-currency</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "name": "convert_currency",
+  "description": "Convert an amount to another currency",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "total": {
+        "type": "number"
+      },
+      "currency": {
+        "type": "string",
+        "enum": [
+          "EUR",
+          "USD",
+          "GBP"
+        ]
+      }
+    },
+    "required": [
+      "total",
+      "currency"
+    ]
+  }
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>List the tools that can take an order as their input:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/.well-known/mcp-tools/orders/get-order/compatible"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Only <code>send-receipt</code> is returned. It requires only the <code>orderId</code>, which every order contains, and it accepts the <code>currency</code> that it does not declare, because it does not set <code>additionalProperties</code>.</p>
+</div>
+</li>
+<li>
+<p>Find out why the other tools cannot take an order:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/.well-known/mcp-tools/orders/get-order/compatibility?verdict=INCOMPATIBLE&amp;verdict=INDETERMINATE"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the full response, see <a href="#mcp-well-known-endpoints_registry">Well-known endpoints</a>. It lists the following results:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>schedule-delivery</code> is <code>INCOMPATIBLE</code> with a <code>REQUIRED_NOT_GUARANTEED</code> reason. It requires an <code>address</code>, which an order does not contain.</p>
+</li>
+<li>
+<p><code>convert-currency</code> is <code>INDETERMINATE</code> with an <code>UNSUPPORTED_KEYWORD</code> limitation at <code>/inputSchema/properties/currency/enum</code>. The comparison does not evaluate <code>enum</code>, so it cannot decide whether every <code>currency</code> in an order is one of the listed values.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Request the <code>compatibility</code> endpoint without the <code>verdict</code> parameter. The tools that it reports as <code>COMPATIBLE</code> are the tools that the <code>compatible</code> endpoint returns.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mcp-viewing-compatible-tools_registry"><a class="anchor" href="#mcp-viewing-compatible-tools_registry"></a>Viewing compatible tools in the web console</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can see which MCP tools can take the output of a tool version, and why the others cannot or might not, on the <strong>Compatible tools</strong> tab of the version in the Apicurio Registry web console.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>MCP tools support is enabled.</p>
+</li>
+<li>
+<p>You are logged in to the Apicurio Registry web console, and an <code>MCP_TOOL</code> artifact exists.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Browse to the artifact, and click a version, as described in <a href="assembly-managing-registry-artifacts-ui.html#browsing-artifacts-using-console_registry" class="page">Viewing artifacts using the Apicurio Registry web console</a>.</p>
+</li>
+<li>
+<p>Click the <strong>Compatible tools</strong> tab. The tab is available only for versions of <code>MCP_TOOL</code> artifacts, and is hidden for disabled versions. A link to the tab of a version that does not have it opens the <strong>Overview</strong> tab instead.</p>
+<div class="paragraph">
+<p>The tab states how many other MCP tools were compared with the version. When older MCP tools were not compared, it also states that only the newest 500 MCP tools were compared. The tab shows a message instead of the list in the following cases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Not compared</strong>, with the reason, when the version cannot be compared, for example because it declares no <code>outputSchema</code>.</p>
+</li>
+<li>
+<p><strong>No other MCP tools were compared with this tool.</strong>, when Apicurio Registry has no other MCP tool to compare.</p>
+</li>
+<li>
+<p><strong>Compatibility information is unavailable for this tool.</strong>, when MCP tools support is disabled or the tool cannot be found.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Compatible</strong>, <strong>Incompatible</strong>, or <strong>Indeterminate</strong> to list the tools with that verdict. Each button shows how many compared tools have that verdict, and <strong>Compatible</strong> is selected by default. Use the pagination controls to list more than one page of tools. Each row links to the tool, and shows its verdict and details:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For an incompatible tool, each reason, with the pointer into the <code>outputSchema</code> of this version and the pointer into the <code>inputSchema</code> of the other tool.</p>
+</li>
+<li>
+<p>For an indeterminate tool, each limitation, with its pointer.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>

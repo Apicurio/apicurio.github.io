@@ -510,87 +510,7 @@
 <p>The <code>/.well-known/mcp-tools</code>, <code>/.well-known/mcp-tools/{groupId}/{artifactId}</code>, <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code>, and <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatibility</code> endpoints operate on MCP tool definitions that you store in Apicurio Registry as <code>MCP_TOOL</code> artifacts. These endpoints require read-level authorization and are available only when MCP tools support is enabled. Apicurio Registry also serves them under <code>/apis/registry/v3/well-known/mcp-tools</code>, which is where the generated SDK clients call them. Unlike <code>/.well-known/agents</code>, these endpoints are not filtered by the <code>apicurio.agent.visibility</code> label: they return every MCP tool definition the caller is authorized to see. See <a href="assembly-mcp-tool-features.html#mcp-tool-visibility_registry" class="page">MCP tool visibility</a> for details.</p>
 </div>
 <div class="paragraph">
-<p>The <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoint compares the <code>outputSchema</code> of the specified tool with the <code>inputSchema</code> of each candidate tool, as if the whole output object were passed to the candidate. A candidate is returned only when the comparison proves that it accepts every output that the <code>outputSchema</code> permits:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Every input that the candidate requires is also required by the <code>outputSchema</code>.</p>
-</li>
-<li>
-<p>The type of each property in the output, and of everything nested inside it, is accepted by the candidate.</p>
-</li>
-<li>
-<p>Any property that the output can contain, but that the candidate does not declare, is allowed by the <code>additionalProperties</code> of the candidate.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>An <code>outputSchema</code> that declares no <code>type</code> permits values other than objects, because <code>properties</code>, <code>required</code>, and <code>additionalProperties</code> apply only to objects. No candidate whose <code>inputSchema</code> declares a <code>type</code> is returned for such a tool, since it would reject those values. The same applies to any node nested inside the schema that declares object or array keywords without a <code>type</code>.</p>
-</div>
-<div class="paragraph">
-<p>An output that leaves its structure unconstrained is not accepted by a candidate that constrains it. A node that declares <code>type: array</code> without <code>items</code> permits elements of any type, and a node that declares <code>type: object</code> without <code>properties</code> or <code>additionalProperties</code> permits properties with any value, so no candidate that constrains the elements or the properties of that node is returned. The reverse is allowed: a candidate that leaves them unconstrained accepts an output that constrains them.</p>
-</div>
-<div class="paragraph">
-<p>The comparison evaluates <code>type</code>, <code>properties</code>, <code>required</code>, <code>additionalProperties</code>, and an <code>items</code> given as a single schema, at every level of each schema, including a node that declares several types. A node that can be <code>null</code> is accepted only by a candidate that also accepts <code>null</code>, because <code>null</code> is a value like any other. A node that declares <code>integer</code> is accepted where the candidate declares <code>number</code>, but a node that declares <code>number</code> is not accepted where the candidate declares <code>integer</code>. Annotations such as <code>title</code>, <code>description</code>, <code>default</code>, <code>examples</code>, and <code>$comment</code> do not affect the result. A candidate is not returned when either schema uses any other keyword, such as <code>enum</code> or <code>$ref</code>, gives <code>type</code> as an array on the schema root rather than on a node inside it, lists a name in <code>type</code> that is not a JSON type or lists the same type twice, gives <code>items</code> as anything other than a single schema, nests objects or arrays more than five levels below the schema root, or declares a <code>$schema</code> dialect other than JSON Schema draft-04, draft-06, draft-07, 2019-09, or 2020-12. A schema that does not declare <code>$schema</code> is treated as JSON Schema 2020-12, which is the default dialect in the MCP specification. A candidate is also not returned when the result depends on the specified tool producing only the properties that it declares, which can happen when any object in its <code>outputSchema</code>, at any level, declares properties and does not set <code>additionalProperties</code>.</p>
-</div>
-<div class="paragraph">
-<p>The <code>format</code> keyword is evaluated on neither schema. A candidate that uses <code>format</code> in its <code>inputSchema</code> is not returned, because <code>format</code> might reject values that the comparison accepts. A <code>format</code> in the <code>outputSchema</code> of the specified tool is ignored instead, because it only narrows the values that the tool produces, and no keyword that the comparison evaluates constrains the contents of a value.</p>
-</div>
-<div class="paragraph">
-<p>The <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatibility</code> endpoint makes the same comparison and returns every compared candidate with its <code>verdict</code>. A <code>COMPATIBLE</code> candidate is one that the <code>/compatible</code> endpoint returns. An <code>INCOMPATIBLE</code> candidate lists in <code>reasons</code> the mismatches that rule it out, each with a JSON Pointer into both tool definitions. An <code>INDETERMINATE</code> candidate lists in <code>limitations</code> what prevented the comparison from deciding, such as a keyword that the comparison does not evaluate. To return only some verdicts, set the <code>verdict</code> query parameter to <code>COMPATIBLE</code>, <code>INCOMPATIBLE</code>, or <code>INDETERMINATE</code>, and repeat it to select more than one. By default, all three verdicts are returned. When the <code>outputSchema</code> of the specified tool is absent or cannot be compared, no candidate is compared, and the top-level <code>limitations</code> field explains why, for example with <code>SOURCE_HAS_NO_OUTPUT_SCHEMA</code>.</p>
-</div>
-<div class="paragraph">
-<p>Both endpoints compare the specified tool with at most the 500 newest MCP tools, by creation date. The <code>/compatibility</code> response reports the coverage of that scan in the following fields:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>candidateTotal</code>: the number of MCP tools in Apicurio Registry, including the specified tool. When per-resource authorization is enabled, only the tools that the caller can read are counted.</p>
-</li>
-<li>
-<p><code>evaluated</code>: the number of candidates compared with the specified tool. A tool that is deleted during the scan, or that has no enabled or deprecated version, is skipped.</p>
-</li>
-<li>
-<p><code>scanLimit</code>: the maximum number of MCP tools that are scanned.</p>
-</li>
-<li>
-<p><code>complete</code>: <code>false</code> when older MCP tools were not compared because only the newest <code>scanLimit</code> tools are scanned. A <code>true</code> value reports the coverage of the scan, not that every verdict is conclusive.</p>
-</li>
-<li>
-<p><code>totals</code>: the number of compared candidates with each verdict, before the <code>verdict</code> filter.</p>
-</li>
-<li>
-<p><code>count</code>: the number of candidates that match the <code>verdict</code> filter, before pagination.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Both endpoints page their results with <code>offset</code> and <code>limit</code>, which the <code>/compatibility</code> endpoint applies after the <code>verdict</code> filter. An <code>offset</code> or <code>limit</code> sent without a value takes its default, 0 or 20. A negative <code>offset</code> is treated as 0, a negative <code>limit</code> as 1, and a <code>limit</code> above 1000 as 1000, including values outside the 32-bit integer range. An <code>offset</code> or <code>limit</code> that is not a number is rejected with a <code>404</code> error, which the conversion of the request parameters returns before the endpoint runs. An unknown <code>verdict</code> value is rejected with a <code>400</code> error.</p>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-The <code>offset</code> and <code>limit</code> parameters of the <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoint now follow these rules. Earlier versions of Apicurio Registry returned one tool for a <code>limit</code> of 0, where an empty page is now returned, and returned an error for an <code>offset</code> or <code>limit</code> sent without a value or outside the 32-bit integer range, or for a <code>limit</code> close to the 32-bit maximum combined with a non-zero <code>offset</code>, where the values now take their defaults or are normalized.
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-The <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoint now returns a different set of tools than earlier versions of Apicurio Registry, which returned any candidate whose <code>inputSchema</code> declared every property in the <code>outputSchema</code> of the specified tool. A candidate that ignores part of the output is now returned. A candidate is no longer returned when it requires an input that the <code>outputSchema</code> does not require, when it rejects a value that the output can contain, such as <code>null</code>, or when the comparison cannot evaluate part of either schema. Structure nested inside a property is now compared as well, so a candidate whose nested types or nested required inputs do not match the output is no longer returned.
-</td>
-</tr>
-</table>
+<p>The <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatible</code> endpoint returns the MCP tools that can take the output of the specified tool as their input, and the <code>/.well-known/mcp-tools/{groupId}/{artifactId}/compatibility</code> endpoint returns every compared tool with its verdict and the reasons and limitations that decide it. For their parameters, how tools are compared, and the known limitations of the comparison, see <a href="assembly-mcp-tool-features.html#mcp-well-known-endpoints_registry" class="page">Well-known endpoints</a> and <a href="assembly-mcp-tool-features.html#mcp-cross-tool-compatibility_registry" class="page">Cross-tool compatibility</a> in the MCP tool features.</p>
 </div>
 <div class="paragraph">
 <p>The <code>/.well-known/schemas/{type}/{version}</code> endpoint serves built-in JSON schemas that you can use for IDE autocompletion and validation of <code>PROMPT_TEMPLATE</code>, <code>MODEL_SCHEMA</code>, and <code>MCP_TOOL</code> artifacts. This endpoint requires no authentication.</p>
@@ -694,6 +614,18 @@ See <a href="assembly-ai-catalog-ard.html" class="page">AI Catalog and ARD disco
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/mcp-tools?name=search&amp;parameter=query"</code></pre>
 </div>
+</div>
+</dd>
+<dt class="hdlist1">Compatible tool discovery</dt>
+<dd>
+<p>You can find the registered MCP tools that can take the output of a tool as their input, to chain one tool after another. Apicurio Registry compares the <code>outputSchema</code> of the tool with the <code>inputSchema</code> of each other MCP tool:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl "http://localhost:8080/.well-known/mcp-tools/orders/get-order/compatible"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a walkthrough, see <a href="assembly-mcp-tool-features.html#mcp-finding-compatible-tools_registry" class="page">Finding the tools that can take the output of a tool</a>.</p>
 </div>
 </dd>
 </dl>
