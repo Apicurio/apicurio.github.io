@@ -812,6 +812,12 @@ APICURIO_POLLING_STORAGE_ID=main</code></pre>
 <div class="paragraph">
 <p>The sync container clones the repository and then updates it every 30 seconds. You can change the interval with the <code>APICURIO_GITOPS_PULL_INTERVAL</code> environment variable.</p>
 </div>
+<div class="paragraph">
+<p>For a private repository, use an SSH URL and provide the keys as described in the next step. The sync container has no setting for HTTPS credentials. A private HTTPS repository requires credentials in the URL itself, for example <code>https://&lt;token&gt;@github.com/my-org/my-registry-data.git</code>. Git saves that URL, including the credentials, in the configuration of the clone on the shared volume, which the registry container also mounts.</p>
+</div>
+<div class="paragraph">
+<p>With the Apicurio Registry Operator, you set the URL in the <code>ApicurioRegistry3</code> custom resource, and the Operator copies it unchanged into the Deployment as an environment variable of the sync container. Anyone who can read the custom resource, the Deployment, or the pod can read the token. The sync container clones a repository only if the clone does not exist, and it fetches updates from the URL that Git saved in the clone. A changed token therefore takes effect only when the sync container creates the clone again. The Operator uses an <code>emptyDir</code> volume by default, so each new pod starts without a clone. If you use a persistent volume instead, delete the clone before you restart the sync container.</p>
+</div>
 </li>
 <li>
 <p>Optional: For SSH remotes, provide the private key and the known hosts file:</p>
@@ -1005,6 +1011,91 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="gitops-storage-sizing_registry"><a class="anchor" href="#gitops-storage-sizing_registry"></a>GitOps storage sizing considerations</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>With GitOps storage, each registry instance holds all of its data in memory and reloads all of it when a repository changes. Memory use and load time therefore grow with the total amount of data in your repositories, not with the size of a commit.</p>
+</div>
+<div class="paragraph">
+<p>Each registry instance has two in-memory databases. The active database serves requests, and the inactive database receives the next load. The registry clears the inactive database only when the next load or dry-run validation starts, so both databases can hold a full copy of the data at the same time. Plan memory for at least two copies of the registry data. While a load runs, the registry also holds in memory the files that it reads from the repositories.</p>
+</div>
+<div class="paragraph">
+<p>A load reads all of the data from every configured repository, not only the files that changed. Because the registry is not ready until the first load succeeds, startup time also grows with the amount of data.</p>
+</div>
+<div class="paragraph">
+<p>The shared volume holds one clone of each repository. In pull mode, the clone is shallow by default and contains only the configured branch. In push mode, the repository on the volume keeps the full history that clients push to it, so the volume grows with that history. While a dry-run validation task runs, the volume also holds a shallow clone of the reference that the task validates.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="gitops-storage-limitations-troubleshooting_registry"><a class="anchor" href="#gitops-storage-limitations-troubleshooting_registry"></a>GitOps storage limitations and troubleshooting</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>GitOps storage is read-only and produces no change events. This section lists these limitations and the checks to make when a registry instance does not become ready or does not show a commit.</p>
+</div>
+<div class="paragraph">
+<p>GitOps storage has the following limitations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The storage is read-only. REST API calls that modify data return an HTTP <code>409</code> response.</p>
+</li>
+<li>
+<p>The registry produces no change events for the data that it loads from Git.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To find the cause of a problem, get the synchronization status from the <code>/admin/gitops/status</code> endpoint and read the <code>syncState</code>, <code>errors</code>, and <code>sources</code> fields. The <code>acr gitops status</code> command shows the same values in the <code>Sync State</code>, <code>Errors</code>, and <code>Sources</code> rows. The registry logs <code>gitops update published</code> after each successful load. After a load that it rejects, the registry logs <code>gitops update failed to load</code>, followed by the errors.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. GitOps storage problems and their causes</caption>
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Problem</th>
+<th class="tableblock halign-left valign-top">Cause and resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The registry does not become ready.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The registry is ready only after the first successful load. If <code>syncState</code> is <code>INITIALIZING</code> and <code>errors</code> is empty, the registry has not yet read a commit from every configured repository. Check that the clone of each repository exists at the path that the registry reads and that the sync container, if you use one, is running. The registry logs <code>GitOps repository directory does not exist</code> while the directory is missing. If <code>syncState</code> is <code>ERROR</code>, the <code>errors</code> field lists what failed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A load fails with the error <code>Data source does not contain a registry configuration matching ID</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The registry found no registry configuration file with a <code>registryId</code> value that matches the <code>apicurio.polling-storage.id</code> property of the registry instance. The registry rejects such a load when the <code>apicurio.polling-storage.require-registry-config</code> property is <code>true</code>, which is the default. Add a registry configuration file with a matching <code>registryId</code> value, or set the <code>apicurio.polling-storage.id</code> property to the <code>registryId</code> value of an existing file. If a file with a matching <code>registryId</code> value exists, check its file name suffix and its <code>$type</code> value. The registry reads a file as a registry configuration only if the file has a metadata file suffix and the registry configuration <code>$type</code> value.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A commit does not appear in the registry.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compare the <code>sources</code> field with the latest commit in the remote repository. If <code>syncState</code> stays <code>IDLE</code> and <code>sources</code> keeps showing an earlier commit, the new commit has not reached the local clone. The sync container logs <code>Fetch failed</code> when it cannot update the clone. If <code>syncState</code> is <code>ERROR</code>, a load or a poll failed, and the registry serves the last successfully loaded data. The registry does not load a commit again after a data error, so push a new commit that fixes the errors that the <code>errors</code> field lists.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#gitops-repository-data-format_registry">GitOps repository data format</a></p>
+</li>
+<li>
+<p><a href="#gitops-management-api_registry">GitOps management API</a></p>
+</li>
+<li>
+<p><a href="assembly-registry-events.html#registry-events-overview_registry" class="page">Overview of Apicurio Registry change events</a></p>
+</li>
+<li>
+<p><a href="assembly-managing-registry-artifacts-cli.html#synchronizing-gitops-using-registry-cli_registry" class="page">Checking and synchronizing GitOps storage using the CLI</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="gitops-storage-configuration-properties_registry"><a class="anchor" href="#gitops-storage-configuration-properties_registry"></a>GitOps storage configuration properties</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -1014,7 +1105,7 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 <p>All GitOps storage properties are experimental and require <code>apicurio.features.experimental.enabled=true</code>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Registry configuration properties</caption>
+<caption class="title">Table 4. Registry configuration properties</caption>
 <colgroup>
 <col style="width: 37.5%;">
 <col style="width: 25%;">
@@ -1121,7 +1212,7 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Sync container environment variables</caption>
+<caption class="title">Table 5. Sync container environment variables</caption>
 <colgroup>
 <col style="width: 37.5%;">
 <col style="width: 25%;">
@@ -1231,7 +1322,7 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 <p>The registry provides administrative REST endpoints for GitOps storage under the <code>/apis/registry/v3/admin/gitops</code> path. The endpoints return an HTTP <code>409</code> response when a different storage variant is active.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. GitOps management endpoints</caption>
+<caption class="title">Table 6. GitOps management endpoints</caption>
 <colgroup>
 <col style="width: 42.8571%;">
 <col style="width: 14.2857%;">
@@ -1281,7 +1372,7 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 <p>The status response contains the following fields:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. GitOps status fields</caption>
+<caption class="title">Table 7. GitOps status fields</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
