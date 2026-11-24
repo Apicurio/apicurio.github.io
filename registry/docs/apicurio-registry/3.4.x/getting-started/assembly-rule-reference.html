@@ -812,6 +812,39 @@ reference for every <code>include</code> directive. An unmapped include fails wi
 </div>
 </div>
 <div class="sect1">
+<h2 id="registry-rule-json-schema-validity-changes_registry"><a class="anchor" href="#registry-rule-json-schema-validity-changes_registry"></a>Changes to JSON Schema validity checking in Apicurio Registry 3.4</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Before version 3.4, Apicurio Registry checked JSON Schema validity by loading the schema.
+If you used the <code>VALIDITY</code> rule with JSON Schema artifacts before version 3.4, the following behavior changed:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apicurio Registry now checks artifacts in draft 2019-09.
+The earlier checker rejected them at the <code>FULL</code> level with a message that ends with <code>JSON schema version 2019-09 is not supported yet.</code></p>
+</li>
+<li>
+<p>Apicurio Registry validates a schema against the meta-schema of its draft instead of only loading it, and rejects a schema that its draft forbids.
+For example, in draft 4, <code>exclusiveMinimum</code> is a boolean that requires <code>minimum</code>, and in draft 2020-12, <code>$dynamicAnchor</code> must not be empty.</p>
+</li>
+<li>
+<p>The <code>context</code> of each rule violation is now a JSON Pointer, such as <code>/properties/price/minimum</code>, instead of the earlier location that started with <code>#</code>.
+Update clients that match the earlier contexts.</p>
+</li>
+<li>
+<p>Apicurio Registry can report more than one problem at once, at most one per location.
+The earlier checker reported one problem at a time.</p>
+</li>
+<li>
+<p>Apicurio Registry does not check stored versions again.
+The changes apply when you add content or finalize a draft.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="registry-rule-precedence_registry"><a class="anchor" href="#registry-rule-precedence_registry"></a>Apicurio Registry content rule precedence</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">

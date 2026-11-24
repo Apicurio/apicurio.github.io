@@ -491,6 +491,105 @@
 <div class="paragraph">
 <p>If a rule is violated, Apicurio Registry returns HTTP error <code>400</code>, and does not store the content. The response body includes <code>ruleViolation.ruleType</code>, the violated rule, and <code>ruleViolation.causes</code>, a list of causes, each with a <code>description</code> and a <code>context</code> that shows what went wrong and where. To return HTTP error <code>409</code> instead, as before version 3.3.0, set <code>apicurio.rest.legacy-error-codes.enabled</code> to <code>true</code>.</p>
 </div>
+<div class="paragraph">
+<p>The compatibility check endpoints of the Confluent-compatible API also apply the configured rules to the submitted schema without storing it. When no <code>COMPATIBILITY</code> rule is configured, they check only <code>BACKWARD</code> compatibility.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#registry-rules-violation-response_registry">Rule violation responses from the REST API</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-rules-violation-response_registry"><a class="anchor" href="#registry-rules-violation-response_registry"></a>Rule violation responses from the REST API</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>When a request violates a rule, the Core Registry API v3 rejects the request. The problem details body describes each violation.</p>
+</div>
+<div class="paragraph">
+<p>The response body has the following fields:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>title</code></dt>
+<dd>
+<p>A short summary of the violation.</p>
+</dd>
+<dt class="hdlist1"><code>detail</code></dt>
+<dd>
+<p>The summary, followed by each cause in the form <code>&lt;description&gt; at &lt;context&gt;</code>.</p>
+</dd>
+<dt class="hdlist1"><code>status</code></dt>
+<dd>
+<p>The HTTP status code.</p>
+</dd>
+<dt class="hdlist1"><code>name</code></dt>
+<dd>
+<p>The name of the error.</p>
+</dd>
+<dt class="hdlist1"><code>ruleViolation</code></dt>
+<dd>
+<p>The details of the violation:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ruleType</code>: the type of the violated rule, one of <code>VALIDITY</code>, <code>COMPATIBILITY</code>, <code>INTEGRITY</code>, or <code>GOVERNANCE</code>.</p>
+</li>
+<li>
+<p><code>causes</code>: one entry per problem, with a <code>description</code> and a <code>context</code> that locates the problem, for example a JSON Pointer.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>causes</code></dt>
+<dd>
+<p>The same list as <code>ruleViolation.causes</code>. This top-level field is deprecated and remains for earlier clients. Use <code>ruleViolation.causes</code> instead.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The following example shows the response when a new version of a JSON Schema artifact violates a <code>COMPATIBILITY</code> rule:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "status": 400,
+  "name": "RuleViolationException",
+  "title": "Incompatible artifact: my-schema [JSON], num of incompatible diffs: {1}, list of diff types: [The 'maxLength' string-length limit was decreased. at /properties/name/maxLength]",
+  "detail": "Incompatible artifact: my-schema [JSON], num of incompatible diffs: {1}, list of diff types: [The 'maxLength' string-length limit was decreased. at /properties/name/maxLength] Causes: The 'maxLength' string-length limit was decreased. at /properties/name/maxLength",
+  "ruleViolation": {
+    "ruleType": "COMPATIBILITY",
+    "causes": [
+      {
+        "description": "The 'maxLength' string-length limit was decreased.",
+        "context": "/properties/name/maxLength"
+      }
+    ]
+  },
+  "causes": [
+    {
+      "description": "The 'maxLength' string-length limit was decreased.",
+      "context": "/properties/name/maxLength"
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The API defines four more optional fields on each cause: <code>code</code>, <code>direction</code>, <code>proposed</code>, and <code>existing</code>. No built-in rule returns them. Treat them as optional in client code.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="../assets-attachments/registry-rest-api.htm">Apicurio Registry REST API documentation</a></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">

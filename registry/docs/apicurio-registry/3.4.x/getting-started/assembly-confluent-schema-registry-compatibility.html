@@ -493,7 +493,7 @@ schema.registry.url=http://my-registry:8080/apis/ccompat/v7</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Compatibility API</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Schema compatibility checking against specific versions or all versions. Supports <code>verbose</code> and <code>normalize</code> parameters. Defaults to <code>BACKWARD</code> compatibility when you do not configure an explicit rule, matching the Confluent behavior.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schema compatibility checking against specific versions or all versions. Supports <code>verbose</code> and <code>normalize</code> parameters. With <code>verbose=true</code>, an incompatible result includes a <code>messages</code> array that explains each violation. Otherwise the response contains only <code>is_compatible</code>. Defaults to <code>BACKWARD</code> compatibility when you do not configure an explicit rule, matching the Confluent behavior.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Config API</strong></p></td>
@@ -753,6 +753,25 @@ This default only applies to the compatibility <em>check</em> endpoint. Schema r
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p><strong>Compatibility check response</strong></p>
+</div>
+<div class="paragraph">
+<p>The <code>POST /compatibility/subjects/{subject}/versions/{version}</code> and <code>POST /compatibility/subjects/{subject}/versions</code> endpoints return <code>is_compatible</code>. When you set <code>verbose=true</code> and the schema is incompatible, the response also includes <code>messages</code>. Each entry is one rule violation. When the violation has a context, the entry has the form <code>&lt;description&gt; at &lt;context&gt;</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "is_compatible": false,
+  "messages": [
+    "The 'maxLength' string-length limit was decreased. at /properties/name/maxLength"
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If Apicurio Registry cannot process the submitted schema, for example because it is not well formed or Apicurio Registry cannot resolve a reference, the endpoint returns HTTP status 422.</p>
 </div>
 <div class="paragraph">
 <p><strong>Config response format</strong></p>
