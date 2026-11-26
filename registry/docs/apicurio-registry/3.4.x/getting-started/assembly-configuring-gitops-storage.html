@@ -143,6 +143,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-migrating-registry-v2-v3.html">Migrating from Apicurio Registry 2.6.3 to Apicurio Registry 3.x</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="guide-exporting-gitops-format.html">Exporting Apicurio Registry data in GitOps format</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -686,6 +689,12 @@ versions:
 </li>
 <li>
 <p>The optional <code>validatedUpTo</code> field on an artifact controls rule validation during a load. When unset, only the latest version is validated, against all preceding versions. When set to a version identifier, versions up to and including that version are not re-validated. When the value matches no version, all versions are validated.</p>
+</li>
+<li>
+<p>A group with no artifacts is loaded with its metadata and rules. This is useful for reserving a group namespace or applying group-level rules before any artifacts are added.</p>
+</li>
+<li>
+<p>An artifact with no versions is loaded with its metadata and rules, but <code>artifactType</code> must be set explicitly. Without it, the load fails with an error because the type cannot be inferred from content. In previous versions, versionless artifacts were silently skipped.</p>
 </li>
 <li>
 <p>The optional <code>peers</code> list on the registry configuration declares peer registries. Each entry has <code>peerId</code> (lowercase letters, digits, <code>.</code>, <code>_</code>, and <code>-</code> only; must be unique and cannot be <code>local</code>, which is reserved), <code>url</code>, optional <code>name</code> and <code>description</code>, <code>enabled</code> (defaults to <code>true</code> when omitted), and an optional <code>credentialSecretRef</code>, which is a reference to a credential and never a secret value itself. The full <code>peers</code> list is replaced on every load: omitting the key, or setting it to an empty list, removes all previously loaded peers.</p>
