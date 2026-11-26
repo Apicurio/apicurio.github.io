@@ -1105,6 +1105,9 @@ Each entry under <code>schemas[]</code> is independent. Projection and field met
 <div class="paragraph">
 <p>How a failed result affects Kafka clients depends on the SerDes <code>fail-on-error</code> setting, except for <code>DLQ</code>: see <a href="#data-contracts-serdes_registry">Kafka SerDes integration</a>.</p>
 </div>
+<div class="paragraph">
+<p>A rule can also have a list of <code>tags</code>. You can search for rules by tag, as described in <a href="#data-contracts-search_registry">Contract search</a>. Apicurio Registry stores and returns the <code>onSuccess</code> action of a rule, but the action has no effect.</p>
+</div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
@@ -1351,6 +1354,14 @@ props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, AvroKafkaSerializer.clas
 KafkaProducer&lt;String, GenericRecord&gt; producer = new KafkaProducer&lt;&gt;(props);</code></pre>
 </div>
 </div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-configuring-kafka-client-serdes.html" class="page">Configuring Kafka serializers/deserializers in Java clients</a></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1391,7 +1402,7 @@ KafkaProducer&lt;String, GenericRecord&gt; producer = new KafkaProducer&lt;&gt;(
 <p>Changes to the global contract ruleset do not belong to an artifact and are not in this log. Deleting an artifact, or the group that contains it, deletes its audit entries.</p>
 </div>
 <div class="paragraph">
-<p>Query the audit log for an artifact (<code>limit</code> defaults to 20, maximum 500):</p>
+<p>The audit log endpoint returns the newest entries first. Query the audit log for an artifact (<code>limit</code> defaults to 20, maximum 500):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1421,7 +1432,7 @@ KafkaProducer&lt;String, GenericRecord&gt; producer = new KafkaProducer&lt;&gt;(
 <h2 id="data-contracts-search_registry"><a class="anchor" href="#data-contracts-search_registry"></a>Contract search</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Search for contracts across the registry using metadata filters.</p>
+<p>Search for contracts across the registry using metadata filters, and find contract rules by tag.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 5. Contract search query parameters</caption>
@@ -1454,7 +1465,7 @@ KafkaProducer&lt;String, GenericRecord&gt; producer = new KafkaProducer&lt;&gt;(
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>orderby</code> / <code>order</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sort by field and direction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sort by <code>name</code>, <code>createdOn</code> (default), or <code>modifiedOn</code>, in <code>asc</code> or <code>desc</code> (default) order</p></td>
 </tr>
 </tbody>
 </table>
@@ -1462,6 +1473,40 @@ KafkaProducer&lt;String, GenericRecord&gt; producer = new KafkaProducer&lt;&gt;(
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/apis/registry/v3/search/contracts?status=STABLE&amp;ownerTeam=orders-team&amp;limit=10"</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>To find contract rules by tag, use the <code>GET /search/contract/rules</code> endpoint. The <code>tag</code> query parameter is required.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl "http://localhost:8080/apis/registry/v3/search/contract/rules?tag=pii"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Response</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">[
+  {
+    "groupId": "my-group",
+    "artifactId": "my-artifact",
+    "ruleCategory": "DOMAIN",
+    "rule": {
+      "name": "require-email",
+      "kind": "CONDITION",
+      "type": "CEL",
+      "mode": "WRITE",
+      "expr": "customerEmail != \"\"",
+      "params": {},
+      "tags": ["pii"],
+      "onFailure": "ERROR",
+      "disabled": false
+    }
+  }
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each entry contains a rule that has the tag, with the <code>groupId</code> and <code>artifactId</code> of the artifact that the rule belongs to. An entry for an artifact in the default group has no <code>groupId</code>. <code>ruleCategory</code> is <code>DOMAIN</code> or <code>MIGRATION</code>. For a version-level rule, the entry also has the <code>globalId</code> of the version. For a global rule, <code>groupId</code> and <code>artifactId</code> are both <code>__GLOBAL__</code>. The response includes only rules on artifacts that you can read.</p>
 </div>
 </div>
 </div>
@@ -1519,6 +1564,14 @@ curl http://localhost:8080/apis/registry/v3/admin/contracts/ruleset
 curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</code></pre>
 </div>
 </div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-managing-registry-artifacts-ui.html#managing-global-contract-rules-using-console_registry" class="page">Managing global contract rules using the Apicurio Registry web console</a></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1574,6 +1627,18 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>POST /groups/{groupId}/contracts</code> and <code>PUT /groups/{groupId}/contracts/{contractId}</code> endpoints store the ODCS contract without artifact references. For a contract stored this way, <code>GET /groups/{groupId}/artifacts/{artifactId}/versions/{version}/content</code> returns the YAML unchanged with <code>references=DEREFERENCE</code> or <code>references=REWRITE</code>. These options resolve <code>schemas[].location</code> values only for an <code>ODCS_CONTRACT</code> artifact that you create through the artifact endpoints with its references. Apicurio Registry does not project a contract that you create through the artifact endpoints.
+</td>
+</tr>
+</table>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 7. Contract metadata REST API endpoints</caption>
 <colgroup>
@@ -1762,7 +1827,7 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 14. Contract search REST API endpoint</caption>
+<caption class="title">Table 14. Contract search REST API endpoints</caption>
 <colgroup>
 <col style="width: 12.5%;">
 <col style="width: 50%;">
@@ -1780,6 +1845,11 @@ curl -X DELETE http://localhost:8080/apis/registry/v3/admin/contracts/ruleset</c
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/search/contracts?status=&amp;ownerTeam=&amp;compatibilityGroup=&amp;offset=&amp;limit=&amp;order=&amp;orderby=</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Search contracts across the registry</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/search/contract/rules?tag=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Search contract rules by tag across the registry</p></td>
 </tr>
 </tbody>
 </table>

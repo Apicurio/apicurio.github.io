@@ -614,11 +614,11 @@ namespace level. It is the recommended approach for most production environments
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Install the operator in a dedicated namespace. By default, it watches all namespaces:</p>
+<p>Install the operator in a dedicated namespace. By default, it watches all namespaces. The manifest refers to the namespace as <code>PLACEHOLDER_NAMESPACE</code>, so replace this string with the namespace name and apply the manifest with the <code>-n</code> option:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl create namespace apicurio-system
-kubectl apply -f operator/install/install.yaml -n apicurio-system</code></pre>
+sed "s/PLACEHOLDER_NAMESPACE/apicurio-system/g" operator/install/install.yaml | kubectl apply -n apicurio-system -f -</code></pre>
 </div>
 </div>
 </li>

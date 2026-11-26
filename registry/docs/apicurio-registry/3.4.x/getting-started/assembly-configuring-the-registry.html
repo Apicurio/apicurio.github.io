@@ -415,7 +415,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can configure your Apicurio Registry deployment, including file-based secrets, HTTP caching, the web console, logging, health checks, observability, and the storage content cache.</p>
+<p>You can configure your Apicurio Registry deployment, including file-based secrets, HTTP caching, HTTP compression, the web console, logging, health checks, observability, and the storage content cache.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -428,6 +428,48 @@ For a list of all available configuration options, see <a href="assembly-config-
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-experimental-features_registry"><a class="anchor" href="#registry-experimental-features_registry"></a>Experimental features</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>An experimental feature is disabled by default and can change incompatibly or be removed in a later release. To use one, enable the feature and set the <code>apicurio.features.experimental.enabled</code> property, which is the experimental features gate, to <code>true</code>. If you enable an experimental feature while the gate is <code>false</code>, Apicurio Registry does not start.</p>
+</div>
+<div class="paragraph">
+<p>The gate is <code>false</code> by default. It applies to every property whose description in the configuration reference ends with <em>(experimental)</em>, for example, <code>apicurio.agents.enabled</code> and <code>apicurio.iceberg.enabled</code>. It also applies to the GitOps and KubernetesOps storage variants, <code>apicurio.storage.kind=gitops</code> and <code>apicurio.storage.kind=kubernetesops</code>.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry checks the gate at startup, before it initializes storage. When the gate is <code>false</code>, startup fails if you set one of these properties to <code>true</code> or if the storage kind is <code>gitops</code> or <code>kubernetesops</code>. The error names each property that you set, with its description:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>The following experimental features are enabled but the experimental features gate ('apicurio.features.experimental.enabled') is not enabled. Either enable the experimental features gate or disable the following properties: apicurio.iceberg.enabled (Enable the Iceberg REST Catalog API)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To start Apicurio Registry, set <code>apicurio.features.experimental.enabled=true</code> or the <code>APICURIO_FEATURES_EXPERIMENTAL_ENABLED=true</code> environment variable, or disable the features that the error names.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Apicurio Registry 3.2 and 3.3 define the gate but do not check it at startup. A deployment that enables an experimental feature without the gate starts on those versions and does not start on 3.4. Before you upgrade such a deployment, set the gate to <code>true</code> or disable the feature.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-config-reference.html">Apicurio Registry configuration reference</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -915,6 +957,9 @@ Before you configure OpenTelemetry, ensure that you have installed Apicurio Regi
 </div>
 </div>
 <div class="paragraph">
+<p>If you deploy Apicurio Registry with the Apicurio Registry Operator, you can set the same values in the <code>spec.app.otel</code> section of the <code>ApicurioRegistry3</code> custom resource instead of environment variables. See <a href="assembly-operator-config-reference.html#otel-spec_registry" class="page">OTelSpec</a>.</p>
+</div>
+<div class="paragraph">
 <p>When you enable the OpenTelemetry SDK and use JSON logging format, Apicurio Registry automatically includes trace context (trace ID and span ID) in log entries. You can then correlate logs and traces.</p>
 </div>
 <div class="listingblock">
@@ -1128,13 +1173,618 @@ Before you configure OpenTelemetry, ensure that you have installed Apicurio Regi
 </div>
 </div>
 <div class="sect1">
+<h2 id="registry-http-compression_registry"><a class="anchor" href="#registry-http-compression_registry"></a>HTTP compression in Apicurio Registry</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry 3.3.2 and later gzip-compresses REST API responses for clients that accept gzip, and decompresses gzip-encoded request bodies. Compression reduces the bandwidth that large schemas and search results consume.</p>
+</div>
+<div class="paragraph">
+<p><strong>Response compression</strong></p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry compresses a REST API response only when all of the following conditions are true:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The request includes an <code>Accept-Encoding</code> header that accepts gzip. The header accepts gzip when it lists <code>gzip</code> with a quality value greater than <code>0</code>. If the header does not list <code>gzip</code>, the wildcard <code>*</code> with a quality value greater than <code>0</code> also accepts it. The check is case-insensitive.</p>
+</li>
+<li>
+<p>The response does not already carry a <code>Content-Encoding</code> header.</p>
+</li>
+<li>
+<p>The media type of the response is in the <code>quarkus.http.compress-media-types</code> list. The list covers text-based content such as JSON, XML, YAML, GraphQL, and Protobuf schema definitions, but not opaque binary content such as <code>application/zip</code> or <code>application/octet-stream</code>.</p>
+</li>
+<li>
+<p>The dynamic <code>apicurio.rest.compression.enabled</code> property is <code>true</code>, which is the default.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry does not apply a minimum size threshold. It compresses every response that meets the preceding conditions, including small ones.</p>
+</div>
+<div class="paragraph">
+<p>When Apicurio Registry compresses a response, it sets the <code>Content-Encoding: gzip</code> header, removes the <code>Content-Length</code> header that described the uncompressed body, and adds <code>Vary: Accept-Encoding</code> so that caches and content delivery networks store the compressed and uncompressed variants separately.</p>
+</div>
+<div class="paragraph">
+<p><strong>Request decompression</strong></p>
+</div>
+<div class="paragraph">
+<p>The Quarkus HTTP layer decompresses request bodies that carry the <code>Content-Encoding: gzip</code> header before Apicurio Registry processes them. Request decompression is always on. The <code>apicurio.rest.compression.enabled</code> property does not affect it. The <code>quarkus.http.limits.max-body-size</code> limit of 50 MB applies to the decompressed payload, so Apicurio Registry rejects a small gzip payload that expands beyond the limit with an HTTP <code>400</code> or <code>413</code> status code.</p>
+</div>
+<div class="paragraph">
+<p>The TypeScript SDK and the Go SDK gzip-compress request bodies by default. Web browsers send the <code>Accept-Encoding</code> header automatically, and command-line tools such as <code>curl</code> send it when you use the <code>--compressed</code> option.</p>
+</div>
+<div class="paragraph">
+<p><strong>Apicurio Registry property and Quarkus HTTP settings</strong></p>
+</div>
+<div class="paragraph">
+<p>Two configuration layers control compression:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apicurio Registry defines the <code>apicurio.rest.compression.enabled</code> property. The property is dynamic, so you can change it at runtime without a restart by using the admin configuration REST API, the CLI, or the <strong>Settings</strong> tab of the web console. It turns response compression on or off and does not affect request decompression.</p>
+</li>
+<li>
+<p>The <code>quarkus.http.enable-compression</code>, <code>quarkus.http.enable-decompression</code>, and <code>quarkus.http.compress-media-types</code> properties are Quarkus HTTP settings. Quarkus fixes them at build time, so you cannot change the values in the Apicurio Registry image by setting environment variables on a running instance. The Apicurio Registry build sets <code>quarkus.http.enable-compression</code> to <code>false</code> and <code>quarkus.http.enable-decompression</code> to <code>true</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry serves its REST API through RESTEasy Classic, which writes responses outside the Quarkus HTTP route chain that <code>quarkus.http.enable-compression</code> acts on. For this reason, a writer interceptor in Apicurio Registry performs the response compression, and it reads the <code>quarkus.http.compress-media-types</code> list to decide which media types to compress.</p>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#registry-http-compression-properties_registry">HTTP compression configuration properties</a></p>
+</li>
+<li>
+<p><a href="#disabling-http-response-compression_registry">Disabling HTTP response compression at runtime</a></p>
+</li>
+<li>
+<p><a href="#verifying-http-compression_registry">Verifying HTTP compression with curl</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-http-compression-properties_registry"><a class="anchor" href="#registry-http-compression-properties_registry"></a>HTTP compression configuration properties</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The following tables list the Apicurio Registry and Quarkus properties that control HTTP compression, the media types that Apicurio Registry compresses, the HTTP headers involved, and how Apicurio Registry interprets common <code>Accept-Encoding</code> values.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 6. Apicurio Registry REST compression property</caption>
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 21.4285%;">
+<col style="width: 14.2857%;">
+<col style="width: 35.7144%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.rest.compression.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>APICURIO_REST_COMPRESSION_ENABLED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables gzip compression of REST API responses. This property is dynamic. You can change it at runtime by using the admin configuration REST API, the CLI, or the web console. Available since 3.3.2.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>To set the default for a deployment, set the <code>APICURIO_REST_COMPRESSION_ENABLED</code> environment variable to <code>false</code> on the Apicurio Registry container, for example in the <code>env</code> block of the custom resource that the Apicurio Registry Operator manages. A value that you set at runtime takes precedence over the environment variable.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry exposes a dynamic property for runtime changes only when the matching <code>.dynamic.allow</code> property is <code>true</code>. For this property, <code>apicurio.rest.compression.enabled.dynamic.allow</code> defaults to the value of <code>apicurio.config.dynamic.allow-all</code>, which is <code>true</code>. Replicas that did not make a runtime change pick it up within the configuration refresh interval, which is one minute by default.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 7. Quarkus HTTP compression properties</caption>
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 21.4285%;">
+<col style="width: 14.2857%;">
+<col style="width: 35.7144%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.http.enable-compression</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_ENABLE_COMPRESSION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables response compression in the Quarkus HTTP layer. Fixed at build time. The Apicurio Registry writer interceptor, not this setting, compresses REST API responses.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.http.enable-decompression</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_ENABLE_DECOMPRESSION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Decompresses request bodies that carry a <code>Content-Encoding: gzip</code> header. Fixed at build time.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.http.compress-media-types</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_COMPRESS_MEDIA_TYPES</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See the following list</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comma-separated list of response media types that are eligible for compression. Fixed at build time. Setting this property replaces the Quarkus default list rather than extending it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus.http.limits.max-body-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARKUS_HTTP_LIMITS_MAX_BODY_SIZE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>52428800</code> (50 MB)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum request body size. For gzip-encoded requests, the limit applies to the decompressed payload.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Apicurio Registry compresses REST API responses with the following media types:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>text/html</code>, <code>text/plain</code>, <code>text/xml</code>, <code>text/css</code>, <code>text/javascript</code>, and <code>text/x-prompt-template</code></p>
+</li>
+<li>
+<p><code>application/javascript</code>, <code>application/json</code>, <code>application/graphql+json</code>, <code>application/graphql</code>, <code>application/xhtml+xml</code>, <code>application/xml</code>, and <code>application/x-yaml</code></p>
+</li>
+<li>
+<p><code>application/x-protobuf</code> and <code>application/x-thrift</code></p>
+</li>
+<li>
+<p><code>application/vnd.schemaregistry.v1+json</code> and <code>application/vnd.schemaregistry+json</code>, which the Confluent-compatible API can return</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Binary media types, such as the <code>application/zip</code> that the admin export endpoint returns and <code>application/octet-stream</code>, are not in the list, so Apicurio Registry never compresses them.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 8. HTTP headers that compression uses</caption>
+<colgroup>
+<col style="width: 27.2727%;">
+<col style="width: 18.1818%;">
+<col style="width: 54.5455%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Header</th>
+<th class="tableblock halign-left valign-top">Direction</th>
+<th class="tableblock halign-left valign-top">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Accept-Encoding</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Request</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tells Apicurio Registry which content codings the client accepts. Apicurio Registry compresses the response only when this header accepts gzip.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Content-Encoding</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Request</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set <code>Content-Encoding: gzip</code> to send a gzip-compressed request body. Apicurio Registry decompresses the body before it processes the request.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Content-Encoding</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry sets <code>Content-Encoding: gzip</code> on every compressed response. A response without this header is uncompressed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Vary</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry adds <code>Vary: Accept-Encoding</code> to every compressed response so that caches store the compressed and uncompressed variants separately.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Content-Length</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry removes the <code>Content-Length</code> header of the uncompressed body from a compressed response.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 9. Accept-Encoding values and the resulting response</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>Accept-Encoding</code> value</th>
+<th class="tableblock halign-left valign-top">Compressed</th>
+<th class="tableblock halign-left valign-top">Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gzip</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explicit gzip acceptance.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gzip, deflate</code> or <code>deflate, gzip;q=0.8</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gzip is listed with a quality value greater than <code>0</code>. The order and the other codings do not matter.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GZIP</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Token matching is case-insensitive.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>*</code> or <code>br, *</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The wildcard accepts any coding that the header does not list explicitly, including gzip.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gzip;q=0</code> or <code>gzip;q=0, *;q=0.5</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An explicit <code>gzip;q=0</code> refuses gzip and takes precedence over the wildcard.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>*;q=0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The wildcard refuses every coding that the header does not list explicitly.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deflate</code>, <code>br</code>, or <code>identity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gzip is not listed and there is no wildcard.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Header absent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apicurio Registry never compresses a response when the client does not send <code>Accept-Encoding</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#registry-http-compression_registry">HTTP compression in Apicurio Registry</a></p>
+</li>
+<li>
+<p><a href="assembly-config-reference.html">Apicurio Registry configuration reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="disabling-http-response-compression_registry"><a class="anchor" href="#disabling-http-response-compression_registry"></a>Disabling HTTP response compression at runtime</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can turn gzip compression of REST API responses off and on without restarting Apicurio Registry by changing the dynamic <code>apicurio.rest.compression.enabled</code> property. Disable it when a proxy in front of Apicurio Registry already compresses responses, or when you need to inspect uncompressed responses.</p>
+</div>
+<div class="paragraph">
+<p>Request decompression stays active regardless of this setting.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You have administrator access to the Apicurio Registry instance.</p>
+</li>
+<li>
+<p>The Apicurio Registry version is 3.3.2 or later.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Check the current value of the property:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl http://localhost:8080/apis/registry/v3/admin/config/properties/apicurio.rest.compression.enabled</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The response is a JSON object with <code>name</code>, <code>value</code>, <code>type</code>, <code>label</code>, and <code>description</code> fields. The default <code>value</code> is <code>"true"</code>.</p>
+</div>
+</li>
+<li>
+<p>Set the property to <code>false</code> by using the admin configuration REST API:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X PUT -H "Content-Type: application/json" \
+  -d '{"value": "false"}' \
+  http://localhost:8080/apis/registry/v3/admin/config/properties/apicurio.rest.compression.enabled</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, use the CLI:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr server-config set apicurio.rest.compression.enabled false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To use the Apicurio Registry web console instead, click the <strong>Settings</strong> tab, and in the <strong>Additional properties</strong> section, set the <strong>Compression</strong> switch to <strong>Off</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry stores the value in its storage, so the setting persists across restarts. Other replicas apply the change within the configuration refresh interval, which is one minute by default.</p>
+</div>
+</li>
+<li>
+<p>To restore the default, reset the property:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ acr server-config reset apicurio.rest.compression.enabled</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The equivalent REST API call is <code>DELETE /apis/registry/v3/admin/config/properties/apicurio.rest.compression.enabled</code>.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>A request that includes the <code>Accept-Encoding: gzip</code> header returns a response without a <code>Content-Encoding</code> header while the property is <code>false</code>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#verifying-http-compression_registry">Verifying HTTP compression with curl</a></p>
+</li>
+<li>
+<p><a href="assembly-managing-registry-artifacts-ui.html">Managing Apicurio Registry content using the web console</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="verifying-http-compression_registry"><a class="anchor" href="#verifying-http-compression_registry"></a>Verifying HTTP compression with curl</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>You can confirm that Apicurio Registry compresses responses and decompresses request bodies by inspecting the HTTP headers that <code>curl</code> sends and receives. Run these checks after you deploy Apicurio Registry behind a new proxy or ingress controller, or when a client reports garbled or oversized responses.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The Apicurio Registry version is 3.3.2 or later, and the instance is reachable, for example at <code>http://localhost:8080</code>.</p>
+</li>
+<li>
+<p>The <code>curl</code> and <code>gzip</code> commands are installed.</p>
+</li>
+<li>
+<p>You have write access to a group in Apicurio Registry to test request decompression.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Request a JSON resource with the <code>Accept-Encoding: gzip</code> header and print only the response headers:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -sS -o /dev/null -D - -H "Accept-Encoding: gzip" \
+  http://localhost:8080/apis/registry/v3/system/info</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A compressed response includes the following headers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-http hljs" data-lang="http">Content-Encoding: gzip
+Vary: Accept-Encoding</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Repeat the request without the <code>Accept-Encoding</code> header and confirm that the response has no <code>Content-Encoding</code> header:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -sS -o /dev/null -D - http://localhost:8080/apis/registry/v3/system/info</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>To read a compressed response body on the command line, add the <code>--compressed</code> option, which sends <code>Accept-Encoding</code> and decodes the body:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -sS --compressed http://localhost:8080/apis/registry/v3/system/info</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a gzip-compressed request body that creates an artifact:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ cat &gt; create-artifact.json &lt;&lt;'EOF'
+{
+  "artifactId": "compression-test",
+  "artifactType": "JSON",
+  "firstVersion": {
+    "content": {
+      "content": "{\"type\": \"object\"}",
+      "contentType": "application/json"
+    }
+  }
+}
+EOF
+$ gzip create-artifact.json</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Send the compressed body with the <code>Content-Encoding: gzip</code> header:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -sS -X POST -H "Content-Type: application/json" \
+  -H "Content-Encoding: gzip" \
+  --data-binary @create-artifact.json.gz \
+  http://localhost:8080/apis/registry/v3/groups/default/artifacts</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Apicurio Registry decompresses the body and returns an HTTP <code>200</code> response that describes the new artifact.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>The first request returns <code>Content-Encoding: gzip</code> and <code>Vary: Accept-Encoding</code>, and the second request returns neither header.</p>
+</li>
+<li>
+<p>The <code>POST</code> request returns a JSON response whose <code>artifact.artifactId</code> value is <code>compression-test</code>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#registry-http-compression-troubleshooting_registry">HTTP compression troubleshooting</a></p>
+</li>
+<li>
+<p><a href="#disabling-http-response-compression_registry">Disabling HTTP response compression at runtime</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="registry-http-compression-troubleshooting_registry"><a class="anchor" href="#registry-http-compression-troubleshooting_registry"></a>HTTP compression troubleshooting</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The following table lists common symptoms that clients and proxies produce when HTTP compression does not behave as expected, with the cause and the action to take.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch table-expandable">
+<caption class="title">Table 10. HTTP compression symptoms, causes, and actions</caption>
+<colgroup>
+<col style="width: 30.7692%;">
+<col style="width: 30.7692%;">
+<col style="width: 38.4616%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Symptom</th>
+<th class="tableblock halign-left valign-top">Cause</th>
+<th class="tableblock halign-left valign-top">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The client sends <code>Accept-Encoding: gzip</code>, but the response has no <code>Content-Encoding</code> header.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>One of the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>apicurio.rest.compression.enabled</code> property is <code>false</code>.</p>
+</li>
+<li>
+<p>The response media type is not in the <code>quarkus.http.compress-media-types</code> list, for example the <code>application/zip</code> that the admin export endpoint returns.</p>
+</li>
+<li>
+<p>The header refuses gzip, for example <code>gzip;q=0</code> or <code>*;q=0</code>.</p>
+</li>
+<li>
+<p>A proxy between the client and Apicurio Registry removed or rewrote the <code>Accept-Encoding</code> header, or decompressed the response before forwarding it.</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check the property value with <code>GET /apis/registry/v3/admin/config/properties/apicurio.rest.compression.enabled</code>. Send the same request directly to the Apicurio Registry service, bypassing the proxy, and compare the headers. Configure the proxy to forward <code>Accept-Encoding</code> unchanged.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>curl</code> prints binary characters instead of JSON.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The response is gzip-compressed, and <code>curl</code> does not decode it unless you ask it to.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add the <code>--compressed</code> option to <code>curl</code>, or pipe the output through <code>gunzip</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A client receives a response that is gzip-compressed twice, or a client library reports a decoding error.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A reverse proxy, ingress controller, or content delivery network in front of Apicurio Registry compresses responses that already carry <code>Content-Encoding: gzip</code>. Apicurio Registry itself never compresses a response that already has a <code>Content-Encoding</code> header.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configure the proxy to skip responses that already have a <code>Content-Encoding</code> header, or set <code>apicurio.rest.compression.enabled</code> to <code>false</code> and let the proxy compress.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A cache or content delivery network serves a compressed response to a client that did not accept gzip, or the reverse.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The cache ignores the <code>Vary: Accept-Encoding</code> header that Apicurio Registry sets on compressed responses.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configure the cache to key stored responses on the <code>Accept-Encoding</code> header, or set <code>apicurio.rest.compression.enabled</code> to <code>false</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A gzip-compressed request body fails with an HTTP <code>400</code> status code, or Apicurio Registry closes the connection without sending a response.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>One of the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The client sets <code>Content-Encoding: gzip</code> but sends an uncompressed body.</p>
+</li>
+<li>
+<p>A proxy decompressed the body but forwarded the <code>Content-Encoding: gzip</code> header, or removed the header but forwarded the compressed bytes.</p>
+</li>
+<li>
+<p>A version of Apicurio Registry earlier than 3.3.2 received the request. Earlier versions do not decompress request bodies.</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Confirm that the <code>Content-Encoding</code> header matches the body encoding at the point where the request reaches Apicurio Registry. For versions of Apicurio Registry earlier than 3.3.2, disable request compression in the client. For example, the TypeScript SDK accepts <code>useDefaultMiddlewares = false</code> as the fourth argument of <code>RegistryClientFactory.createRegistryClient()</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A gzip-compressed request body fails with an HTTP <code>400</code> or <code>413</code> status code although the compressed payload is small.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The decompressed payload exceeds the <code>quarkus.http.limits.max-body-size</code> limit of 50 MB. Apicurio Registry applies the limit to the decompressed size to prevent decompression-bomb attacks.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reduce the size of the request body.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Setting <code>QUARKUS_HTTP_ENABLE_COMPRESSION</code>, <code>QUARKUS_HTTP_ENABLE_DECOMPRESSION</code>, or <code>QUARKUS_HTTP_COMPRESS_MEDIA_TYPES</code> on a running instance has no effect.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quarkus fixes these properties at build time, so the values in the Apicurio Registry image cannot change at runtime.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use the dynamic <code>apicurio.rest.compression.enabled</code> property to control response compression at runtime.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="#verifying-http-compression_registry">Verifying HTTP compression with curl</a></p>
+</li>
+<li>
+<p><a href="#registry-http-compression-properties_registry">HTTP compression configuration properties</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="registry-rest-metrics-distribution_registry"><a class="anchor" href="#registry-rest-metrics-distribution_registry"></a>REST request metrics distribution configuration</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>You can control how Apicurio Registry publishes distribution statistics for its REST request timer metrics. Change the distribution type when your monitoring system computes percentiles poorly from histogram buckets, for example, Datadog.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 6. REST metrics distribution properties</caption>
+<caption class="title">Table 11. REST metrics distribution properties</caption>
 <colgroup>
 <col style="width: 36.3636%;">
 <col style="width: 27.2727%;">
@@ -1384,7 +2034,7 @@ $ curl -s http://localhost:8080/apis/registry/v3/ids/contentIds/1 &gt; /dev/null
 <p>The storage content cache has three configuration properties, three named caches, and five Micrometer meters for each cache, exposed at <code>/metrics</code> on the management port. When <code>apicurio.storage.content-cache.hot-path.ttl-seconds</code> is <code>0</code>, Apicurio Registry does not create the <code>contentAndTypeById</code> cache and does not register its meters. The properties are available since Apicurio Registry 3.3.3.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 7. Storage content cache configuration properties</caption>
+<caption class="title">Table 12. Storage content cache configuration properties</caption>
 <colgroup>
 <col style="width: 26.6666%;">
 <col style="width: 26.6666%;">
@@ -1421,7 +2071,7 @@ $ curl -s http://localhost:8080/apis/registry/v3/ids/contentIds/1 &gt; /dev/null
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 8. Caches and the reads that they serve</caption>
+<caption class="title">Table 13. Caches and the reads that they serve</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -1458,7 +2108,7 @@ $ curl -s http://localhost:8080/apis/registry/v3/ids/contentIds/1 &gt; /dev/null
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 9. Storage content cache metrics</caption>
+<caption class="title">Table 14. Storage content cache metrics</caption>
 <colgroup>
 <col style="width: 21.4285%;">
 <col style="width: 21.4285%;">
@@ -1660,7 +2310,7 @@ The following environment variables are provided for reference only. The default
 </table>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 10. Environment variables for Apicurio Registry liveness probes</caption>
+<caption class="title">Table 15. Environment variables for Apicurio Registry liveness probes</caption>
 <colgroup>
 <col style="width: 29.4117%;">
 <col style="width: 29.4117%;">
@@ -1715,7 +2365,7 @@ Because OpenShift automatically restarts a Pod that fails a liveness check, the 
 </table>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 11. Environment variables for Apicurio Registry readiness probes</caption>
+<caption class="title">Table 16. Environment variables for Apicurio Registry readiness probes</caption>
 <colgroup>
 <col style="width: 30.7692%;">
 <col style="width: 38.4615%;">

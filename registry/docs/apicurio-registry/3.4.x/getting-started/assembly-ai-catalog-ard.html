@@ -671,7 +671,7 @@ A crawler that retrieves only the static catalog can discover the search API fro
 <dd>
 <p>Apicurio Registry filters Agent Card entries by the <code>apicurio.agent.visibility</code> label with the same rules as <code>/.well-known/agents</code>.
 Apicurio Registry does not filter MCP tool entries by visibility, even when the artifact carries an <code>apicurio.agent.visibility</code> label: the visibility model applies only to Agent Cards.
-When neither OpenID Connect (OIDC) nor basic authentication is configured, Apicurio Registry applies no visibility filtering.</p>
+When no authentication mechanism is configured, Apicurio Registry applies no visibility filtering.</p>
 </dd>
 <dt class="hdlist1">Authorization</dt>
 <dd>
@@ -768,14 +768,37 @@ The endpoint also accepts <code>orderBy</code>, <code>pageSize</code>, and <code
 Apicurio Registry accepts <code>orderBy</code> for compatibility with ARD clients, but the parameter has no effect.
 Apicurio Registry returns Agent Card entries before MCP tool entries and orders each group newest first.
 <code>pageSize</code> defaults to 20, and Apicurio Registry clamps larger values to 500.
-The endpoint returns an AI Catalog document.
-When more results remain, the response includes a <code>nextPageToken</code> value that you can use to request the next page.</p>
+The response is an object with an <code>items</code> array and a <code>total</code> count.
+Each item has the same fields as an entry of the catalog document, and <code>total</code> counts all the entries that match the filter.
+To fetch the next page, pass the <code>pageToken</code> value from the previous response.
+The last page has no <code>pageToken</code>.</p>
 <div class="listingblock">
 <div class="title">Example request</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -G "http://localhost:8080/.well-known/ard/agents" \
   --data-urlencode "filter=type=application/a2a-agent-card+json" \
   --data-urlencode "pageSize=10"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example response</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "items": [
+    {
+      "identifier": "urn:air:registry.example.com:8080:ai-agents:translator-agent",
+      "displayName": "Translation Agent",
+      "type": "application/a2a-agent-card+json",
+      "url": "http://registry.example.com:8080/.well-known/agents/ai-agents/translator-agent",
+      "description": "Translates text between languages",
+      "capabilities": ["translation"],
+      "version": "1.0.0",
+      "updatedAt": "2026-09-01T10:15:30Z",
+      "tags": ["apicurio.agent.visibility=public", "department=localization"]
+    }
+  ],
+  "total": 1
+}</code></pre>
 </div>
 </div>
 </dd>

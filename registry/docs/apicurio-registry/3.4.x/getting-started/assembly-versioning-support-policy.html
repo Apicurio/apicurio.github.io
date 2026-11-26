@@ -615,6 +615,199 @@ Database schema migrations run automatically on startup and do not require manua
 </div>
 </div>
 <div class="sect1">
+<h2 id="deprecated-configuration-properties_registry"><a class="anchor" href="#deprecated-configuration-properties_registry"></a>Deprecated configuration properties</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Apicurio Registry retires a configuration property in two phases. It first deprecates the property, and a later release removes it. Apicurio Registry starts when you set a deprecated property and does not start when you set a removed property.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Deprecated</dt>
+<dd>
+<p>At startup, Apicurio Registry logs a warning that names the property, the version that deprecated it, the version that removes it, and the replacement, if one exists:</p>
+<div class="listingblock">
+<div class="content">
+<pre>Property 'apicurio.kafkasql.ssl.keystore.location' is deprecated since 3.1.0 and will be removed in 4.0.0. Use 'apicurio.kafkasql.security.ssl.keystore.location' instead.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A deprecated property that has a replacement still takes effect when you do not set the replacement. If you set both, the replacement takes precedence. In that case, the warning says which property takes precedence and does not name the removal version.</p>
+</div>
+</dd>
+<dt class="hdlist1">Removed</dt>
+<dd>
+<p>Apicurio Registry logs an error for each removed property that you set, and startup fails with an <code>IllegalStateException</code> that lists them. The error names the version that removed the property and the replacement, if one exists:</p>
+<div class="listingblock">
+<div class="content">
+<pre>Property 'apicurio.gitops.id' was removed in 3.2.1. Use 'apicurio.polling-storage.id' instead.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Before you upgrade, remove or replace every removed property in your configuration.</p>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The following table lists the deprecated properties.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Deprecated configuration properties</caption>
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Deprecated property</th>
+<th class="tableblock halign-left valign-top">Replacement</th>
+<th class="tableblock halign-left valign-top">Deprecated since</th>
+<th class="tableblock halign-left valign-top">To be removed in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.compat.json-schema.use-apitomy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None. The property has no effect.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.usage.dead-threshold-days</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None. The property has no effect.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.agent.protocol-version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None. The property has no effect.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.spec-version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None. The property has no effect.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ard.federation.default</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None. The property has no effect.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.agent.name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.instance.name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.ai-catalog.host-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.instance.name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.ssl.truststore.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.security.ssl.truststore.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.ssl.keystore.location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.security.ssl.keystore.location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.ssl.keystore.type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.security.ssl.keystore.type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.ssl.keystore.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.security.ssl.keystore.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.ssl.key.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kafkasql.security.ssl.key.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.0</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The following table lists the removed properties. Apicurio Registry 3.2.1 removed these GitOps and KubernetesOps storage properties without a deprecation phase, while both storage variants were experimental. Versions 3.2.1 to 3.3 ignore the properties. From version 3.4, Apicurio Registry does not start when you set one of them.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Removed configuration properties</caption>
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 50%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Removed property</th>
+<th class="tableblock halign-left valign-top">Replacement</th>
+<th class="tableblock halign-left valign-top">Removed in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.2.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kubernetesops.id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.2.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.repo.origin.branch</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.repo.branch</code>. Set the same branch in the <code>APICURIO_GITOPS_REPO_BRANCH</code> variable of the GitOps sync container.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.2.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.refresh.every</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.poll-period</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.2.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.kubernetesops.refresh.every</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.polling-storage.poll-period</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.2.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.repo.origin.uri</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None. Apicurio Registry does not clone the repository. Run the GitOps sync container and set its <code>APICURIO_GITOPS_REPO_URL</code> variable.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.2.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.gitops.workdir</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None. Apicurio Registry reads the repositories from the <code>apicurio.gitops.workspace</code> directory, where the GitOps sync container keeps them.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.2.1</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-config-reference.html">Apicurio Registry configuration reference</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="patch-upgrades_registry"><a class="anchor" href="#patch-upgrades_registry"></a>Performing patch upgrades</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">

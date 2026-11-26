@@ -446,7 +446,7 @@ For a list of all available configuration options, see <a href="assembly-config-
 <td class="content">
 <div class="paragraph">
 <p>Alternatively, for details on how to configure these settings automatically,
-see the <a href="https://www.apicur.io/registry/docs/apicurio-registry-operator/1.1.0-v2.4.12.final/assembly-registry-maintenance.html#registry-security-keycloak">Apicurio Registry Operator documentation</a>.</p>
+see <a href="assembly-deploying-registry-operator.html#configuring-registry-authentication_registry" class="page">getting-started/assembly-deploying-registry-operator.adoc#configuring-registry-authentication_registry</a>.</p>
 </div>
 </td>
 </tr>
@@ -1066,7 +1066,7 @@ You can specify multiple scopes by using comma separation. The scopes are conver
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>A Kubernetes cluster with Helm 3.x installed.</p>
+<p>Access to a Kubernetes cluster with Helm 3.x installed.</p>
 </li>
 <li>
 <p>Apicurio Registry is installed and running.</p>
@@ -1921,7 +1921,7 @@ Even with <code>client_credentials</code> working, the tokens <strong>do not inc
 <p>Apicurio Registry provides the following authentication options: OpenID Connect with an identity provider such as Keycloak, HTTP basic authentication, proxy header authentication, and Kubernetes-native authentication.</p>
 </div>
 <div class="paragraph">
-<p>Apicurio Registry provides authorization options for role-based and content-based approaches:</p>
+<p>Apicurio Registry provides the following authorization options:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1930,6 +1930,9 @@ Even with <code>client_credentials</code> working, the tokens <strong>do not inc
 </li>
 <li>
 <p>Content-based authorization for schema or API artifacts, where only the owner of the artifacts or artifact group can update or delete artifacts.</p>
+</li>
+<li>
+<p>Per-resource authorization for individual groups and artifacts, from an access rules file that Apicurio Registry applies after role-based and content-based authorization.</p>
 </li>
 </ul>
 </div>
@@ -1977,6 +1980,9 @@ All authentication and authorization options in Apicurio Registry are disabled b
 </li>
 <li>
 <p><a href="#registry-security-anon-read_registry">Apicurio Registry anonymous read-only access</a></p>
+</li>
+<li>
+<p><a href="assembly-configuring-resource-authorization.html#configuring-resource-authorization_registry" class="page">Configuring per-resource authorization</a></p>
 </li>
 </ul>
 </div>
@@ -2723,6 +2729,9 @@ REST API (or associated UI) to grant roles to additional users (including additi
 <div class="paragraph">
 <p>When owner-only authorization and group owner-only authorization are both enabled, only the user who created an artifact group has write access to that artifact group, for example, to add or remove artifacts in that group.</p>
 </div>
+<div class="paragraph">
+<p>If you also enable per-resource authorization, the owner of an artifact or group keeps access to it by default, even when the access rules deny it. To apply the access rules to owners too, set <code>apicurio.auth.resource-based-authorization.owner-bypass.enabled</code> to <code>false</code>.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -3037,7 +3046,7 @@ Environment variables are the recommended approach because they let you configur
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Setting <code>QUARKUS_HTTP_CORS_ORIGINS</code> by using an environment variable completely overrides the default origins from <code>application.properties</code>. The default methods and headers still apply unless you also override them.
+Setting <code>QUARKUS_HTTP_CORS_ORIGINS</code> by using an environment variable completely overrides the default origins from <code>application.properties</code>. The default methods and headers still apply unless you also override them. If you set <code>APICURIO_URL_OVERRIDE_HOST</code>, Apicurio Registry still adds the <code>http://</code> and <code>https://</code> origins for that host to the allowed origins.
 </td>
 </tr>
 </table>
@@ -3127,6 +3136,9 @@ If you deploy Apicurio Registry by using the Kubernetes Operator, automatic CORS
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>When Apicurio Registry runs behind an HTTPS reverse proxy and you set <code>APICURIO_URL_OVERRIDE_HOST</code> to the proxy host name, Apicurio Registry adds the <code>http://</code> and <code>https://</code> origins for that host to the allowed origins. If you also set <code>APICURIO_URL_OVERRIDE_PORT</code>, the origins include that port unless it is <code>80</code> or <code>443</code>. Set <code>QUARKUS_HTTP_CORS_ORIGINS</code> only for other origins, such as a browser application on a different host.</p>
 </div>
 <div class="paragraph">
 <p>To allow a single origin:</p>

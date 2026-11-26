@@ -425,7 +425,7 @@ custom resource.</p>
 <div class="sectionbody">
 <div class="paragraph _abstract">
 <p>The <code>ApicurioRegistry3</code> custom resource defines the desired state of an instance of Apicurio Registry. The resource is
-organized into two main sections under <code>spec</code>:</p>
+organized into three sections under <code>spec</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -437,7 +437,9 @@ spec:
   app:
     # Configuration for the Apicurio Registry backend (REST API) component.
   ui:
-    # Configuration for the Apicurio Registry web console component.</code></pre>
+    # Configuration for the Apicurio Registry web console component.
+  consolePlugin:
+    # Configuration for the OpenShift Console plugin component.</code></pre>
 </div>
 </div>
 </div>
@@ -565,6 +567,30 @@ spec:
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#tls-spec_registry">TLSSpec</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">See below</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>otel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenTelemetry observability configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#otel-spec_registry">OTelSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See below</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>searchIndex</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Elasticsearch-based content search indexing (experimental)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#search-index-spec_registry">SearchIndexSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See below</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sql</code> <em>(deprecated)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use <code>storage.type</code> and <code>storage.sql</code> instead. When this field is set, the operator attempts to move its values to <code>storage</code> and updates the custom resource.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DeprecatedSqlSpec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kafkasql</code> <em>(deprecated)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use <code>storage.type</code> and <code>storage.kafkasql</code> instead. When this field is set, the operator attempts to move its values to <code>storage</code> and updates the custom resource.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DeprecatedKafkasqlSpec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -635,14 +661,32 @@ immutable.</p></td>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>insecureRequests</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Controls the plain HTTP port when TLS is configured. With <code>enabled</code>, Apicurio Registry also accepts HTTP requests. With <code>redirect</code>, Apicurio Registry redirects HTTP requests to HTTPS. With <code>disabled</code>, Apicurio Registry does not open the HTTP port. The operator exposes the HTTP port on the application Service only when the value is <code>enabled</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String (<code>enabled</code>, <code>redirect</code>, <code>disabled</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>keystoreSecretRef</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the keystore (PKCS12 format). Default key: <code>keystore.p12</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the keystore (PKCS12 format). Default key: <code>user.p12</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#secret-key-ref_registry">SecretKeyRef</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>keystorePasswordSecretRef</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the keystore password. Default key: <code>password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the keystore password. Default key: <code>user.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#secret-key-ref_registry">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>truststoreSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the truststore (PKCS12 format). Default key: <code>ca.p12</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#secret-key-ref_registry">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>truststorePasswordSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the truststore password. Default key: <code>ca.password</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#secret-key-ref_registry">SecretKeyRef</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
@@ -664,6 +708,134 @@ immutable.</p></td>
         key: keystore.password</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Configure OpenTelemetry observability for the application:</p>
+</div>
+<table id="otel-spec_registry" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. OTelSpec</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable OpenTelemetry. When <code>true</code>, the operator sets <code>QUARKUS_OTEL_SDK_DISABLED=false</code> and applies the other fields of this section.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>endpoint</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Endpoint URL of the OpenTelemetry collector, for example <code><a href="http://otel-collector:4317" class="bare">http://otel-collector:4317</a></code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:4317" class="bare">http://localhost:4317</a></code> (application default)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protocol</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protocol of the OTLP exporter: <code>grpc</code> or <code>http/protobuf</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grpc</code> (application default)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>traceSamplingRatio</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ratio of traces to sample, between <code>0.0</code> and <code>1.0</code>. The operator configures the <code>parentbased_traceidratio</code> sampler with this ratio.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Double</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.1</code> (application default)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    otel:
+      enabled: true
+      endpoint: http://otel-collector:4317
+      protocol: grpc
+      traceSamplingRatio: 0.1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configure Elasticsearch-based content search indexing (experimental):</p>
+</div>
+<table id="search-index-spec_registry" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. SearchIndexSpec</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable content search indexing. When enabled, the operator also enables the experimental features gate.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hosts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Elasticsearch hosts to connect to, for example <code>elasticsearch:9200</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>indexName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the Elasticsearch index.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio-registry</code> (application default)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>username</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Username for a secured Elasticsearch cluster.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the password for a secured Elasticsearch cluster. Default key: <code>password</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#secret-key-ref_registry">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    searchIndex:
+      enabled: true
+      hosts: elasticsearch:9200
+      username: registry-search
+      password:
+        name: elasticsearch-credentials
+        key: password</code></pre>
+</div>
+</div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
@@ -676,6 +848,12 @@ immutable.</p></td>
 <li>
 <p><a href="#operator-ingress-reference_registry">Ingress configuration reference</a></p>
 </li>
+<li>
+<p><a href="assembly-configuring-the-registry.html#configuring-registry-observability_registry" class="page">Apicurio Registry observability with OpenTelemetry</a></p>
+</li>
+<li>
+<p><a href="assembly-configuring-content-search.html#configuring-content-search-operator_registry" class="page">Configuring content search with the Apicurio Registry Operator</a></p>
+</li>
 </ul>
 </div>
 </div>
@@ -687,7 +865,7 @@ immutable.</p></td>
 <p>The <code>spec.ui</code> section configures the Apicurio Registry web console component.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. UI-specific fields</caption>
+<caption class="title">Table 7. UI-specific fields</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -747,7 +925,7 @@ immutable.</p></td>
 <p>The <code>spec.app.storage</code> section configures the storage backend for Apicurio Registry.</p>
 </div>
 <table id="storage-spec_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. StorageSpec</caption>
+<caption class="title">Table 8. StorageSpec</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -765,7 +943,7 @@ immutable.</p></td>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Storage type: <code>&lt;empty&gt;</code> (embedded H2 database), <code>postgresql</code>, <code>mysql</code>, <code>kafkasql</code>, or <code>kubernetesops</code>. When left empty, Apicurio Registry uses SQL storage with an embedded H2 database.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage type: <code>&lt;empty&gt;</code> (embedded H2 database), <code>postgresql</code>, <code>mysql</code>, <code>kafkasql</code>, <code>kubernetesops</code>, or <code>gitops</code>. When left empty, Apicurio Registry uses SQL storage with an embedded H2 database.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>""</code> (embedded H2, development only)</p></td>
 </tr>
@@ -787,6 +965,12 @@ immutable.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#kubernetes-ops-spec_registry">KubernetesOpsSpec</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gitops</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitOps storage configuration (read-only, experimental). Required when <code>type</code> is <code>gitops</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#git-ops-spec_registry">GitOpsSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
 </tbody>
 </table>
 <div class="admonitionblock important">
@@ -805,7 +989,7 @@ The default embedded H2 configuration is not suitable for production environment
 <p>Configure SQL database storage (PostgreSQL or MySQL):</p>
 </div>
 <table id="sql-spec_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. SqlSpec</caption>
+<caption class="title">Table 9. SqlSpec</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 50%;">
@@ -827,7 +1011,7 @@ The default embedded H2 configuration is not suitable for production environment
 </tbody>
 </table>
 <table id="data-source-spec_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. DataSourceSpec</caption>
+<caption class="title">Table 10. DataSourceSpec</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -903,7 +1087,7 @@ The default embedded H2 configuration is not suitable for production environment
 <p>Configure KafkaSQL storage:</p>
 </div>
 <table id="kafka-sql-spec_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. KafkaSqlSpec</caption>
+<caption class="title">Table 11. KafkaSqlSpec</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -975,7 +1159,7 @@ The default embedded H2 configuration is not suitable for production environment
 <p>Configure TLS for KafkaSQL storage:</p>
 </div>
 <table id="kafka-sql-tls-spec_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 10. KafkaSqlTLSSpec</caption>
+<caption class="title">Table 12. KafkaSqlTLSSpec</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -1055,7 +1239,7 @@ Default keys match the secret structure produced by the Strimzi Operator, so you
 <p>Configure SASL OAuth authentication for KafkaSQL storage:</p>
 </div>
 <table id="kafka-sql-auth-spec_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 11. KafkaSqlAuthSpec</caption>
+<caption class="title">Table 13. KafkaSqlAuthSpec</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -1149,7 +1333,7 @@ The operator provides first-class support for OAuth (OAUTHBEARER) authentication
 <p>Configure KubernetesOps storage (read-only, experimental). Loads registry data from Kubernetes ConfigMaps:</p>
 </div>
 <table id="kubernetes-ops-spec_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 12. KubernetesOpsSpec</caption>
+<caption class="title">Table 14. KubernetesOpsSpec</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -1181,7 +1365,7 @@ The operator provides first-class support for OAuth (OAUTHBEARER) authentication
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>refreshEvery</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Polling interval for ConfigMap changes. Supports duration format (e.g., <code>10s</code>, <code>1m</code>).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30s</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PT10S</code> (application default)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>labelRegistryId</code></p></td>
@@ -1258,6 +1442,216 @@ KubernetesOps storage is read-only. All changes must be made by creating or upda
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>Configure GitOps storage (read-only, experimental). Loads registry data from Git repositories through a sync container:</p>
+</div>
+<table id="git-ops-spec_registry" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 15. GitOpsSpec</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mode</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sync mode. With <code>pull</code>, the sync container periodically fetches from the remote repositories. With <code>push</code>, the sync container runs an SSH server that accepts <code>git push</code>. In push mode, the operator creates a Service named <code>&lt;cr-name&gt;-gitops-ssh-service</code> on port <code>2222</code> and allows that port in the NetworkPolicy of the app component. The operator also runs the app component with one replica and the <code>Recreate</code> deployment strategy, without a HorizontalPodAutoscaler or a PodDisruptionBudget, and ignores <code>spec.app.replicas</code> and <code>spec.app.autoscaling</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String (<code>pull</code>, <code>push</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pull</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>repos</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of Git repositories to sync from. For a single repository, provide a list with one entry.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array of <a href="#git-ops-repo-spec_registry">GitOpsRepoSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Registry instance identifier. Apicurio Registry loads only the data files that reference this identifier.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main</code> (application default)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pull</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSH Secrets for pull mode.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#git-ops-pull-spec_registry">GitOpsPullSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>push</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSH Secrets for push mode.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#git-ops-push-spec_registry">GitOpsPushSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+<table id="git-ops-repo-spec_registry" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 16. GitOpsRepoSpec</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL of the remote Git repository, over HTTPS or SSH, for example <code><a href="https://github.com/my-org/my-schemas.git" class="bare">https://github.com/my-org/my-schemas.git</a></code> or <code>git@github.com:my-org/my-schemas.git</code>. The operator copies the URL unchanged into the Deployment, so anyone who can read the custom resource or the Deployment can read a token in an HTTPS URL, and SSH keys avoid this exposure.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>branch</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Branch to track.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main</code> (application default)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dir</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Directory under <code>/repos</code> where the sync container clones the repository. Required when you configure more than one repository.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default</code></p></td>
+</tr>
+</tbody>
+</table>
+<table id="git-ops-pull-spec_registry" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 17. GitOpsPullSpec</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sshKeys</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the SSH private key for authenticating to remote Git servers. Default key: <code>id_ed25519</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#secret-key-ref_registry">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>knownHosts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing a <code>known_hosts</code> file for verifying the host keys of remote Git servers. Default key: <code>known_hosts</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#secret-key-ref_registry">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+<table id="git-ops-push-spec_registry" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 18. GitOpsPushSpec</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>authorizedKeys</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the <code>authorized_keys</code> file that controls which SSH public keys can push. Default key: <code>authorized_keys</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#secret-key-ref_registry">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hostKey</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to a Secret containing the SSH host key for the SSH server of the sync container, so that the host fingerprint stays the same across pod restarts. Default key: <code>ssh_host_key</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#secret-key-ref_registry">SecretKeyRef</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+GitOps storage is an experimental feature. The operator enables the experimental features gate when you configure this storage type.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Example with pull mode over HTTPS:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: gitops
+      gitops:
+        registryId: prod
+        repos:
+          - url: https://github.com/my-org/my-registry-data.git
+            branch: main</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example with push mode:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: gitops
+      gitops:
+        mode: push
+        registryId: prod
+        push:
+          authorizedKeys:
+            name: gitops-push-authorized-keys
+          hostKey:
+            name: gitops-push-host-key</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+GitOps storage is read-only. Make all changes through Git. The operator adds the sync container, <code>apicurio-registry-gitops-sync</code>, to the Apicurio Registry pod, and an <code>emptyDir</code> volume that both containers mount at <code>/repos</code>. To override the image of the sync container or add environment variables to it, use <code>spec.app.podTemplateSpec</code> with the container name <code>apicurio-registry-gitops-sync</code>.
+</td>
+</tr>
+</table>
+</div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
@@ -1266,6 +1660,9 @@ KubernetesOps storage is read-only. All changes must be made by creating or upda
 </li>
 <li>
 <p><a href="assembly-configuring-kubernetesops-storage.html" class="page">Configuring Apicurio Registry with KubernetesOps storage</a></p>
+</li>
+<li>
+<p><a href="assembly-configuring-gitops-storage.html" class="page">Configuring Apicurio Registry with GitOps storage</a></p>
 </li>
 </ul>
 </div>
@@ -1278,7 +1675,7 @@ KubernetesOps storage is read-only. All changes must be made by creating or upda
 <p>The <code>spec.app.auth</code> section configures OIDC authentication and role-based authorization.</p>
 </div>
 <table id="auth-spec_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. AuthSpec</caption>
+<caption class="title">Table 19. AuthSpec</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -1377,7 +1774,7 @@ KubernetesOps storage is read-only. All changes must be made by creating or upda
 <p>Configure role-based authorization:</p>
 </div>
 <table id="authz-spec_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 14. AuthzSpec</caption>
+<caption class="title">Table 20. AuthzSpec</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -1455,7 +1852,7 @@ KubernetesOps storage is read-only. All changes must be made by creating or upda
 <p>Configure authorization roles:</p>
 </div>
 <table id="authz-roles-spec_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 15. AuthzRolesSpec</caption>
+<caption class="title">Table 21. AuthzRolesSpec</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -1501,7 +1898,7 @@ KubernetesOps storage is read-only. All changes must be made by creating or upda
 <p>Configure admin override functionality:</p>
 </div>
 <table id="admin-override-spec_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 16. AdminOverrideSpec</caption>
+<caption class="title">Table 22. AdminOverrideSpec</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -1594,7 +1991,7 @@ KubernetesOps storage is read-only. All changes must be made by creating or upda
 <p>Configure basic authentication for client credentials:</p>
 </div>
 <table id="basic-auth-spec_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 17. BasicAuthSpec</caption>
+<caption class="title">Table 23. BasicAuthSpec</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -1641,7 +2038,7 @@ KubernetesOps storage is read-only. All changes must be made by creating or upda
 <p>Configure TLS for OIDC connections:</p>
 </div>
 <table id="auth-tls-spec_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 18. AuthTLSSpec</caption>
+<caption class="title">Table 24. AuthTLSSpec</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -1704,7 +2101,7 @@ KubernetesOps storage is read-only. All changes must be made by creating or upda
 <p>The <code>ingress</code> section is available for both <code>spec.app</code> and <code>spec.ui</code> components.</p>
 </div>
 <table id="ingress-spec_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 19. IngressSpec</caption>
+<caption class="title">Table 25. IngressSpec</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -1744,6 +2141,18 @@ KubernetesOps storage is read-only. All changes must be made by creating or upda
 <td class="tableblock halign-left valign-top"><p class="tableblock">Map[String]String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>{}</code></p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tlsSecretName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of a Secret of type <code>kubernetes.io/tls</code> to use for TLS on the operator-managed Ingress. The operator adds a <code>tls</code> section to the Ingress that references this Secret and the configured host.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tlsTermination</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLS termination type for the operator-managed Ingress. The operator sets the <code>route.openshift.io/termination</code> annotation on the Ingress to this value. Use <code>edge</code> to terminate TLS at the Ingress or Route, and do not configure application TLS (<code>spec.app.tls</code>). Use <code>passthrough</code> when you configure application TLS and Apicurio Registry handles HTTPS itself.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String (<code>edge</code>, <code>passthrough</code>, <code>reencrypt</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -1770,7 +2179,7 @@ KubernetesOps storage is read-only. All changes must be made by creating or upda
 <p>Many configuration fields use <code>SecretKeyRef</code> to reference Kubernetes Secrets:</p>
 </div>
 <table id="secret-key-ref_registry" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 20. SecretKeyRef</caption>
+<caption class="title">Table 26. SecretKeyRef</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -1809,6 +2218,52 @@ KubernetesOps storage is read-only. All changes must be made by creating or upda
   name: db-credentials
   key: db-password</code></pre>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="operator-cr-status_registry"><a class="anchor" href="#operator-cr-status_registry"></a>Custom resource status</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The Apicurio Registry Operator reports the state of each <code>ApicurioRegistry3</code> resource in <code>status.conditions</code>. Each condition has a <code>type</code>, a <code>status</code> of <code>True</code>, <code>False</code>, or <code>Unknown</code>, a <code>reason</code>, a human-readable <code>message</code>, a <code>lastTransitionTime</code>, and a <code>lastUpdateTime</code>. The <code>status.observedGeneration</code> field records the generation of the resource that the status describes.</p>
+</div>
+<table id="operator-status-conditions_registry" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 27. Status conditions</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Condition type</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Ready</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Always reported. <code>True</code> with reason <code>ActiveDeploymentsAvailable</code> when all active Deployments of the instance are available. <code>False</code> with reason <code>ActiveDeploymentUnavailable</code> when at least one Deployment is not available. The message names the unavailable Deployments.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ValidationError</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reported only while it is <code>True</code>, with reason <code>Error</code>. The custom resource contains an invalid combination of fields. For example, the custom resource sets both <code>replicas</code> and <code>autoscaling</code> on one component, has a container without a name in <code>podTemplateSpec</code>, or sets environment variables on the component container in <code>podTemplateSpec</code> instead of in <code>env</code>. With GitOps storage in push mode, the Apicurio Registry Operator also reports this condition when <code>spec.app.replicas</code> is greater than 1 or <code>spec.app.autoscaling.enabled</code> is <code>true</code>, and still deploys the app component with one replica. The message lists the validation errors.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OperatorError</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reported only while it is <code>True</code>. The Apicurio Registry Operator encountered an unexpected error while reconciling the resource. The reason is the name of the exception class, or <code>AggregatedOperatorException</code> when there is more than one error. The message contains the error details.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>To inspect the conditions of an instance, display the resource and read its <code>status.conditions</code> field:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get apicurioregistries3 example-registry -o yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also use the short name <code>registry3</code> in place of <code>apicurioregistries3</code>.</p>
 </div>
 </div>
 </div>

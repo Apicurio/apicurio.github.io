@@ -463,6 +463,15 @@
 <div class="title">Additional resources</div>
 <ul>
 <li>
+<p><a href="assembly-configuring-registry-security.html#registry-security-settings_registry" class="page">Apicurio Registry authentication and authorization configuration options</a></p>
+</li>
+<li>
+<p><a href="assembly-deploying-registry-operator.html#configuring-env-vars_registry" class="page">Environment variable configuration</a></p>
+</li>
+<li>
+<p><a href="assembly-deploying-registry-operator.html#using-podtemplatespec_registry" class="page">PodTemplateSpec advanced customization</a></p>
+</li>
+<li>
 <p><a href="https://github.com/kroxylicious/design/blob/main/proposals/009-authorizer.md">Kroxylicious ACL rules format (proposal 009)</a></p>
 </li>
 </ul>
@@ -509,6 +518,49 @@
 </div>
 <div class="paragraph">
 <p>These environment variables configure the feature and file path only; they do not enable authentication. If authentication is disabled, Apicurio Registry warns at startup and bypasses authorization even when resource-based authorization is enabled.</p>
+</div>
+</li>
+<li>
+<p>If you deploy Apicurio Registry with the Apicurio Registry Operator, configure the <code>ApicurioRegistry3</code> custom resource instead. Set the properties as environment variables in <code>spec.app.env</code>, and mount the ConfigMap through <code>spec.app.podTemplateSpec</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registry-access-rules
+data:
+  access.rules: |
+    from io.apicurio.authz import Artifact, Group, Role;
+    allow Role with name = "sr-developer" to READ Artifact with name like "public/*";
+    otherwise deny;
+---
+apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry
+spec:
+  app:
+    env:
+      - name: APICURIO_AUTH_RESOURCE_BASED_AUTHORIZATION_ENABLED
+        value: "true"
+      - name: APICURIO_AUTH_RESOURCE_BASED_AUTHORIZATION_RULES_PATH
+        value: /opt/apicurio/authz/access.rules
+    podTemplateSpec:
+      spec:
+        volumes:
+          - name: access-rules
+            configMap:
+              name: registry-access-rules
+        containers:
+          - name: apicurio-registry-app
+            volumeMounts:
+              - name: access-rules
+                mountPath: /opt/apicurio/authz
+                readOnly: true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Keep your existing <code>spec.app.auth</code> configuration, because per-resource authorization has no effect without authentication. Set the environment variables in <code>spec.app.env</code>, not in the <code>podTemplateSpec</code> container. If a <code>podTemplateSpec</code> container sets <code>env</code>, the Apicurio Registry Operator records a validation error condition in the <code>ApicurioRegistry3</code> status.</p>
 </div>
 </li>
 <li>
@@ -906,7 +958,10 @@ allow User with name = "alice" to WRITE Artifact with name like "team-a/*";</cod
 <p>The flags are advisory. They do not replace filtering or authorize a subsequent request. Ownership transfers, rules, state, mutability settings, referenced/generated artifacts, and bulk operations can impose additional checks. For example, <code>write: true</code> on a group does not guarantee permission to delete every artifact in it. Policy or ownership can also change after a result is returned. Clients must handle failed operations even when a flag is <code>true</code>.</p>
 </div>
 <div class="paragraph">
-<p>An owning developer with RBAC enabled can receive <code>read: true</code>, <code>write: true</code>, and <code>admin: false</code>. With RBAC disabled, an eligible owner bypass can permit admin-level access too. Do not infer permission flags from a role name alone. The presence of the API field does not by itself imply that a particular UI version uses it to hide actions.</p>
+<p>An owning developer with RBAC enabled can receive <code>read: true</code>, <code>write: true</code>, and <code>admin: false</code>. With RBAC disabled, an eligible owner bypass can permit admin-level access too. Do not infer permission flags from a role name alone.</p>
+</div>
+<div class="paragraph">
+<p>When the <code>write</code> flag is <code>false</code> for a group, an artifact, or a version, the Apicurio Registry web console hides actions on that resource such as <strong>Edit</strong>, <strong>Create artifact</strong>, <strong>Create version</strong>, and <strong>Delete version</strong>. When a result has no <code>permissions</code> object, the web console does not hide actions on this basis. Apicurio Registry decides whether to allow an action when you perform it.</p>
 </div>
 </div>
 </div>

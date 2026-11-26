@@ -468,11 +468,17 @@ Additional <code>ApicurioRegistry3</code> custom resource examples are available
 <p>Each component can be independently configured with its own settings for replicas, ingress, environment variables,
 and pod specifications.</p>
 </div>
+<div class="paragraph">
+<p>A third section, <code>spec.consolePlugin</code>, enables the OpenShift Console plugin.</p>
+</div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>
 <ul>
 <li>
 <p><a href="https://github.com/Apicurio/apicurio-registry/tree/3.3.0/operator/controller/src/test/resources/k8s/examples">Apicurio Registry upstream repository</a></p>
+</li>
+<li>
+<p><a href="#configuring-console-plugin_registry">OpenShift Console plugin configuration</a></p>
 </li>
 </ul>
 </div>
@@ -501,6 +507,9 @@ and pod specifications.</p>
 <li>
 <p><strong>KubernetesOps</strong> - Read-only storage that loads registry data from Kubernetes ConfigMaps. Suitable for
 Kubernetes-native and GitOps workflows. This is an experimental feature.</p>
+</li>
+<li>
+<p><strong>GitOps</strong> - Read-only storage that loads registry data from Git repositories. This is an experimental feature.</p>
 </li>
 </ul>
 </div>
@@ -575,7 +584,7 @@ spec:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Replace the <code>host</code> values with appropriate hostnames for your environment. Currently, Apicurio Registry Operator only creates simple HTTP Ingresses. To enable TLS, you must create your own Ingress or Route resources with TLS configuration.
+Replace the <code>host</code> values with appropriate hostnames for your environment. By default, the Apicurio Registry Operator creates plain HTTP Ingresses. To enable TLS, set <code>tlsTermination</code> and <code>tlsSecretName</code> in the <code>ingress</code> section of each component, or disable the operator-managed Ingress and create your own Ingress or Route resources with TLS.
 </td>
 </tr>
 </table>
@@ -1151,6 +1160,191 @@ REST API or web console.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="deploying-registry-gitops_registry"><a class="anchor" href="#deploying-registry-gitops_registry"></a>Deploying Apicurio Registry with GitOps storage</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>Deploy Apicurio Registry with GitOps storage. GitOps is a read-only storage variant that loads registry data from one or more Git repositories. The Apicurio Registry Operator adds a sync container, <code>apicurio-registry-gitops-sync</code>, to the Apicurio Registry pod. The sync container keeps a clone of each repository on a volume that both containers mount at <code>/repos</code>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+GitOps storage is an <strong>experimental</strong> feature. The Apicurio Registry Operator enables the experimental features gate when you configure this storage type.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have cluster administrator access to a Kubernetes cluster.</p>
+</li>
+<li>
+<p>You must have already installed the Apicurio Registry Operator. See <a href="assembly-installing-registry-openshift.html">Installing Apicurio Registry on OpenShift</a>.</p>
+</li>
+<li>
+<p>You must have a Git repository that contains registry data in the GitOps repository data format.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the Kubernetes web console, click <strong>Installed Operators</strong> &gt; <strong>Apicurio Registry</strong> &gt; <strong>ApicurioRegistry3</strong> &gt;
+<strong>Create ApicurioRegistry3</strong>.</p>
+</li>
+<li>
+<p>Paste in the following custom resource definition, adjusting the values for your environment:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: example-registry-gitops
+spec:
+  app:
+    storage:
+      type: gitops
+      gitops:
+        registryId: prod
+        repos:
+          - url: https://github.com/my-org/my-registry-data.git
+            branch: main
+    ingress:
+      host: registry.example.com
+  ui:
+    ingress:
+      host: registry-ui.example.com</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>registryId</code> value must match the <code>registryId</code> in the registry configuration file of your repository. Otherwise, Apicurio Registry rejects the load. If you omit <code>registryId</code>, Apicurio Registry uses its default identifier, <code>main</code>.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Optional: To pull from a private repository over SSH, create a Secret that holds the SSH private key. To verify the host key of the Git server, also create a Secret that holds a <code>known_hosts</code> file. Reference the Secrets in the <code>pull</code> section:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: gitops
+      gitops:
+        registryId: prod
+        repos:
+          - url: git@github.com:my-org/my-registry-data.git
+        pull:
+          sshKeys:
+            name: gitops-ssh-keys
+            key: id_ed25519
+          knownHosts:
+            name: gitops-known-hosts
+            key: known_hosts</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Apicurio Registry Operator mounts the Secrets into the sync container.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The Apicurio Registry Operator copies the <code>url</code> value unchanged into the Deployment, so anyone who can read the custom resource or the Deployment can read a token in an HTTPS URL, and SSH keys avoid this exposure.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Optional: To accept <code>git push</code> instead of pulling from a remote repository, set <code>mode</code> to <code>push</code>. Reference the Secrets that hold the <code>authorized_keys</code> file and the SSH host key. The sync container requires both at its default <code>strict</code> security level:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: gitops
+      gitops:
+        mode: push
+        registryId: prod
+        push:
+          authorizedKeys:
+            name: gitops-push-authorized-keys
+            key: authorized_keys
+          hostKey:
+            name: gitops-push-host-key
+            key: ssh_host_key</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In push mode, the Apicurio Registry Operator creates a Service named <code>&lt;cr-name&gt;-gitops-ssh-service</code> for the SSH server of the sync container on port <code>2222</code>. The Apicurio Registry Operator also allows that port in the NetworkPolicy of the app component. Clients push to <code>ssh://git@&lt;host&gt;:2222/repos/default</code>, where <code>&lt;host&gt;</code> is an address that routes to the Service.</p>
+</div>
+<div class="paragraph">
+<p>While <code>mode</code> is <code>push</code>, the Apicurio Registry Operator runs the app component with one replica and the <code>Recreate</code> deployment strategy, without a HorizontalPodAutoscaler or a PodDisruptionBudget. If <code>spec.app.replicas</code> is greater than 1 or <code>spec.app.autoscaling.enabled</code> is <code>true</code>, the Apicurio Registry Operator keeps one replica and reports a <code>ValidationError</code> condition. When you set <code>mode</code> back to <code>pull</code>, the Apicurio Registry Operator applies <code>spec.app.replicas</code> and <code>spec.app.autoscaling</code> again.</p>
+</div>
+</li>
+<li>
+<p>Optional: To load data from several repositories, list them in <code>repos</code> and give each one a distinct <code>dir</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    storage:
+      type: gitops
+      gitops:
+        registryId: prod
+        repos:
+          - url: https://github.com/my-org/platform-schemas.git
+            dir: platform
+          - url: https://github.com/my-org/fulfillment-schemas.git
+            branch: fulfillment
+            dir: fulfillment</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Click <strong>Create</strong> and wait for the Apicurio Registry deployment to be created.</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<div class="title">Verification</div>
+<ul>
+<li>
+<p>Access the Apicurio Registry web console and verify that the artifacts from your repository are visible.</p>
+</li>
+</ul>
+</div>
+<div class="ulist _additional-resources">
+<div class="title">Additional resources</div>
+<ul>
+<li>
+<p><a href="assembly-configuring-gitops-storage.html" class="page">Configuring Apicurio Registry with GitOps storage</a></p>
+</li>
+<li>
+<p><a href="assembly-operator-config-reference.html#git-ops-spec_registry" class="page">GitOpsSpec</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="configuring-registry-authentication_registry"><a class="anchor" href="#configuring-registry-authentication_registry"></a>Configuring authentication and authorization</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -1289,6 +1483,9 @@ spec:
 <li>
 <p><a href="assembly-configuring-registry-security.html" class="page">Configuring Apicurio Registry security options</a></p>
 </li>
+<li>
+<p><a href="assembly-configuring-resource-authorization.html#enabling-resource-authorization_registry" class="page">Enabling per-resource authorization</a></p>
+</li>
 </ul>
 </div>
 </div>
@@ -1353,10 +1550,10 @@ Set <code>tlsVerificationType</code> to <code>certificate-validation</code> to v
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuring-ingress-hostname_registry"><a class="anchor" href="#configuring-ingress-hostname_registry"></a>Ingress hostname and class configuration</h2>
+<h2 id="configuring-ingress-hostname_registry"><a class="anchor" href="#configuring-ingress-hostname_registry"></a>Ingress hostname, class, and TLS configuration</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>You can specify the Ingress hostname and IngressClass for each component.</p>
+<p>You can specify the Ingress hostname and IngressClass for each component, and configure TLS on the operator-managed Ingress.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1378,6 +1575,66 @@ spec:
       annotations:
         nginx.org/proxy-connect-timeout: "30s"</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>To configure TLS on the operator-managed Ingress of a component, set the following fields in the <code>ingress</code> section of the component. Without these fields, the Apicurio Registry Operator creates a plain HTTP Ingress.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>tlsSecretName</code></dt>
+<dd>
+<p>Name of a Secret of type <code>kubernetes.io/tls</code> in the namespace of the custom resource. The Apicurio Registry Operator adds a <code>tls</code> section to the Ingress that references this Secret and the configured <code>host</code>.</p>
+</dd>
+<dt class="hdlist1"><code>tlsTermination</code></dt>
+<dd>
+<p>TLS termination type: <code>edge</code>, <code>passthrough</code>, or <code>reencrypt</code>. The Apicurio Registry Operator sets the <code>route.openshift.io/termination</code> annotation on the Ingress to this value. On OpenShift, the annotation controls the TLS termination of the Route that OpenShift generates from the Ingress.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>With edge termination, TLS ends at the Ingress or Route, and traffic to the Apicurio Registry pod uses HTTP. Do not configure application TLS (<code>spec.app.tls</code>). By default, the Apicurio Registry Operator sets the <code>REGISTRY_API_URL</code> environment variable of the UI to an <code>http://</code> URL, so set the variable to the HTTPS URL of the API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    ingress:
+      host: registry-api.example.com
+      tlsTermination: edge
+      tlsSecretName: registry-tls-cert
+  ui:
+    ingress:
+      host: registry-ui.example.com
+      tlsTermination: edge
+      tlsSecretName: registry-tls-cert
+    env:
+      - name: REGISTRY_API_URL
+        value: https://registry-api.example.com/apis/registry/v3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With passthrough termination, the encrypted traffic passes through the Ingress or Route to the Apicurio Registry pod, so you must also configure application TLS. When you configure the application keystore, the Apicurio Registry Operator points the Ingress backend at the <code>https</code> port of the application Service:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    ingress:
+      host: registry-api.example.com
+      tlsTermination: passthrough
+      tlsSecretName: registry-tls-cert
+    tls:
+      insecureRequests: disabled
+      keystoreSecretRef:
+        name: registry-keystore
+        key: keystore.p12
+      keystorePasswordSecretRef:
+        name: registry-keystore
+        key: keystore.password</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set <code>REGISTRY_API_URL</code> for the UI as for edge termination. For the application TLS fields, see <a href="#configuring-app-tls_registry">Application TLS configuration</a>.</p>
 </div>
 </div>
 </div>
@@ -1793,6 +2050,26 @@ spec:
         name: registry-tls
         key: keystore.password</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The <code>insecureRequests</code> field controls the plain HTTP port. With <code>enabled</code>, Apicurio Registry also accepts HTTP requests. With <code>redirect</code>, Apicurio Registry redirects HTTP requests to HTTPS. With <code>disabled</code>, Apicurio Registry does not open the HTTP port. The Apicurio Registry Operator exposes the HTTP port on the application Service only when the value is <code>enabled</code>. To serve HTTPS only:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  app:
+    tls:
+      insecureRequests: disabled
+      keystoreSecretRef:
+        name: registry-tls
+        key: keystore.p12
+      keystorePasswordSecretRef:
+        name: registry-tls
+        key: keystore.password</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To provide a truststore, set the <code>truststoreSecretRef</code> and <code>truststorePasswordSecretRef</code> fields. If you omit the <code>key</code> of a reference, the Apicurio Registry Operator uses <code>user.p12</code> and <code>user.password</code> for the keystore, and <code>ca.p12</code> and <code>ca.password</code> for the truststore.</p>
 </div>
 <div class="ulist _additional-resources">
 <div class="title">Additional resources</div>

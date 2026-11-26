@@ -900,7 +900,7 @@ To enable all the agent registry discovery features at once (A2A, MCP tools, the
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.a2a.default-visibility</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>entitled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Default visibility for new Agent Card artifacts (<code>public</code>, <code>entitled</code>, or <code>private</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Visibility of an Agent Card that has no <code>apicurio.agent.visibility</code> label (<code>public</code>, <code>entitled</code>, or <code>private</code>). Apicurio Registry applies the value when it filters discovery results and does not add the label to the artifact. A change to this property therefore changes the visibility of every unlabeled Agent Card, including existing ones.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1244,6 +1244,175 @@ for details.
 </div>
 </div>
 <div class="sect1">
+<h2 id="a2a-peer-registries_registry"><a class="anchor" href="#a2a-peer-registries_registry"></a>Peer registries for federated agent search</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>As an administrator, you manage the peer registries through the <code>/apis/registry/v3/admin/peers</code> REST API. A registry that uses GitOps or KubernetesOps storage loads its peers from the <code>peers</code> list of the registry configuration instead.</p>
+</div>
+<div class="paragraph">
+<p>The peer management API requires <code>apicurio.federation.enabled=true</code>, and every operation returns HTTP 409 without it. <a href="#a2a-federated-agent-search_registry">Federated agent search</a> describes how to enable federation and how Apicurio Registry searches the peers.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. Peer fields</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 66.6668%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>peerId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unique ID of the peer. Lowercase letters, digits, <code>.</code>, <code>_</code>, and <code>-</code> only, at most 256 characters. The ID cannot be <code>.</code> or <code>..</code>, and the ID <code>local</code> is reserved.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Base URL of the peer registry, for example <code>https://registry.eu.example.com</code>. To search the peer, Apicurio Registry adds <code>/.well-known/agents</code> to this URL.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Display name of the peer, at most 512 characters.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description of the peer, at most 1024 characters.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">On update</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether federated agent search queries the peer. When you create a peer without this field, the peer is enabled.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>credentialSecretRef</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name that refers to a credential for the peer. Uppercase and lowercase letters, digits, <code>.</code>, <code>_</code>, and <code>-</code> only, at most 253 characters. The name cannot be a single period or begin with two periods. Apicurio Registry stores this name and returns it in API responses, but does not use it when it calls the peer. Do not enter a credential value.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Apicurio Registry checks the <code>url</code> when you create or update a peer, and when it loads a peer from GitOps or KubernetesOps data. When a URL fails the check, the peer management API returns HTTP 400, and a load from GitOps or KubernetesOps data fails. The URL must meet the following conditions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The URL is an absolute <code>https</code> URL with a host. Apicurio Registry accepts plain <code>http</code> only when <code>apicurio.federation.peer.insecure-http.enabled</code> is <code>true</code>.</p>
+</li>
+<li>
+<p>The URL has no user information, query, or fragment. A port, if present, is in the range 1 to 65535. The URL is at most 1024 characters long.</p>
+</li>
+<li>
+<p>The host is not a link-local, unspecified, multicast, reserved, or cloud metadata address. Apicurio Registry accepts a loopback address or a <code>localhost</code> name only when <code>apicurio.federation.peer.loopback.enabled</code> is <code>true</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Before each call to a peer, Apicurio Registry checks the scheme and the host again. When the host is a name, the address conditions apply to every address that the name resolves to.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 12. Peer URL configuration properties</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.peer.insecure-http.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value of <code>apicurio.outbound.insecure-http.enabled</code>, <code>false</code> by default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow peer URLs that use plain <code>http</code> instead of <code>https</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>apicurio.federation.peer.loopback.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value of <code>apicurio.outbound.loopback.enabled</code>, <code>false</code> by default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow peer URLs that point at a loopback address or a <code>localhost</code> name, for development and tests</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Both properties apply to every peer, including the peers that Apicurio Registry loads from GitOps or KubernetesOps data. The <code>apicurio.outbound.*</code> properties are also the defaults for imports from MCP servers.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 13. Peer management operations</caption>
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 12.5%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Endpoint</th>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/registry/v3/admin/peers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List the peers, including disabled peers, ordered by <code>peerId</code>. The <code>limit</code> and <code>offset</code> query parameters page the result, and default to 20 and 0. The response contains the <code>peers</code> of the page and the total <code>count</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/registry/v3/admin/peers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create a peer. The request body is the peer definition. Returns HTTP 409 when a peer with the same <code>peerId</code> exists.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/registry/v3/admin/peers/{peerId}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the definition of a peer.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/registry/v3/admin/peers/{peerId}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Replace the definition of a peer. The request body must contain <code>url</code> and <code>enabled</code>. Apicurio Registry clears the optional fields that you omit.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/apis/registry/v3/admin/peers/{peerId}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete a peer.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The peer operations require admin-level authorization. An operation on a single peer returns HTTP 404 when the peer does not exist. The create, update, and delete operations return HTTP 409 when the storage is read-only. The create and update operations also return HTTP 409 when the peer is enabled and the number of other enabled peers has reached <code>apicurio.federation.search.max-peers</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example: creating a peer</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST "http://localhost:8080/apis/registry/v3/admin/peers" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "peerId": "eu-registry",
+    "url": "https://registry.eu.example.com",
+    "name": "EU registry",
+    "description": "Registry serving the EU region.",
+    "enabled": true
+  }'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the format of the <code>peers</code> list in GitOps and KubernetesOps data, see <a href="assembly-configuring-gitops-storage.html#gitops-repository-data-format_registry" class="page">GitOps repository data format</a> and <a href="assembly-configuring-kubernetesops-storage.html#kubernetesops-field-reference_registry" class="page">KubernetesOps field reference</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="a2a-agent-card-artifact-type_registry"><a class="anchor" href="#a2a-agent-card-artifact-type_registry"></a>Agent Card artifact type</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -1261,67 +1430,107 @@ for details.
       "version": "1.0.0",
       "content": {
         "contentType": "application/json",
-        "content": "{\"name\": \"My Agent\", \"skills\": [{\"id\": \"task\", \"name\": \"Task Execution\"}]}"
+        "content": "{\"name\": \"My Agent\", \"description\": \"Executes tasks on request\", \"version\": \"1.0.0\", \"supportedInterfaces\": [{\"url\": \"https://my-agent.example.com\", \"protocolBinding\": \"http+json\", \"protocolVersion\": \"1.0\"}], \"capabilities\": {\"streaming\": false, \"pushNotifications\": false}, \"skills\": [{\"id\": \"task\", \"name\": \"Task Execution\", \"description\": \"Runs a task and returns the result\", \"tags\": [\"task\"]}], \"defaultInputModes\": [\"text/plain\"], \"defaultOutputModes\": [\"text/plain\"]}"
       }
     }
   }'</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Agent Cards must conform to the A2A specification:</p>
+<p>Apicurio Registry expects Agent Cards in the A2A protocol v1.0 format. A v1.0 Agent Card declares its endpoints in <code>supportedInterfaces</code> and its authentication in <code>securitySchemes</code>, not in a top-level <code>url</code> or <code>authentication</code> field. At the <code>FULL</code> level, the <code>VALIDITY</code> rule checks the required fields and the field types, as described in <a href="#a2a-validation-rules_registry">Agent Card validation rules</a>.</p>
 </div>
-<div class="listingblock">
-<div class="title">Agent Card JSON schema</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
-  "required": ["name"],
-  "properties": {
-    "name": {"type": "string"},
-    "description": {"type": "string"},
-    "version": {"type": "string"},
-    "url": {"type": "string", "format": "uri"},
-    "provider": {
-      "type": "object",
-      "properties": {
-        "organization": {"type": "string"},
-        "url": {"type": "string", "format": "uri"}
-      }
-    },
-    "capabilities": {
-      "type": "object",
-      "properties": {
-        "streaming": {"type": "boolean"},
-        "pushNotifications": {"type": "boolean"}
-      }
-    },
-    "skills": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["id", "name"],
-        "properties": {
-          "id": {"type": "string"},
-          "name": {"type": "string"},
-          "description": {"type": "string"},
-          "tags": {"type": "array", "items": {"type": "string"}},
-          "examples": {"type": "array", "items": {"type": "string"}}
-        }
-      }
-    },
-    "defaultInputModes": {"type": "array", "items": {"type": "string"}},
-    "defaultOutputModes": {"type": "array", "items": {"type": "string"}},
-    "authentication": {
-      "type": "object",
-      "properties": {
-        "schemes": {"type": "array", "items": {"type": "string"}}
-      }
-    }
-  }
-}</code></pre>
-</div>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 14. Agent Card fields</caption>
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the agent. A non-empty string.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description of what the agent does. A non-empty string.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version of the agent, as a string.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protocolVersion</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A2A protocol version that the agent supports, for example <code>1.0</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>supportedInterfaces</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array with at least one interface. Each interface has an <code>http</code> or <code>https</code> <code>url</code>, a <code>protocolBinding</code> such as <code>http+json</code>, and a <code>protocolVersion</code>. An interface can also have a <code>tenant</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>provider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Organization that provides the agent. When present, the object must contain <code>organization</code> and an <code>http</code> or <code>https</code> <code>url</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>capabilities</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Object with the optional boolean fields <code>streaming</code>, <code>pushNotifications</code>, and <code>extendedAgentCard</code>, and an optional <code>extensions</code> array.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>skills</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array with at least one skill. Each skill has an <code>id</code>, a <code>name</code>, a <code>description</code>, and a <code>tags</code> array with at least one tag. The optional skill fields are <code>examples</code>, <code>inputModes</code>, <code>outputModes</code>, and <code>securityRequirements</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>defaultInputModes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array of the input modes that the agent supports, for example <code>text/plain</code> or <code>application/json</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>defaultOutputModes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array of the output modes that the agent supports.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>securitySchemes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Object that maps each scheme name to a security scheme definition.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>securityRequirements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array of objects that map security scheme names to the required scopes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>iconUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL of an icon for the agent.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>documentationUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL of the agent documentation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>signatures</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array of JSON Web Signature (JWS) signatures of the Agent Card. Each signature has a <code>protected</code> string and a <code>signature</code> string, and can have a <code>header</code> object.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
@@ -1334,7 +1543,7 @@ for details.
 <p>Apicurio Registry detects the extension, assembles a valid Agent Card from it, and stores it as a companion artifact.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 11. Enabling OpenAPI-to-Agent-Card auto-generation</caption>
+<caption class="title">Table 15. Enabling OpenAPI-to-Agent-Card auto-generation</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 16.6666%;">
@@ -1422,7 +1631,7 @@ servers:
 <p>Apicurio Registry marks the companion artifact and its source OpenAPI artifact with <code>apicurio.a2a.openapi-agent-card.*</code> labels:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 12. Provenance and sync labels</caption>
+<caption class="title">Table 16. Provenance and sync labels</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -1523,16 +1732,16 @@ servers:
 <p>Required <code>name</code> field (non-empty string)</p>
 </li>
 <li>
-<p><code>description</code> and <code>version</code> fields</p>
+<p><code>description</code> (non-empty string) and <code>version</code> (string) fields</p>
 </li>
 <li>
-<p><code>supportedInterfaces</code> array, where each interface has <code>url</code>, <code>protocolBinding</code>, and <code>protocolVersion</code></p>
+<p><code>supportedInterfaces</code> array with at least one interface, where each interface has <code>url</code>, <code>protocolBinding</code>, and <code>protocolVersion</code></p>
 </li>
 <li>
-<p><code>provider</code> object with <code>organization</code> and <code>url</code></p>
+<p><code>provider</code> object with <code>organization</code> and <code>url</code>, when present</p>
 </li>
 <li>
-<p><code>skills</code> array, where each skill has <code>id</code> and <code>name</code></p>
+<p><code>skills</code> array with at least one skill, where each skill has <code>id</code>, <code>name</code>, <code>description</code>, and a non-empty <code>tags</code> array</p>
 </li>
 <li>
 <p><code>capabilities</code> object with boolean values</p>
@@ -1612,7 +1821,7 @@ servers:
 <p>Artifact references record which tools, servers, models, and prompts an agent uses, and which tools an MCP server provides. The references are registry metadata: Agent Card and <code>server.json</code> content is not changed.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. Allowed reference targets</caption>
+<caption class="title">Table 17. Allowed reference targets</caption>
 <colgroup>
 <col style="width: 16.6666%;">
 <col style="width: 33.3333%;">
@@ -1840,7 +2049,7 @@ metadata:
 <p>You can chain context across multiple agents in a pipeline: each agent&#8217;s output becomes part of the next agent&#8217;s input. The <code>agent-registry</code> example in the Apicurio Registry repository runs such a pipeline with Quarkus LangChain4j applications:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 14. Briefing pipeline in the agent-registry example</caption>
+<caption class="title">Table 18. Briefing pipeline in the agent-registry example</caption>
 <colgroup>
 <col style="width: 14.2857%;">
 <col style="width: 42.8571%;">
@@ -1913,12 +2122,14 @@ docker compose up -d
 // Search for agents with specific skill
 var agents = client.wellKnown().agents()
     .get(config -&gt; {
-        config.queryParameters.skill = List.of("translation");
+        config.queryParameters.skill = new String[] { "translation" };
         config.queryParameters.limit = 10;
     });
 
 for (var agent : agents.getAgents()) {
-    System.out.println("Found: " + agent.getName() + " @ " + agent.getUrl());
+    var interfaces = agent.getSupportedInterfaces();
+    String url = (interfaces == null || interfaces.isEmpty()) ? "no interface" : interfaces.get(0).getUrl();
+    System.out.println("Found: " + agent.getName() + " @ " + url);
 }</code></pre>
 </div>
 </div>
@@ -2025,10 +2236,13 @@ apicurio.agents.enabled=true</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p>The <code>name</code> field is present and non-empty.</p>
+<p>The <code>name</code> and <code>description</code> fields are present and non-empty, and the <code>version</code> field is a string.</p>
 </li>
 <li>
-<p>Skills have both <code>id</code> and <code>name</code> fields.</p>
+<p>The <code>supportedInterfaces</code>, <code>capabilities</code>, <code>defaultInputModes</code>, and <code>defaultOutputModes</code> fields are present, and <code>supportedInterfaces</code> contains at least one interface.</p>
+</li>
+<li>
+<p>The <code>skills</code> array contains at least one skill, and each skill has <code>id</code>, <code>name</code>, <code>description</code>, and a non-empty <code>tags</code> array.</p>
 </li>
 <li>
 <p>Capabilities are boolean values.</p>
