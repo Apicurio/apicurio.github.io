@@ -821,7 +821,7 @@ The MCP specification has two authoritative sources: the formal <a href="https:/
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by tool name (partial match)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter by artifact name or artifact ID (partial match). The filter does not match the <code>name</code> field inside the tool definition, so set the artifact name to the tool name when you create the artifact.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>parameter</code></p></td>
@@ -1165,6 +1165,7 @@ This is a deliberate design decision, not a gap: filtering <code>/.well-known/mc
   -d '{
     "artifactId": "weather-tool",
     "artifactType": "MCP_TOOL",
+    "name": "get_weather",
     "firstVersion": {
       "version": "1.0.0",
       "content": {
@@ -1401,7 +1402,7 @@ The two schemas have opposite directions:</p>
 <p>Earlier MCP tool checking compared only top-level input types, property names, and requiredness; output changes and nested constraint changes were unchecked. Version 3.4 checks the supported subset above and changes those results. Making an input optional is now backward compatible. Adding a typed optional input to an open schema is no longer automatically accepted. Stored versions are not rewritten; unsupported schemas in existing versions can prevent subsequent publication under an enabled compatibility rule.</p>
 </div>
 <div class="paragraph">
-<p>For a release-safety demonstration, publish a tool whose input <code>query</code> is a string with <code>maxLength: 10</code>, enable <code>BACKWARD</code>, and propose <code>maxLength: 5</code>. Expect HTTP 400 and unchanged old content. Propose <code>maxLength: 20</code> and expect acceptance. For an output schema, the direction is reversed. Use a disposable registry and retain the rule configuration, exact versions, responses, and retrieved content as evidence for the agent-registry graduation work (#10294). This demonstrates publication-time schema enforcement only; it is not evidence of runtime admission, authenticated invocation, or full feature graduation.</p>
+<p>For a release-safety demonstration, publish a tool whose input <code>query</code> is a string with <code>maxLength: 10</code>, enable <code>BACKWARD</code>, and propose <code>maxLength: 5</code>. Expect HTTP 400 and unchanged old content. Propose <code>maxLength: 20</code> and expect acceptance. For an output schema, the direction is reversed. Use a disposable registry. This demonstrates publication-time schema enforcement only; it is not evidence of runtime admission, authenticated invocation, or full feature graduation.</p>
 </div>
 </div>
 </div>
