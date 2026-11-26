@@ -1438,6 +1438,419 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="gitops-multi-replica-deployments_registry"><a class="anchor" href="#gitops-multi-replica-deployments_registry"></a>Multi-replica deployments</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>This section describes how GitOps storage behaves in a multi-replica deployment: the per-replica volume model, synchronization modes, the convergence window, validation tasks across replicas, and sticky routing configuration.</p>
+</div>
+<div class="sect2">
+<h3 id="gitops-multi-replica-deployment_registry"><a class="anchor" href="#gitops-multi-replica-deployment_registry"></a>Deployment model</h3>
+<div class="paragraph _abstract">
+<p>In a Kubernetes deployment, a <strong>replica</strong> is one copy of the registry pod. A Deployment with <code>replicas: 3</code> runs three identical pods, and a Service spreads incoming requests across them. When you run GitOps storage with multiple replicas, each replica operates independently with its own volume and its own sync sidecar.</p>
+</div>
+<div class="paragraph">
+<p><strong>Architecture</strong></p>
+</div>
+<div class="paragraph">
+<p>Each replica has:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Its own <code>emptyDir</code> volume, created empty when the pod starts and deleted with the pod.</p>
+</li>
+<li>
+<p>Its own sync sidecar (<code>apicurio-registry-gitops-sync</code>), which clones the configured repositories into that volume.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>No replica reads another replica&#8217;s volume. Every sidecar independently clones and fetches the same remote repositories, so all replicas converge on the same data. For a few seconds after a change, different replicas can serve different commits. This is the <strong>convergence window</strong>, described below.</p>
+</div>
+<div class="paragraph">
+<p>In pull mode, this design avoids any single point of failure: if one pod is lost, its replacement clones the repositories again from the remote. No <code>ReadWriteMany</code> storage or cross-pod coordination is required. In push mode, an <code>emptyDir</code> volume is deleted with the pod, and the sidecar has no remote to clone from, so a pod replacement starts with an empty repository. See <a href="#gitops-modes-and-replicas_registry">Synchronization modes and replicas</a> for details.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="gitops-volume-strategy_registry"><a class="anchor" href="#gitops-volume-strategy_registry"></a>Volume strategy</h3>
+<div class="paragraph _abstract">
+<p>GitOps storage uses an <code>emptyDir</code> volume per pod. This is the default and the only volume type that the Apicurio Registry Operator configures.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>emptyDir</code></dt>
+<dd>
+<p>Each pod gets its own volume that is created empty on startup and deleted with the pod. Nothing outside the pod can see it. The Apicurio Registry Operator configures this automatically.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>A <code>PersistentVolumeClaim</code> (PVC) with <code>ReadWriteOnce</code> access mode is not suitable for multi-replica Deployments:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Pods on different nodes:</strong> A <code>ReadWriteOnce</code> PVC can only be mounted by pods on a single node. When Kubernetes schedules a replica onto a different node, the pod remains in <code>ContainerCreating</code> with a <code>Multi-Attach</code> error because the volume is already attached to another node.</p>
+</li>
+<li>
+<p><strong>Pods on the same node:</strong> Kubernetes can mount the volume into multiple pods on the same node, but the sidecars all write to the same directory. This causes conflicts and is not supported.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A PVC must never be shared by more than one pod. A PVC per pod would require a StatefulSet with <code>volumeClaimTemplates</code>, but the Apicurio Registry Operator uses a Deployment. A shared volume accessible to all replicas is planned (<a href="https://github.com/Apicurio/apicurio-registry/issues/10610">#10610</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="gitops-modes-and-replicas_registry"><a class="anchor" href="#gitops-modes-and-replicas_registry"></a>Synchronization modes and replicas</h3>
+<div class="paragraph _abstract">
+<p>The synchronization mode determines whether multiple replicas can run.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Pull mode (recommended for high availability)</dt>
+<dd>
+<p>Every sidecar pulls from the same remote repository independently. Any replica can serve requests, and losing one does not lose data because the replacement clones the repository again from the remote. Pull mode is the default.</p>
+</dd>
+<dt class="hdlist1">Push mode (single replica only)</dt>
+<dd>
+<p>In push mode, CI runs <code>git push</code> to an SSH server in the sidecar, reached through a Service. A Service sends each connection to one of its pods, so the push lands in one pod&#8217;s volume and the other replicas never receive it. Their data silently diverges. For this reason, <strong>push mode supports a single replica only</strong>.</p>
+<div class="paragraph">
+<p>Because push mode uses an <code>emptyDir</code> volume and the sidecar has no remote repository to clone from, a pod replacement (by a rollout, node drain, or eviction) starts with an empty repository. The registry has no data until CI pushes again, and with a single replica nothing serves in the meantime. To mitigate this, CI should push on a schedule as well as on change. Operator support for a persistent volume in this case is tracked in <a href="https://github.com/Apicurio/apicurio-registry/issues/11132">#11132</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+An <code>emptyDir</code> survives container restarts within the same pod. Only a full pod replacement deletes the volume.
+</td>
+</tr>
+</table>
+</div>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Do not configure <code>replicas &gt; 1</code> with push mode. Running push mode with multiple replicas causes silent data divergence across replicas. In push mode, the Apicurio Registry Operator always runs one replica with the <code>Recreate</code> deployment strategy, and creates no HorizontalPodAutoscaler or PodDisruptionBudget. <code>Recreate</code> matters even with a single replica: every rollout has a short outage while the old pod terminates and the new one starts. If <code>replicas &gt; 1</code> or autoscaling is set, the Apicurio Registry Operator also records a <code>ValidationError</code> condition on the CR explaining that the setting is ignored.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="gitops-convergence-window_registry"><a class="anchor" href="#gitops-convergence-window_registry"></a>Convergence window</h3>
+<div class="paragraph _abstract">
+<p>In pull mode, each sidecar fetches updates from the remote independently. After a new commit is pushed to the remote, each sidecar picks it up on its next pull cycle. Until all sidecars have fetched the new commit and their registries have loaded it, different replicas can serve data from different commits.</p>
+</div>
+<div class="paragraph">
+<p>This period is the <strong>convergence window</strong>. With the default pull interval of 30 seconds and the default poll and debounce settings, convergence typically takes around 60 seconds under healthy, lightly loaded conditions: the sidecar that pulls last is at most one pull interval behind, and the registry needs an additional poll-plus-debounce cycle to load the new data. Under load or with slow Git fetches, convergence can take longer.</p>
+</div>
+<div class="paragraph">
+<p><strong>Detecting the convergence window</strong></p>
+</div>
+<div class="paragraph">
+<p>Use the GitOps status endpoint to check which commit each repository is serving:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl http://localhost:8080/apis/registry/v3/admin/gitops/status</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>sources</code> field in the response maps each repository identifier to the abbreviated commit that the replica has loaded. When you query different replicas (for example, by targeting individual pod IPs), the commit values can differ during the convergence window.</p>
+</div>
+<div class="paragraph">
+<p>To verify that all replicas have loaded a specific commit, compare the <code>sources</code> values against the expected target commit. Equal values alone do not confirm convergence: all replicas initially report the previous commit, and a failed load retains the old commit in the status. Also check the <code>syncState</code> field for errors. Only when every replica reports the expected commit with no errors has the convergence window closed.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="gitops-validation-across-replicas_registry"><a class="anchor" href="#gitops-validation-across-replicas_registry"></a>Validation tasks across replicas</h3>
+<div class="paragraph _abstract">
+<p>Dry-run validation is asynchronous. The client sends a <code>POST</code> request to create a task and receives a task ID, then polls a <code>GET</code> endpoint until the task finishes. The pod that receives the <code>POST</code> writes a request file to its volume, its sidecar fetches the reference, and that same pod runs the validation.</p>
+</div>
+<div class="paragraph">
+<p><strong>Self-describing task IDs and cross-replica polling</strong></p>
+</div>
+<div class="paragraph">
+<p>The task ID encodes the validation request itself (the repository ID, reference, and type), signed with an HMAC key. Any replica that receives a <code>GET</code> for an unknown task ID can decode it, start the same validation on its own volume, and return its own result. No replica needs anything from another.</p>
+</div>
+<div class="paragraph">
+<p>For this to work across replicas, all replicas must share the same HMAC key via <code>apicurio.gitops.validate.hmac-key</code>. Without a shared key, each replica generates its own random key at startup, and a <code>GET</code> on another replica returns <code>404</code> instead of decoding the task ID. The key must be at least 32 bytes. Supply it from a Kubernetes Secret:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">env:
+  - name: APICURIO_GITOPS_VALIDATE_HMAC_KEY
+    valueFrom:
+      secretKeyRef:
+        name: registry-gitops-hmac
+        key: hmac-key</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the Apicurio Registry Operator, place the same <code>env</code> entry under <code>spec.app.env</code> in the ApicurioRegistry CR:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: my-registry
+spec:
+  app:
+    env:
+      - name: APICURIO_GITOPS_VALIDATE_HMAC_KEY
+        valueFrom:
+          secretKeyRef:
+            name: registry-gitops-hmac
+            key: hmac-key</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Operator-managed HMAC key distribution is tracked in <a href="https://github.com/Apicurio/apicurio-registry/issues/11189">#11189</a>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Grace period</strong></p>
+</div>
+<div class="paragraph">
+<p>When a replica receives a <code>GET</code> for an unknown task ID, it waits <code>apicurio.gitops.validate.grace-period.seconds</code> (5 seconds by default) before starting its own validation. This gives the creating replica time to finish first. Without sticky routing, or when repeated work is too frequent, increase the grace period. The cost is a later result if the creating replica is lost. Keep the grace period well below how long clients wait for a result, such as the CLI&#8217;s <code>--timeout</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Duplicate requests</strong></p>
+</div>
+<div class="paragraph">
+<p>If a replica receives a <code>POST</code> for a validation that it already has pending or submitted, it returns the existing task instead of creating a duplicate.</p>
+</div>
+<div class="paragraph">
+<p>This design has the following characteristics:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Repeated work</dt>
+<dd>
+<p>Without sticky routing, a client polling every few seconds can reach every replica, and each one runs the validation independently. Each replica limits how many validations it runs concurrently via the <code>max-tasks</code> setting (default 5). Use sticky routing (described below) to keep a client&#8217;s polls on the same pod and avoid repeated work. If sticky routing is not feasible, increase the grace period (described above) to reduce repeated work.</p>
+</dd>
+<dt class="hdlist1">Listing</dt>
+<dd>
+<p>The <code>GET /admin/gitops/validate</code> (list) endpoint returns tasks from the replica that receives the request only. A task created on one replica is not listed on another.</p>
+</dd>
+<dt class="hdlist1">Deleting</dt>
+<dd>
+<p><code>DELETE /admin/gitops/validate/{taskId}</code> removes the task&#8217;s in-memory entry on the receiving replica, but only if the task is <code>pending</code>, <code>completed</code>, or <code>failed</code>. If the task is still in flight (<code>submitted</code>, <code>fetching</code>, or <code>validating</code>), the <code>DELETE</code> returns <code>409 Conflict</code>. Wait for the task to finish or let it expire. Because the task ID is self-describing, a subsequent <code>GET</code> on any replica (including the one that deleted it) decodes the ID and starts the validation again. A task is fully gone only after it expires, controlled by <code>apicurio.gitops.validate.task.ttl.seconds</code> (3600 seconds by default).</p>
+</dd>
+<dt class="hdlist1">Commit SHA vs. branch</dt>
+<dd>
+<p>CI should validate a full commit SHA (40 hexadecimal characters), not a branch name or abbreviated SHA. A branch can move while replicas are fetching it, and different replicas can end up validating different commits. An abbreviated SHA does not work because the sidecar&#8217;s fetch fallback requires the full SHA. The Git server must also allow fetching a commit by its SHA directly; GitHub and GitLab allow this by default, but other servers might not.</p>
+<div class="listingblock">
+<div class="title">Example validation request with a commit SHA</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl -X POST -H "Content-Type: application/json" \
+  -d '{"type": "pull", "repoId": "default", "ref": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0"}' \
+  http://localhost:8080/apis/registry/v3/admin/gitops/validate</code></pre>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Use sticky routing (described below) to keep a client&#8217;s polls on the same pod. This avoids repeated work and makes listing and deleting tasks consistent.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="gitops-sticky-routing_registry"><a class="anchor" href="#gitops-sticky-routing_registry"></a>Configuring sticky routing</h3>
+<div class="paragraph _abstract">
+<p><strong>Sticky routing</strong>, or <strong>session affinity</strong>, keeps a load balancer sending the same client to the same pod. This is an optimization, not a correctness mechanism: without it, self-describing task IDs still produce the right answer, with some repeated work. You can configure sticky routing to reduce repeated validation work across replicas.</p>
+</div>
+<div class="paragraph">
+<p>How to configure sticky routing depends on where the client&#8217;s requests enter the cluster.</p>
+</div>
+<div class="paragraph">
+<p><strong>Clients inside the cluster</strong></p>
+</div>
+<div class="paragraph">
+<p>Clients inside the cluster (for example, Tekton, Argo Workflows, or CI runners on the cluster) call the registry&#8217;s Service directly. Configure <code>sessionAffinity: ClientIP</code> on the Service:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: my-registry-service
+spec:
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 3600</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Kubernetes remembers which pod the client pod&#8217;s IP was sent to and keeps sending it there for up to the configured timeout (default 3 hours). The client pod&#8217;s IP does not change during a CI job, so this works well.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The Apicurio Registry Operator does not set <code>sessionAffinity</code> by default, because pinning clients to pods can unbalance load when a few clients produce most of the traffic. Enable it when you need it.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Operator-managed deployments</strong></p>
+</div>
+<div class="paragraph">
+<p>The Apicurio Registry Operator creates the registry Service and Ingress automatically. The CR cannot configure <code>sessionAffinity</code> on the Service or affinity annotations on the Ingress today (<a href="https://github.com/Apicurio/apicurio-registry/issues/11187">#11187</a>). To use sticky routing with operator-managed deployments:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set <code>spec.app.ingress.enabled: false</code> in the ApicurioRegistry CR to disable the operator-managed Ingress.</p>
+</li>
+<li>
+<p>Create your own Service with <code>sessionAffinity: ClientIP</code> that selects the registry pods. Use the labels the operator sets, for example <code>app.kubernetes.io/instance: &lt;CR name&gt;</code> and <code>app.kubernetes.io/component: app</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: my-registry-affinity
+spec:
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 3600
+  selector:
+    app.kubernetes.io/instance: my-registry
+    app.kubernetes.io/component: app
+  ports:
+    - port: 8080
+      targetPort: 8080</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The operator&#8217;s own Service still exists, so in-cluster clients must call your new Service by name to get affinity.</p>
+</div>
+</li>
+<li>
+<p>Create your own Ingress or Route pointing at your Service, with the affinity annotations from the examples below.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The Apicurio Registry Operator does not manage these resources, so you must keep them in step with the CR manually, for example updating ports when TLS is enabled.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Clients outside the cluster through OpenShift Routes</strong></p>
+</div>
+<div class="paragraph">
+<p>OpenShift Routes use cookie-based affinity by default: the router sets a cookie on the first response and uses it to route subsequent requests to the same pod. For this to work, the client must send the cookie back.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Cookie-based affinity works only with HTTP, edge-terminated, and re-encrypt Routes. For TLS passthrough Routes, the router cannot read or set HTTP cookies inside the encrypted connection. Use source-IP-based affinity instead (<code>haproxy.router.openshift.io/balance: source</code>).
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>apicurio-registry</code> CLI keeps cookies within a command (<a href="https://github.com/Apicurio/apicurio-registry/pull/11155">#11155</a>), so cookie-based affinity from the Route&#8217;s default configuration works for <code>gitops validate</code> polling. For TLS passthrough Routes (where cookie-based affinity does not work), configure source-IP-based affinity:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: Route
+metadata:
+  annotations:
+    haproxy.router.openshift.io/balance: source</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For other clients that support cookies, such as <code>curl</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Create the task and save cookies
+$ curl -c cookies.txt -X POST -H "Content-Type: application/json" \
+  -d '{"type": "pull", "repoId": "default", "ref": "refs/pull/42/head"}' \
+  https://registry.example.com/apis/registry/v3/admin/gitops/validate
+
+# Poll with the same cookies
+$ curl -b cookies.txt \
+  https://registry.example.com/apis/registry/v3/admin/gitops/validate/TASK_ID</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Clients outside the cluster through nginx-ingress</strong></p>
+</div>
+<div class="paragraph">
+<p>For nginx-ingress, configure cookie-based or IP-based affinity with annotations on the Ingress resource:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Cookie-based affinity
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/session-cookie-name: REGISTRY_AFFINITY
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "3600"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># IP-based affinity (alternative)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/upstream-hash-by: $remote_addr</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Hosted CI runners</strong></p>
+</div>
+<div class="paragraph">
+<p>Hosted CI runners such as GitHub-hosted runners reach the internet through cloud NAT. Their outgoing IP can change during a job, so IP-based stickiness is best-effort for them. Cookie-based stickiness is more reliable if the CI tool supports it.</p>
+</div>
+</div>
+</div>
+</div>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
