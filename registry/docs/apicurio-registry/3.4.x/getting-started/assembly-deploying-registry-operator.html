@@ -1999,6 +1999,23 @@ spec:
 </tr>
 </table>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Image overrides and upgrades:</strong> overriding <code>spec.(app/ui).podTemplateSpec.spec.containers[name=&#8230;&#8203;].image</code> is not recommended.
+If you set it, the operator leaves it alone on every reconcile, including after you upgrade the operator: your image stays set to whatever you configured, and the operator does not advance it to the version it would otherwise pin.
+The Apicurio Registry Operator and the Apicurio Registry image it ships with are released as one unit and are not validated against other combinations, so if you override the image, you are responsible for keeping it in step with the operator version yourself.
+If you don&#8217;t set <code>image</code>, the operator always sets it to the version it pins, and upgrading the operator upgrades Apicurio Registry too.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">

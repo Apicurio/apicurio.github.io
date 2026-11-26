@@ -839,7 +839,7 @@ Database schema migrations run automatically on startup and do not require manua
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Review the release notes for the target version to understand new features and any behavioral changes.</p>
+<p>Review the release notes for the target version, in particular the <strong>Breaking Changes &amp; Migration</strong> and <strong>Deprecations</strong> sections if present, to understand behavioral changes that affect your deployment.</p>
 </li>
 <li>
 <p>Back up your database.</p>
@@ -854,6 +854,48 @@ Database schema migrations run automatically on startup and do not require manua
 <p>Verify that your client applications work correctly with the new version.</p>
 </li>
 </ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="minor-upgrades-operator_registry"><a class="anchor" href="#minor-upgrades-operator_registry"></a>Performing minor upgrades with the Apicurio Registry Operator</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>If you deploy Apicurio Registry by using the Apicurio Registry Operator, the operator and the Apicurio Registry image it ships with are released and supported as one unit: the operator&#8217;s install YAML pins both to the same version, and the combination is not validated against any other.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Review the release notes for the target version, as in the general minor upgrade procedure.</p>
+</li>
+<li>
+<p>Back up your database.</p>
+</li>
+<li>
+<p>Upgrade the Apicurio Registry Operator first, for example by moving to the new version&#8217;s channel, or by approving the next install plan on a manual-approval subscription.</p>
+</li>
+<li>
+<p>The operator reconciles existing <code>ApicurioRegistry3</code> custom resources to the new version&#8217;s pinned images, which upgrades Apicurio Registry and the Apicurio Registry web console component.</p>
+</li>
+<li>
+<p>Verify that your client applications work correctly with the new version.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you override the Apicurio Registry or Apicurio Registry web console component image with <code>spec.(app/ui).podTemplateSpec</code>, upgrading the operator does <strong>not</strong> upgrade your image: the operator leaves an explicitly set image alone. You must update it yourself, in step with the operator version. See <a href="assembly-deploying-registry-operator.html#using-podtemplatespec_registry" class="page">PodTemplateSpec advanced customization</a>.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>

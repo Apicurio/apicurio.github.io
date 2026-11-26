@@ -678,12 +678,12 @@ otherwise deny;</code></pre>
 <p><code>User with name &#8230;&#8203;</code> matches the authenticated user name. <code>Role with name &#8230;&#8203;</code> matches a role of the user, for example a role from the identity provider.</p>
 </li>
 <li>
-<p><code>deny</code> rules must come before <code>allow</code> rules, and the file must end with <code>otherwise deny;</code>. Lines starting with <code>//</code> are comments.</p>
+<p><code>deny</code> rules must come before <code>allow</code> rules, and the file must end with <code>otherwise deny;</code>. Lines starting with <code>//</code> and blocks between <code>/*</code> and <code>*/</code> are comments.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>User and role principals are different types: a user named <code>ops</code> does not match a role named <code>ops</code>. ACL role principals come from the authenticated security identity&#8217;s roles. RBAC can use a different role source (token, application, header, or Kubernetes), so verify both mappings when using a non-default RBAC role source. With the pinned Kroxylicious 0.25.1 parser, use the <code>$anonymous</code> role instead of the proposal&#8217;s <code>anonymous User</code> syntax, and use <code>//</code> rather than block comments.</p>
+<p>User and role principals are different types: a user named <code>ops</code> does not match a role named <code>ops</code>. ACL role principals come from the authenticated security identity&#8217;s roles. RBAC can use a different role source (token, application, header, or Kubernetes), so verify both mappings when using a non-default RBAC role source. The Kroxylicious parser does not support the proposal&#8217;s <code>anonymous User</code> syntax: use the <code>$anonymous</code> role instead.</p>
 </div>
 <div class="paragraph">
 <p>You select names with the following selectors:</p>
@@ -719,7 +719,7 @@ otherwise deny;</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>with name matching /regex/</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">names that fully match the regular expression (RE2 syntax). Resources only. A backslash inside the expression is removed, so <code>/a\.b/</code> is the expression <code>a.b</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">names that fully match the regular expression (RE2 syntax). Resources only. Inside the expression, <code>\/</code> is a slash and <code>\\</code> is a backslash. Any other backslash stays part of the expression, so <code>/a\.b/</code> matches only <code>a.b</code>.</p></td>
 </tr>
 </tbody>
 </table>
