@@ -134,6 +134,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-versioning-support-policy.html">Versioning and support policy</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-upgrading-to-3-4.html">Upgrading to Apicurio Registry 3.4</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -450,7 +453,7 @@
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-GitOps storage is an <strong>experimental</strong> feature. You must enable the experimental features gate (<code>APICURIO_FEATURES_EXPERIMENTAL_ENABLED=true</code>) to use it. The data format (<code>*-v0</code>) might change in future releases.
+GitOps storage is an <strong>experimental</strong> feature. You must enable the experimental features gate (<code>APICURIO_FEATURES_EXPERIMENTAL_ENABLED=true</code>) to use it.
 </td>
 </tr>
 </table>
@@ -531,7 +534,7 @@ GitOps storage is an <strong>experimental</strong> feature. You must enable the 
 <p>No fixed directory structure is required. The registry discovers metadata files anywhere in the repository by file name suffix. By default, files ending in <code>.registry</code> or <code>.ar</code>, combined with the <code>.yaml</code>, <code>.yml</code>, or <code>.json</code> extensions, are treated as metadata files, for example <code>order-event.registry.yaml</code>. You can change the suffixes with the <code>apicurio.polling-storage.file-suffixes</code> property.</p>
 </div>
 <div class="paragraph">
-<p>Each metadata file declares its kind with a <code>$type</code> discriminator:</p>
+<p>Each metadata file declares its kind and the version of the data format with a <code>$type</code> discriminator, for example <code>$type: artifact-v1</code>. The current version is <code>v1</code>. For the versions that the registry reads, see <a href="#gitops-data-format-versions_registry">GitOps data format versions</a>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Metadata file types</caption>
@@ -547,19 +550,19 @@ GitOps storage is an <strong>experimental</strong> feature. You must enable the 
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry-v0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry-v1</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Registry configuration. Fields: <code>registryId</code>, <code>globalRules</code> (list of <code>ruleType</code> and <code>config</code> pairs), <code>properties</code>, and <code>peers</code> (list of peer registries; see below). The <code>registryId</code> value must match the <code>apicurio.polling-storage.id</code> property of the registry instance.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>group-v0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An artifact group. Fields: <code>registryIds</code> (list), <code>groupId</code>, <code>description</code>, <code>labels</code>, <code>owner</code>, <code>artifactsType</code>, <code>rules</code>, <code>createdOn</code>, and <code>modifiedOn</code>. Every group that an artifact references must be declared by a <code>group-v0</code> file; the registry does not create groups automatically.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>group-v1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An artifact group. Fields: <code>registryIds</code> (list), <code>groupId</code>, <code>description</code>, <code>labels</code>, <code>owner</code>, <code>artifactsType</code>, <code>rules</code>, <code>createdOn</code>, and <code>modifiedOn</code>. Every group that an artifact references must be declared by a <code>group-v1</code> file; the registry does not create groups automatically.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifact-v0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An artifact with its versions declared inline. Fields: <code>registryIds</code>, <code>groupId</code>, <code>artifactId</code>, <code>artifactType</code> (optional), <code>name</code>, <code>description</code>, <code>labels</code>, <code>owner</code>, <code>createdOn</code>, <code>modifiedOn</code>, <code>rules</code>, <code>validatedUpTo</code>, and <code>versions</code>. Each version has <code>version</code>, <code>state</code>, and <code>content</code>, where <code>content</code> is a relative path to a schema file. A version can also have <code>name</code>, <code>description</code>, <code>labels</code>, <code>owner</code>, <code>globalId</code>, <code>createdOn</code>, <code>modifiedOn</code>, and <code>contentMetadata</code>, which is a relative path to a <code>content-v0</code> file.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifact-v1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An artifact with its versions declared inline. Fields: <code>registryIds</code>, <code>groupId</code>, <code>artifactId</code>, <code>artifactType</code> (optional), <code>name</code>, <code>description</code>, <code>labels</code>, <code>owner</code>, <code>createdOn</code>, <code>modifiedOn</code>, <code>rules</code>, <code>validatedUpTo</code>, and <code>versions</code>. Each version has <code>version</code>, <code>state</code>, and <code>content</code>, where <code>content</code> is a relative path to a schema file. A version can also have <code>name</code>, <code>description</code>, <code>labels</code>, <code>owner</code>, <code>globalId</code>, <code>createdOn</code>, <code>modifiedOn</code>, and <code>contentMetadata</code>, which is a relative path to a <code>content-v1</code> file.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content-v0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content-v1</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Optional content metadata, for explicit content identifiers and references. Fields: <code>contentId</code>, <code>content</code> (relative path to the schema file), and <code>references</code> (list of entries with <code>groupId</code>, <code>artifactId</code>, <code>version</code>, and <code>name</code>).</p></td>
 </tr>
 </tbody>
@@ -572,7 +575,7 @@ GitOps storage is an <strong>experimental</strong> feature. You must enable the 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">$type: registry-v0
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">$type: registry-v1
 registryId: main
 globalRules:
   - ruleType: VALIDITY
@@ -581,13 +584,13 @@ globalRules:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">$type: group-v0
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">$type: group-v1
 groupId: my-schemas</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">$type: artifact-v0
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">$type: artifact-v1
 groupId: my-schemas
 artifactId: order-event
 artifactType: AVRO
@@ -715,6 +718,96 @@ versions:
 </div>
 </div>
 <div class="sect1">
+<h2 id="gitops-data-format-versions_registry"><a class="anchor" href="#gitops-data-format-versions_registry"></a>GitOps data format versions</h2>
+<div class="sectionbody">
+<div class="paragraph _abstract">
+<p>The data format of GitOps and KubernetesOps metadata files is versioned. The version is the suffix of the <code>$type</code> value, for example <code>v1</code> in <code>artifact-v1</code>, and it applies to the whole file.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Data format versions</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Version</th>
+<th class="tableblock halign-left valign-top">Status in Apicurio Registry 3.4</th>
+<th class="tableblock halign-left valign-top">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Current</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read. The export to GitOps format writes this version.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read. A load that contains <code>v0</code> files logs one warning with the number of files and an example path. <code>v1</code> has the same fields as <code>v0</code>, so only the <code>$type</code> values differ.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The registry reads at most two versions: the current one and at most one deprecated one. A deprecated version stays readable for at least two minor releases after the release that deprecated it, or until the next major release. A newer version of the data format is introduced only together with the removal of the oldest one.</p>
+</div>
+<div class="paragraph">
+<p>A file with a version that the registry doesn&#8217;t read fails the load, and the registry keeps serving the last successfully loaded data:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A removed version: the error names the version and the version to convert to.</p>
+</li>
+<li>
+<p>A newer version, written for a later Apicurio Registry release: the error says that the file requires a newer registry.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Within a version, the format changes only by adding optional fields. The registry rejects fields that it doesn&#8217;t know, so use a new field only when every registry that reads the repository supports it.</p>
+</div>
+<div class="paragraph">
+<p><strong>Converting a repository to the current version</strong></p>
+</div>
+<div class="paragraph">
+<p>A repository can contain files of both readable versions, so you can convert it in one commit or file by file. To convert from <code>v0</code> to <code>v1</code>, change the <code>$type</code> values, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">grep -rlZE '^\$type: (registry|group|artifact|content)-v0' --include='*.registry.yaml' . \
+  | xargs -0 sed -i -E 's/^\$type: (registry|group|artifact|content)-v0$/$type: \1-v1/'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Adjust the file pattern if you changed <code>apicurio.polling-storage.file-suffixes</code>, or if your metadata
+files use the <code>.yml</code> extension. For <code>.json</code> files, match <code>"\$type": "(registry|group|artifact|content)-v0"</code>
+instead, since JSON quotes the field and its value.</p>
+</div>
+<div class="paragraph">
+<p>This uses GNU <code>sed</code>. On macOS or another BSD <code>sed</code>, pass an empty string to <code>-i</code> (<code>sed -i '' -E &#8230;&#8203;</code>).</p>
+</div>
+<div class="paragraph">
+<p>Before you convert, check which registry instances read the repository:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Convert only after every registry instance that reads the repository runs Apicurio Registry 3.4 or later. Apicurio Registry 3.3 and earlier skip <code>v1</code> files, so the converted artifacts disappear from those instances.</p>
+</li>
+<li>
+<p>If you convert file by file, convert the registry configuration file first. With the default <code>apicurio.polling-storage.require-registry-config=true</code>, a registry that can&#8217;t read it rejects the whole load and keeps serving its last data, instead of serving data without the converted files. With that property set to <code>false</code>, the registry instead logs a warning and loads without the registry file.</p>
+</li>
+<li>
+<p>To roll back to a Apicurio Registry release that doesn&#8217;t read <code>v1</code>, revert the conversion commit.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="configuring-gitops-storage-single-repository_registry"><a class="anchor" href="#configuring-gitops-storage-single-repository_registry"></a>Configuring GitOps storage with a single repository</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
@@ -724,7 +817,7 @@ versions:
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>You have a Git repository that contains a registry configuration file (<code>registry-v0</code>) and registry content.</p>
+<p>You have a Git repository that contains a registry configuration file (<code>registry-v1</code>) and registry content.</p>
 </li>
 <li>
 <p>You have a local clone of the repository, or a sync container that maintains one.</p>
@@ -742,8 +835,8 @@ versions:
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">APICURIO_STORAGE_KIND=gitops
-APICURIO_FEATURES_EXPERIMENTAL_ENABLED=true
-APICURIO_POLLING_STORAGE_ID=main</code></pre>
+APICURIO_POLLING_STORAGE_ID=main
+APICURIO_FEATURES_EXPERIMENTAL_ENABLED=true</code></pre>
 </div>
 </div>
 </li>
@@ -1062,7 +1155,7 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 <p>To find the cause of a problem, get the synchronization status from the <code>/admin/gitops/status</code> endpoint and read the <code>syncState</code>, <code>errors</code>, and <code>sources</code> fields. The <code>acr gitops status</code> command shows the same values in the <code>Sync State</code>, <code>Errors</code>, and <code>Sources</code> rows. The registry logs <code>gitops update published</code> after each successful load. After a load that it rejects, the registry logs <code>gitops update failed to load</code>, followed by the errors.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. GitOps storage problems and their causes</caption>
+<caption class="title">Table 4. GitOps storage problems and their causes</caption>
 <colgroup>
 <col style="width: 40%;">
 <col style="width: 60%;">
@@ -1117,7 +1210,7 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 <p>All GitOps storage properties are experimental and require <code>apicurio.features.experimental.enabled=true</code>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Registry configuration properties</caption>
+<caption class="title">Table 5. Registry configuration properties</caption>
 <colgroup>
 <col style="width: 37.5%;">
 <col style="width: 25%;">
@@ -1224,7 +1317,7 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Sync container environment variables</caption>
+<caption class="title">Table 6. Sync container environment variables</caption>
 <colgroup>
 <col style="width: 37.5%;">
 <col style="width: 25%;">
@@ -1334,7 +1427,7 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 <p>The registry provides administrative REST endpoints for GitOps storage under the <code>/apis/registry/v3/admin/gitops</code> path. The endpoints return an HTTP <code>409</code> response when a different storage variant is active.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. GitOps management endpoints</caption>
+<caption class="title">Table 7. GitOps management endpoints</caption>
 <colgroup>
 <col style="width: 42.8571%;">
 <col style="width: 14.2857%;">
@@ -1384,7 +1477,7 @@ APICURIO_GITOPS_REPOS_1_BRANCH=fulfillment</code></pre>
 <p>The status response contains the following fields:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. GitOps status fields</caption>
+<caption class="title">Table 8. GitOps status fields</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">

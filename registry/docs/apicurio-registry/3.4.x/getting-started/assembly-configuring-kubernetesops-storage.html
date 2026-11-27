@@ -134,6 +134,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-versioning-support-policy.html">Versioning and support policy</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-upgrading-to-3-4.html">Upgrading to Apicurio Registry 3.4</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -758,19 +761,19 @@ spec:
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry-v0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry-v1</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Registry configuration including global rules, settings, and peer registries</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>group-v0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>group-v1</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Group definition</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifact-v0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>artifact-v1</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Artifact definition with versions</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content-v0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content-v1</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Content metadata linking to actual schema/API data</p></td>
 </tr>
 </tbody>
@@ -787,7 +790,7 @@ metadata:
     apicurio.io/registry-id: my-registry
 data:
   registry.registry.yaml: |
-    $type: registry-v0
+    $type: registry-v1
     registryId: my-registry
     globalRules:
       - ruleType: VALIDITY
@@ -807,7 +810,7 @@ metadata:
     apicurio.io/registry-id: my-registry
 data:
   group-events.registry.yaml: |
-    $type: group-v0
+    $type: group-v1
     registryIds: [my-registry]
     groupId: com.example.events
     description: "Event schemas for the platform"</code></pre>
@@ -828,7 +831,7 @@ metadata:
     apicurio.io/registry-id: my-registry
 data:
   artifact-user-event.registry.yaml: |
-    $type: artifact-v0
+    $type: artifact-v1
     registryIds: [my-registry]
     groupId: com.example.events
     artifactId: user-event
@@ -867,7 +870,7 @@ The <code>content</code> field in a version uses a relative path that references
 </table>
 </div>
 <div class="paragraph">
-<p>For advanced use cases, you can use <code>content-v0</code> metadata to set an explicit <code>contentId</code> or define content references. The version&#8217;s <code>contentMetadata</code> field points to a <code>content-v0</code> entry, which in turn points to the actual content via its own <code>content</code> field.</p>
+<p>For advanced use cases, you can use <code>content-v1</code> metadata to set an explicit <code>contentId</code> or define content references. The version&#8217;s <code>contentMetadata</code> field points to a <code>content-v1</code> entry, which in turn points to the actual content via its own <code>content</code> field.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example: Artifact with content metadata</div>
@@ -881,7 +884,7 @@ metadata:
     apicurio.io/registry-id: my-registry
 data:
   artifact-user-event.registry.yaml: |
-    $type: artifact-v0
+    $type: artifact-v1
     registryIds: [my-registry]
     groupId: com.example.events
     artifactId: user-event
@@ -893,7 +896,7 @@ data:
         contentMetadata: content-user-event.registry.yaml
 
   content-user-event.registry.yaml: |
-    $type: content-v0
+    $type: content-v1
     contentId: 1
     content: user-event.avsc
     references: []
@@ -912,7 +915,7 @@ data:
 </div>
 </div>
 <div class="paragraph">
-<p>Content references allow one artifact to reference another (for example, an Avro schema that imports another record type). Use the <code>references</code> field in a <code>content-v0</code> entry to declare these relationships.</p>
+<p>Content references allow one artifact to reference another (for example, an Avro schema that imports another record type). Use the <code>references</code> field in a <code>content-v1</code> entry to declare these relationships.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example: Content references</div>
@@ -926,12 +929,12 @@ metadata:
     apicurio.io/registry-id: my-registry
 data:
   group-refs.registry.yaml: |
-    $type: group-v0
+    $type: group-v1
     registryIds: [my-registry]
     groupId: com.example.refs
 
   artifact-address.registry.yaml: |
-    $type: artifact-v0
+    $type: artifact-v1
     registryIds: [my-registry]
     groupId: com.example.refs
     artifactId: address
@@ -942,7 +945,7 @@ data:
         content: address.avsc
 
   artifact-customer.registry.yaml: |
-    $type: artifact-v0
+    $type: artifact-v1
     registryIds: [my-registry]
     groupId: com.example.refs
     artifactId: customer
@@ -954,7 +957,7 @@ data:
         contentMetadata: content-customer.registry.yaml
 
   content-customer.registry.yaml: |
-    $type: content-v0
+    $type: content-v1
     content: customer.avsc
     references:
       - groupId: com.example.refs
@@ -999,10 +1002,14 @@ data:
 <h2 id="kubernetesops-field-reference_registry"><a class="anchor" href="#kubernetesops-field-reference_registry"></a>Field reference</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Each KubernetesOps entity type (<code>registry-v0</code>, <code>group-v0</code>, <code>artifact-v0</code>, <code>content-v0</code>) supports a specific set of YAML fields. Fields marked with <code>$type</code> are required for type identification, and unknown fields cause parse errors.</p>
+<p>Each KubernetesOps entity type (<code>registry-v1</code>, <code>group-v1</code>, <code>artifact-v1</code>, <code>content-v1</code>) supports a specific set of YAML fields. Fields marked with <code>$type</code> are required for type identification, and unknown fields cause parse errors.</p>
+</div>
+<div class="paragraph">
+<p>The suffix of each type is the data format version. KubernetesOps storage uses the same versions as GitOps storage: <code>v1</code> is current, and <code>v0</code> is still read but deprecated. A <code>$type</code> such as <code>registry-v0</code> therefore also loads, with a deprecation warning in the log. For details, see
+<a href="assembly-configuring-gitops-storage.html#gitops-data-format-versions_registry" class="page">getting-started/assembly-configuring-gitops-storage.adoc#gitops-data-format-versions_registry</a>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 4. registry-v0 fields</caption>
+<caption class="title">Table 4. registry-v1 fields</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 20%;">
@@ -1019,7 +1026,7 @@ data:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>$type</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must be <code>registry-v0</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must be <code>registry-v1</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registryId</code></p></td>
@@ -1044,7 +1051,7 @@ data:
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 5. group-v0 fields</caption>
+<caption class="title">Table 5. group-v1 fields</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 20%;">
@@ -1061,7 +1068,7 @@ data:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>$type</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must be <code>group-v0</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must be <code>group-v1</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registryIds</code></p></td>
@@ -1101,7 +1108,7 @@ data:
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 6. artifact-v0 fields</caption>
+<caption class="title">Table 6. artifact-v1 fields</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 20%;">
@@ -1118,7 +1125,7 @@ data:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>$type</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must be <code>artifact-v0</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must be <code>artifact-v1</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>registryIds</code></p></td>
@@ -1173,7 +1180,7 @@ data:
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 7. Version fields (nested in artifact-v0)</caption>
+<caption class="title">Table 7. Version fields (nested in artifact-v1)</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 20%;">
@@ -1220,7 +1227,7 @@ data:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentMetadata</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Relative path to a <code>content-v0</code> metadata entry for advanced content configuration.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Relative path to a <code>content-v1</code> metadata entry for advanced content configuration.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>globalId</code></p></td>
@@ -1235,7 +1242,7 @@ data:
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 8. content-v0 fields</caption>
+<caption class="title">Table 8. content-v1 fields</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 20%;">
@@ -1252,7 +1259,7 @@ data:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>$type</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must be <code>content-v0</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Required</strong>. Must be <code>content-v1</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentId</code></p></td>
@@ -1272,7 +1279,7 @@ data:
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch table-expandable">
-<caption class="title">Table 9. Rule fields (nested in registry-v0, group-v0, and artifact-v0)</caption>
+<caption class="title">Table 9. Rule fields (nested in registry-v1, group-v1, and artifact-v1)</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 20%;">

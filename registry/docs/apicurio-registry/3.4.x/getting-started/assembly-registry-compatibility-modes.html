@@ -134,6 +134,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="assembly-versioning-support-policy.html">Versioning and support policy</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="assembly-upgrading-to-3-4.html">Upgrading to Apicurio Registry 3.4</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -898,65 +901,8 @@ If a reference cannot be resolved, part of the schema cannot be compared, so the
 <h2 id="registry-compatibility-json-schema-changes_registry"><a class="anchor" href="#registry-compatibility-json-schema-changes_registry"></a>Changes to JSON Schema compatibility checking in Apicurio Registry 3.4</h2>
 <div class="sectionbody">
 <div class="paragraph _abstract">
-<p>Earlier versions of Apicurio Registry checked JSON Schema compatibility with a different checker, based on the everit library.
-If you used JSON Schema compatibility rules before version 3.4, note the following differences:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Artifacts in drafts 2019-09 and 2020-12 are now checked.
-The earlier checker could not load them, and the check failed with an error instead.</p>
-</li>
-<li>
-<p>Rule violations are worded differently, and their <code>context</code> points at the keyword that changed.
-Update anything that matches the previous text or contexts, for example:</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 37.5%;">
-<col style="width: 37.5%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Change</th>
-<th class="tableblock halign-left valign-top">Before 3.4</th>
-<th class="tableblock halign-left valign-top">From 3.4</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Change the <code>type</code> of property <code>a</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Subschema type changed</code> at <code>/properties/a</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>The declared 'type' of the schema was changed.</code> at <code>/properties/a/type</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Add a property to <code>required</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object type property schemas narrowed</code> at <code>/propertySchemasAdded</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>A property was made 'required'.</code> at <code>/required/0</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Remove a value from <code>enum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Combined type subschema not compatible</code> at <code>/</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>A value was removed from the 'enum' allowed set.</code> at <code>/enum</code></p></td>
-</tr>
-</tbody>
-</table>
-</li>
-<li>
-<p>A new <code>oneOf</code> subschema that can match the same values as an existing one is now reported as incompatible.
-The earlier checker compared <code>oneOf</code> like <code>anyOf</code>, and accepted such a change.</p>
-</li>
-<li>
-<p>Adding a <code>type</code> inside <code>then</code> or <code>else</code> that an enclosing schema already requires is reported as incompatible, where the earlier checker accepted it.
-See <strong>Known over-strict verdicts</strong> in "What the JSON Schema compatibility check reports".</p>
-</li>
-<li>
-<p>The <code>apicurio.compat.json-schema.use-apitomy</code> configuration property, which selected the new checker in version 3.3, no longer has any effect, and is deprecated since version 3.4.
-Setting it to <code>false</code> does not restore the earlier checker.
-If it is set, Apicurio Registry logs a warning at startup.
-The property is scheduled for removal in version 4.0. After the removal, Apicurio Registry does not start if the property is still set. Remove it before you upgrade.</p>
-</li>
-</ul>
+<p>Apicurio Registry 3.4 checks JSON Schema compatibility with a different checker than earlier versions, and reports some changes differently.
+If you used JSON Schema compatibility rules before version 3.4, see the list of differences in <a href="assembly-upgrading-to-3-4.html#upgrading-to-3-4-json-schema-compatibility_registry" class="page">Changes to JSON Schema compatibility checking in Apicurio Registry 3.4</a>.</p>
 </div>
 </div>
 </div>
